@@ -1,0 +1,131 @@
+C256 log file - elmerucr
+========================
+
+goals
+=====
+v0.6
+----
+- breakpoint functionality on scanlines
+- all opcodes implemented
+- multiple instructions in debug mode, and still correct scanline behaviour
+
+v0.4 (released 2019-11-01)
+--------------------------
+v reSID integration
+v CIA chip that responds to keyboard events and raises interrupts
+v some timer interrupt integration
+
+v0.2 (released 2019-01-08)
+--------------------------
+v memory edit in debug mode (quick hack)
+v basic pulse working (breakpoints and continue execution with correct scanlines)
+
+todo / bugs
+===========
+-
+- currently access is granted to sdl2 to read registers etc... from cia
+- debug mode needs to its own irq connection (one of the lines)
+- make next pixel to be drawn visible in debug mode
+- call stack, stack tracing, former instructions log etc...
+- reentrant vicv functionality (parts of a scanline etc...), running and debug mode use the same function
+- when 0x8a is somewhere in memory, and do memdump in debug mode, a newline is put by debugger
+
+2020
+====
+2020-01-21 Split E64-II completely from E64
+2020-01-15 Musashi removed, Moira implemented, breakpoints still need to be done
+2020-01-14 Moira is a new 68000 emulation core from Dirk Hoffmann
+2020-01-08 Revert back to old style Musashi 3.4: Exception handling is preferred over new style
+2020-01-03 Changed to 68000 (in stead of 68020)
+
+2019
+====
+2019-12-15 debugger in E64-II defaults to cobalt colors
+2019-12-14 distinction between little en big endian in sound module (some sid lo/hi registers will be swapped)
+2019-12-05 timer works in big endian mode, to prepare for m68k
+2019-12-04 lots of things changed.
+2019-11-01 converted cia to a class.
+2019-10-10 started a second target E64-II (with MC68020 core in stead of CSG65CE02)
+2019-10-02 timers and irqs basic functionality implemented
+2019-09-16 "sids" renamed to "sound", moved to c++ code and left/right channel mixing enabled
+2019-09-12 For some reason, breakpoints still trigger when "breakpoints_active" is false inside cpu
+2019-09-12 To simplify source code, scanline breakpoints have been removed. First get pixel clock right.
+2019-09-12 Pulse single step function removed, now only one execute function that takes an argument. Introduced a bug with delay system...
+2019-09-09 System compiles with Ubuntu linux
+2019-09-07 Moved source to GitHub.
+2019-09-01 Started namechange to "E64". "C256" appears to be in use for a hardware project based on similar ideas
+2019-08-29 pid delay works on both fps and audiobuffer now
+2019-08-28 Removed 'n' command in console, F1 suffices
+2019-08-17 Built with official SDL-2.0.10 release. No warnings anymore during building. Works :-)
+2019-08-08 Removed M68K part for the time being
+2019-07-09 scanline breakpoints working
+2019-06-30 reSID seems to be fully working. Audio buffer is leading for the <new> pid delay
+2019-06-22 Bug resolved: when some sound code is added to kernel, system freezes after a few key presses. Return address from function call after RTN instruction was wrong. Nasty bug in lib65ce02 resolved
+2019-06-21 I hear some experimental sound!
+2019-06-16 Replaced the usleep() function by a portable c++11 version (using chrono and thread)
+2019-06-12 Conversion to hpp and cpp for most of the files
+2019-06-05 Start of integration of reSID library
+2019-05-25 Version numbering like Gimp: 0.3 is development, 0.4 next release, etc...
+2019-04-15 Made it compile with c++ compiler, to prepare for inclusion of reSID (a c++ lib)
+2019-03-31 FIRST TIME INTERRUPTS ARE WORKING INSIDE MACHINE (CIA KEYBOARD INTERRUPT!)
+2019-03-28 working on cia (keyboard input) and interrupt handling
+2019-03-03 start of cpu abstraction layer (c256_cpu.*)
+2019-02-25 first steps to incorporate an m68k next to the 65ce02 (debug status bar, common_defs...)
+2019-02-11 vicv has its own address space, and via the pla it's connected to logical address space of cpu
+2019-02-11 border color is now implemented in vicv, fps color is automatically calculated
+2019-02-11 removed color+background per char support in the borders
+2019-02-11 implemented SN74LS612 16mb address space
+2019-02-10 renamed mmu to pla
+2019-02-xx building kernel from 64tass
+2019-01-12 added Musashi m68k core again, not yet functional
+2019-01-04 c256_pulse will contain de most important functions to keep the system running
+2019-01-03 cursor flash implemented!
+2019-01-03 color palette of VirtualC64 imported
+2019-01-02 further implementation of debug console
+
+2018
+====
+2018-12-30 many things done, debug console accepts keyboard input, and reduces cpu usage
+2018-12-04 fps in running screen, works but is some kind of ugly hack
+2018-12-03 Welcome message
+2018-12-02 First implementation of debug and running modes
+2018-11-17 console now supports rudimentary print function
+2018-11-14 Created c256_console.h and c256_console.c. This is the management of the different textfields in borders
+2018-11-14 Renamed console to borders. c256_borders forms backbone of borders and its rendering
+2018-11-06 Added c256_sdl2_delay.c and c256_sdl2_delay.h: isolate calculation for delay per frame in this unit to keep things simple
+2018-11-01 Built with official SDL-2.0.9 release. Works :-)
+2018-10-28 Mercurial SDL-2.0.9-12363 works...
+2018-10-22 Official Mercurial SDL-2.0.9-12345 works like a charm, now the offical release...
+2018-10-21 Download from Mercurial (HG), built framework first, then app, black screen bug solved...!
+2018-10-02 Black screen on app startup. Seems related to MacOS Mojave. Upgrade to SDL 2.0.9 preview version does not improve the situation, although it's mentioned in resolved bugs on website. To be continued...
+2018-08-26 upgraded framework SDL 2.0.5 to SDL 2.0.8
+2018-08-16 added char roms in 8bit, the <old> 32bit versions will be removed later on
+2018-04-28 lib65ce02: Revised my own cpu library (not finished) and linked it into the project. Goal is to have the choice for two types of cpu's. My own lib must also run on its own (and synced with GitHub in the future). Need to revise its license. Must be flexible.
+2018-04-03 e_status.h and e_status.c: changed to e_console.h and e_console.c: is more descriptive
+2018-04-03 added two source files: e_machine_state.h and e_machine_state.c. C256 is a finite state machine. See header.
+2018-04-02 general cleaning up of code, backup, and start to move mainloop out of e_sdl2.c
+2018-03-10 e_status: status characters are implement as a full screen (40*64) in stead of upper 4 rows and bottom 4 rows. Normally, only rows 0-3 and 36-39 are displayed. Rows 4-35 can be used for settings screen etc...
+2018-02-15 started implementation of e_status text content top and bottom, refers purely to char roms and not main memory
+2018-02-03 e_sdl2.c: making transition to more fine-grained control of framerate. Use usleep() in microseconds in stead of SDL_Delay (microseconds)
+2018-01-30 Changed quite a lot of source directory names in tree
+2018-01-30 After minor changes (names of header file etc) it's possible to build inside Ubuntu 16.04LTS, change was not permanent
+2018-01-27 all needed characters are patched to reflect the full ascii set
+2018-01-26 missing ascii characters designed
+2018-01-24 c256_rom.asm: Added function printHexByte
+2018-01-21 e_sdl2.c: linear interpolation and fullscreen desktop for nice rendering, F12 now leaves the app
+2018-01-20 c256_rom.asm: split into multiple files (1) c256.rom.asm, (2) c256_definitions and (3) c256_rom_tables.asm
+2018-01-19 e_sdl2.c: Scanning the keyboard state using a pointer from SDL_GetKeyboardState(NULL)
+2018-01-15 c256_rom.asm: Reverted to asmx again. This assembler is not case-sensitive but does allow long names. Besides that, local labels (like .1, .bla, etc... are possible)
+2018-01-13 c256_rom.asm: Real bug (2018-01-10) was found. Not alignment. Pointer to cursor was cleared, but with clr.l, meaning four bytes (in stead of two) were put to zero. Start of string 'welcomeMessage' (that was just next to cursorPoint in memory) was zero'd. Meaning printString function directly returned and not printed at all. Solved by changing instruction to 'clr.w'
+2018-01-13 c256_rom.asm: works with 68kasm from now, GPL2.0
+2018-01-10 c256_rom.asm: printString implemented and works more or less - there was a problem with the alignment of the string data --> this needs serious resolving.
+2018-01-07 c256_rom.asm: putChar function with LF implemented.
+2018-01-04 c256_rom.asm: Implementing ascii code table in kernel - some characters are missing in c64 charset.
+2018-01-01 SDL_WINDOW_FULLSCREEN_DESKTOP results in quite nice rendering in MacOS. Some scanlines are tinier than others.
+
+2017
+====
+2017-12-05 Product builds with Xcode 9.2.
+2017-11-28 Changed source file C256 rom to vasmm68k_mot format. Used to be asmx format.
+2017-11-27 A lot happened before this date.
+2017-05-01 Succeeded in compiling Musashi (m68k core) standalone. Decision was made to run m68k inside C256 in stead of a 65c02 emulation.
