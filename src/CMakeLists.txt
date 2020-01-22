@@ -1,3 +1,3 @@
-add_subdirectory(E64-I/)
-add_subdirectory(E64-II/)
-add_subdirectory(shared/)
+add_subdirectory(debugger/)
+add_subdirectory(devices/)
+add_subdirectory(sdl2/)

@@ -1,0 +1,1 @@
+add_library(TTL74LS148 STATIC TTL74LS148.cpp)
