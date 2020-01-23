@@ -6,7 +6,7 @@
 #include "debug_screen.hpp"
 #include "common_defs.hpp"
 
-uint32_t debug_screen_buffer[VICV_PIXELS_PER_SCANLINE * 320];
+uint32_t debug_screen_buffer[VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES];
 
 uint8_t debug_screen_character_buffer[32*64];            // 32 lines of 64 chars
 uint8_t debug_screen_foreground_color_buffer[32*64];     // 32x64
@@ -19,13 +19,13 @@ void E64::debug_screen_update()
 
     // copy relevant area of vicv screen buffer to bottom of debug screen buffer
     uint8_t scanline_normalized;
-    if(computer.vicv_ic->return_current_scanline() > 287)
+    if(computer.vicv_ic->get_current_scanline() > 287)
     {
         scanline_normalized = 255;
     }
-    else if(computer.vicv_ic->return_current_scanline() >= 32)
+    else if(computer.vicv_ic->get_current_scanline() >= 32)
     {
-        scanline_normalized = computer.vicv_ic->return_current_scanline() - 32;
+        scanline_normalized = computer.vicv_ic->get_current_scanline() - 32;
     }
     else
     {
@@ -33,7 +33,7 @@ void E64::debug_screen_update()
     }
     for(int i=0; i<VICV_PIXELS_PER_SCANLINE*64; i++)
     {
-        debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE)+i] = computer.vicv_ic->back_buffer[i+(VICV_PIXELS_PER_SCANLINE*scanline_normalized)];
+        debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE)+i] = computer.vicv_ic->backbuffer[i+(VICV_PIXELS_PER_SCANLINE*scanline_normalized)];
     }
 }
 

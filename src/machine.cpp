@@ -32,7 +32,7 @@ E64::machine::machine()
     TTL74LS148_ic->connect_device(&debugger_irq_pin, 5);
     
     // init frequency dividers (make sure the right amount of cycles will run on different ic's)
-    m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_CLOCK_SPEED);
+    m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
     m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
     m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
     

@@ -195,8 +195,8 @@
 				4691C7A923D7B40600E9E78D /* machine.cpp */,
 				4691C7AC23D7B40600E9E78D /* machine.hpp */,
 				4691C78723D7B28600E9E78D /* main.cpp */,
-				4691C7AA23D7B40600E9E78D /* pid_delay.cpp */,
 				4691C7AD23D7B40600E9E78D /* pid_delay.hpp */,
+				4691C7AA23D7B40600E9E78D /* pid_delay.cpp */,
 				4691C77823D7B23C00E9E78D /* Assets.xcassets */,
 				4691C78023D7B23C00E9E78D /* Info.plist */,
 				4691C81323D7B80B00E9E78D /* log.txt */,
@@ -674,6 +674,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_FILE = "E64-II/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

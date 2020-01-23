@@ -29,16 +29,25 @@ namespace E64
         uint32_t *screen_buffer_0;
         uint32_t *screen_buffer_1;
 
-        void swap_buffers(void);
+        inline void swap_buffers()
+        {
+            uint32_t *temp = frontbuffer;
+            frontbuffer = backbuffer;
+            backbuffer = temp;
+        }
 
         // internal stuff
-        uint16_t current_pixel;
+        uint16_t current_dot;
         uint16_t current_xpos;
         uint16_t current_scanline;
 
         // overlay related things
         bool overlay_present;
-        uint32_t borders_contrast_foreground_color(void);
+        uint32_t borders_contrast_foreground_color();
+
+        void render_scanline();
+        void render_border_scanline();
+        void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
     public:
         vicv(void);
         ~vicv(void);
@@ -46,9 +55,9 @@ namespace E64
         bool irq_line;
 
         // pointer to the buffer that currently can be shown
-        uint32_t *front_buffer;
+        uint32_t *frontbuffer;
         // pointer to the buffer that's currently being written to
-        uint32_t *back_buffer;
+        uint32_t *backbuffer;
 
         // move this member to private again????   !!!!
         uint32_t *color_palette;
@@ -56,20 +65,18 @@ namespace E64
         // this will be flagged if a frame is completely done
         bool frame_done;
 
-        void reset(void);
+        void reset();
 
-        // run cycles on this ic (note: 1 cycle = 1 pixel)
+        // run cycles on this chip
         void run(uint32_t number_of_cycles);
 
-        void render_current_scanline(void);
-        void render_border_scanline(void);
-        void render_scanline(void);
-        uint16_t return_current_scanline(void);
-        uint16_t return_current_pixel(void);
-        void toggle_overlay(void);
-        void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
-        uint8_t read_byte(uint8_t address);
-        void write_byte(uint8_t address, uint8_t byte);
+        inline uint16_t get_current_scanline() { return current_scanline; }
+        inline uint16_t get_current_pixel() { return current_xpos; }
+        inline void toggle_overlay() { overlay_present = !overlay_present; }
+        
+        // Register access to vicv
+        inline uint8_t read_byte(uint8_t address)  { return registers[address]; }
+        inline void write_byte(uint8_t address, uint8_t byte) { registers[address] = byte; }
     };
 }
 

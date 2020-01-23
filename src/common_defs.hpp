@@ -14,7 +14,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200122
+#define E64_BUILD               20200123
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             8192000     // 8MHz system
@@ -36,8 +36,9 @@ extern const char screencode_to_ascii[];
 #define RAM_SIZE                    0x1000000                           // 16mb system
 #define FPS                         50                                  // "PAL" @50Hz
 #define VICV_PIXELS_PER_SCANLINE    512
-#define VICV_CLOCK_SPEED            VICV_PIXELS_PER_SCANLINE*320*FPS    // pixelclock speed
-#define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/(320*FPS))
+#define VICV_SCANLINES              320
+#define VICV_DOT_CLOCK_SPEED        VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES*FPS
+#define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/(VICV_SCANLINES*FPS))
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
 //#define NO_OF_SIDS                  4

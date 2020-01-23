@@ -74,14 +74,14 @@ void E64::sdl2_init()
     printf("[SDL] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
 
     // setup context
-    context0.current_window_size = 3;
+    context0.current_window_size = 2;
     context0.fullscreen = false;
     // create window - title will be set later by function E64::sdl2_update_title()
     context0.window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
     // create renderer and link it to window
     context0.renderer = SDL_CreateRenderer(context0.window, -1, SDL_RENDERER_ACCELERATED);
     // create a texture that is able to refresh very frequently
-    context0.texture = SDL_CreateTexture(context0.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, 320);
+    context0.texture = SDL_CreateTexture(context0.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
     
     SDL_GetWindowSize(context0.window, &window_width, &window_height);
     destination = { 0, 0, window_width, window_height };
@@ -485,7 +485,7 @@ void E64::sdl2_update_screen()
     switch(computer.current_mode)
     {
         case NORMAL_MODE:
-            SDL_UpdateTexture(context0.texture, NULL, computer.vicv_ic->front_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
+            SDL_UpdateTexture(context0.texture, NULL, computer.vicv_ic->frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
         case DEBUG_MODE:
             SDL_UpdateTexture(context0.texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));

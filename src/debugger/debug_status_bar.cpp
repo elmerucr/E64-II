@@ -76,7 +76,7 @@ void debug_status_bar_refresh()
     }
     
     // vicv scanlines
-    snprintf(help_string, 256, "line: %3u\npix : %3u", computer.vicv_ic->return_current_scanline(), computer.vicv_ic->return_current_pixel() );
+    snprintf(help_string, 256, "line: %3u\npix : %3u", computer.vicv_ic->get_current_scanline(), computer.vicv_ic->get_current_pixel() );
     debug_status_bar_set_cursor_pos(5*64 + 54);
     debug_status_bar_print(help_string);
 
