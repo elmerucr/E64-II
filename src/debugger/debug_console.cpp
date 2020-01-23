@@ -8,8 +8,8 @@
 #include "common_defs.hpp"
 #include "debug_console.hpp"
 #include "debug_screen.hpp"
-#include "debug_command_E64_II.hpp"
-#include "debug_status_bar_E64_II.hpp"
+#include "debug_command.hpp"
+#include "debug_status_bar.hpp"
 
 debug_console_struct debug_console;
 

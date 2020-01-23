@@ -11,7 +11,7 @@
 #include "sdl2.hpp"
 #include "debug_screen.hpp"
 #include "debug_console.hpp"
-#include "debug_command_E64_II.hpp"
+#include "debug_command.hpp"
 
 struct window_size
 {
@@ -74,7 +74,7 @@ void E64::sdl2_init()
     printf("[SDL] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
 
     // setup context
-    context0.current_window_size = 2;
+    context0.current_window_size = 3;
     context0.fullscreen = false;
     // create window - title will be set later by function E64::sdl2_update_title()
     context0.window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );

@@ -12,7 +12,7 @@
 #include "vicv.hpp"
 #include "debug_console.hpp"
 #include "debug_screen.hpp"
-#include "debug_status_bar_E64_II.hpp"
+#include "debug_status_bar.hpp"
 #include "cia.hpp"
 #include "sound.hpp"
 #include "timer.hpp"

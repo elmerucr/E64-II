@@ -1,5 +1,5 @@
 //  common_defs.h
-//  E64
+//  E64-II
 //
 //  Copyright © 2017 elmerucr. All rights reserved.
 //
@@ -9,14 +9,14 @@
 #define COMMON_DEFS_H
 
 #include <cstdint>
+#include "machine.hpp"
 #include "pid_delay.hpp"
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200121
+#define E64_BUILD               20200122
 #define E64_YEAR                2020
 
-#include "machine.hpp"
 #define CPU_CLOCK_SPEED             8192000     // 8MHz system
 #define IO_CIA_PAGE                 0xfe03
 #define IO_VICV_PAGE                0xfe04
@@ -27,7 +27,7 @@
 #define DEBUGGER_FOREGROUND_COLOR   0x3b
 #define DEBUGGER_BACKGROUND_COLOR   0x34
 
-// some objects need to be visible at global level:
+// some objects must be visible at global level
 extern E64::pid_delay frame_delay;
 extern E64::machine computer;
 extern const uint8_t ascii_to_screencode[];

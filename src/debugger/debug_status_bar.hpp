@@ -1,12 +1,12 @@
-//  debug_status_bar_E64_II.hpp
-//  E64
+//  debug_status_bar.hpp
+//  E64-II
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
 
 #include <cstdint>
 
-#ifndef DEBUG_STATUS_BAR_E64_II_HPP
-#define DEBUG_STATUS_BAR_E64_II_HPP
+#ifndef DEBUG_STATUS_BAR_HPP
+#define DEBUG_STATUS_BAR_HPP
 
 extern uint8_t status_bar_chars[];
 extern uint8_t status_bar_foreground_color_buffer[];

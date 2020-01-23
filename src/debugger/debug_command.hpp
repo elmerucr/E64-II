@@ -1,10 +1,10 @@
-//  debug_command_E64_II.hpp
+//  debug_command.hpp
 //  E64-II
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
 
-#ifndef DEBUG_COMMAND_E64_II_HPP
-#define DEBUG_COMMAND_E64_II_HPP
+#ifndef DEBUG_COMMAND_HPP
+#define DEBUG_COMMAND_HPP
 
 #include <cstdint>
 

@@ -14,8 +14,8 @@
 		4691C79623D7B34700E9E78D /* vicv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79523D7B34700E9E78D /* vicv.cpp */; };
 		4691C7A023D7B36C00E9E78D /* debug_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79823D7B36C00E9E78D /* debug_console.cpp */; };
 		4691C7A123D7B36C00E9E78D /* debug_screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79C23D7B36C00E9E78D /* debug_screen.cpp */; };
-		4691C7A223D7B36C00E9E78D /* debug_status_bar_E64_II.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79D23D7B36C00E9E78D /* debug_status_bar_E64_II.cpp */; };
-		4691C7A323D7B36C00E9E78D /* debug_command_E64_II.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79F23D7B36C00E9E78D /* debug_command_E64_II.cpp */; };
+		4691C7A223D7B36C00E9E78D /* debug_status_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */; };
+		4691C7A323D7B36C00E9E78D /* debug_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79F23D7B36C00E9E78D /* debug_command.cpp */; };
 		4691C7A623D7B3B600E9E78D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; };
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C7B123D7B40600E9E78D /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7A923D7B40600E9E78D /* machine.cpp */; };
@@ -77,13 +77,13 @@
 		4691C79423D7B34700E9E78D /* vicv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vicv.hpp; path = ../../../src/devices/vicv/vicv.hpp; sourceTree = "<group>"; };
 		4691C79523D7B34700E9E78D /* vicv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vicv.cpp; path = ../../../src/devices/vicv/vicv.cpp; sourceTree = "<group>"; };
 		4691C79823D7B36C00E9E78D /* debug_console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_console.cpp; path = ../../../src/debugger/debug_console.cpp; sourceTree = "<group>"; };
-		4691C79923D7B36C00E9E78D /* debug_status_bar_E64_II.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_status_bar_E64_II.hpp; path = ../../../src/debugger/debug_status_bar_E64_II.hpp; sourceTree = "<group>"; };
+		4691C79923D7B36C00E9E78D /* debug_status_bar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_status_bar.hpp; path = ../../../src/debugger/debug_status_bar.hpp; sourceTree = "<group>"; };
 		4691C79A23D7B36C00E9E78D /* debug_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_console.hpp; path = ../../../src/debugger/debug_console.hpp; sourceTree = "<group>"; };
-		4691C79B23D7B36C00E9E78D /* debug_command_E64_II.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_command_E64_II.hpp; path = ../../../src/debugger/debug_command_E64_II.hpp; sourceTree = "<group>"; };
+		4691C79B23D7B36C00E9E78D /* debug_command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_command.hpp; path = ../../../src/debugger/debug_command.hpp; sourceTree = "<group>"; };
 		4691C79C23D7B36C00E9E78D /* debug_screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_screen.cpp; path = ../../../src/debugger/debug_screen.cpp; sourceTree = "<group>"; };
-		4691C79D23D7B36C00E9E78D /* debug_status_bar_E64_II.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_status_bar_E64_II.cpp; path = ../../../src/debugger/debug_status_bar_E64_II.cpp; sourceTree = "<group>"; };
+		4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_status_bar.cpp; path = ../../../src/debugger/debug_status_bar.cpp; sourceTree = "<group>"; };
 		4691C79E23D7B36C00E9E78D /* debug_screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_screen.hpp; path = ../../../src/debugger/debug_screen.hpp; sourceTree = "<group>"; };
-		4691C79F23D7B36C00E9E78D /* debug_command_E64_II.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_command_E64_II.cpp; path = ../../../src/debugger/debug_command_E64_II.cpp; sourceTree = "<group>"; };
+		4691C79F23D7B36C00E9E78D /* debug_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_command.cpp; path = ../../../src/debugger/debug_command.cpp; sourceTree = "<group>"; };
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		4691C7A923D7B40600E9E78D /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine.cpp; sourceTree = "<group>"; };
 		4691C7AA23D7B40600E9E78D /* pid_delay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pid_delay.cpp; path = ../../../src/pid_delay.cpp; sourceTree = "<group>"; };
@@ -250,14 +250,14 @@
 		4691C79723D7B35500E9E78D /* debugger */ = {
 			isa = PBXGroup;
 			children = (
-				4691C79F23D7B36C00E9E78D /* debug_command_E64_II.cpp */,
-				4691C79B23D7B36C00E9E78D /* debug_command_E64_II.hpp */,
-				4691C79823D7B36C00E9E78D /* debug_console.cpp */,
+				4691C79B23D7B36C00E9E78D /* debug_command.hpp */,
+				4691C79F23D7B36C00E9E78D /* debug_command.cpp */,
 				4691C79A23D7B36C00E9E78D /* debug_console.hpp */,
-				4691C79C23D7B36C00E9E78D /* debug_screen.cpp */,
+				4691C79823D7B36C00E9E78D /* debug_console.cpp */,
 				4691C79E23D7B36C00E9E78D /* debug_screen.hpp */,
-				4691C79D23D7B36C00E9E78D /* debug_status_bar_E64_II.cpp */,
-				4691C79923D7B36C00E9E78D /* debug_status_bar_E64_II.hpp */,
+				4691C79C23D7B36C00E9E78D /* debug_screen.cpp */,
+				4691C79923D7B36C00E9E78D /* debug_status_bar.hpp */,
+				4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */,
 			);
 			name = debugger;
 			sourceTree = "<group>";
@@ -481,7 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4691C7F523D7B5F200E9E78D /* wave.cc in Sources */,
-				4691C7A323D7B36C00E9E78D /* debug_command_E64_II.cpp in Sources */,
+				4691C7A323D7B36C00E9E78D /* debug_command.cpp in Sources */,
 				4691C7F323D7B5F200E9E78D /* wave6581__ST.cc in Sources */,
 				4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */,
 				4691C80323D7B60300E9E78D /* sound.cpp in Sources */,
@@ -504,7 +504,7 @@
 				4691C7A023D7B36C00E9E78D /* debug_console.cpp in Sources */,
 				4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */,
 				4691C7FB23D7B5F200E9E78D /* envelope.cc in Sources */,
-				4691C7A223D7B36C00E9E78D /* debug_status_bar_E64_II.cpp in Sources */,
+				4691C7A223D7B36C00E9E78D /* debug_status_bar.cpp in Sources */,
 				4691C7FC23D7B5F200E9E78D /* wave6581_PST.cc in Sources */,
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,

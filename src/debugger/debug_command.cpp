@@ -1,5 +1,5 @@
-//  debug_command_E64_II.cpp
-//  E64
+//  debug_command.cpp
+//  E64-II
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
 
@@ -7,10 +7,10 @@
 #include <cstring>
 
 #include "common_defs.hpp"
-#include "debug_command_E64_II.hpp"
+#include "debug_command.hpp"
 #include "debug_console.hpp"
 #include "sdl2.hpp"
-#include "debug_status_bar_E64_II.hpp"
+#include "debug_status_bar.hpp"
 
 char command_help_string[2048];
 

@@ -1,12 +1,12 @@
-//  debug_status_bar_E64_II.cpp
-//  E64
+//  debug_status_bar.cpp
+//  E64-II
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
 
 #include <cstdio>
 
 #include "common_defs.hpp"
-#include "debug_status_bar_E64_II.hpp"
+#include "debug_status_bar.hpp"
 #include "debug_console.hpp"
 
 uint8_t status_bar_chars[16*64];

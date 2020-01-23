@@ -1,5 +1,5 @@
 //  common_defs.c
-//  E64
+//  E64-II
 //
 //  Copyright © 2018 elmerucr. All rights reserved.
 

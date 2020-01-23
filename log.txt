@@ -1,12 +1,11 @@
-C256 log file - elmerucr
-========================
+E64-II log file - elmerucr
+==========================
 
 goals
 =====
 v0.6
 ----
 - breakpoint functionality on scanlines
-- all opcodes implemented
 - multiple instructions in debug mode, and still correct scanline behaviour
 
 v0.4 (released 2019-11-01)
@@ -33,7 +32,8 @@ todo / bugs
 2020
 ====
 2020-01-21 Split E64-II completely from E64
-2020-01-15 Musashi removed, Moira implemented, breakpoints still need to be done
+2020-01-18 Breakpoints in Moira now work for exception handler code as well
+2020-01-15 Musashi removed, Moira implemented, breakpoints still need to be done (and a bug in Moira)
 2020-01-14 Moira is a new 68000 emulation core from Dirk Hoffmann
 2020-01-08 Revert back to old style Musashi 3.4: Exception handling is preferred over new style
 2020-01-03 Changed to 68000 (in stead of 68020)
