@@ -45,10 +45,14 @@ SDL_AudioDeviceID E64_sdl2_audio_dev;
 SDL_AudioSpec want, have;
 bool audio_running;
 
+bool E64::stats_in_title;
+
 const uint8_t *E64_sdl2_keyboard_state;
 
 void E64::sdl2_init()
 {
+    stats_in_title = false;
+    
     SDL_version compiled;
     SDL_version linked;
 
@@ -211,148 +215,148 @@ int E64::sdl2_process_events()
                     switch(event.key.keysym.sym)
                     {
                         case SDLK_0:
-                            debug_console_putchar(shift_pressed ? ')' : '0');
+                            debug_console_put_char(shift_pressed ? ')' : '0');
                             break;
                         case SDLK_1:
-                            debug_console_putchar(shift_pressed ? '!' : '1');
+                            debug_console_put_char(shift_pressed ? '!' : '1');
                             break;
                         case SDLK_2:
-                            debug_console_putchar(shift_pressed ? '@' : '2');
+                            debug_console_put_char(shift_pressed ? '@' : '2');
                             break;
                         case SDLK_3:
-                            debug_console_putchar(shift_pressed ? '#' : '3');
+                            debug_console_put_char(shift_pressed ? '#' : '3');
                             break;
                         case SDLK_4:
-                            debug_console_putchar(shift_pressed ? '$' : '4');
+                            debug_console_put_char(shift_pressed ? '$' : '4');
                             break;
                         case SDLK_5:
-                            debug_console_putchar(shift_pressed ? '%' : '5');
+                            debug_console_put_char(shift_pressed ? '%' : '5');
                             break;
                         case SDLK_6:
-                            debug_console_putchar(shift_pressed ? '^' : '6');
+                            debug_console_put_char(shift_pressed ? '^' : '6');
                             break;
                         case SDLK_7:
-                            debug_console_putchar(shift_pressed ? '&' : '7');
+                            debug_console_put_char(shift_pressed ? '&' : '7');
                             break;
                         case SDLK_8:
-                            debug_console_putchar(shift_pressed ? '*' : '8');
+                            debug_console_put_char(shift_pressed ? '*' : '8');
                             break;
                         case SDLK_9:
-                            debug_console_putchar(shift_pressed ? '(' : '9');
+                            debug_console_put_char(shift_pressed ? '(' : '9');
                             break;
                         case SDLK_a:
-                            debug_console_putchar(shift_pressed ? 'A' : 'a');
+                            debug_console_put_char(shift_pressed ? 'A' : 'a');
                             break;
                         case SDLK_b:
-                            debug_console_putchar(shift_pressed ? 'B' : 'b');
+                            debug_console_put_char(shift_pressed ? 'B' : 'b');
                             break;
                         case SDLK_c:
-                            debug_console_putchar(shift_pressed ? 'C' : 'c');
+                            debug_console_put_char(shift_pressed ? 'C' : 'c');
                             break;
                         case SDLK_d:
-                            debug_console_putchar(shift_pressed ? 'D' : 'd');
+                            debug_console_put_char(shift_pressed ? 'D' : 'd');
                             break;
                         case SDLK_e:
-                            debug_console_putchar(shift_pressed ? 'E' : 'e');
+                            debug_console_put_char(shift_pressed ? 'E' : 'e');
                             break;
                         case SDLK_f:
-                            debug_console_putchar(shift_pressed ? 'F' : 'f');
+                            debug_console_put_char(shift_pressed ? 'F' : 'f');
                             break;
                         case SDLK_g:
-                            debug_console_putchar(shift_pressed ? 'G' : 'g');
+                            debug_console_put_char(shift_pressed ? 'G' : 'g');
                             break;
                         case SDLK_h:
-                            debug_console_putchar(shift_pressed ? 'H' : 'h');
+                            debug_console_put_char(shift_pressed ? 'H' : 'h');
                             break;
                         case SDLK_i:
-                            debug_console_putchar(shift_pressed ? 'I' : 'i');
+                            debug_console_put_char(shift_pressed ? 'I' : 'i');
                             break;
                         case SDLK_j:
-                            debug_console_putchar(shift_pressed ? 'J' : 'j');
+                            debug_console_put_char(shift_pressed ? 'J' : 'j');
                             break;
                         case SDLK_k:
-                            debug_console_putchar(shift_pressed ? 'K' : 'k');
+                            debug_console_put_char(shift_pressed ? 'K' : 'k');
                             break;
                         case SDLK_l:
-                            debug_console_putchar(shift_pressed ? 'L' : 'l');
+                            debug_console_put_char(shift_pressed ? 'L' : 'l');
                             break;
                         case SDLK_m:
-                            debug_console_putchar(shift_pressed ? 'M' : 'm');
+                            debug_console_put_char(shift_pressed ? 'M' : 'm');
                             break;
                         case SDLK_n:
-                            debug_console_putchar(shift_pressed ? 'N' : 'n');
+                            debug_console_put_char(shift_pressed ? 'N' : 'n');
                             break;
                         case SDLK_o:
-                            debug_console_putchar(shift_pressed ? 'O' : 'o');
+                            debug_console_put_char(shift_pressed ? 'O' : 'o');
                             break;
                         case SDLK_p:
-                            debug_console_putchar(shift_pressed ? 'P' : 'p');
+                            debug_console_put_char(shift_pressed ? 'P' : 'p');
                             break;
                         case SDLK_q:
-                            debug_console_putchar(shift_pressed ? 'Q' : 'q');
+                            debug_console_put_char(shift_pressed ? 'Q' : 'q');
                             break;
                         case SDLK_r:
-                            debug_console_putchar(shift_pressed ? 'R' : 'r');
+                            debug_console_put_char(shift_pressed ? 'R' : 'r');
                             break;
                         case SDLK_s:
-                            debug_console_putchar(shift_pressed ? 'S' : 's');
+                            debug_console_put_char(shift_pressed ? 'S' : 's');
                             break;
                         case SDLK_t:
-                            debug_console_putchar(shift_pressed ? 'T' : 't');
+                            debug_console_put_char(shift_pressed ? 'T' : 't');
                             break;
                         case SDLK_u:
-                            debug_console_putchar(shift_pressed ? 'U' : 'u');
+                            debug_console_put_char(shift_pressed ? 'U' : 'u');
                             break;
                         case SDLK_v:
-                            debug_console_putchar(shift_pressed ? 'V' : 'v');
+                            debug_console_put_char(shift_pressed ? 'V' : 'v');
                             break;
                         case SDLK_w:
-                            debug_console_putchar(shift_pressed ? 'W' : 'w');
+                            debug_console_put_char(shift_pressed ? 'W' : 'w');
                             break;
                         case SDLK_x:
-                            debug_console_putchar(shift_pressed ? 'X' : 'x');
+                            debug_console_put_char(shift_pressed ? 'X' : 'x');
                             break;
                         case SDLK_y:
-                            debug_console_putchar(shift_pressed ? 'Y' : 'y');
+                            debug_console_put_char(shift_pressed ? 'Y' : 'y');
                             break;
                         case SDLK_z:
-                            debug_console_putchar(shift_pressed ? 'Z' : 'z');
+                            debug_console_put_char(shift_pressed ? 'Z' : 'z');
                             break;
                         case SDLK_SPACE:
-                            debug_console_putchar(' ');
+                            debug_console_put_char(' ');
                             break;
                         case SDLK_BACKQUOTE:
-                            debug_console_putchar(shift_pressed ? '~' : '`');
+                            debug_console_put_char(shift_pressed ? '~' : '`');
                             break;
                         case SDLK_COMMA:
-                            debug_console_putchar(shift_pressed ? '<' : ',');
+                            debug_console_put_char(shift_pressed ? '<' : ',');
                             break;
                         case SDLK_PERIOD:
-                            debug_console_putchar(shift_pressed ? '>' : '.');
+                            debug_console_put_char(shift_pressed ? '>' : '.');
                             break;
                         case SDLK_SLASH:
-                            debug_console_putchar(shift_pressed ? '?' : '/');
+                            debug_console_put_char(shift_pressed ? '?' : '/');
                             break;
                         case SDLK_SEMICOLON:
-                            debug_console_putchar(shift_pressed ? ':' : ';');
+                            debug_console_put_char(shift_pressed ? ':' : ';');
                             break;
                         case SDLK_QUOTE:
-                            debug_console_putchar(shift_pressed ? '"' : '\'');
+                            debug_console_put_char(shift_pressed ? '"' : '\'');
                             break;
                         case SDLK_BACKSLASH:
-                            debug_console_putchar(shift_pressed ? '|' : '\\');
+                            debug_console_put_char(shift_pressed ? '|' : '\\');
                             break;
                         case SDLK_LEFTBRACKET:
-                            debug_console_putchar(shift_pressed ? '{' : '[');
+                            debug_console_put_char(shift_pressed ? '{' : '[');
                             break;
                         case SDLK_RIGHTBRACKET:
-                            debug_console_putchar(shift_pressed ? '}' : ']');
+                            debug_console_put_char(shift_pressed ? '}' : ']');
                             break;
                         case SDLK_MINUS:
-                            debug_console_putchar(shift_pressed ? '_' : '-');
+                            debug_console_put_char(shift_pressed ? '_' : '-');
                             break;
                         case SDLK_EQUALS:
-                            debug_console_putchar(shift_pressed ? '+' : '=');
+                            debug_console_put_char(shift_pressed ? '+' : '=');
                             break;
                         case SDLK_RETURN:
                             debug_console_enter();
@@ -508,7 +512,7 @@ void E64::sdl2_update_title(void)
     }
 }
 
-void E64::sdl2_wait_until_enter_released(void)
+void E64::sdl2_wait_until_enter_released()
 {
     SDL_Event event;
     bool wait = true;
@@ -522,7 +526,7 @@ void E64::sdl2_wait_until_enter_released(void)
         E64::sdl2_delay_10ms();
     }
 }
-void E64::sdl2_wait_until_f9_released(void)
+void E64::sdl2_wait_until_f9_released()
 {
     SDL_Event event;
     bool wait = true;

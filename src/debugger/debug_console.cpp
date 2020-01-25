@@ -96,7 +96,7 @@ void debug_console_add_top_row()
     }
 }
 
-void debug_console_putchar(char character)
+void debug_console_put_char(char character)
 {
     debug_console_cursor_deactivate();
     character = character & 0x7f;
@@ -121,7 +121,7 @@ void debug_console_print(const char *string_to_print)
     char *temp_char = (char *)string_to_print;
     while(*temp_char != ASCII_NULL)
     {
-        debug_console_putchar(*temp_char);
+        debug_console_put_char(*temp_char);
         temp_char++;
     }
 }
@@ -262,7 +262,6 @@ void debug_console_enter()
         console_help_string[i] = screencode_to_ascii[ (debug_console.console_character_buffer[start_of_row + i]) & 0x7f ];
     }
     console_help_string[64] = ASCII_NULL;
-    debug_console_putchar('\n');
     E64::debug_command_execute(console_help_string);
 }
 

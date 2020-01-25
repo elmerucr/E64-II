@@ -24,10 +24,11 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     token3 = strtok( NULL, " ");
     if(token0 == NULL)
     {
-        // do nothing
+        debug_console_put_char('\n');
     }
     else if( strcmp(token0, "b") == 0 )
     {
+        debug_console_put_char('\n');
         if(token1 == NULL)
         {
             unsigned int no_of_breakpoints = (unsigned int)computer.m68k_ic->debugger.breakpoints.elements();
@@ -66,15 +67,18 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else if( strcmp(token0, "bar") == 0 )
     {
+        debug_console_put_char('\n');
         debug_console_toggle_status_bar();
     }
     else if( strcmp(token0, "bc") == 0 )
     {
+        debug_console_put_char('\n');
         computer.m68k_ic->debugger.breakpoints.removeAll();
         debug_console_print("all breakpoints removed\n");
     }
     else if( strcmp(token0, "c") == 0 )
     {
+        debug_console_put_char('\n');
         E64::sdl2_wait_until_enter_released();
         computer.switch_to_running();
         // NEEDS WORK
@@ -160,16 +164,13 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         if( token1 == NULL )
         {
-            debug_command_memory_dump(computer.m68k_ic->getPC(), 8);
+            debug_command_memory_dump(computer.m68k_ic->getPC(), 1);
         }
         else
         {
             uint32_t temp_32bit;
             temp_32bit = debug_command_hex_string_to_int(token1);
-            if( token2 == NULL)
-            {
-                debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 8);
-            }
+            debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 1);
         }
     }
     else if( strcmp(token0, "r") == 0 )
@@ -186,10 +187,12 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else if( strcmp(token0, "ver") == 0 )
     {
+        debug_console_put_char('\n');
         debug_console_version();
     }
     else if( strcmp(token0, "win") == 0 )
     {
+        debug_console_put_char('\n');
         if(token1 == NULL)
         {
             E64::sdl2_reset_window_size();
@@ -210,6 +213,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else
     {
+        debug_console_put_char('\n');
         snprintf(command_help_string, 256, "error: unknown command '%s'\n", token0);
         debug_console_print(command_help_string);
     }
@@ -217,17 +221,10 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 
 void E64::debug_command_dump_cpu_status()
 {
+    debug_console_put_char('\n');
     computer.m68k_ic->dump_registers(command_help_string);
     debug_console_print(command_help_string);
-    
-    computer.m68k_ic->disassembleSR(command_help_string);
-    debug_console_print(command_help_string);
-    
-//    debug_console_print("\n\n");
-//    debug_console_print(".,");
-//    csg65ce02_dasm(computer.cpu_ic->pc, c256_string2, 256);
-//    debug_console_print(c256_string2);
-    debug_console_putchar('\n');
+    debug_console_put_char('\n');
 }
 
 //void E64::debug_command_disassemble(uint8_t number)
@@ -247,29 +244,26 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;
-        snprintf(command_help_string, 256, ":%06x", temp_address);
+        snprintf(command_help_string, 256, "\n:%06x ", temp_address);
         debug_console_print(command_help_string);
-        for(int i=0; i<16; i += 4)
+        for(int i=0; i<8; i++)
         {
-            //if((i & 3) == 0) debug_console_print(" ");
-            snprintf(command_help_string, 256, " %04x%04x", computer.mmu_ic->read_memory_16(temp_address), computer.mmu_ic->read_memory_16(temp_address+2));
+            snprintf(command_help_string, 256, "%02x ", computer.mmu_ic->read_memory_8(temp_address));
             debug_console_print(command_help_string);
-            temp_address += 4;
+            temp_address ++;
             temp_address &= RAM_SIZE - 1;
         }
-        //debug_console_print(" ");
         temp_address = address;
-        for(int i=0; i<16; i++)
+        for(int i=0; i<8; i++)
         {
-            if((i & 3) == 0) debug_console_putchar(' ');
             uint8_t temp_byte = computer.mmu_ic->read_memory_8(temp_address);
             if( temp_byte == ASCII_LF ) temp_byte = 0x80;
-            debug_console_putchar( temp_byte );
+            debug_console_put_char( temp_byte );
             temp_address++;
         }
-        address += 16;
+        address += 8;
         address &= RAM_SIZE - 1;
-        debug_console_print("\n");
+        debug_console.cursor_pos -= 32;
     }
 }
 

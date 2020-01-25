@@ -14,7 +14,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200123
+#define E64_BUILD               20200125
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             8192000     // 8MHz system

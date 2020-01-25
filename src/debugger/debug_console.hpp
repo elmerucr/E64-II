@@ -40,7 +40,7 @@ void debug_console_init();
 void debug_console_version();
 void debug_console_welcome();
 void debug_console_blit_to_debug_screen();
-void debug_console_putchar(char character);
+void debug_console_put_char(char character);
 void debug_console_print(const char *string_to_print);
 
 void debug_console_cursor_activate();

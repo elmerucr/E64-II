@@ -32,6 +32,9 @@ namespace E64
     void sdl2_toggle_fullscreen();
     void sdl2_wait_until_enter_released();
 
+    extern bool stats_in_title;
+    inline void sdl2_toggle_stats() { stats_in_title = !stats_in_title; };
+
     // audio related
     void sdl2_start_audio();
     void sdl2_stop_audio();

@@ -41,13 +41,13 @@ namespace E64
         uint16_t current_xpos;
         uint16_t current_scanline;
 
-        // overlay related things
         bool overlay_present;
-        uint32_t borders_contrast_foreground_color();
 
         void render_scanline();
         void render_border_scanline();
         void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
+        void setup_color_palettes();
+        uint32_t borders_contrast_foreground_color();
     public:
         vicv(void);
         ~vicv(void);
