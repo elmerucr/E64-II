@@ -47,22 +47,18 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         }
         else
         {
-            uint32_t temp_32bit = debug_command_hex_string_to_int(token1) & (RAM_SIZE - 1);
-            computer.m68k_ic->debugger.breakpoints.addAt(temp_32bit);
-            snprintf(command_help_string, 256, "breakpoint at $%06x added\n", temp_32bit);
-            debug_console_print(command_help_string);
-//            if( computer.cpu_ic->is_breakpoint(temp_32bit) )
-//            {
-//                snprintf(command_help_string, 256, "breakpoint at $%06x removed\n", temp_32bit);
-//                debug_console_print(command_help_string);
-//                computer.cpu_ic->remove_breakpoint(temp_32bit);
-//            }
-//            else
-//            {
-//                snprintf(command_help_string, 256, "breakpoint at $%06x added\n", temp_32bit);
-//                debug_console_print(command_help_string);
-//                computer.cpu_ic->add_breakpoint(temp_32bit);
-//            }
+            uint32_t temp_32bit;
+            if( debug_command_hex_string_to_int(token1, &temp_32bit) )
+            {
+                temp_32bit &= (RAM_SIZE - 1);
+                computer.m68k_ic->debugger.breakpoints.addAt(temp_32bit);
+                snprintf(command_help_string, 256, "breakpoint at $%06x added\n", temp_32bit);
+                debug_console_print(command_help_string);
+            }
+            else
+            {
+                debug_console_print("error: invalid address\n");
+            }
         }
     }
     else if( strcmp(token0, "bar") == 0 )
@@ -169,8 +165,14 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         else
         {
             uint32_t temp_32bit;
-            temp_32bit = debug_command_hex_string_to_int(token1);
-            debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 1);
+            if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
+            {
+                debug_console_print("\nerror: invalid address\n");
+            }
+            else
+            {
+                debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 1);
+            }
         }
     }
     else if( strcmp(token0, "r") == 0 )
@@ -183,6 +185,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //    }
     else if( strcmp(token0, "reset") == 0)
     {
+        debug_console_put_char('\n');
         computer.reset();
     }
     else if( strcmp(token0, "ver") == 0 )
@@ -267,10 +270,15 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     }
 }
 
-// hex2int
-// take a hex string and convert it to a 32bit number (max 8 hex digits)
-// from: https://stackoverflow.com/questions/10156409/convert-hex-string-char-to-int
-uint32_t E64::debug_command_hex_string_to_int(const char *temp_string)
+/*
+ * hex2int
+ * take a hex string and convert it to a 32bit number (max 8 hex digits)
+ * from: https://stackoverflow.com/questions/10156409/convert-hex-string-char-to-int
+ *
+ * This function is slightly adopted to check for true values
+ 
+ */
+bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *return_value)
 {
     uint32_t val = 0;
     while (*temp_string)
@@ -290,10 +298,16 @@ uint32_t E64::debug_command_hex_string_to_int(const char *temp_string)
         {
             byte = byte - 'A' + 10;
         }
+        else
+        {
+            // we have a problem, return false and do not write the return value
+            return false;
+        }
         // shift 4 to make space for new digit, and add the 4 bits of the new digit
-        val = (val << 4) | (byte & 0xF);
+        val = (val << 4) | (byte & 0xf);
     }
-    return val;
+    *return_value = val;
+    return true;
 }
 
 void E64::debug_command_single_step_cpu()

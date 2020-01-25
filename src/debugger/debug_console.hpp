@@ -52,9 +52,20 @@ void debug_console_insert();
 void debug_console_backspace();
 void debug_console_arrow_left();
 void debug_console_arrow_right();
+
 void debug_console_arrow_up();
+
 void debug_console_arrow_down();
-void debug_console_add_bottom_row_if_necessary();
+
+void debug_console_add_bottom_row();
+
+/*
+ * This function checks the screen output for presence of specific
+ * monitor output such as ':ff0008' at the beginning of a line. This
+ * way, it is possible to continue automatic scrolling and printing.
+ */
+bool debug_console_check_output();
+
 void debug_console_add_top_row();
 void debug_console_clear();
 

@@ -15,7 +15,13 @@ namespace E64
     void debug_command_disassemble(uint8_t number);
     void debug_command_memory_dump(uint32_t address, int rows);
     void debug_command_single_step_cpu(void);
-    uint32_t debug_command_hex_string_to_int(const char *temp_string);
+
+    /*
+     * Second argument is a pointer to an uint32_t and writes its
+     * result to it, only if no errors were found. The return value
+     * is TRUE upon success, and FALSE on error.
+     */
+    bool debug_command_hex_string_to_int(const char *temp_string, uint32_t *return_value);
 }
 
 #endif
