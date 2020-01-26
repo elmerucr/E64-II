@@ -102,6 +102,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else if( strcmp(token0, "full") == 0 )
     {
+        debug_console_put_char('\n');
         E64::sdl2_toggle_fullscreen();
     }
 //    else if( strcmp(token0, "help") == 0 )
@@ -247,7 +248,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;
-        snprintf(command_help_string, 256, "\n:%06x ", temp_address);
+        snprintf(command_help_string, 256, "\n:%06x  ", temp_address);
         debug_console_print(command_help_string);
         for(int i=0; i<8; i++)
         {
@@ -256,6 +257,9 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
             temp_address ++;
             temp_address &= RAM_SIZE - 1;
         }
+        
+        debug_console_put_char(' ');
+        
         temp_address = address;
         for(int i=0; i<8; i++)
         {
@@ -264,9 +268,21 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
             debug_console_put_char( temp_byte );
             temp_address++;
         }
+        
+        debug_console_put_char(' ');
+        debug_console_put_char(' ');
+        
+        temp_address = address;
+        for(int i=0; i<8; i++)
+        {
+            uint8_t temp_byte = computer.mmu_ic->read_memory_8(temp_address);
+            if( temp_byte == ASCII_LF ) temp_byte = 0x80;
+            debug_console_put_screencode( temp_byte );
+            temp_address++;
+        }
         address += 8;
         address &= RAM_SIZE - 1;
-        debug_console.cursor_pos -= 32;
+        debug_console.cursor_pos -= 43;
     }
 }
 
@@ -275,8 +291,8 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
  * take a hex string and convert it to a 32bit number (max 8 hex digits)
  * from: https://stackoverflow.com/questions/10156409/convert-hex-string-char-to-int
  *
- * This function is slightly adopted to check for true values
- 
+ * This function is slightly adopted to check for true values. It returns false
+ * when there's wrong input.
  */
 bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *return_value)
 {
@@ -312,8 +328,6 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
 
 void E64::debug_command_single_step_cpu()
 {
-    // NEEDS WORK
-    //computer.cpu_ic->force_next_instruction();
     computer.run(0);
     computer.TTL74LS148_ic->update_interrupt_level();
 }

@@ -34,7 +34,7 @@ extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000                           // 16mb system
-#define FPS                         50                                  // "PAL" @50Hz
+#define FPS                         25
 #define VICV_PIXELS_PER_SCANLINE    512
 #define VICV_SCANLINES              320
 #define VICV_DOT_CLOCK_SPEED        VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES*FPS

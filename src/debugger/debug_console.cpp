@@ -114,6 +114,18 @@ void debug_console_put_char(char character)
     debug_console_cursor_activate();
 }
 
+void debug_console_put_screencode(char screencode)
+{
+    debug_console_cursor_deactivate();
+    debug_console.console_character_buffer[debug_console.cursor_pos] = screencode;
+    debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
+    debug_console.console_background_color_buffer[debug_console.cursor_pos] = debug_console.current_background_color;
+    debug_console.cursor_pos++;
+    // cursor out of current screen?
+    if( debug_console.cursor_pos > 2047 ) debug_console_add_bottom_row();
+    debug_console_cursor_activate();
+}
+
 void debug_console_print(const char *string_to_print)
 {
     char *temp_char = (char *)string_to_print;
@@ -228,9 +240,9 @@ void debug_console_arrow_up()
     
     if(debug_console.cursor_pos<(debug_console.status_bar_active ? debug_console.status_bar_rows * 64 : 0))
     {
-        //debug_console.cursor_pos += 0x40;
-        debug_console_check_output();
+        char *tempo = debug_console_check_output(true);
         debug_console_add_top_row();
+        if(tempo) debug_console_print(tempo);
     }
     debug_console_cursor_activate();
 }
@@ -243,8 +255,7 @@ void debug_console_arrow_down()
     // cursor out of current screen?
     if( debug_console.cursor_pos > 2047 )
     {
-        //debug_console.cursor_pos -= 0x40;
-        debug_console_check_output();
+        debug_console_check_output(false);
         debug_console_add_bottom_row();
     }
     debug_console_cursor_activate();
@@ -349,9 +360,10 @@ void debug_console_toggle_status_bar()
     }
 }
 
-bool debug_console_check_output()
+char *debug_console_check_output(bool top_down)
 {
-    bool found_something = false;
+    char token[64];
+    char *result = nullptr;
     uint16_t start_pos = debug_console.status_bar_active ? 1024 : 0;
     
     for(int i = start_pos; i < 2048; i += 0x40)
@@ -359,8 +371,14 @@ bool debug_console_check_output()
         if(debug_console.console_character_buffer[i] == ascii_to_screencode[':'] )
         {
             printf("got something\n");
+            for(int j=0; i<64; i++)
+            {
+                token[j] = screencode_to_ascii[ (debug_console.console_character_buffer[i + j]) & 0x7f ];
+            }
+            token[63] = ASCII_NULL;
+            result = token;
+            if(top_down) break;
         }
     }
-    
-    return found_something;
+    return result;
 }

@@ -89,7 +89,7 @@ void E64::pid_delay::run()
             std::cout << "[PID Delay] system too slow?" << std::endl;
             current_delay = 5000;
         }
-        if (current_delay > 20000) current_delay = 20000;
+        if (current_delay > (1000000/FPS) ) current_delay = (1000000/FPS);
     }
 
     statistics_framecounter++;

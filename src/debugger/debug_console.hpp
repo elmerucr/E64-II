@@ -15,7 +15,7 @@ typedef struct
     uint8_t console_background_color_buffer[2048];
 
     // cursor related vars
-    int16_t    cursor_pos;
+    int16_t     cursor_pos;
     bool        cursor_pos_original_reverse;
     uint8_t     cursor_blink_time;
     uint8_t     cursor_count_down;
@@ -41,6 +41,7 @@ void debug_console_version();
 void debug_console_welcome();
 void debug_console_blit_to_debug_screen();
 void debug_console_put_char(char character);
+void debug_console_put_screencode(char screencode);
 void debug_console_print(const char *string_to_print);
 
 void debug_console_cursor_activate();
@@ -63,8 +64,13 @@ void debug_console_add_bottom_row();
  * This function checks the screen output for presence of specific
  * monitor output such as ':ff0008' at the beginning of a line. This
  * way, it is possible to continue automatic scrolling and printing.
+ *
+ * The function will return a pointer to a char token if something was
+ * found. Otherwise a NULL.
+ *
+ * If the argument is TRUE, it will look top down, if FALSE, bottom up.
  */
-bool debug_console_check_output();
+char *debug_console_check_output(bool top_down);
 
 void debug_console_add_top_row();
 void debug_console_clear();

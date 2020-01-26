@@ -64,11 +64,14 @@ int main(int argc, char **argv)
                 if(computer.vicv_ic->frame_done == true)
                 {
                     computer.vicv_ic->frame_done = false;
+                    
                     // process events and catch a possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) computer.running = false;
-                    // updates at 50Hz for cia is ok, it's connected to user input
+                    
                     computer.cia_ic->run();
+                    
                     E64::sdl2_update_screen();
+                    
                     frame_delay.run();
                 }
                 break;
