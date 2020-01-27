@@ -102,6 +102,9 @@ void debug_console_put_char(char character)
         case ASCII_LF:
             debug_console.cursor_pos = (debug_console.cursor_pos + 64) & 0xffc0;
             break;
+        case ASCII_CR:
+            debug_console.cursor_pos = debug_console.cursor_pos & 0xffc0;
+            break;
         default:
             debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[character];
             debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
@@ -233,20 +236,6 @@ void debug_console_arrow_right()
     debug_console_cursor_activate();
 }
 
-void debug_console_arrow_up()
-{
-    debug_console_cursor_deactivate();
-    debug_console.cursor_pos -= 0x40;
-    
-    if(debug_console.cursor_pos<(debug_console.status_bar_active ? debug_console.status_bar_rows * 64 : 0))
-    {
-        char *tempo = debug_console_check_output(true);
-        debug_console_add_top_row();
-        if(tempo) debug_console_print(tempo);
-    }
-    debug_console_cursor_activate();
-}
-
 void debug_console_arrow_down()
 {
     debug_console_cursor_deactivate();
@@ -255,8 +244,37 @@ void debug_console_arrow_down()
     // cursor out of current screen?
     if( debug_console.cursor_pos > 2047 )
     {
-        debug_console_check_output(false);
-        debug_console_add_bottom_row();
+        uint32_t address;
+        if( debug_console_check_output(false, &address))
+        {
+            debug_console_add_bottom_row();
+            E64::debug_command_memory_dump((address+8) & (RAM_SIZE - 1), 1);
+        }
+        else
+        {
+            debug_console_add_bottom_row();
+        }
+    }
+    debug_console_cursor_activate();
+}
+
+void debug_console_arrow_up()
+{
+    debug_console_cursor_deactivate();
+    debug_console.cursor_pos -= 0x40;
+    
+    if(debug_console.cursor_pos<(debug_console.status_bar_active ? debug_console.status_bar_rows * 64 : 0))
+    {
+        uint32_t address;
+        if( debug_console_check_output(true, &address) )
+        {
+            debug_console_add_top_row();
+            E64::debug_command_memory_dump((address-8) & (RAM_SIZE - 1), 1);
+        }
+        else
+        {
+            debug_console_add_top_row();
+        }
     }
     debug_console_cursor_activate();
 }
@@ -360,25 +378,27 @@ void debug_console_toggle_status_bar()
     }
 }
 
-char *debug_console_check_output(bool top_down)
+bool debug_console_check_output(bool top_down, uint32_t *address)
 {
-    char token[64];
-    char *result = nullptr;
+    bool something_found = false;
+    
     uint16_t start_pos = debug_console.status_bar_active ? 1024 : 0;
     
     for(int i = start_pos; i < 2048; i += 0x40)
     {
         if(debug_console.console_character_buffer[i] == ascii_to_screencode[':'] )
         {
-            printf("got something\n");
-            for(int j=0; i<64; i++)
+            something_found = true;
+            
+            char potential_address[7];
+            for(int j=0; j<6; j++)
             {
-                token[j] = screencode_to_ascii[ (debug_console.console_character_buffer[i + j]) & 0x7f ];
+                potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
             }
-            token[63] = ASCII_NULL;
-            result = token;
+            potential_address[6] = 0;
+            E64::debug_command_hex_string_to_int(potential_address, address);
             if(top_down) break;
         }
     }
-    return result;
+    return something_found;
 }

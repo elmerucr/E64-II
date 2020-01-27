@@ -62,15 +62,16 @@ void debug_console_add_bottom_row();
 
 /*
  * This function checks the screen output for presence of specific
- * monitor output such as ':ff0008' at the beginning of a line. This
- * way, it is possible to continue automatic scrolling and printing.
+ * monitor output such as ':' at the beginning of a line.
  *
- * The function will return a pointer to a char token if something was
- * found. Otherwise a NULL.
+ * The function will return a BOOL if something was
+ * found.
  *
- * If the argument is TRUE, it will look top down, if FALSE, bottom up.
+ * If the 1st argument is TRUE, it will look top down, if FALSE, bottom
+ * up. The 2nd argument is a pointer to an uint16_t in which the result
+ * will be written if something was found.
  */
-char *debug_console_check_output(bool top_down);
+bool debug_console_check_output(bool top_down, uint32_t *address);
 
 void debug_console_add_top_row();
 void debug_console_clear();

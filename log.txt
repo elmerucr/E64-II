@@ -21,7 +21,7 @@ v basic pulse working (breakpoints and continue execution with correct scanlines
 
 todo / bugs
 ===========
--
+- put_char doesn't work perfectly for several values (in monitor output ff0310 etc...)
 - currently access is granted to sdl2 to read registers etc... from cia
 - debug mode needs to its own irq connection (one of the lines)
 - make next pixel to be drawn visible in debug mode
@@ -31,6 +31,7 @@ todo / bugs
 
 2020
 ====
+2020-01-27 Debugger m command partly working (with scrolling functions)
 2020-01-21 Split E64-II completely from E64, it is a separate project
 2020-01-18 Breakpoints in Moira now work for exception handler code as well
 2020-01-15 Musashi removed, Moira implemented, breakpoints still need to be done (and a bug in Moira)

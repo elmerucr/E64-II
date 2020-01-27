@@ -14,7 +14,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200126
+#define E64_BUILD               20200127
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             8192000     // 8MHz system
@@ -34,7 +34,7 @@ extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000                           // 16mb system
-#define FPS                         25
+#define FPS                         50
 #define VICV_PIXELS_PER_SCANLINE    512
 #define VICV_SCANLINES              320
 #define VICV_DOT_CLOCK_SPEED        VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES*FPS
@@ -150,6 +150,7 @@ extern const char screencode_to_ascii[];
 #define C64_AMBER_15 0xffffbf85
 
 #define ASCII_NULL          0x00    // null
+#define ASCII_CR            0x0d    // carriage return
 #define ASCII_LF            0x0a    // linefeed
 #define ASCII_SPACE         0x20    // space
 #define ASCII_UNDERSCORE    0x5f    // _

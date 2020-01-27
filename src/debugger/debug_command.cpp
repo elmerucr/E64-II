@@ -159,6 +159,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else if( strcmp(token0, "m") == 0 )
     {
+        debug_console_put_char('\n');
         if( token1 == NULL )
         {
             debug_command_memory_dump(computer.m68k_ic->getPC(), 1);
@@ -248,7 +249,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;
-        snprintf(command_help_string, 256, "\n:%06x  ", temp_address);
+        snprintf(command_help_string, 256, "\r:%06x  ", temp_address);
         debug_console_print(command_help_string);
         for(int i=0; i<8; i++)
         {
