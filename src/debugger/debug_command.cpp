@@ -265,7 +265,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         for(int i=0; i<8; i++)
         {
             uint8_t temp_byte = computer.mmu_ic->read_memory_8(temp_address);
-            if( temp_byte == ASCII_LF ) temp_byte = 0x80;
+            if( (temp_byte == ASCII_LF) || (temp_byte == ASCII_CR) ) temp_byte = 0x80;
             debug_console_put_char( temp_byte );
             temp_address++;
         }
@@ -277,7 +277,6 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         for(int i=0; i<8; i++)
         {
             uint8_t temp_byte = computer.mmu_ic->read_memory_8(temp_address);
-            if( temp_byte == ASCII_LF ) temp_byte = 0x80;
             debug_console_put_screencode( temp_byte );
             temp_address++;
         }
