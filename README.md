@@ -4,9 +4,9 @@
 The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. Heavily inspired by the Commodore 64 and other (more advanced) personal computer systems of the era.
 
 ## Technical specifications (a work in progress):
-* Motorola 68000 CPU running at 8.192MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
+* Motorola 68000 CPU running at 5.6MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
-* A custom Video Interface Chip with a resolution of 512x320 pixels (512x256 excluding  top and bottom borders).
+* A custom Video Interface Chip with a resolution of 512x320 pixels.
 * Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz (C64 pal) for correct pitch. Emulation is achieved with the excellent [resid](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. Several registers (lo/hi from frequency, pulse width and filters) have been swapped to facilitate use with the big endian M68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
@@ -56,7 +56,7 @@ In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be fo
 * [VirtualC64](http://www.dirkwhoffmann.de/software/virtualC64.html) - A Commodore 64 on your Apple Macintosh by Dirk W. Hoffmann
 * [visual6502](http://www.visual6502.org) - Visual Transistor-level Simulation of the 6502 CPU and other chips
 ## MIT License
-Copyright (c) 2019 elmerucr
+Copyright (c) 2020 elmerucr
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
