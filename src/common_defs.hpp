@@ -14,10 +14,10 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200127
+#define E64_BUILD               20200131
 #define E64_YEAR                2020
 
-#define CPU_CLOCK_SPEED             8192000     // 8MHz system
+#define CPU_CLOCK_SPEED             5600000     // 8MHz system
 #define IO_CIA_PAGE                 0xfe03
 #define IO_VICV_PAGE                0xfe04
 #define IO_SND_PAGE                 0xfe05
@@ -34,14 +34,18 @@ extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000                           // 16mb system
+
 #define FPS                         50
 #define VICV_PIXELS_PER_SCANLINE    512
+#define VICV_PIXELS_HBLANK          128
 #define VICV_SCANLINES              320
-#define VICV_DOT_CLOCK_SPEED        VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES*FPS
-#define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/(VICV_SCANLINES*FPS))
+#define VICV_PIXELS_VBLANK          30
+
+#define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK)*FPS
+#define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/( (VICV_SCANLINES+VICV_PIXELS_VBLANK) * FPS) )
+
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
-//#define NO_OF_SIDS                  4
 #define AUDIO_BUFFER_SIZE           8192.0
 
 // E64 elmerucr colors

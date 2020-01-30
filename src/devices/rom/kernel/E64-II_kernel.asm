@@ -31,13 +31,15 @@ kernel_main
 	move.w	#$003c,TIMER_BASE+2		; load value 60 ($003c = 60bpm = 1Hz) into high and low bytes
 	ori.b	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
 	; set up timer1 interrupt
-	move.w	#$00f0,TIMER_BASE+2		; load value 240
+	move.w	#$0ff0,TIMER_BASE+2		; load value 240
 	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
 
 	; set screen colors
-	move.b	#$00,VICV_BASE			; c64 black
-	move.b	#$06,VICV_BASE+1		; c64 blue
+	move.b	#$00,VICV_BASE			; c64 black border
+	move.b	#$06,VICV_BASE+1		; c64 blue background
+	; set border size
+	move.b	#$20,VICV_BORDER_SIZE
 	; set text color
 	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
 
@@ -228,11 +230,12 @@ timer1_irq_handler
 	addq.b	#$1,(1,a0)
 	andi.b	#%00001111,(1,a0)
 	movea.l	(a7)+,a0
+	addq.b	#1,VICV_BORDER_SIZE
 	bra		timer2_check
 
 ; string data
 welcome
-	dc.b	"E64-II (C)2019 kernel version 0.1.20200115",ASCII_LF,ASCII_NULL
+	dc.b	"E64-II (C)2019 kernel version 0.1.20200130",ASCII_LF,ASCII_NULL
 
 	align 1
 	include "E64-II_kernel_tables.asm"

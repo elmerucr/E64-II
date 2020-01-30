@@ -57,6 +57,7 @@ E64::machine::~machine()
 void E64::machine::switch_to_running()
 {
     current_mode = NORMAL_MODE;
+    debug_console_cursor_deactivate();
     E64::sdl2_update_title();
     // audio starts "automatically" when buffer reaches a minimum size
 }
@@ -64,6 +65,7 @@ void E64::machine::switch_to_running()
 void E64::machine::switch_to_debug()
 {
     current_mode = DEBUG_MODE;
+    debug_console_cursor_activate();
     E64::sdl2_update_title();
     E64::sdl2_stop_audio();
 }
@@ -101,12 +103,15 @@ int E64::machine::run(uint16_t no_of_cycles)
         exit_code = CPU_BREAKPOINT;
     }
     // run cycles on vicv
-    vicv_ic->run(m68k_to_vicv->clock(processed_cycles));
+    vicv_ic->run2(m68k_to_vicv->clock(processed_cycles));
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
     // calculate no. of cycles to run on sound device & start audio if buffer large enough
     sound_ic->run(m68k_to_sid->clock(processed_cycles));
     if(E64::sdl2_get_queued_audio_size() > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
+    
+    TTL74LS148_ic->update_interrupt_level();
+    
     return exit_code;
 }
 

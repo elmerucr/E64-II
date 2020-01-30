@@ -75,9 +75,9 @@ void debug_status_bar_refresh()
         temp_pc += no_of_bytes;
     }
     
-    // vicv scanlines
-    snprintf(help_string, 256, "line: %3u\npix : %3u", computer.vicv_ic->get_current_scanline(), computer.vicv_ic->get_current_pixel() );
-    debug_status_bar_set_cursor_pos(5*64 + 54);
+    // vicv
+    snprintf(help_string, 256, "    pixel: %3u\n scanline: %3u\n   hblank: %3u\n   vblank: %3u", computer.vicv_ic->get_current_pixel(), computer.vicv_ic->get_current_scanline(), computer.vicv_ic->is_hblank() ? 1 : 0, computer.vicv_ic->is_vblank() ? 1 : 0 );
+    debug_status_bar_set_cursor_pos(3*64 + 44);
     debug_status_bar_print(help_string);
 
     // set accent colors for titles etc...
@@ -90,8 +90,8 @@ void debug_status_bar_refresh()
     snprintf(help_string, 256, " Disassembly                                                    ");
     debug_status_bar_set_cursor_pos(9*64);
     debug_status_bar_print(help_string);
-    snprintf(help_string, 256, "  vic v  ");
-    debug_status_bar_set_cursor_pos(4*64 + 54);
+    snprintf(help_string, 256, "     vic v      ");
+    debug_status_bar_set_cursor_pos(2*64 + 44);
     debug_status_bar_print(help_string);
 }
 

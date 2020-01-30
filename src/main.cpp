@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         switch(computer.current_mode)
         {
             case E64::NORMAL_MODE:
-                switch( computer.run(64) )
+                switch( computer.run(8213) )
                 {
                     case E64::NOTHING:
                         break;
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
                         computer.switch_to_debug();
                         break;
                 }
-                computer.TTL74LS148_ic->update_interrupt_level();
+                
                 // if full frame was drawn call other update functions:
                 if(computer.vicv_ic->frame_done == true)
                 {
@@ -68,6 +68,7 @@ int main(int argc, char **argv)
                     // process events and catch a possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) computer.running = false;
                     
+                    // we want to run this one only once per frame
                     computer.cia_ic->run();
                     
                     E64::sdl2_update_screen();
@@ -76,8 +77,6 @@ int main(int argc, char **argv)
                 }
                 break;
             case E64::DEBUG_MODE:
-                // 10ms is a reasonable delay
-                E64::sdl2_delay_10ms();
                 if( debug_console_cursor_flash() )
                 {
                     debug_status_bar_refresh();
@@ -85,6 +84,10 @@ int main(int argc, char **argv)
                     E64::debug_screen_update();
                     E64::sdl2_update_screen();
                 }
+                
+                // 10ms is a reasonable delay
+                E64::sdl2_delay_10ms();
+                
                 switch( E64::sdl2_process_events() )
                 {
                     case E64::QUIT_EVENT:

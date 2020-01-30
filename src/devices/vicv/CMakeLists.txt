@@ -1,1 +1,1 @@
-add_library(vicv STATIC vicv.cpp)
+add_library(vicv STATIC vicv.cpp vicv_sprite.cpp)

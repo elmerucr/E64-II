@@ -27,7 +27,6 @@ todo / bugs
 - make next pixel to be drawn visible in debug mode
 - call stack, stack tracing, former instructions log etc...
 - reentrant vicv functionality (parts of a scanline etc...), running and debug mode use the same function
-- when 0x8a is somewhere in memory, and do memdump in debug mode, a newline is put by debugger
 
 2020
 ====

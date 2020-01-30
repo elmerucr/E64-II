@@ -32,10 +32,13 @@ void E64::vicv::reset()
     
     frame_done = false;
 
-    current_dot = 0;
-    current_xpos = 0;
-    current_scanline = current_dot >> 9;
+    cycle_clock = dot_clock = 0;
+    current_xpos = dot_clock & 0b0000000111111111;
+    current_scanline = dot_clock >> 9;
 
+    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) screen_buffer_0[i] = screen_buffer_1[i] = 0xff202020;
+    for(int i=0; i<256; i++) registers[i] = 0;
+    
     frontbuffer = screen_buffer_1;
     backbuffer  = screen_buffer_0;
     
@@ -45,8 +48,7 @@ void E64::vicv::reset()
 /* Note: each cycle on vicv results in one pixel (or dot) to be
  * produced.
  */
-void E64::vicv::run(uint32_t number_of_cycles)
-{
+void E64::vicv::run(uint32_t number_of_cycles) {
     current_xpos = current_xpos + number_of_cycles;
 
     /* It looks like an <if> statement could have been used below.
@@ -76,7 +78,61 @@ void E64::vicv::run(uint32_t number_of_cycles)
     }
 }
 
-inline void E64::vicv::render_scanline() {
+#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
+//#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+
+#define IS_HBLANK       (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
+#define IS_VBLANK       (Y_POS > (VICV_SCANLINES-1))
+#define IS_BLANK        (IS_HBLANK || IS_VBLANK)
+#define IS_BORDER       (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > (319-registers[VICV_REG_BORDER_SIZE]))
+#define IS_START_LINE   (!X_POS)
+
+void E64::vicv::run2(uint32_t number_of_cycles)
+{
+    while(number_of_cycles > 0)
+    {
+        if(IS_BLANK)
+        {
+            // do nothing for now
+        }
+        else if(IS_BORDER)
+        {
+            backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
+            dot_clock++;
+        }
+        else
+        {
+            // draw background color
+            backbuffer[dot_clock] = color_palette[registers[VICV_REG_BKG]];
+            
+            
+            // if start of new row, get internal stuff vicv organized
+            if(IS_START_LINE)
+            {
+                // which sprites are visible on this scanline?
+            }
+            dot_clock++;
+        }
+        
+        cycle_clock++;
+        
+        if(cycle_clock == (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK) )
+        {
+            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+            swap_buffers();
+            cycle_clock = dot_clock = 0;
+            frame_done = true;
+        }
+        number_of_cycles--;
+    }
+}
+
+bool E64::vicv::is_hblank() { return IS_HBLANK; }
+bool E64::vicv::is_vblank() { return IS_VBLANK; }
+
+inline void E64::vicv::render_scanline()
+{
     // 1st index in screen buffer to be used for display
     int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
     // get the current textrow, divide by 8
@@ -153,6 +209,13 @@ inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
         base = (base + VICV_PIXELS_PER_SCANLINE) % (VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
     }
 }
+
+// OLD
+//uint16_t E64::vicv::get_current_scanline() { return current_scanline; }
+//uint16_t E64::vicv::get_current_pixel() { return current_xpos; }
+
+uint16_t E64::vicv::get_current_scanline() { return Y_POS; }
+uint16_t E64::vicv::get_current_pixel() { return X_POS; }
 
 void E64::vicv::setup_color_palettes()
 {

@@ -25,6 +25,7 @@ TIMER_BASE	equ $fe0600
 VICV_BASE	equ	$fe0400 	; vicv base register
 VICV_TXT	equ VICV_BASE+$02
 VICV_COL	equ VICV_BASE+$06
+VICV_BORDER_SIZE	equ VICV_BASE+$0a
 
 ; sound
 SOUND_BASE	equ $fe0500	; sound base register

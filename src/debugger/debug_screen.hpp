@@ -13,7 +13,7 @@
 
 namespace E64
 {
-    void debug_screen_update(void);
+    void debug_screen_update();
     void debug_screen_render_scanline(int line_number);
 }
 

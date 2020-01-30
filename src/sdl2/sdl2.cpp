@@ -83,7 +83,7 @@ void E64::sdl2_init()
     // create window - title will be set later by function E64::sdl2_update_title()
     context0.window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
     // create renderer and link it to window
-    context0.renderer = SDL_CreateRenderer(context0.window, -1, SDL_RENDERER_ACCELERATED);
+    context0.renderer = SDL_CreateRenderer(context0.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     // create a texture that is able to refresh very frequently
     context0.texture = SDL_CreateTexture(context0.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
     

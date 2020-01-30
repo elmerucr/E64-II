@@ -232,18 +232,6 @@ void E64::debug_command_dump_cpu_status()
     debug_console_put_char('\n');
 }
 
-//void E64::debug_command_disassemble(uint8_t number)
-//{
-//    uint16_t temp_pc = computer.cpu_ic->pc;
-//    for(int i = 0; i<number; i++)
-//    {
-//        debug_console_print(".,");
-//        temp_pc += csg65ce02_dasm(temp_pc, c256_string2, 256);
-//        debug_console_print(c256_string2);
-//        debug_console_putchar('\n');
-//    }
-//}
-
 void E64::debug_command_memory_dump(uint32_t address, int rows)
 {
     for(int i=0; i<rows; i++ )
