@@ -1,7 +1,7 @@
 //  vicv.cpp
 //  E64
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2020 elmerucr. All rights reserved.
 
 #include <cstdio>
 
@@ -99,6 +99,7 @@ void E64::vicv::run2(uint32_t number_of_cycles)
         else if(IS_BORDER)
         {
             backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
+            // only increase dot_clock if we were in visible area
             dot_clock++;
         }
         else
@@ -106,15 +107,18 @@ void E64::vicv::run2(uint32_t number_of_cycles)
             // draw background color
             backbuffer[dot_clock] = color_palette[registers[VICV_REG_BKG]];
             
+            if(sprites[0].render_pixel(X_POS, Y_POS)) backbuffer[dot_clock] = C64_LIGHTBLUE;
             
             // if start of new row, get internal stuff vicv organized
             if(IS_START_LINE)
             {
                 // which sprites are visible on this scanline?
             }
+            // only increase dot_clock if we were in visible area
             dot_clock++;
         }
         
+        // cycle clock is always increased
         cycle_clock++;
         
         if(cycle_clock == (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK) )

@@ -18,12 +18,19 @@ enum sprite_mode {
 class sprite {
 private:
     enum sprite_mode mode;
-    uint8_t width;              // only bit 0-2 are relevant (0-7
-    uint8_t height;
+    uint16_t width;              // only bit 0-2 are relevant
+    uint16_t height;
     int16_t x_position;
     int16_t y_position;
 public:
-    uint32_t render_pixel();
+    sprite();
+    
+    /*
+     * This function takes the values of the current dot being drawn.
+     * The sprite logic (knowing its own coordinates) will decide if
+     * and what color pixel to draw.
+     */
+    bool render_pixel(int16_t x, int16_t y);
 };
 
 }

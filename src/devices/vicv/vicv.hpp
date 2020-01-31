@@ -1,7 +1,7 @@
 //  vicv.hpp
 //  E64
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
 #include "vicv_sprite.hpp"
