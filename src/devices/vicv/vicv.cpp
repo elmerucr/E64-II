@@ -104,6 +104,13 @@ void E64::vicv::run2(uint32_t number_of_cycles)
         }
         else
         {
+            // did we reach the first pixel of a new line
+            if(!X_POS)
+            {
+                // determine which sprites are present in this line and their local line to be drawn
+                //sprites[0].
+            }
+            
             // draw background color
             backbuffer[dot_clock] = color_palette[registers[VICV_REG_BKG]];
             

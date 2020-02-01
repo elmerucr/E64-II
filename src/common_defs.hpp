@@ -14,10 +14,10 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200131
+#define E64_BUILD               20200201
 #define E64_YEAR                2020
 
-#define CPU_CLOCK_SPEED             5600000     // 8MHz system
+#define CPU_CLOCK_SPEED             5600000
 #define IO_CIA_PAGE                 0xfe03
 #define IO_VICV_PAGE                0xfe04
 #define IO_SND_PAGE                 0xfe05

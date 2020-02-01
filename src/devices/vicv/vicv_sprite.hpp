@@ -18,12 +18,21 @@ enum sprite_mode {
 class sprite {
 private:
     enum sprite_mode mode;
-    uint16_t width;              // only bit 0-2 are relevant
-    uint16_t height;
+    uint16_t width_mask;
+    uint16_t height_mask;
     int16_t x_position;
     int16_t y_position;
 public:
     sprite();
+    
+    /*
+     * Width and height are set in an exponential way.
+     * 2^width or 2^height will be the result (in no. of chars).
+     * The argument will be truncated to 3 bits before any calculation.
+     * Minimum size = 2^0 = 1 char (8 pix) OR 2^7 = 128 chars (1024 pix)
+     */
+    void set_width(uint8_t width);
+    void set_height(uint8_t height);
     
     /*
      * This function takes the values of the current dot being drawn.
