@@ -13,6 +13,22 @@ E64::sprite::sprite()
     y_position = 64;
 }
 
+uint8_t E64::sprite::read(uint8_t address)
+{
+    switch(address & 0b00001111)
+    {
+        case SPRITE_REG_WIDTH:
+            
+            break;
+        case SPRITE_REG_HEIGHT:
+            //
+            break;
+    }
+    return registers[address & 0b00001111];
+}
+
+void    write(uint8_t address, uint8_t byte);
+
 void E64::sprite::set_width(uint8_t width)
 {
     switch(width & 0b00000111)
