@@ -103,7 +103,7 @@ int E64::machine::run(uint16_t no_of_cycles)
         exit_code = CPU_BREAKPOINT;
     }
     // run cycles on vicv
-    vicv_ic->run2(m68k_to_vicv->clock(processed_cycles));
+    vicv_ic->run(m68k_to_vicv->clock(processed_cycles));
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
     // calculate no. of cycles to run on sound device & start audio if buffer large enough

@@ -4,7 +4,7 @@
 //  Copyright © 2017-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
-#include "vicv_sprite.hpp"
+#include "vicv_surface.hpp"
 
 #ifndef vicv_hpp
 #define vicv_hpp
@@ -26,8 +26,8 @@ private:
     // this chip contains 256 registers (and are mapped to a specific page)
     uint8_t registers[256];
     
-    // 16 sprites
-    sprite sprites[16];
+    // 16 surfaces
+    surface surfaces[16];
     
     /*
      * these are "internal" framebuffers for double buffering

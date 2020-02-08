@@ -92,6 +92,8 @@ void E64::vicv::run2(uint32_t number_of_cycles)
 {
     while(number_of_cycles > 0)
     {
+        uint8_t current_surface = 0;
+        
         if(IS_BLANK)
         {
             // do nothing for now
@@ -104,23 +106,41 @@ void E64::vicv::run2(uint32_t number_of_cycles)
         }
         else
         {
-            // did we reach the first pixel of a new line
-            if(!X_POS)
-            {
-                // determine which sprites are present in this line and their local line to be drawn
-                //sprites[0].
-            }
+//            // did we reach the first pixel of a new line
+//            if(IS_START_LINE)
+//            {
+//                // determine which sprites are present in this line and their local line to be drawn
+//                //sprites[0].
+//            }
             
             // draw background color
             backbuffer[dot_clock] = color_palette[registers[VICV_REG_BKG]];
             
-            if(sprites[0].render_pixel(X_POS, Y_POS)) backbuffer[dot_clock] = C64_LIGHTBLUE;
-            
-            // if start of new row, get internal stuff vicv organized
-            if(IS_START_LINE)
+            while( current_surface < 16 )
             {
-                // which sprites are visible on this scanline?
+                if(surfaces[current_surface].render_pixel(X_POS, Y_POS))
+                {
+                    backbuffer[dot_clock] = C64_LIGHTBLUE;
+                    
+                    goto quick_exit;
+                }
+                current_surface++;
             }
+            
+//            for(int i=0; i<16; i++)
+//            {
+//                if(surfaces[i].render_pixel(X_POS, Y_POS))
+//                {
+//                    backbuffer[dot_clock] = C64_LIGHTBLUE;
+//                    goto finish_loop;
+//                }
+//                if(surfaces[i].registers[SURFACE_REG_FLAGS] & SURFACE_BACKGROUND)
+//                {
+//                    // draw it
+//                }
+//            }
+            quick_exit:
+            
             // only increase dot_clock if we were in visible area
             dot_clock++;
         }

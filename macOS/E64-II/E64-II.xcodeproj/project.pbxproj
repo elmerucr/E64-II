@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4667E6B523E1C7EF00CC9017 /* vicv_sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4667E6B323E1C7EF00CC9017 /* vicv_sprite.cpp */; };
+		4667E6B523E1C7EF00CC9017 /* vicv_surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4667E6B323E1C7EF00CC9017 /* vicv_surface.cpp */; };
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
 		4691C77C23D7B23C00E9E78D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */; };
 		4691C78823D7B28600E9E78D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C78723D7B28600E9E78D /* main.cpp */; };
@@ -67,8 +67,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4667E6B323E1C7EF00CC9017 /* vicv_sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vicv_sprite.cpp; path = ../../../src/devices/vicv/vicv_sprite.cpp; sourceTree = "<group>"; };
-		4667E6B423E1C7EF00CC9017 /* vicv_sprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vicv_sprite.hpp; path = ../../../src/devices/vicv/vicv_sprite.hpp; sourceTree = "<group>"; };
+		4667E6B323E1C7EF00CC9017 /* vicv_surface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vicv_surface.cpp; path = ../../../src/devices/vicv/vicv_surface.cpp; sourceTree = "<group>"; };
+		4667E6B423E1C7EF00CC9017 /* vicv_surface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vicv_surface.hpp; path = ../../../src/devices/vicv/vicv_surface.hpp; sourceTree = "<group>"; };
 		4691C77123D7B23A00E9E78D /* E64-II.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "E64-II.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4691C77823D7B23C00E9E78D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -246,8 +246,8 @@
 			children = (
 				4691C79423D7B34700E9E78D /* vicv.hpp */,
 				4691C79523D7B34700E9E78D /* vicv.cpp */,
-				4667E6B423E1C7EF00CC9017 /* vicv_sprite.hpp */,
-				4667E6B323E1C7EF00CC9017 /* vicv_sprite.cpp */,
+				4667E6B423E1C7EF00CC9017 /* vicv_surface.hpp */,
+				4667E6B323E1C7EF00CC9017 /* vicv_surface.cpp */,
 			);
 			name = vicv;
 			sourceTree = "<group>";
@@ -495,7 +495,7 @@
 				4691C7F923D7B5F200E9E78D /* filter.cc in Sources */,
 				4691C7A123D7B36C00E9E78D /* debug_screen.cpp in Sources */,
 				4691C7F723D7B5F200E9E78D /* wave8580__ST.cc in Sources */,
-				4667E6B523E1C7EF00CC9017 /* vicv_sprite.cpp in Sources */,
+				4667E6B523E1C7EF00CC9017 /* vicv_surface.cpp in Sources */,
 				4691C7B323D7B40600E9E78D /* common_defs.cpp in Sources */,
 				4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,

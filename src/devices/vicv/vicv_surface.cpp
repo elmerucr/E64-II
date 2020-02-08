@@ -1,11 +1,11 @@
-//  vicv_sprite.cpp
+//  vicv_surface.cpp
 //  E64
 //
 //  Copyright © 2020 elmerucr. All rights reserved.
 
-#include "vicv_sprite.hpp"
+#include "vicv_surface.hpp"
 
-E64::sprite::sprite()
+E64::surface::surface()
 {
     set_width(5);
     set_height(2);
@@ -13,14 +13,14 @@ E64::sprite::sprite()
     y_position = 64;
 }
 
-uint8_t E64::sprite::read(uint8_t address)
+uint8_t E64::surface::read(uint8_t address)
 {
     switch(address & 0b00001111)
     {
-        case SPRITE_REG_WIDTH:
+        case SURFACE_REG_WIDTH:
             
             break;
-        case SPRITE_REG_HEIGHT:
+        case SURFACE_REG_HEIGHT:
             //
             break;
     }
@@ -29,7 +29,7 @@ uint8_t E64::sprite::read(uint8_t address)
 
 void    write(uint8_t address, uint8_t byte);
 
-void E64::sprite::set_width(uint8_t width)
+void E64::surface::set_width(uint8_t width)
 {
     switch(width & 0b00000111)
     {
@@ -44,7 +44,7 @@ void E64::sprite::set_width(uint8_t width)
     }
 }
 
-void E64::sprite::set_height(uint8_t height)
+void E64::surface::set_height(uint8_t height)
 {
     switch(height & 0b00000111)
     {
@@ -61,11 +61,11 @@ void E64::sprite::set_height(uint8_t height)
 
 #define X_RELATIVE  (x - x_position)
 #define Y_RELATIVE  (y - y_position)
-#define X_IN_SPRITE ((width_mask & X_RELATIVE) == 0)
-#define Y_IN_SPRITE ((height_mask & Y_RELATIVE) == 0)
+#define X_IN_SURFACE ((width_mask & X_RELATIVE) == 0)
+#define Y_IN_SURFACE ((height_mask & Y_RELATIVE) == 0)
 
-bool E64::sprite::render_pixel(int16_t x, int16_t y)
+bool E64::surface::render_pixel(int16_t x, int16_t y)
 {
-    if( X_IN_SPRITE && Y_IN_SPRITE ) return true;
+    if( X_IN_SURFACE && Y_IN_SURFACE ) return true;
     return false;
 }
