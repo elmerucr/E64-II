@@ -50,6 +50,7 @@
 		4691C80F23D7B70500E9E78D /* kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C80E23D7B70500E9E78D /* kernel.cpp */; };
 		4691C81223D7B74300E9E78D /* patched_char_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C81123D7B74300E9E78D /* patched_char_rom.cpp */; };
 		4691C81423D7B80B00E9E78D /* log.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4691C81323D7B80B00E9E78D /* log.txt */; };
+		46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46B4480A23EF3AB30000DAB1 /* blitter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -154,6 +155,8 @@
 		4691C80E23D7B70500E9E78D /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kernel.cpp; path = ../../../src/devices/rom/kernel/kernel.cpp; sourceTree = "<group>"; };
 		4691C81123D7B74300E9E78D /* patched_char_rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = patched_char_rom.cpp; path = ../../../src/devices/rom/char_rom/patched_char_rom.cpp; sourceTree = "<group>"; };
 		4691C81323D7B80B00E9E78D /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = log.txt; path = ../../../log.txt; sourceTree = "<group>"; };
+		46B4480923EF3AB20000DAB1 /* blitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = blitter.hpp; path = ../../../src/devices/vicv/blitter.hpp; sourceTree = "<group>"; };
+		46B4480A23EF3AB30000DAB1 /* blitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = blitter.cpp; path = ../../../src/devices/vicv/blitter.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +247,8 @@
 		4691C79323D7B32D00E9E78D /* vicv */ = {
 			isa = PBXGroup;
 			children = (
+				46B4480923EF3AB20000DAB1 /* blitter.hpp */,
+				46B4480A23EF3AB30000DAB1 /* blitter.cpp */,
 				4691C79423D7B34700E9E78D /* vicv.hpp */,
 				4691C79523D7B34700E9E78D /* vicv.cpp */,
 				4667E6B423E1C7EF00CC9017 /* vicv_surface.hpp */,
@@ -496,6 +501,7 @@
 				4691C7A123D7B36C00E9E78D /* debug_screen.cpp in Sources */,
 				4691C7F723D7B5F200E9E78D /* wave8580__ST.cc in Sources */,
 				4667E6B523E1C7EF00CC9017 /* vicv_surface.cpp in Sources */,
+				46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */,
 				4691C7B323D7B40600E9E78D /* common_defs.cpp in Sources */,
 				4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,

@@ -36,11 +36,11 @@ void E64::vicv::reset()
     current_xpos = dot_clock & 0b0000000111111111;
     current_scanline = dot_clock >> 9;
 
-    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) screen_buffer_0[i] = screen_buffer_1[i] = 0xff202020;
-    for(int i=0; i<256; i++) registers[i] = 0;
-    
     frontbuffer = screen_buffer_1;
     backbuffer  = screen_buffer_0;
+    
+    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) screen_buffer_0[i] = screen_buffer_1[i] = 0xff202020;
+    for(int i=0; i<256; i++) registers[i] = 0;
     
     setup_color_palettes();
 }

@@ -29,10 +29,9 @@ private:
     // 16 surfaces
     surface surfaces[16];
     
-    /*
-     * these are "internal" framebuffers for double buffering
-     * we need two buffers as the calls for refreshing the screen will be asynchronous
-     * to the outside world only front_buffer and back_buffer are known
+    /* These are "internal" framebuffers for double buffering. We need
+     * two buffers as the calls for refreshing the screen will be asynchronous.
+     * To the outside world only front_buffer and back_buffer are known.
      */
     uint32_t *screen_buffer_0;
     uint32_t *screen_buffer_1;

@@ -37,9 +37,9 @@ extern const char screencode_to_ascii[];
 
 #define FPS                         50
 #define VICV_PIXELS_PER_SCANLINE    512
-#define VICV_PIXELS_HBLANK          128
+#define VICV_PIXELS_HBLANK          0 // 128
 #define VICV_SCANLINES              320
-#define VICV_PIXELS_VBLANK          30
+#define VICV_PIXELS_VBLANK          0  // 30
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK)*FPS
 #define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/( (VICV_SCANLINES+VICV_PIXELS_VBLANK) * FPS) )
