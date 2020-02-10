@@ -24,6 +24,8 @@ E64::machine::machine()
     
     vicv_ic = new vicv();
     
+    blitter_ic = new blitter();
+    
     sound_ic = new sound(true);
     
     cia_ic = new cia();
@@ -33,6 +35,7 @@ E64::machine::machine()
     
     // init frequency dividers (make sure the right amount of cycles will run on different ic's)
     m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
+    m68k_to_blitter = new frequency_divider(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
     m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
     m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
     
@@ -43,10 +46,12 @@ E64::machine::~machine()
 {
     delete m68k_to_timer;
     delete m68k_to_sid;
+    delete m68k_to_blitter;
     delete m68k_to_vicv;
     
     delete cia_ic;
     delete sound_ic;
+    delete blitter_ic;
     delete vicv_ic;
     delete timer_ic;
     delete TTL74LS148_ic;
@@ -104,6 +109,8 @@ int E64::machine::run(uint16_t no_of_cycles)
     }
     // run cycles on vicv
     vicv_ic->run(m68k_to_vicv->clock(processed_cycles));
+    // run cycles on blitter
+    blitter_ic->run(m68k_to_blitter->clock(processed_cycles));
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
     // calculate no. of cycles to run on sound device & start audio if buffer large enough

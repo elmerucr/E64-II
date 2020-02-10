@@ -1,9 +1,9 @@
-//  vicv_surface.cpp
+//  surface.cpp
 //  E64
 //
 //  Copyright © 2020 elmerucr. All rights reserved.
 
-#include "vicv_surface.hpp"
+#include "surface.hpp"
 
 E64::surface::surface()
 {

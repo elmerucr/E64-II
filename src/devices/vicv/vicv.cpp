@@ -10,25 +10,30 @@
 
 E64::vicv::vicv()
 {
-    screen_buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
-    screen_buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+    host_screen_buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+    host_screen_buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     color_palette   = new uint32_t[256];
     overlay_present = false;
+    
+    framebuffer0 = (uint32_t *)&computer.mmu_ic->ram[0x00e00000];
+    framebuffer1 = (uint32_t *)&computer.mmu_ic->ram[0x00f00000];
 }
 
 E64::vicv::~vicv()
 {
     delete [] color_palette;
-    delete [] screen_buffer_1;
-    delete [] screen_buffer_0;
-    screen_buffer_0 = nullptr;
-    screen_buffer_1 = nullptr;
+    delete [] host_screen_buffer_1;
+    delete [] host_screen_buffer_0;
+    host_screen_buffer_0 = nullptr;
+    host_screen_buffer_1 = nullptr;
     color_palette = nullptr;
 }
 
 void E64::vicv::reset()
 {
-    irq_line = true;
+    hblank_irq = true;
+    vblank_irq = true;
+    raster_irq = true;
     
     frame_done = false;
 
@@ -36,19 +41,62 @@ void E64::vicv::reset()
     current_xpos = dot_clock & 0b0000000111111111;
     current_scanline = dot_clock >> 9;
 
-    frontbuffer = screen_buffer_1;
-    backbuffer  = screen_buffer_0;
+    host_frontbuffer = host_screen_buffer_1;
+    host_backbuffer  = host_screen_buffer_0;
     
-    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) screen_buffer_0[i] = screen_buffer_1[i] = 0xff202020;
+    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) host_screen_buffer_0[i] = host_screen_buffer_1[i] = 0xff202020;
     for(int i=0; i<256; i++) registers[i] = 0;
     
     setup_color_palettes();
 }
 
+#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
+//#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+
+//#define IS_HBLANK       (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
+#define HBLANK          (X_POS & 0xfffffe00)
+#define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
+#define BLANK           (HBLANK || VBLANK)
+#define HBORDER         (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > (319-registers[VICV_REG_BORDER_SIZE]))
+
+void E64::vicv::run(uint32_t number_of_cycles)
+{
+    while(number_of_cycles > 0)
+    {
+        if(!BLANK)
+        {
+            host_backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
+            
+            if(HBORDER) host_backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
+            
+            dot_clock++;
+        }
+        
+        cycle_clock++;
+        
+        if(cycle_clock == (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK) )
+        {
+            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+            swap_buffers();
+            cycle_clock = dot_clock = 0;
+            frame_done = true;
+        }
+        number_of_cycles--;
+    }
+}
+
+
+
+bool E64::vicv::is_hblank() { return HBLANK; }
+bool E64::vicv::is_vblank() { return VBLANK; }
+
+
+
 /* Note: each cycle on vicv results in one pixel (or dot) to be
  * produced.
  */
-void E64::vicv::run(uint32_t number_of_cycles) {
+void E64::vicv::run_old(uint32_t number_of_cycles) {
     current_xpos = current_xpos + number_of_cycles;
 
     /* It looks like an <if> statement could have been used below.
@@ -77,90 +125,6 @@ void E64::vicv::run(uint32_t number_of_cycles) {
         current_xpos -= VICV_PIXELS_PER_SCANLINE;
     }
 }
-
-#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
-#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
-//#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
-
-#define IS_HBLANK       (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
-#define IS_VBLANK       (Y_POS > (VICV_SCANLINES-1))
-#define IS_BLANK        (IS_HBLANK || IS_VBLANK)
-#define IS_BORDER       (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > (319-registers[VICV_REG_BORDER_SIZE]))
-#define IS_START_LINE   (!X_POS)
-
-void E64::vicv::run2(uint32_t number_of_cycles)
-{
-    while(number_of_cycles > 0)
-    {
-        uint8_t current_surface = 0;
-        
-        if(IS_BLANK)
-        {
-            // do nothing for now
-        }
-        else if(IS_BORDER)
-        {
-            backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
-            // only increase dot_clock if we were in visible area
-            dot_clock++;
-        }
-        else
-        {
-//            // did we reach the first pixel of a new line
-//            if(IS_START_LINE)
-//            {
-//                // determine which sprites are present in this line and their local line to be drawn
-//                //sprites[0].
-//            }
-            
-            // draw background color
-            backbuffer[dot_clock] = color_palette[registers[VICV_REG_BKG]];
-            
-            while( current_surface < 16 )
-            {
-                if(surfaces[current_surface].render_pixel(X_POS, Y_POS))
-                {
-                    backbuffer[dot_clock] = C64_LIGHTBLUE;
-                    
-                    goto quick_exit;
-                }
-                current_surface++;
-            }
-            
-//            for(int i=0; i<16; i++)
-//            {
-//                if(surfaces[i].render_pixel(X_POS, Y_POS))
-//                {
-//                    backbuffer[dot_clock] = C64_LIGHTBLUE;
-//                    goto finish_loop;
-//                }
-//                if(surfaces[i].registers[SURFACE_REG_FLAGS] & SURFACE_BACKGROUND)
-//                {
-//                    // draw it
-//                }
-//            }
-            quick_exit:
-            
-            // only increase dot_clock if we were in visible area
-            dot_clock++;
-        }
-        
-        // cycle clock is always increased
-        cycle_clock++;
-        
-        if(cycle_clock == (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK) )
-        {
-            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-            swap_buffers();
-            cycle_clock = dot_clock = 0;
-            frame_done = true;
-        }
-        number_of_cycles--;
-    }
-}
-
-bool E64::vicv::is_hblank() { return IS_HBLANK; }
-bool E64::vicv::is_vblank() { return IS_VBLANK; }
 
 inline void E64::vicv::render_scanline()
 {
@@ -193,7 +157,7 @@ inline void E64::vicv::render_scanline()
             // get byte information from char_rom
             eight_pixels = patched_char_rom[(current_char<<3) | currentCharacterLine];
         }
-        backbuffer[base | x] = (eight_pixels & 0x80) ? current_char_color : background_color;
+        host_backbuffer[base | x] = (eight_pixels & 0x80) ? current_char_color : background_color;
         // shift all bits in internal byte 1 place to the left
         eight_pixels = eight_pixels << 1;
     }
@@ -205,7 +169,7 @@ inline void E64::vicv::render_border_scanline()
     uint32_t background_color = color_palette[registers[VICV_REG_BOR]];
     for(int x = 0; x < VICV_PIXELS_PER_SCANLINE; x++)
     {
-        backbuffer[base | x] = background_color;
+        host_backbuffer[base | x] = background_color;
     }
 }
 
@@ -229,7 +193,7 @@ inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
                 eight_pixels = patched_char_rom[((ascii_to_screencode[*temp_text]) * 8) + y];
             }
 
-            backbuffer[base + x] = (eight_pixels & 0x80) ? contrast_color : background_color;
+            host_backbuffer[base + x] = (eight_pixels & 0x80) ? contrast_color : background_color;
             
             eight_pixels = eight_pixels << 1;
             x++;

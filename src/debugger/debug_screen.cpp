@@ -33,7 +33,7 @@ void E64::debug_screen_update()
     }
     for(int i=0; i<VICV_PIXELS_PER_SCANLINE*64; i++)
     {
-        debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + i] = computer.vicv_ic->backbuffer[i + (VICV_PIXELS_PER_SCANLINE*scanline_normalized)];
+        debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + i] = computer.vicv_ic->host_backbuffer[i + (VICV_PIXELS_PER_SCANLINE*scanline_normalized)];
     }
 }
 

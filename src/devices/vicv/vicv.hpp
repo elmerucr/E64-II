@@ -4,7 +4,7 @@
 //  Copyright © 2017-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
-#include "vicv_surface.hpp"
+#include <cstring>
 
 #ifndef vicv_hpp
 #define vicv_hpp
@@ -13,9 +13,9 @@
 #define VICV_REG_BOR            0x00    // reg00 - Border color register
 #define VICV_REG_BKG            0x01    // reg01 - Background color register
 // reg02-05 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
-#define VICV_REG_TXT            0x02    // reg02 - Textscreen pointer
+#define VICV_REG_TXT            0x02
 // reg06-09 combined are a 32 bit pointer for the location of the default color screen (2k), big endian
-#define VICV_REG_COL            0x06    // reg06 - Colorscreen pointer
+#define VICV_REG_COL            0x06
 #define VICV_REG_BORDER_SIZE    0x0a    // a byte telling the size of the horizontal border
 
 namespace E64 {
@@ -26,22 +26,24 @@ private:
     // this chip contains 256 registers (and are mapped to a specific page)
     uint8_t registers[256];
     
-    // 16 surfaces
-    surface surfaces[16];
-    
-    /* These are "internal" framebuffers for double buffering. We need
+    /* These are host framebuffers for double buffering. We need
      * two buffers as the calls for refreshing the screen will be asynchronous.
-     * To the outside world only front_buffer and back_buffer are known.
+     * To the outside world only host_front_buffer and host_back_buffer are known.
      */
-    uint32_t *screen_buffer_0;
-    uint32_t *screen_buffer_1;
+    uint32_t *host_screen_buffer_0;
+    uint32_t *host_screen_buffer_1;
 
     inline void swap_buffers()
     {
-        uint32_t *temp = frontbuffer;
-        frontbuffer = backbuffer;
-        backbuffer = temp;
+        uint32_t *temp = host_frontbuffer;
+        host_frontbuffer = host_backbuffer;
+        host_backbuffer = temp;
     }
+    
+    // framebuffer pointers of the virtual machine
+    uint32_t *framebuffer0;
+    uint32_t *framebuffer1;
+    
 
     // internal stuff
     uint32_t cycle_clock;
@@ -60,12 +62,24 @@ public:
     vicv(void);
     ~vicv(void);
     
-    bool irq_line;
+    bool hblank_irq;
+    bool vblank_irq;
+    bool raster_irq;
 
     // pointer to the buffer that currently can be shown
-    uint32_t *frontbuffer;
+    uint32_t *host_frontbuffer;
     // pointer to the buffer that's currently being written to
-    uint32_t *backbuffer;
+    uint32_t *host_backbuffer;
+    
+    inline void clear_framebuffer0()
+    {
+        memset(framebuffer0, 0x00, (640*1024));
+    }
+    
+    inline void clear_framebuffer1()
+    {
+        memset(framebuffer1, 0x00, (640*1024));
+    }
 
     // move this member to private again????   !!!!
     uint32_t *color_palette;
@@ -76,9 +90,9 @@ public:
     void reset();
 
     // run cycles on this chip
-    void run(uint32_t number_of_cycles);
+    void run_old(uint32_t number_of_cycles);
     // experimental version
-    void run2(uint32_t number_of_dots);
+    void run(uint32_t number_of_dots);
 
     uint16_t    get_current_scanline();
     uint16_t    get_current_pixel();

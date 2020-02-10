@@ -11,7 +11,8 @@ namespace E64
 
 class blitter
 {
-	//
+public:
+    void run(int no_of_cycles);
 };
 
 }

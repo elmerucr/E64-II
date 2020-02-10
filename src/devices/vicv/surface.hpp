@@ -1,10 +1,10 @@
-//  vicv_surface.hpp
+//  surface.hpp
 //  E64
 //
 //  Copyright © 2020 elmerucr. All rights reserved.
 
-#ifndef VICV_SURFACE_HPP
-#define VICV_SURFACE_HPP
+#ifndef SURFACE_HPP
+#define SURFACE_HPP
 
 #include <cstdint>
 
@@ -100,4 +100,4 @@ public:
 
 }
 
-#endif // VICV_SURFACE_HPP
+#endif // SURFACE_HPP

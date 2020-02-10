@@ -14,6 +14,7 @@
 #include "timer.hpp"
 #include "TTL74LS148.hpp"
 #include "vicv.hpp"
+#include "blitter.hpp"
 
 namespace E64
 {
@@ -33,6 +34,7 @@ namespace E64
     {
     private:
         frequency_divider *m68k_to_vicv;
+        frequency_divider *m68k_to_blitter;
         frequency_divider *m68k_to_sid;
         frequency_divider *m68k_to_timer;
         bool debugger_irq_pin;
@@ -46,6 +48,7 @@ namespace E64
         TTL74LS148          *TTL74LS148_ic;
         timer               *timer_ic;
         vicv                *vicv_ic;
+        blitter             *blitter_ic;
         sound               *sound_ic;
         cia                 *cia_ic;
 

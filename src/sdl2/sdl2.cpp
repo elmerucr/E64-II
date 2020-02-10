@@ -489,7 +489,7 @@ void E64::sdl2_update_screen()
     switch(computer.current_mode)
     {
         case NORMAL_MODE:
-            SDL_UpdateTexture(context0.texture, NULL, computer.vicv_ic->frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
+            SDL_UpdateTexture(context0.texture, NULL, computer.vicv_ic->host_frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
         case DEBUG_MODE:
             SDL_UpdateTexture(context0.texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
