@@ -16,6 +16,8 @@ kernel_main
 	move.l	a0,VEC_11_UNIMPL_INSTRUCTION
 	lea		interrupt_2_autovector,a0
 	move.l	a0,VEC_26_LEVEL2_IRQ_AUTOVECT
+	lea		interrupt_4_autovector,a0
+	move.l	a0,VEC_28_LEVEL4_IRQ_AUTOVECT
 	lea		interrupt_5_autovector,a0
 	move.l	a0,VEC_29_LEVEL5_IRQ_AUTOVECT
 	lea		interrupt_6_autovector,a0
@@ -56,10 +58,10 @@ kernel_main
 	lea		welcome,a0
 	bsr		put_string
 
-	; set ipl to level 1
+	; set ipl to level 2
 	move.w	sr,d0
 	andi.w	#%1111100011111111,d0
-	ori.w	#%0000000100000000,d0
+	ori.w	#%0000001000000000,d0
 	move.w	d0,sr
 
 	; play a welcome sound on SID0
@@ -183,8 +185,12 @@ exception_handler
 	move.l #$deadbeef,d0
 	rte
 
-; level 2 interrupt autovector (timer)
+; level 2 interrupt autovector (vicv vblank)
 interrupt_2_autovector
+	rte
+
+; level 4 interrupt autovector (timer)
+interrupt_4_autovector
 	move.l	a0,-(a7)				; save a0
 timer0_check
 	btst	#0,TIMER_BASE			; did timer 0 cause the interrupt?
@@ -235,7 +241,7 @@ timer1_irq_handler
 
 ; string data
 welcome
-	dc.b	"E64-II (C)2019 kernel version 0.1.20200130",ASCII_LF,ASCII_NULL
+	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200211",ASCII_LF,ASCII_NULL
 
 	align 1
 	include "E64-II_kernel_tables.asm"

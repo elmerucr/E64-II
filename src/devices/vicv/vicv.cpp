@@ -14,7 +14,7 @@ E64::vicv::vicv()
     host_screen_buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     color_palette   = new uint32_t[256];
     overlay_present = false;
-    
+
     framebuffer0 = (uint32_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint32_t *)&computer.mmu_ic->ram[0x00f00000];
 }
@@ -31,22 +31,20 @@ E64::vicv::~vicv()
 
 void E64::vicv::reset()
 {
-    hblank_irq = true;
     vblank_irq = true;
-    raster_irq = true;
-    
+
     frame_done = false;
 
     cycle_clock = dot_clock = 0;
-    current_xpos = dot_clock & 0b0000000111111111;
-    current_scanline = dot_clock >> 9;
+//    current_xpos = dot_clock & 0b0000000111111111;
+//    current_scanline = dot_clock >> 9;
 
     host_frontbuffer = host_screen_buffer_1;
     host_backbuffer  = host_screen_buffer_0;
-    
+
     for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) host_screen_buffer_0[i] = host_screen_buffer_1[i] = 0xff202020;
     for(int i=0; i<256; i++) registers[i] = 0;
-    
+
     setup_color_palettes();
 }
 
@@ -67,20 +65,25 @@ void E64::vicv::run(uint32_t number_of_cycles)
         if(!BLANK)
         {
             host_backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
-            
+
             if(HBORDER) host_backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
-            
+
             dot_clock++;
         }
-        
+
         cycle_clock++;
-        
-        if(cycle_clock == (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK) )
+
+        switch(cycle_clock)
         {
-            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-            swap_buffers();
-            cycle_clock = dot_clock = 0;
-            frame_done = true;
+            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES):
+                vblank_irq = false;
+                break;
+            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK):
+                if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+                swap_buffers();
+                cycle_clock = dot_clock = 0;
+                frame_done = true;
+                break;
         }
         number_of_cycles--;
     }
@@ -93,85 +96,85 @@ bool E64::vicv::is_vblank() { return VBLANK; }
 
 
 
-/* Note: each cycle on vicv results in one pixel (or dot) to be
- * produced.
- */
-void E64::vicv::run_old(uint32_t number_of_cycles) {
-    current_xpos = current_xpos + number_of_cycles;
+///* Note: each cycle on vicv results in one pixel (or dot) to be
+// * produced.
+// */
+//void E64::vicv::run_old(uint32_t number_of_cycles) {
+//    current_xpos = current_xpos + number_of_cycles;
+//
+//    /* It looks like an <if> statement could have been used below.
+//     * The <while> is necessary however to make sure ALL scanlines
+//     * are processed. In theory, the number of pixels to run, could be
+//     * more than an extra scanline, so several have to be done.
+//     */
+//    while( current_xpos >= VICV_PIXELS_PER_SCANLINE )
+//    {
+//        if( (current_scanline < 32) || (current_scanline > 287) )
+//        {
+//            render_border_scanline();
+//        }
+//        else
+//        {
+//            render_scanline();
+//        }
+//        current_scanline++;
+//        if(current_scanline == VICV_SCANLINES)
+//        {
+//            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+//            swap_buffers();
+//            current_scanline = 0;
+//            frame_done = true;
+//        }
+//        current_xpos -= VICV_PIXELS_PER_SCANLINE;
+//    }
+//}
 
-    /* It looks like an <if> statement could have been used below.
-     * The <while> is necessary however to make sure ALL scanlines
-     * are processed. In theory, the number of pixels to run, could be
-     * more than an extra scanline, so several have to be done.
-     */
-    while( current_xpos >= VICV_PIXELS_PER_SCANLINE )
-    {
-        if( (current_scanline < 32) || (current_scanline > 287) )
-        {
-            render_border_scanline();
-        }
-        else
-        {
-            render_scanline();
-        }
-        current_scanline++;
-        if(current_scanline == VICV_SCANLINES)
-        {
-            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-            swap_buffers();
-            current_scanline = 0;
-            frame_done = true;
-        }
-        current_xpos -= VICV_PIXELS_PER_SCANLINE;
-    }
-}
+//inline void E64::vicv::render_scanline()
+//{
+//    // 1st index in screen buffer to be used for display
+//    int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
+//    // get the current textrow, divide by 8
+//    int currentTextRow = ((current_scanline-32) >> 3);
+//    // get current line within character
+//    int currentCharacterLine = (current_scanline-32) & 0x07;
+//
+//    uint32_t background_color = color_palette[registers[VICV_REG_BKG]];
+//
+//    uint32_t start_screen_buffer = (registers[VICV_REG_TXT] << 24) + (registers[VICV_REG_TXT+1] << 16) + (registers[VICV_REG_TXT+2] << 8) + registers[VICV_REG_TXT+3];
+//    uint32_t start_color_buffer = (registers[VICV_REG_COL] << 24) + (registers[VICV_REG_COL+1] << 16) + (registers[VICV_REG_COL+2] << 8) + registers[VICV_REG_COL+3];
+//
+//    // Reserve a byte for internal rendering use, defaults to 0
+//    uint8_t eight_pixels = 0;
+//    int current_column;
+//    uint8_t current_char;
+//    uint32_t current_char_color = 0;
+//
+//    for(int x=0; x<VICV_PIXELS_PER_SCANLINE; x++)
+//    {
+//        if( !(x & 0b00000111) ) // it's the first pixel of a char
+//        {
+//            // get current text column, current x divided by 8 (yields 0-63)
+//            current_column = (x >> 3);
+//            current_char = computer.mmu_ic->ram[(start_screen_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff];
+//            current_char_color = computer.vicv_ic->color_palette[computer.mmu_ic->ram[(start_color_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff] ];
+//            // get byte information from char_rom
+//            eight_pixels = patched_char_rom[(current_char<<3) | currentCharacterLine];
+//        }
+//        host_backbuffer[base | x] = (eight_pixels & 0x80) ? current_char_color : background_color;
+//        // shift all bits in internal byte 1 place to the left
+//        eight_pixels = eight_pixels << 1;
+//    }
+//}
 
-inline void E64::vicv::render_scanline()
-{
-    // 1st index in screen buffer to be used for display
-    int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
-    // get the current textrow, divide by 8
-    int currentTextRow = ((current_scanline-32) >> 3);
-    // get current line within character
-    int currentCharacterLine = (current_scanline-32) & 0x07;
-
-    uint32_t background_color = color_palette[registers[VICV_REG_BKG]];
-
-    uint32_t start_screen_buffer = (registers[VICV_REG_TXT] << 24) + (registers[VICV_REG_TXT+1] << 16) + (registers[VICV_REG_TXT+2] << 8) + registers[VICV_REG_TXT+3];
-    uint32_t start_color_buffer = (registers[VICV_REG_COL] << 24) + (registers[VICV_REG_COL+1] << 16) + (registers[VICV_REG_COL+2] << 8) + registers[VICV_REG_COL+3];
-
-    // Reserve a byte for internal rendering use, defaults to 0
-    uint8_t eight_pixels = 0;
-    int current_column;
-    uint8_t current_char;
-    uint32_t current_char_color = 0;
-    
-    for(int x=0; x<VICV_PIXELS_PER_SCANLINE; x++)
-    {
-        if( !(x & 0b00000111) ) // it's the first pixel of a char
-        {
-            // get current text column, current x divided by 8 (yields 0-63)
-            current_column = (x >> 3);
-            current_char = computer.mmu_ic->ram[(start_screen_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff];
-            current_char_color = computer.vicv_ic->color_palette[computer.mmu_ic->ram[(start_color_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff] ];
-            // get byte information from char_rom
-            eight_pixels = patched_char_rom[(current_char<<3) | currentCharacterLine];
-        }
-        host_backbuffer[base | x] = (eight_pixels & 0x80) ? current_char_color : background_color;
-        // shift all bits in internal byte 1 place to the left
-        eight_pixels = eight_pixels << 1;
-    }
-}
-
-inline void E64::vicv::render_border_scanline()
-{
-    int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
-    uint32_t background_color = color_palette[registers[VICV_REG_BOR]];
-    for(int x = 0; x < VICV_PIXELS_PER_SCANLINE; x++)
-    {
-        host_backbuffer[base | x] = background_color;
-    }
-}
+//inline void E64::vicv::render_border_scanline()
+//{
+//    int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
+//    uint32_t background_color = color_palette[registers[VICV_REG_BOR]];
+//    for(int x = 0; x < VICV_PIXELS_PER_SCANLINE; x++)
+//    {
+//        host_backbuffer[base | x] = background_color;
+//    }
+//}
 
 inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
 {
@@ -194,7 +197,7 @@ inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
             }
 
             host_backbuffer[base + x] = (eight_pixels & 0x80) ? contrast_color : background_color;
-            
+
             eight_pixels = eight_pixels << 1;
             x++;
             // increase the text pointer only when necessary
@@ -285,7 +288,7 @@ void E64::vicv::setup_color_palettes()
     color_palette[0x3d] = C64_COBALT_13;
     color_palette[0x3e] = C64_COBALT_14;
     color_palette[0x3f] = C64_COBALT_15;
-    
+
     // 16 brown tones from 0x40-0x4f
     color_palette[0x40] = C64_AMBER_00;
     color_palette[0x41] = C64_AMBER_01;
@@ -303,7 +306,7 @@ void E64::vicv::setup_color_palettes()
     color_palette[0x4d] = C64_AMBER_13;
     color_palette[0x4e] = C64_AMBER_14;
     color_palette[0x4f] = C64_AMBER_15;
-    
+
     // the rest (0x50-0xff) is C64_BLUE
     for(int i = 0x50; i < 0x100; i++) color_palette[i] = C64_BLUE;
 }

@@ -43,13 +43,12 @@ private:
     // framebuffer pointers of the virtual machine
     uint32_t *framebuffer0;
     uint32_t *framebuffer1;
-    
 
     // internal stuff
     uint32_t cycle_clock;
     uint32_t dot_clock;
-    uint16_t current_xpos;
-    uint16_t current_scanline;
+//    uint16_t current_xpos;
+//    uint16_t current_scanline;
 
     bool overlay_present;
 
@@ -61,10 +60,8 @@ private:
 public:
     vicv(void);
     ~vicv(void);
-    
-    bool hblank_irq;
+
     bool vblank_irq;
-    bool raster_irq;
 
     // pointer to the buffer that currently can be shown
     uint32_t *host_frontbuffer;

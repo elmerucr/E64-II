@@ -1,7 +1,7 @@
 //  machine.cpp
 //  E64
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "debug_console.hpp"
 #include "machine.hpp"
@@ -20,9 +20,10 @@ E64::machine::machine()
     TTL74LS148_ic = new TTL74LS148();
     
     timer_ic = new timer();
-    TTL74LS148_ic->connect_device(&timer_ic->irq_pin, 2);
+    TTL74LS148_ic->connect_device(&timer_ic->irq_pin, 4);
     
     vicv_ic = new vicv();
+    TTL74LS148_ic->connect_device(&vicv_ic->vblank_irq, 1);
     
     blitter_ic = new blitter();
     

@@ -1,1 +1,1 @@
-add_library(vicv STATIC vicv.cpp surface.cpp blitter.cpp)
+add_library(vicv STATIC vicv.cpp blitter.cpp)

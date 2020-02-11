@@ -6,8 +6,8 @@ The E64-II (Enhanced 64-II) is a virtual computer system (under construction) th
 ## Technical specifications (a work in progress):
 * Motorola 68000 CPU running at 5.6MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
-* A custom Video Interface Chip with a resolution of 512x320 pixels.
-* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz (C64 pal) for correct pitch. Emulation is achieved with the excellent [resid](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. Several registers (lo/hi from frequency, pulse width and filters) have been swapped to facilitate use with the big endian M68000.
+* A custom Video Interface Chip (VICV) with a resolution of 512x320 pixels.
+* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for identical pitch to the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to ease use with the big endian M68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running in normal mode:
@@ -42,6 +42,7 @@ In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be fo
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives
 * [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others
 * [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time
+* [CCS64](http://www.ccs64.com) - A Commodore 64 Emulator by Per Håkan Sundell
 * [Hatari](https://hatari.tuxfamily.org) - Hatari is an Atari ST/STE/TT/Falcon emulator
 * [lib65ce02](https://github.com/elmerucr/lib65ce02) - CSG65CE02 emulator written in C
 * [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage
