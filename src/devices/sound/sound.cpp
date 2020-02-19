@@ -38,7 +38,7 @@ E64::sound::sound(bool big_endian)
         register_index[22] = 21;
     }
     
-    for(int i = 0; i<4; i++)
+    for(int i = 0; i<2; i++)
     {
         // set chip model
         sid[i].set_chip_model(MOS6581);
@@ -132,6 +132,4 @@ void E64::sound::reset()
 {
     sid[0].reset();
     sid[1].reset();
-    sid[2].reset();
-    sid[3].reset();
 }

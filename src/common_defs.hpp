@@ -1,7 +1,7 @@
 //  common_defs.h
 //  E64-II
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2020 elmerucr. All rights reserved.
 //
 //  General definitions for the whole project
 
@@ -14,7 +14,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200211
+#define E64_BUILD               20200219
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             5600000

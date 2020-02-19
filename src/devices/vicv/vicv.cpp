@@ -337,3 +337,22 @@ uint32_t E64::vicv::borders_contrast_foreground_color()
     }
     return 0xff000000 | red << 16 | grn << 8 | blue;
 }
+
+uint8_t E64::vicv::read_byte(uint8_t address)
+{
+    return registers[address];
+    
+}
+
+void E64::vicv::write_byte(uint8_t address, uint8_t byte)
+{
+    switch( address )
+    {
+        case VICV_REG_ISR:
+            if( byte & 0b00000001 ) vblank_irq = true;
+            break;
+        default:
+            registers[address] = byte;
+            break;
+    }
+}

@@ -16,7 +16,7 @@ namespace E64
 {
     class sound
     {
-        SID sid[4];
+        SID sid[2];
         uint8_t balance_registers[8];
         cycle_count delta_t_sid0;
         int16_t sample_buffer_mono_sid0[65536];

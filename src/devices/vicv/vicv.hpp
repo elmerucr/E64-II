@@ -12,11 +12,14 @@
 // internal vicv registers (appear at a different base address in main memory)
 #define VICV_REG_BOR            0x00    // reg00 - Border color register
 #define VICV_REG_BKG            0x01    // reg01 - Background color register
-// reg02-05 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
+// reg 02-05 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
 #define VICV_REG_TXT            0x02
-// reg06-09 combined are a 32 bit pointer for the location of the default color screen (2k), big endian
+// reg 06-09 combined are a 32 bit pointer for the location of the default color screen (2k), big endian
 #define VICV_REG_COL            0x06
 #define VICV_REG_BORDER_SIZE    0x0a    // a byte telling the size of the horizontal border
+// reg 0c interrupt status register
+// write to bit 0 = acknowldge VBLANK interrupt
+#define VICV_REG_ISR            0x0c
 
 namespace E64 {
 
@@ -101,8 +104,8 @@ public:
     void toggle_overlay() { overlay_present = !overlay_present; }
     
     // Register access to vicv
-    inline uint8_t read_byte(uint8_t address)  { return registers[address]; }
-    inline void write_byte(uint8_t address, uint8_t byte) { registers[address] = byte; }
+    uint8_t read_byte(uint8_t address);
+    void write_byte(uint8_t address, uint8_t byte);
 };
 
 }

@@ -1,7 +1,7 @@
 //  common_defs.c
 //  E64-II
 //
-//  Copyright © 2018 elmerucr. All rights reserved.
+//  Copyright © 2018-2020 elmerucr. All rights reserved.
 
 #include "common_defs.hpp"
 

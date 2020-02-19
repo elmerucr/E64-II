@@ -22,10 +22,11 @@ CIA_BASE	equ	$fe0300
 TIMER_BASE	equ $fe0600
 
 ; vicv
-VICV_BASE	equ	$fe0400 	; vicv base register
-VICV_TXT	equ VICV_BASE+$02
-VICV_COL	equ VICV_BASE+$06
+VICV_BASE			equ	$fe0400 	; vicv base register
+VICV_TXT			equ VICV_BASE+$02
+VICV_COL			equ VICV_BASE+$06
 VICV_BORDER_SIZE	equ VICV_BASE+$0a
+VICV_ISR			equ VICV_BASE+$0c
 
 ; sound
 SOUND_BASE	equ $fe0500	; sound base register

@@ -3,11 +3,11 @@
 ## Description
 The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. Heavily inspired by the Commodore 64 and other (more advanced) personal computer systems of the era.
 
-## Technical specifications (a work in progress):
+## Technical specifications:
 * Motorola 68000 CPU running at 5.6MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
 * A custom Video Interface Chip (VICV) with a resolution of 512x320 pixels.
-* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for identical pitch to the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to ease use with the big endian M68000.
+* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for identical pitch to the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to ease use with the big endian M68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running in normal mode:

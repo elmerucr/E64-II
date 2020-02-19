@@ -23,7 +23,7 @@ E64::machine::machine()
     TTL74LS148_ic->connect_device(&timer_ic->irq_pin, 4);
     
     vicv_ic = new vicv();
-    TTL74LS148_ic->connect_device(&vicv_ic->vblank_irq, 1);
+    TTL74LS148_ic->connect_device(&vicv_ic->vblank_irq, 2);
     
     blitter_ic = new blitter();
     

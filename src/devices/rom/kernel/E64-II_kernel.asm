@@ -58,10 +58,10 @@ kernel_main
 	lea		welcome,a0
 	bsr		put_string
 
-	; set ipl to level 2
+	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
 	move.w	sr,d0
 	andi.w	#%1111100011111111,d0
-	ori.w	#%0000001000000000,d0
+	ori.w	#%0000000100000000,d0
 	move.w	d0,sr
 
 	; play a welcome sound on SID0
@@ -187,6 +187,9 @@ exception_handler
 
 ; level 2 interrupt autovector (vicv vblank)
 interrupt_2_autovector
+	move.b	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
+									; switch buffers
+									; plan some blitter stuff (text screen, ...)
 	rte
 
 ; level 4 interrupt autovector (timer)
