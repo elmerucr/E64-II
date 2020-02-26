@@ -43,7 +43,7 @@ private:
         host_backbuffer = temp;
     }
     
-    // framebuffer pointers of the virtual machine
+    // framebuffer pointers inside the virtual machine
     uint32_t *framebuffer0;
     uint32_t *framebuffer1;
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4633A79823FD565800AFD176 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4633A79723FD565800AFD176 /* video.cpp */; };
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
 		4691C77C23D7B23C00E9E78D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */; };
 		4691C78823D7B28600E9E78D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C78723D7B28600E9E78D /* main.cpp */; };
@@ -67,6 +68,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4633A79623FD565800AFD176 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/resources/video.hpp; sourceTree = "<group>"; };
+		4633A79723FD565800AFD176 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/resources/video.cpp; sourceTree = "<group>"; };
 		4691C77123D7B23A00E9E78D /* E64-II.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "E64-II.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4691C77823D7B23C00E9E78D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -168,6 +171,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4633A79523FD560600AFD176 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				4633A79623FD565800AFD176 /* video.hpp */,
+				4633A79723FD565800AFD176 /* video.cpp */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
 		4691C76823D7B23A00E9E78D = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +202,7 @@
 			children = (
 				4691C79723D7B35500E9E78D /* debugger */,
 				4691C79223D7B32300E9E78D /* devices */,
+				4633A79523FD560600AFD176 /* resources */,
 				4691C78E23D7B30400E9E78D /* sdl2 */,
 				4691C7AF23D7B40600E9E78D /* common_defs.hpp */,
 				4691C7AB23D7B40600E9E78D /* common_defs.cpp */,
@@ -507,6 +520,7 @@
 				4691C79623D7B34700E9E78D /* vicv.cpp in Sources */,
 				4691C7FE23D7B5F200E9E78D /* extfilt.cc in Sources */,
 				4691C7F423D7B5F200E9E78D /* wave8580_PST.cc in Sources */,
+				4633A79823FD565800AFD176 /* video.cpp in Sources */,
 				4691C7A023D7B36C00E9E78D /* debug_console.cpp in Sources */,
 				4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */,
 				4691C7FB23D7B5F200E9E78D /* envelope.cc in Sources */,

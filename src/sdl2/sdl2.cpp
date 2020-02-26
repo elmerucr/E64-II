@@ -45,13 +45,10 @@ SDL_AudioDeviceID E64_sdl2_audio_dev;
 SDL_AudioSpec want, have;
 bool audio_running;
 
-bool E64::stats_in_title;
-
 const uint8_t *E64_sdl2_keyboard_state;
 
 void E64::sdl2_init()
 {
-    stats_in_title = false;
     
     SDL_version compiled;
     SDL_version linked;

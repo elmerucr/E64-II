@@ -22,6 +22,7 @@ namespace E64
     // event related
     int sdl2_process_events();
     void sdl2_wait_until_f9_released();
+    void sdl2_wait_until_enter_released();
 
     // window management
     void sdl2_update_screen();
@@ -30,10 +31,6 @@ namespace E64
     void sdl2_increase_window_size();
     void sdl2_decrease_window_size();
     void sdl2_toggle_fullscreen();
-    void sdl2_wait_until_enter_released();
-
-    extern bool stats_in_title;
-    inline void sdl2_toggle_stats() { stats_in_title = !stats_in_title; };
 
     // audio related
     void sdl2_start_audio();
