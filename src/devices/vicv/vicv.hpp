@@ -29,21 +29,6 @@ private:
     // this chip contains 256 registers (and are mapped to a specific page)
     uint8_t registers[256];
     
-    /* These are host framebuffers for double buffering. We need
-     * two buffers as the calls for refreshing the screen might happen
-     * when the next screen is already being drawn.
-     * To the outside world only host_front_buffer and host_back_buffer are known.
-     */
-    uint32_t *host_screen_buffer_0;
-    uint32_t *host_screen_buffer_1;
-
-    inline void swap_buffers()
-    {
-        uint32_t *temp = host_frontbuffer;
-        host_frontbuffer = host_backbuffer;
-        host_backbuffer = temp;
-    }
-    
     // framebuffer pointers inside the virtual machine
     uint32_t *framebuffer0;
     uint32_t *framebuffer1;
@@ -51,9 +36,8 @@ private:
     // internal stuff
     uint32_t cycle_clock;
     uint32_t dot_clock;
-//    uint16_t current_xpos;
-//    uint16_t current_scanline;
 
+    // current state of the overlay (presenting stats to the user)
     bool overlay_present;
 
     void render_scanline();
@@ -66,11 +50,6 @@ public:
     ~vicv(void);
 
     bool vblank_irq;
-
-    // pointer to the buffer that currently can be shown
-    uint32_t *host_frontbuffer;
-    // pointer to the buffer that's currently being written to
-    uint32_t *host_backbuffer;
     
     inline void clear_framebuffer0()
     {

@@ -125,6 +125,7 @@ int E64::machine::run(uint16_t no_of_cycles)
 
 void E64::machine::reset()
 {
+    host_video.reset();
     m68k_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
     sound_ic->reset();

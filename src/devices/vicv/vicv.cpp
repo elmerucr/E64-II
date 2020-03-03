@@ -10,8 +10,6 @@
 
 E64::vicv::vicv()
 {
-    host_screen_buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
-    host_screen_buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     color_palette   = new uint32_t[256];
     overlay_present = false;
 
@@ -22,10 +20,6 @@ E64::vicv::vicv()
 E64::vicv::~vicv()
 {
     delete [] color_palette;
-    delete [] host_screen_buffer_1;
-    delete [] host_screen_buffer_0;
-    host_screen_buffer_0 = nullptr;
-    host_screen_buffer_1 = nullptr;
     color_palette = nullptr;
 }
 
@@ -37,10 +31,6 @@ void E64::vicv::reset()
 
     cycle_clock = dot_clock = 0;
 
-    host_frontbuffer = host_screen_buffer_1;
-    host_backbuffer  = host_screen_buffer_0;
-
-    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) host_screen_buffer_0[i] = host_screen_buffer_1[i] = 0xff202020;
     for(int i=0; i<256; i++) registers[i] = 0;
 
     setup_color_palettes();
@@ -62,10 +52,9 @@ void E64::vicv::run(uint32_t number_of_cycles)
     {
         if(!BLANK)
         {
-            //host_video.backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
-            host_backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
+            host_video.backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
 
-            if(HBORDER) host_backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
+            if(HBORDER) host_video.backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];
 
             dot_clock++;
         }
@@ -79,7 +68,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK):
                 if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-                swap_buffers();
+                host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;
                 break;
@@ -195,7 +184,7 @@ inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
                 eight_pixels = patched_char_rom[((ascii_to_screencode[*temp_text]) * 8) + y];
             }
 
-            host_backbuffer[base + x] = (eight_pixels & 0x80) ? contrast_color : background_color;
+            host_video.backbuffer[base + x] = (eight_pixels & 0x80) ? contrast_color : background_color;
 
             eight_pixels = eight_pixels << 1;
             x++;

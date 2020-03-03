@@ -5,7 +5,6 @@
 
 #include "video.hpp"
 #include "common_defs.hpp"
-#include "debug_screen.hpp"
 
 E64::video::video()
 {
@@ -47,21 +46,22 @@ E64::video::video()
     // make sure mouse cursor isn't visible
     SDL_ShowCursor(SDL_DISABLE);
     
+    // prepare both screen buffers
     buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     
-    frontbuffer = buffer_1;
-    backbuffer  = buffer_0;
-
-    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) buffer_0[i] = buffer_1[i] = 0xff202020;
+    // prepare debug_screen_buffer
+    debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
 }
 
 E64::video::~video()
 {
+    delete [] debug_screen_buffer;
     delete [] buffer_1;
     delete [] buffer_0;
     buffer_0 = nullptr;
     buffer_1 = nullptr;
+    debug_screen_buffer = nullptr;
     
     printf("[SDL] cleaning up video\n");
     SDL_DestroyTexture(texture);
@@ -70,12 +70,20 @@ E64::video::~video()
     SDL_Quit();
 }
 
+void E64::video::reset()
+{
+    frontbuffer = buffer_1;
+    backbuffer  = buffer_0;
+
+    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) buffer_0[i] = buffer_1[i] = 0xff202020;
+}
+
 void E64::video::update_screen()
 {
     switch(computer.current_mode)
     {
         case NORMAL_MODE:
-            SDL_UpdateTexture(texture, NULL, computer.vicv_ic->host_frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
+            SDL_UpdateTexture(texture, NULL, frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
         case DEBUG_MODE:
             SDL_UpdateTexture(texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));

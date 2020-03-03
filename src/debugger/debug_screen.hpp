@@ -17,8 +17,6 @@ namespace E64
     void debug_screen_render_scanline(int line_number);
 }
 
-extern uint32_t debug_screen_buffer[];
-
 extern uint8_t debug_screen_character_buffer[];
 extern uint8_t debug_screen_foreground_color_buffer[];
 extern uint8_t debug_screen_background_color_buffer[];

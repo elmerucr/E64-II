@@ -208,8 +208,8 @@
 				4691C7AB23D7B40600E9E78D /* common_defs.cpp */,
 				4691C7B023D7B40600E9E78D /* frequency_divider.hpp */,
 				4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */,
-				4691C7A923D7B40600E9E78D /* machine.cpp */,
 				4691C7AC23D7B40600E9E78D /* machine.hpp */,
+				4691C7A923D7B40600E9E78D /* machine.cpp */,
 				4691C78723D7B28600E9E78D /* main.cpp */,
 				4691C7AD23D7B40600E9E78D /* pid_delay.hpp */,
 				4691C7AA23D7B40600E9E78D /* pid_delay.cpp */,
@@ -257,10 +257,10 @@
 		4691C79323D7B32D00E9E78D /* vicv */ = {
 			isa = PBXGroup;
 			children = (
-				46B4480923EF3AB20000DAB1 /* blitter.hpp */,
-				46B4480A23EF3AB30000DAB1 /* blitter.cpp */,
 				4691C79423D7B34700E9E78D /* vicv.hpp */,
 				4691C79523D7B34700E9E78D /* vicv.cpp */,
+				46B4480923EF3AB20000DAB1 /* blitter.hpp */,
+				46B4480A23EF3AB30000DAB1 /* blitter.cpp */,
 			);
 			name = vicv;
 			sourceTree = "<group>";

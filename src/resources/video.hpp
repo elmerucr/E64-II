@@ -35,6 +35,12 @@ private:
     int window_height;
     SDL_Rect destination;
     
+    /* These are host framebuffers for double buffering. We need two
+     * buffers as the calls for refreshing the screen might happen when
+     * the next screen is already being drawn.
+     * To the outside world only host_front_buffer and host_back_buffer
+     * are known.
+     */
     uint32_t *buffer_0;
     uint32_t *buffer_1;
 public:
@@ -46,12 +52,18 @@ public:
     // pointer to the buffer that's currently being written to
     uint32_t *backbuffer;
     
+    // pointer to debug screen buffer
+    uint32_t *debug_screen_buffer;
+    
     inline void swap_buffers()
     {
         uint32_t *temp = frontbuffer;
         frontbuffer = backbuffer;
         backbuffer = temp;
     }
+    
+    // must be called upon machine reset
+    void reset();
     
     void update_screen();
     void update_title();
