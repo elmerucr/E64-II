@@ -23,6 +23,7 @@ include_directories(
     src/devices/timer/
     src/devices/TTL74LS148/
     src/devices/vicv/
+    src/resources/
     src/sdl2/
 )
 
@@ -36,4 +37,4 @@ add_executable(
     src/frequency_divider.cpp
     src/pid_delay.cpp)
 
-target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid sound timer TTL74LS148 vicv ${SDL2_LIBRARIES})
+target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid sound timer TTL74LS148 vicv video ${SDL2_LIBRARIES})
