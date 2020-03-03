@@ -5,7 +5,7 @@
 
 #include "video.hpp"
 #include "common_defs.hpp"
-#include <SDL2/SDL.h>
+#include "debug_screen.hpp"
 
 E64::video::video()
 {
@@ -46,9 +46,99 @@ E64::video::video()
 
     // make sure mouse cursor isn't visible
     SDL_ShowCursor(SDL_DISABLE);
+    
+    buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+    buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+    
+    frontbuffer = buffer_1;
+    backbuffer  = buffer_0;
+
+    for(int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++) buffer_0[i] = buffer_1[i] = 0xff202020;
 }
 
 E64::video::~video()
 {
-    // 
+    delete [] buffer_1;
+    delete [] buffer_0;
+    buffer_0 = nullptr;
+    buffer_1 = nullptr;
+    
+    printf("[SDL] cleaning up video\n");
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+void E64::video::update_screen()
+{
+    switch(computer.current_mode)
+    {
+        case NORMAL_MODE:
+            SDL_UpdateTexture(texture, NULL, computer.vicv_ic->host_frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
+            break;
+        case DEBUG_MODE:
+            SDL_UpdateTexture(texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
+            break;
+    }
+    SDL_RenderCopy(renderer, texture, NULL, &destination);
+    SDL_RenderPresent(renderer);
+}
+
+void E64::video::reset_window_size()
+{
+    SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
+    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
+void E64::video::increase_window_size()
+{
+    if(current_window_size < 3)
+    {
+        current_window_size++;
+        SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        destination = { 0, 0, window_width, window_height };
+        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    }
+}
+
+void E64::video::decrease_window_size()
+{
+    if(current_window_size > 0)
+    {
+        current_window_size--;
+        SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        destination = { 0, 0, window_width, window_height };
+        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    }
+}
+
+void E64::video::toggle_fullscreen()
+{
+    fullscreen = !fullscreen;
+    if(fullscreen)
+    {
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
+    }
+    SDL_GetWindowSize(window, &window_width, &window_height);
+    destination = { 0, 0, window_width, window_height };
+}
+
+void E64::video::update_title()
+{
+    switch(computer.current_mode)
+    {
+        case NORMAL_MODE:
+            SDL_SetWindowTitle(window, "E64-II");
+            break;
+        case DEBUG_MODE:
+            SDL_SetWindowTitle(window, "E64-II debugger");
+            break;
+    }
 }

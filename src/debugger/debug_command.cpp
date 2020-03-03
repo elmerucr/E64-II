@@ -103,7 +103,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     else if( strcmp(token0, "full") == 0 )
     {
         debug_console_put_char('\n');
-        E64::sdl2_toggle_fullscreen();
+        host_video.toggle_fullscreen();
     }
 //    else if( strcmp(token0, "help") == 0 )
 //    {
@@ -200,15 +200,15 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         debug_console_put_char('\n');
         if(token1 == NULL)
         {
-            E64::sdl2_reset_window_size();
+            host_video.reset_window_size();
         }
         else if( strcmp(token1, "+") == 0 )
         {
-            E64::sdl2_increase_window_size();
+            host_video.increase_window_size();
         }
         else if( strcmp(token1, "-") == 0 )
         {
-            E64::sdl2_decrease_window_size();
+            host_video.decrease_window_size();
         }
         else
         {

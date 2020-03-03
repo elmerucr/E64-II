@@ -18,6 +18,7 @@
 #include "timer.hpp"
 
 // global components of the system
+E64::video host_video;
 E64::machine computer;
 E64::pid_delay frame_delay(12800.0);
 
@@ -71,7 +72,7 @@ int main(int argc, char **argv)
                     // we want to run this one only once per frame
                     computer.cia_ic->run();
                     
-                    E64::sdl2_update_screen();
+                    host_video.update_screen();
                     
                     frame_delay.run();
                 }
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
                     debug_status_bar_refresh();
                     debug_console_blit_to_debug_screen();
                     E64::debug_screen_update();
-                    E64::sdl2_update_screen();
+                    host_video.update_screen();
                 }
                 
                 // 10ms is a reasonable delay
@@ -100,7 +101,7 @@ int main(int argc, char **argv)
                         debug_status_bar_refresh();
                         debug_console_blit_to_debug_screen();
                         E64::debug_screen_update();
-                        E64::sdl2_update_screen();
+                        host_video.update_screen();
                         break;
                 }
                 break;

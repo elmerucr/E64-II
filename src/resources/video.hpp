@@ -5,6 +5,9 @@
 
 #include <SDL2/SDL.h>
 
+#ifndef VIDEO_HPP
+#define VIDEO_HPP
+
 namespace E64 {
 
 struct window_size
@@ -31,9 +34,24 @@ private:
     int window_width;
     int window_height;
     SDL_Rect destination;
+    
+    uint32_t *buffer_0;
+    uint32_t *buffer_1;
 public:
     video();
     ~video();
+    
+    // pointer to the buffer that currently can be shown
+    uint32_t *frontbuffer;
+    // pointer to the buffer that's currently being written to
+    uint32_t *backbuffer;
+    
+    inline void swap_buffers()
+    {
+        uint32_t *temp = frontbuffer;
+        frontbuffer = backbuffer;
+        backbuffer = temp;
+    }
     
     void update_screen();
     void update_title();
@@ -44,3 +62,5 @@ public:
 };
 
 }
+
+#endif // VIDEO_HPP

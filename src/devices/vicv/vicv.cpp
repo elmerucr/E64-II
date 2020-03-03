@@ -36,8 +36,6 @@ void E64::vicv::reset()
     frame_done = false;
 
     cycle_clock = dot_clock = 0;
-//    current_xpos = dot_clock & 0b0000000111111111;
-//    current_scanline = dot_clock >> 9;
 
     host_frontbuffer = host_screen_buffer_1;
     host_backbuffer  = host_screen_buffer_0;
@@ -64,6 +62,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
     {
         if(!BLANK)
         {
+            //host_video.backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
             host_backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : color_palette[registers[VICV_REG_BKG]];
 
             if(HBORDER) host_backbuffer[dot_clock] = color_palette[registers[VICV_REG_BOR]];

@@ -9,12 +9,13 @@
 #define COMMON_DEFS_H
 
 #include <cstdint>
+#include "video.hpp"
 #include "machine.hpp"
 #include "pid_delay.hpp"
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200226
+#define E64_BUILD               20200303
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             5600000
@@ -28,6 +29,7 @@
 #define DEBUGGER_BACKGROUND_COLOR   0x34
 
 // some objects must be visible at global level
+extern E64::video host_video;
 extern E64::pid_delay frame_delay;
 extern E64::machine computer;
 extern const uint8_t ascii_to_screencode[];

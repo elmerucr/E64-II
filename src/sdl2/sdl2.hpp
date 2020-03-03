@@ -24,14 +24,6 @@ namespace E64
     void sdl2_wait_until_f9_released();
     void sdl2_wait_until_enter_released();
 
-    // window management
-    void sdl2_update_screen();
-    void sdl2_update_title();
-    void sdl2_reset_window_size();
-    void sdl2_increase_window_size();
-    void sdl2_decrease_window_size();
-    void sdl2_toggle_fullscreen();
-
     // audio related
     void sdl2_start_audio();
     void sdl2_stop_audio();

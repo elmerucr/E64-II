@@ -30,7 +30,8 @@ private:
     uint8_t registers[256];
     
     /* These are host framebuffers for double buffering. We need
-     * two buffers as the calls for refreshing the screen will be asynchronous.
+     * two buffers as the calls for refreshing the screen might happen
+     * when the next screen is already being drawn.
      * To the outside world only host_front_buffer and host_back_buffer are known.
      */
     uint32_t *host_screen_buffer_0;

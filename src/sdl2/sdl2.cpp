@@ -13,34 +13,6 @@
 #include "debug_console.hpp"
 #include "debug_command.hpp"
 
-struct window_size
-{
-    uint16_t x;
-    uint16_t y;
-};
-
-const struct window_size window_sizes[4] =
-{
-    {  512, 320 },
-    {  768, 480 },
-    { 1024, 640 },
-    { 1280, 800 }
-};
-
-typedef struct
-{
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *texture;
-    uint8_t current_window_size;
-    bool fullscreen;
-} E64_sdl2;
-
-E64_sdl2 context0;
-int window_width;
-int window_height;
-SDL_Rect destination;
-
 SDL_AudioDeviceID E64_sdl2_audio_dev;
 SDL_AudioSpec want, have;
 bool audio_running;
@@ -49,46 +21,7 @@ const uint8_t *E64_sdl2_keyboard_state;
 
 void E64::sdl2_init()
 {
-    
-    SDL_version compiled;
-    SDL_version linked;
-
-    SDL_VERSION(&compiled);
-    SDL_GetVersion(&linked);
-    printf("[SDL] compiled against SDL version %d.%d.%d\n",
-           compiled.major, compiled.minor, compiled.patch);
-    printf("[SDL] linked against SDL version %d.%d.%d\n",
-           linked.major, linked.minor, linked.patch);
-
-    // init subsystems video and audio
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-    // INIT VIDEO STUFF
-    // print the list of video backends
-    int numVideoDrivers = SDL_GetNumVideoDrivers();
-    printf("[SDL] %d video backend(s) compiled into SDL: ", numVideoDrivers);
-    for(int i=0; i<numVideoDrivers; i++)
-    {
-        printf(" \'%s\' ", SDL_GetVideoDriver(i));
-    }
-    printf("\n");
-    printf("[SDL] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
-
-    // setup context
-    context0.current_window_size = 2;
-    context0.fullscreen = false;
-    // create window - title will be set later by function E64::sdl2_update_title()
-    context0.window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
-    // create renderer and link it to window
-    context0.renderer = SDL_CreateRenderer(context0.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    // create a texture that is able to refresh very frequently
-    context0.texture = SDL_CreateTexture(context0.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
-    
-    SDL_GetWindowSize(context0.window, &window_width, &window_height);
-    destination = { 0, 0, window_width, window_height };
-    
-    // make sure mouse cursor isn't visible
-    SDL_ShowCursor(SDL_DISABLE);
+    SDL_Init(SDL_INIT_AUDIO);
     
     // each call to SDL_PollEvent invokes SDL_PumpEvents() that updates this array
     E64_sdl2_keyboard_state = SDL_GetKeyboardState(NULL);
@@ -134,51 +67,6 @@ void E64::sdl2_init()
     printf("channels\t%d\t\t%d\n", want.channels, have.channels);
     printf("samples\t\t%d\t\t%d\n", want.samples, have.samples);
     audio_running = false;
-}
-
-void E64::sdl2_reset_window_size()
-{
-    SDL_SetWindowSize(context0.window, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y);
-    SDL_SetWindowPosition(context0.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-}
-
-void E64::sdl2_increase_window_size()
-{
-    if(context0.current_window_size < 3)
-    {
-        context0.current_window_size++;
-        SDL_SetWindowSize(context0.window, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y);
-        SDL_GetWindowSize(context0.window, &window_width, &window_height);
-        destination = { 0, 0, window_width, window_height };
-        SDL_SetWindowPosition(context0.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    }
-}
-
-void E64::sdl2_decrease_window_size()
-{
-    if(context0.current_window_size > 0)
-    {
-        context0.current_window_size--;
-        SDL_SetWindowSize(context0.window, window_sizes[context0.current_window_size].x, window_sizes[context0.current_window_size].y);
-        SDL_GetWindowSize(context0.window, &window_width, &window_height);
-        destination = { 0, 0, window_width, window_height };
-        SDL_SetWindowPosition(context0.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    }
-}
-
-void E64::sdl2_toggle_fullscreen()
-{
-    context0.fullscreen = !context0.fullscreen;
-    if(context0.fullscreen)
-    {
-        SDL_SetWindowFullscreen(context0.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    }
-    else
-    {
-        SDL_SetWindowFullscreen(context0.window, SDL_WINDOW_RESIZABLE);
-    }
-    SDL_GetWindowSize(context0.window, &window_width, &window_height);
-    destination = { 0, 0, window_width, window_height };
 }
 
 int E64::sdl2_process_events()
@@ -481,34 +369,6 @@ int E64::sdl2_process_events()
     return return_value;
 }
 
-void E64::sdl2_update_screen()
-{
-    switch(computer.current_mode)
-    {
-        case NORMAL_MODE:
-            SDL_UpdateTexture(context0.texture, NULL, computer.vicv_ic->host_frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
-            break;
-        case DEBUG_MODE:
-            SDL_UpdateTexture(context0.texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
-            break;
-    }
-    SDL_RenderCopy(context0.renderer, context0.texture, NULL, &destination);
-    SDL_RenderPresent(context0.renderer);
-}
-
-void E64::sdl2_update_title(void)
-{
-    switch(computer.current_mode)
-    {
-        case NORMAL_MODE:
-            SDL_SetWindowTitle(context0.window, "E64-II");
-            break;
-        case DEBUG_MODE:
-            SDL_SetWindowTitle(context0.window, "E64-II debugger");
-            break;
-    }
-}
-
 void E64::sdl2_wait_until_enter_released()
 {
     SDL_Event event;
@@ -573,11 +433,8 @@ void E64::sdl2_cleanup()
 {
     printf("[SDL] cleaning up\n");
     E64::sdl2_stop_audio();
-    SDL_DestroyTexture(context0.texture);
-    SDL_DestroyRenderer(context0.renderer);
-    SDL_DestroyWindow(context0.window);
     SDL_CloseAudioDevice(E64_sdl2_audio_dev);
-    SDL_Quit();
+    //SDL_Quit();
 }
 
 void E64::sdl2_delay_10ms()

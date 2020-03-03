@@ -64,7 +64,7 @@ void E64::machine::switch_to_running()
 {
     current_mode = NORMAL_MODE;
     debug_console_cursor_deactivate();
-    E64::sdl2_update_title();
+    host_video.update_title();
     // audio starts "automatically" when buffer reaches a minimum size
 }
 
@@ -72,7 +72,7 @@ void E64::machine::switch_to_debug()
 {
     current_mode = DEBUG_MODE;
     debug_console_cursor_activate();
-    E64::sdl2_update_title();
+    host_video.update_title();
     E64::sdl2_stop_audio();
 }
 
