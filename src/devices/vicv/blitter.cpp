@@ -17,3 +17,20 @@ void E64::blitter::run(int no_of_cycles)
         no_of_cycles--;
     }
 }
+
+uint8_t E64::blitter::read_byte(uint8_t address)
+{
+    return 0;
+}
+
+void E64::blitter::write_byte(uint8_t address, uint8_t byte)
+{
+    switch( address )
+    {
+        case 0x00:
+            if( byte & 0b00000001 ) printf("dummy for clearing a framebuffer\n");
+            break;
+        default:
+            break;
+    }
+}

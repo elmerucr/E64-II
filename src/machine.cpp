@@ -89,11 +89,6 @@ void E64::machine::switch_mode()
     }
 }
 
-//void E64::machine::force_next_instruction()
-//{
-//    cpu_ic->force_next_instruction();
-//}
-
 int E64::machine::run(uint16_t no_of_cycles)
 {
     // default exit_code of the function is 0, no breakpoints have occurred

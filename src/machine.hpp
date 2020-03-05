@@ -55,7 +55,6 @@ namespace E64
         machine();
         ~machine();
         
-//        void force_next_instruction();
         int  run(uint16_t no_of_cycles);
         
         bool toggle_debugger_irq_pin();

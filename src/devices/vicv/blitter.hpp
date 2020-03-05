@@ -3,6 +3,13 @@
 //
 //  Copyright © 2020 elmerucr. All rights reserved.
 
+/* Blitter is able to copy data very fast between memory locations, at a
+ * clock speed of 8 times CPU. Copy operations run concurrently and can
+ * be added to a FIFO linked list through an I/O memory mapped interface.
+ *
+ * Reg 00: bit 0: On 1, blitter is busy, on 0, blitter is idle.
+ */
+
 #ifndef BLITTER_HPP
 #define BLITTER_HPP
 
@@ -39,8 +46,14 @@ struct surface
 
 class blitter
 {
+private:
+    uint8_t registers[256];
 public:
     void run(int no_of_cycles);
+    
+    // Register access
+    uint8_t read_byte(uint8_t address);
+    void write_byte(uint8_t address, uint8_t byte);
 };
 
 }

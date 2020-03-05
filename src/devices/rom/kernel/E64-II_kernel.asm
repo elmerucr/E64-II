@@ -189,6 +189,7 @@ exception_handler
 interrupt_2_autovector
 	move.b	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
 									; switch buffers
+									; clear the backbuffer
 									; plan some blitter stuff (text screen, ...)
 	rte
 

@@ -28,6 +28,9 @@ VICV_COL			equ VICV_BASE+$06
 VICV_BORDER_SIZE	equ VICV_BASE+$0a
 VICV_ISR			equ VICV_BASE+$0c
 
+; blitter
+BLITTER_BASE		equ $fe0700
+
 ; sound
 SOUND_BASE	equ $fe0500	; sound base register
 SID0_BASE	equ	SOUND_BASE

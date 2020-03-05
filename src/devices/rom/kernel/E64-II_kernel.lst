@@ -32,125 +32,128 @@ F01:0027       VICV_COL			equ VICV_BASE+$06
 F01:0028       VICV_BORDER_SIZE	equ VICV_BASE+$0a
 F01:0029       VICV_ISR			equ VICV_BASE+$0c
 F01:0030       
-F01:0031       ; sound
-F01:0032       SOUND_BASE	equ $fe0500	; sound base register
-F01:0033       SID0_BASE	equ	SOUND_BASE
-F01:0034       SID1_BASE	equ	SOUND_BASE+$20
-F01:0035       ; sound indices
-F01:0036       SID0_LEFT	equ $80
-F01:0037       SID0_RGHT	equ $81
-F01:0038       SID1_LEFT	equ $82
-F01:0039       SID1_RGHT	equ	$83
-F01:0040       
-F01:0041       N_C0_	equ	00*2
-F01:0042       N_C0S	equ	01*2
-F01:0043       N_D0_	equ	02*2
-F01:0044       N_D0S	equ	03*2
-F01:0045       N_E0_	equ	04*2
-F01:0046       N_F0_	equ	05*2
-F01:0047       N_F0S	equ	06*2
-F01:0048       N_G0_	equ	07*2
-F01:0049       N_G0S	equ	08*2
-F01:0050       N_A0_	equ	09*2
-F01:0051       N_A0S	equ	10*2
-F01:0052       N_B0_	equ	11*2
-F01:0053       
-F01:0054       N_C1_	equ	12*2
-F01:0055       N_C1S	equ	13*2
-F01:0056       N_D1_	equ	14*2
-F01:0057       N_D1S	equ	15*2
-F01:0058       N_E1_	equ	16*2
-F01:0059       N_F1_	equ	17*2
-F01:0060       N_F1S	equ	18*2
-F01:0061       N_G1_	equ	19*2
-F01:0062       N_G1S	equ	20*2
-F01:0063       N_A1_	equ	21*2
-F01:0064       N_A1S	equ	22*2
-F01:0065       N_B1_	equ	23*2
-F01:0066       
-F01:0067       N_C2_	equ	24*2
-F01:0068       N_C2S	equ	25*2
-F01:0069       N_D2_	equ	26*2
-F01:0070       N_D2S	equ	27*2
-F01:0071       N_E2_	equ	28*2
-F01:0072       N_F2_	equ	29*2
-F01:0073       N_F2S	equ	30*2
-F01:0074       N_G2_	equ	31*2
-F01:0075       N_G2S	equ	32*2
-F01:0076       N_A2_	equ	33*2
-F01:0077       N_A2S	equ	34*2
-F01:0078       N_B2_	equ	35*2
-F01:0079       
-F01:0080       N_C3_	equ	36*2
-F01:0081       N_C3S	equ	37*2
-F01:0082       N_D3_	equ	38*2
-F01:0083       N_D3S	equ	39*2
-F01:0084       N_E3_	equ	40*2
-F01:0085       N_F3_	equ	41*2
-F01:0086       N_F3S	equ	42*2
-F01:0087       N_G3_	equ	43*2
-F01:0088       N_G3S	equ	44*2
-F01:0089       N_A3_	equ	45*2
-F01:0090       N_A3S	equ	46*2
-F01:0091       N_B3_	equ	47*2
-F01:0092       
-F01:0093       N_C4_	equ	48*2
-F01:0094       N_C4S	equ	49*2
-F01:0095       N_D4_	equ	50*2
-F01:0096       N_D4S	equ	51*2
-F01:0097       N_E4_	equ	52*2
-F01:0098       N_F4_	equ	53*2
-F01:0099       N_F4S	equ	54*2
-F01:0100       N_G4_	equ	55*2
-F01:0101       N_G4S	equ	56*2
-F01:0102       N_A4_	equ	57*2
-F01:0103       N_A4S	equ	58*2
-F01:0104       N_B4_	equ	59*2
-F01:0105       
-F01:0106       N_C5_	equ	60*2
-F01:0107       N_C5S	equ	61*2
-F01:0108       N_D5_	equ	62*2
-F01:0109       N_D5S	equ	63*2
-F01:0110       N_E5_	equ	64*2
-F01:0111       N_F5_	equ	65*2
-F01:0112       N_F5S	equ	66*2
-F01:0113       N_G5_	equ	67*2
-F01:0114       N_G5S	equ	68*2
-F01:0115       N_A5_	equ	69*2
-F01:0116       N_A5S	equ	70*2
-F01:0117       N_B5_	equ	71*2
-F01:0118       
-F01:0119       N_C6_	equ	72*2
-F01:0120       N_C6S	equ	73*2
-F01:0121       N_D6_	equ	74*2
-F01:0122       N_D6S	equ	75*2
-F01:0123       N_E6_	equ	76*2
-F01:0124       N_F6_	equ	77*2
-F01:0125       N_F6S	equ	78*2
-F01:0126       N_G6_	equ	79*2
-F01:0127       N_G6S	equ	80*2
-F01:0128       N_A6_	equ	81*2
-F01:0129       N_A6S	equ	82*2
-F01:0130       N_B6_	equ	83*2
-F01:0131       
-F01:0132       N_C7_	equ	84*2
-F01:0133       N_C7S	equ	85*2
-F01:0134       N_D7_	equ	86*2
-F01:0135       N_D7S	equ	87*2
-F01:0136       N_E7_	equ	88*2
-F01:0137       N_F7_	equ	89*2
-F01:0138       N_F7S	equ	90*2
-F01:0139       N_G7_	equ	91*2
-F01:0140       N_G7S	equ	92*2
-F01:0141       N_A7_	equ	93*2
-F01:0142       N_A7S	equ	94*2
-F01:0143       
-F01:0144       CURR_TEXT_COLOR	equ $008000	; byte
-F01:0145       CURSOR_POS		equ	$008002	; word
-F01:0146       TIMER0_VECTOR	equ	$008004	; long
-F01:0147       TIMER1_VECTOR	equ	$008008	; long
-F01:0148       TIMER2_VECTOR	equ	$00800c	; long
-F01:0149       TIMER3_VECTOR	equ	$008010	; long
+F01:0031       ; blitter
+F01:0032       BLITTER_BASE		equ $fe0700
+F01:0033       
+F01:0034       ; sound
+F01:0035       SOUND_BASE	equ $fe0500	; sound base register
+F01:0036       SID0_BASE	equ	SOUND_BASE
+F01:0037       SID1_BASE	equ	SOUND_BASE+$20
+F01:0038       ; sound indices
+F01:0039       SID0_LEFT	equ $80
+F01:0040       SID0_RGHT	equ $81
+F01:0041       SID1_LEFT	equ $82
+F01:0042       SID1_RGHT	equ	$83
+F01:0043       
+F01:0044       N_C0_	equ	00*2
+F01:0045       N_C0S	equ	01*2
+F01:0046       N_D0_	equ	02*2
+F01:0047       N_D0S	equ	03*2
+F01:0048       N_E0_	equ	04*2
+F01:0049       N_F0_	equ	05*2
+F01:0050       N_F0S	equ	06*2
+F01:0051       N_G0_	equ	07*2
+F01:0052       N_G0S	equ	08*2
+F01:0053       N_A0_	equ	09*2
+F01:0054       N_A0S	equ	10*2
+F01:0055       N_B0_	equ	11*2
+F01:0056       
+F01:0057       N_C1_	equ	12*2
+F01:0058       N_C1S	equ	13*2
+F01:0059       N_D1_	equ	14*2
+F01:0060       N_D1S	equ	15*2
+F01:0061       N_E1_	equ	16*2
+F01:0062       N_F1_	equ	17*2
+F01:0063       N_F1S	equ	18*2
+F01:0064       N_G1_	equ	19*2
+F01:0065       N_G1S	equ	20*2
+F01:0066       N_A1_	equ	21*2
+F01:0067       N_A1S	equ	22*2
+F01:0068       N_B1_	equ	23*2
+F01:0069       
+F01:0070       N_C2_	equ	24*2
+F01:0071       N_C2S	equ	25*2
+F01:0072       N_D2_	equ	26*2
+F01:0073       N_D2S	equ	27*2
+F01:0074       N_E2_	equ	28*2
+F01:0075       N_F2_	equ	29*2
+F01:0076       N_F2S	equ	30*2
+F01:0077       N_G2_	equ	31*2
+F01:0078       N_G2S	equ	32*2
+F01:0079       N_A2_	equ	33*2
+F01:0080       N_A2S	equ	34*2
+F01:0081       N_B2_	equ	35*2
+F01:0082       
+F01:0083       N_C3_	equ	36*2
+F01:0084       N_C3S	equ	37*2
+F01:0085       N_D3_	equ	38*2
+F01:0086       N_D3S	equ	39*2
+F01:0087       N_E3_	equ	40*2
+F01:0088       N_F3_	equ	41*2
+F01:0089       N_F3S	equ	42*2
+F01:0090       N_G3_	equ	43*2
+F01:0091       N_G3S	equ	44*2
+F01:0092       N_A3_	equ	45*2
+F01:0093       N_A3S	equ	46*2
+F01:0094       N_B3_	equ	47*2
+F01:0095       
+F01:0096       N_C4_	equ	48*2
+F01:0097       N_C4S	equ	49*2
+F01:0098       N_D4_	equ	50*2
+F01:0099       N_D4S	equ	51*2
+F01:0100       N_E4_	equ	52*2
+F01:0101       N_F4_	equ	53*2
+F01:0102       N_F4S	equ	54*2
+F01:0103       N_G4_	equ	55*2
+F01:0104       N_G4S	equ	56*2
+F01:0105       N_A4_	equ	57*2
+F01:0106       N_A4S	equ	58*2
+F01:0107       N_B4_	equ	59*2
+F01:0108       
+F01:0109       N_C5_	equ	60*2
+F01:0110       N_C5S	equ	61*2
+F01:0111       N_D5_	equ	62*2
+F01:0112       N_D5S	equ	63*2
+F01:0113       N_E5_	equ	64*2
+F01:0114       N_F5_	equ	65*2
+F01:0115       N_F5S	equ	66*2
+F01:0116       N_G5_	equ	67*2
+F01:0117       N_G5S	equ	68*2
+F01:0118       N_A5_	equ	69*2
+F01:0119       N_A5S	equ	70*2
+F01:0120       N_B5_	equ	71*2
+F01:0121       
+F01:0122       N_C6_	equ	72*2
+F01:0123       N_C6S	equ	73*2
+F01:0124       N_D6_	equ	74*2
+F01:0125       N_D6S	equ	75*2
+F01:0126       N_E6_	equ	76*2
+F01:0127       N_F6_	equ	77*2
+F01:0128       N_F6S	equ	78*2
+F01:0129       N_G6_	equ	79*2
+F01:0130       N_G6S	equ	80*2
+F01:0131       N_A6_	equ	81*2
+F01:0132       N_A6S	equ	82*2
+F01:0133       N_B6_	equ	83*2
+F01:0134       
+F01:0135       N_C7_	equ	84*2
+F01:0136       N_C7S	equ	85*2
+F01:0137       N_D7_	equ	86*2
+F01:0138       N_D7S	equ	87*2
+F01:0139       N_E7_	equ	88*2
+F01:0140       N_F7_	equ	89*2
+F01:0141       N_F7S	equ	90*2
+F01:0142       N_G7_	equ	91*2
+F01:0143       N_G7S	equ	92*2
+F01:0144       N_A7_	equ	93*2
+F01:0145       N_A7S	equ	94*2
+F01:0146       
+F01:0147       CURR_TEXT_COLOR	equ $008000	; byte
+F01:0148       CURSOR_POS		equ	$008002	; word
+F01:0149       TIMER0_VECTOR	equ	$008004	; long
+F01:0150       TIMER1_VECTOR	equ	$008008	; long
+F01:0151       TIMER2_VECTOR	equ	$00800c	; long
+F01:0152       TIMER3_VECTOR	equ	$008010	; long
 F00:0005       
 F00:0006       	org		KERNEL_LOC
 F00:0007       
@@ -458,101 +461,102 @@ F00:0189       interrupt_2_autovector
 F00:0190       	move.b	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
                S01:00FF021C:  13 FC 00 01 00 FE 04 0C
 F00:0191       									; switch buffers
-F00:0192       									; plan some blitter stuff (text screen, ...)
-F00:0193       	rte
+F00:0192       									; clear the backbuffer
+F00:0193       									; plan some blitter stuff (text screen, ...)
+F00:0194       	rte
                S01:00FF0224:  4E 73
-F00:0194       
-F00:0195       ; level 4 interrupt autovector (timer)
-F00:0196       interrupt_4_autovector
-F00:0197       	move.l	a0,-(a7)				; save a0
+F00:0195       
+F00:0196       ; level 4 interrupt autovector (timer)
+F00:0197       interrupt_4_autovector
+F00:0198       	move.l	a0,-(a7)				; save a0
                S01:00FF0226:  2F 08
-F00:0198       timer0_check
-F00:0199       	btst	#0,TIMER_BASE			; did timer 0 cause the interrupt?
+F00:0199       timer0_check
+F00:0200       	btst	#0,TIMER_BASE			; did timer 0 cause the interrupt?
                S01:00FF0228:  08 39 00 00 00 FE 06 00
-F00:0200       	beq		timer1_check			; no, go to next timer
+F00:0201       	beq		timer1_check			; no, go to next timer
                S01:00FF0230:  67 10
-F00:0201       	move.b	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
+F00:0202       	move.b	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
                S01:00FF0232:  13 FC 00 01 00 FE 06 00
-F00:0202       	movea.l	TIMER0_VECTOR,a0
+F00:0203       	movea.l	TIMER0_VECTOR,a0
                S01:00FF023A:  20 79 00 00 80 04
-F00:0203       	jmp		(a0)
+F00:0204       	jmp		(a0)
                S01:00FF0240:  4E D0
-F00:0204       timer1_check
-F00:0205       	btst	#1,TIMER_BASE
+F00:0205       timer1_check
+F00:0206       	btst	#1,TIMER_BASE
                S01:00FF0242:  08 39 00 01 00 FE 06 00
-F00:0206       	beq		timer2_check
+F00:0207       	beq		timer2_check
                S01:00FF024A:  67 10
-F00:0207       	move.b	#%00000010,TIMER_BASE
+F00:0208       	move.b	#%00000010,TIMER_BASE
                S01:00FF024C:  13 FC 00 02 00 FE 06 00
-F00:0208       	movea.l	TIMER1_VECTOR,a0
+F00:0209       	movea.l	TIMER1_VECTOR,a0
                S01:00FF0254:  20 79 00 00 80 08
-F00:0209       	jmp		(a0)
+F00:0210       	jmp		(a0)
                S01:00FF025A:  4E D0
-F00:0210       timer2_check
-F00:0211       	move.l	(a7)+,a0				; restore a0
+F00:0211       timer2_check
+F00:0212       	move.l	(a7)+,a0				; restore a0
                S01:00FF025C:  20 5F
-F00:0212       	rte
+F00:0213       	rte
                S01:00FF025E:  4E 73
-F00:0213       
-F00:0214       ; level 5 interrupt autovector
-F00:0215       interrupt_5_autovector
-F00:0216       	move.l	a0,-(a7)
+F00:0214       
+F00:0215       ; level 5 interrupt autovector
+F00:0216       interrupt_5_autovector
+F00:0217       	move.l	a0,-(a7)
                S01:00FF0260:  2F 08
-F00:0217       	move.l	(a7)+,a0
+F00:0218       	move.l	(a7)+,a0
                S01:00FF0262:  20 5F
-F00:0218       	rte
+F00:0219       	rte
                S01:00FF0264:  4E 73
-F00:0219       
-F00:0220       ; level 6 interrupt autovector
-F00:0221       interrupt_6_autovector
-F00:0222       	rte
+F00:0220       
+F00:0221       ; level 6 interrupt autovector
+F00:0222       interrupt_6_autovector
+F00:0223       	rte
                S01:00FF0266:  4E 73
-F00:0223       
-F00:0224       ; level 7 interrupt autovector
-F00:0225       interrupt_7_autovector
-F00:0226       	rte
+F00:0224       
+F00:0225       ; level 7 interrupt autovector
+F00:0226       interrupt_7_autovector
+F00:0227       	rte
                S01:00FF0268:  4E 73
-F00:0227       
-F00:0228       timer0_irq_handler
-F00:0229       	move.l	a0,-(a7)
+F00:0228       
+F00:0229       timer0_irq_handler
+F00:0230       	move.l	a0,-(a7)
                S01:00FF026A:  2F 08
-F00:0230       	movea.l	VICV_COL,a0
+F00:0231       	movea.l	VICV_COL,a0
                S01:00FF026C:  20 79 00 FE 04 06
-F00:0231       	addq.b	#$1,(a0)
+F00:0232       	addq.b	#$1,(a0)
                S01:00FF0272:  52 10
-F00:0232       	andi.b	#%00001111,(a0)
+F00:0233       	andi.b	#%00001111,(a0)
                S01:00FF0274:  02 10 00 0F
-F00:0233       	movea.l	(a7)+,a0
+F00:0234       	movea.l	(a7)+,a0
                S01:00FF0278:  20 5F
-F00:0234       	bra		timer1_check
+F00:0235       	bra		timer1_check
                S01:00FF027A:  60 C6
-F00:0235       
-F00:0236       timer1_irq_handler
-F00:0237       	move.l	a0,-(a7)
+F00:0236       
+F00:0237       timer1_irq_handler
+F00:0238       	move.l	a0,-(a7)
                S01:00FF027C:  2F 08
-F00:0238       	movea.l	VICV_COL,a0
+F00:0239       	movea.l	VICV_COL,a0
                S01:00FF027E:  20 79 00 FE 04 06
-F00:0239       	addq.b	#$1,(1,a0)
+F00:0240       	addq.b	#$1,(1,a0)
                S01:00FF0284:  52 28 00 01
-F00:0240       	andi.b	#%00001111,(1,a0)
+F00:0241       	andi.b	#%00001111,(1,a0)
                S01:00FF0288:  02 28 00 0F 00 01
-F00:0241       	movea.l	(a7)+,a0
+F00:0242       	movea.l	(a7)+,a0
                S01:00FF028E:  20 5F
-F00:0242       	addq.b	#1,VICV_BORDER_SIZE
+F00:0243       	addq.b	#1,VICV_BORDER_SIZE
                S01:00FF0290:  52 39 00 FE 04 0A
-F00:0243       	bra		timer2_check
+F00:0244       	bra		timer2_check
                S01:00FF0296:  60 C4
-F00:0244       
-F00:0245       ; string data
-F00:0246       welcome
-F00:0247       	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200211",ASCII_LF,ASCII_NULL
+F00:0245       
+F00:0246       ; string data
+F00:0247       welcome
+F00:0248       	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200211",ASCII_LF,ASCII_NULL
                S01:00FF0298:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
                S01:00FF02A8:  30 32 30 20 6B 65 72 6E 65 6C 20 76 65 72 73 69
                S01:00FF02B8:  0A
                S01:00FF02B9:  00
-F00:0248       
-F00:0249       	align 1
-F00:0250       	include "E64-II_kernel_tables.asm"
+F00:0249       
+F00:0250       	align 1
+F00:0251       	include "E64-II_kernel_tables.asm"
 F02:0001       ; rom tables
 F02:0002       
 F02:0003       ascii_to_screencode
@@ -921,9 +925,9 @@ F02:0144       	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0
                S01:00FF0412:  D9 BD
                S01:00FF0414:  E6 B0
                S01:00FF0416:  F4 67
-F00:0251       
-F00:0252       	org		KERNEL_LOC+$fffc
-F00:0253       	dc.l	$deadbeef
+F00:0252       
+F00:0253       	org		KERNEL_LOC+$fffc
+F00:0254       	dc.l	$deadbeef
                S02:00FFFFFC:  DE AD BE EF
 
 
@@ -1073,6 +1077,7 @@ SID0_LEFT EXPR(128=0x80) EQU
 SID1_BASE EXPR(16647456=0xfe0520) EQU 
 SID0_BASE EXPR(16647424=0xfe0500) EQU 
 SOUND_BASE EXPR(16647424=0xfe0500) EQU 
+BLITTER_BASE EXPR(16647936=0xfe0700) UNUSED EQU 
 VICV_ISR EXPR(16647180=0xfe040c) EQU 
 VICV_BORDER_SIZE EXPR(16647178=0xfe040a) EQU 
 VICV_COL EXPR(16647174=0xfe0406) EQU 
@@ -1092,7 +1097,7 @@ VEC_11_UNIMPL_INSTRUCTION EXPR(44=0x2c) EQU
 VEC_10_UNIMPL_INSTRUCTION EXPR(40=0x28) EQU 
 VEC_04_ILLEGAL_INSTRUCTION EXPR(16=0x10) EQU 
 KERNEL_LOC EXPR(16711680=0xff0000) EQU 
-__LINE__ EXPR(253=0xfd) INTERNAL 
+__LINE__ EXPR(254=0xfe) INTERNAL 
 __FO EXPR(0=0x0) INTERNAL 
 __RS EXPR(0=0x0) INTERNAL 
 REPTN EXPR(-1=0xffffffff) INTERNAL 

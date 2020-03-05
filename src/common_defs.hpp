@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200303
+#define E64_BUILD               20200305
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             5600000
@@ -23,6 +23,7 @@
 #define IO_VICV_PAGE                0xfe04
 #define IO_SND_PAGE                 0xfe05
 #define IO_TIMER_PAGE               0xfe06
+#define IO_BLITTER_PAGE             0xfe07
 #define IO_RESET_VECTOR_MASK        0xfffff8
 #define IO_KERNEL_MASK              0xff
 #define DEBUGGER_FOREGROUND_COLOR   0x3b

@@ -33,7 +33,6 @@ private:
     uint32_t *framebuffer0;
     uint32_t *framebuffer1;
 
-    // internal stuff
     uint32_t cycle_clock;
     uint32_t dot_clock;
 
@@ -53,12 +52,12 @@ public:
     
     inline void clear_framebuffer0()
     {
-        memset(framebuffer0, 0x00, (640*1024));
+        memset(framebuffer0, 0x00, 512*320*4);
     }
     
     inline void clear_framebuffer1()
     {
-        memset(framebuffer1, 0x00, (640*1024));
+        memset(framebuffer1, 0x00, 512*320*4);
     }
 
     // move this member to private again????   !!!!
@@ -74,14 +73,14 @@ public:
     // experimental version
     void run(uint32_t number_of_dots);
 
-    uint16_t    get_current_scanline();
-    uint16_t    get_current_pixel();
-    uint32_t    get_cycle_clock() { return cycle_clock; }
-    uint32_t    get_dot_clock() { return dot_clock; }
-    bool        is_hblank();
-    bool        is_vblank();
+    uint16_t        get_current_scanline();
+    uint16_t        get_current_pixel();
+    inline uint32_t get_cycle_clock() { return cycle_clock; }
+    inline uint32_t get_dot_clock() { return dot_clock; }
+    bool            is_hblank();
+    bool            is_vblank();
     
-    void toggle_overlay() { overlay_present = !overlay_present; }
+    inline void toggle_overlay() { overlay_present = !overlay_present; }
     
     // Register access to vicv
     uint8_t read_byte(uint8_t address);

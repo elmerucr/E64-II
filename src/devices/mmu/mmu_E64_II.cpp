@@ -33,6 +33,10 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     {
         return computer.sound_ic->read_byte(address & 0x000000ff);
     }
+    else if( page == IO_BLITTER_PAGE )
+    {
+        return computer.blitter_ic->read_byte(address & 0x000000ff);
+    }
     else if( page == IO_TIMER_PAGE )
     {
         return computer.timer_ic->read_byte(address & 0x000000ff);
@@ -86,6 +90,10 @@ void E64::mmu::write_memory_8(unsigned int address, unsigned int value)
     else if( page == IO_SND_PAGE )
     {
         computer.sound_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+    }
+    else if( page == IO_BLITTER_PAGE )
+    {
+        computer.blitter_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_TIMER_PAGE )
     {
