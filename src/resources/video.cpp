@@ -52,16 +52,32 @@ E64::video::video()
     
     // prepare debug_screen_buffer
     debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+    
+    // prepare 4096 color palette and populate it with the right colors
+    // 0x0 = 0x00 and 0xf means 0xff per channel
+    palette = new uint32_t[0x1000];
+    for(int i = 0x0; i<0x1000; i++)
+    {
+        // we need an argb4444 format, but swapped since E64-II is big-endian
+        //uint8_t alpha = (i & 0x00f0) >> 8;    // unused
+        uint8_t red   = (i & 0x000f) >> 0;
+        uint8_t green = (i & 0xf000) >> 24;
+        uint8_t blue  = (i & 0x0f00) >> 16;
+        
+        palette[i] = 0xff000000 | ((red * 0x11) << 16) | ((green * 0x11) << 8) | (blue * 0x11);
+    }
 }
 
 E64::video::~video()
 {
+    delete [] palette;
     delete [] debug_screen_buffer;
     delete [] buffer_1;
     delete [] buffer_0;
     buffer_0 = nullptr;
     buffer_1 = nullptr;
     debug_screen_buffer = nullptr;
+    palette = nullptr;
     
     printf("[SDL] cleaning up video\n");
     SDL_DestroyTexture(texture);
