@@ -55,14 +55,13 @@ E64::video::video()
     
     // prepare 4096 color palette and populate it with the right colors
     // 0x0 = 0x00 and 0xf means 0xff per channel
-    palette = new uint32_t[0x1000];
-    for(int i = 0x0; i<0x1000; i++)
+    palette = new uint32_t[0x10000];
+    for(int i = 0x0; i<0x10000; i++)
     {
-        // we need an argb4444 format, but swapped since E64-II is big-endian
-        //uint8_t alpha = (i & 0x00f0) >> 8;    // unused
-        uint8_t red   = (i & 0x000f) >> 0;
-        uint8_t green = (i & 0xf000) >> 24;
-        uint8_t blue  = (i & 0x0f00) >> 16;
+        // we need an rgb444 format, but swapped since E64-II is big-endian internally
+        uint8_t red   = (i & 0x000f);
+        uint8_t green = (i & 0xf000) >> 12;
+        uint8_t blue  = (i & 0x0f00) >> 8;
         
         palette[i] = 0xff000000 | ((red * 0x11) << 16) | ((green * 0x11) << 8) | (blue * 0x11);
     }

@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200309
+#define E64_BUILD               20200310
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             5600000
@@ -89,6 +89,23 @@ extern const char screencode_to_ascii[];
 #define C64_LIGHTBLUE   0xff6c6fe3  // color 14
 #define C64_LIGHTGREY   0xffb1b1b1  // color 15
 
+#define NEW_C64_BLACK       0x00f0
+#define NEW_C64_WHITE       0xffff
+#define NEW_C64_RED         0x33f7
+#define NEW_C64_CYAN        0xccf8
+#define NEW_C64_PURPLE      0x49f8
+#define NEW_C64_GREEN       0xa5f6
+#define NEW_C64_BLUE        0x39f3
+#define NEW_C64_YELLOW      0xe8fe
+#define NEW_C64_ORANGE      0x53f8
+#define NEW_C64_BROWN       0x31f5
+#define NEW_C64_LIGHTRED    0x77fb
+#define NEW_C64_DARKGREY    0x44f4
+#define NEW_C64_GREY        0x77f7
+#define NEW_C64_LIGHTGREEN  0xfafb
+#define NEW_C64_LIGHTBLUE   0x7df6
+#define NEW_C64_LIGHTGREY   0xaafa
+
 #define C64_GREY_00 0xff000000
 #define C64_GREY_01 0xff111111
 #define C64_GREY_02 0xff222222
@@ -139,6 +156,15 @@ extern const char screencode_to_ascii[];
 #define C64_COBALT_13  0xff5b68dd
 #define C64_COBALT_14  0xff6270ee
 #define C64_COBALT_15  0xff6978ff
+
+#define NEW_COBALT_00   0x00f0
+#define NEW_COBALT_01   0x12f1
+#define NEW_COBALT_02   0x24f2
+#define NEW_COBALT_03   0x36f3
+#define NEW_COBALT_04   0x48f4
+#define NEW_COBALT_05   0x5af5
+#define NEW_COBALT_06   0x6cf6
+#define NEW_COBALT_07   0x7ef7
 
 #define C64_AMBER_00 0xff000000      // kimbie dark from Visual Studio Code
 #define C64_AMBER_01 0xff110c08
