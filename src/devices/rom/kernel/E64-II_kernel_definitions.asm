@@ -23,10 +23,10 @@ TIMER_BASE	equ $fe0600
 
 ; vicv
 VICV_BASE			equ	$fe0400 	; vicv base register
-VICV_TXT			equ VICV_BASE+$02
-VICV_COL			equ VICV_BASE+$06
-VICV_BORDER_SIZE	equ VICV_BASE+$0a
-VICV_ISR			equ VICV_BASE+$0c
+VICV_TXT			equ VICV_BASE+$04
+VICV_COL			equ VICV_BASE+$08
+VICV_BORDER_SIZE	equ VICV_BASE+$0c
+VICV_ISR			equ VICV_BASE+$0e
 
 ; blitter
 BLITTER_BASE		equ $fe0700

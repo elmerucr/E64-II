@@ -27,10 +27,10 @@ F01:0022       TIMER_BASE	equ $fe0600
 F01:0023       
 F01:0024       ; vicv
 F01:0025       VICV_BASE			equ	$fe0400 	; vicv base register
-F01:0026       VICV_TXT			equ VICV_BASE+$02
-F01:0027       VICV_COL			equ VICV_BASE+$06
-F01:0028       VICV_BORDER_SIZE	equ VICV_BASE+$0a
-F01:0029       VICV_ISR			equ VICV_BASE+$0c
+F01:0026       VICV_TXT			equ VICV_BASE+$04
+F01:0027       VICV_COL			equ VICV_BASE+$08
+F01:0028       VICV_BORDER_SIZE	equ VICV_BASE+$0c
+F01:0029       VICV_ISR			equ VICV_BASE+$0e
 F01:0030       
 F01:0031       ; blitter
 F01:0032       BLITTER_BASE		equ $fe0700
@@ -216,20 +216,20 @@ F00:0039
 F00:0040       	; set screen colors
 F00:0041       	move.b	#$00,VICV_BASE			; c64 black border
                S01:00FF0074:  13 FC 00 00 00 FE 04 00
-F00:0042       	move.b	#$06,VICV_BASE+1		; c64 blue background
-               S01:00FF007C:  13 FC 00 06 00 FE 04 01
+F00:0042       	move.b	#$06,VICV_BASE+2		; c64 blue background
+               S01:00FF007C:  13 FC 00 06 00 FE 04 02
 F00:0043       	; set border size
 F00:0044       	move.b	#$20,VICV_BORDER_SIZE
-               S01:00FF0084:  13 FC 00 20 00 FE 04 0A
+               S01:00FF0084:  13 FC 00 20 00 FE 04 0C
 F00:0045       	; set text color
 F00:0046       	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
                S01:00FF008C:  13 FC 00 0C 00 00 80 00
 F00:0047       
 F00:0048       	; set txt pointer
 F00:0049       	move.l	#$00f00000,VICV_TXT
-               S01:00FF0094:  23 FC 00 F0 00 00 00 FE 04 02
+               S01:00FF0094:  23 FC 00 F0 00 00 00 FE 04 04
 F00:0050       	move.l	#$00f00800,VICV_COL
-               S01:00FF009E:  23 FC 00 F0 08 00 00 FE 04 06
+               S01:00FF009E:  23 FC 00 F0 08 00 00 FE 04 08
 F00:0051       
 F00:0052       	; reset cursor position
 F00:0053       	move.w	#$0,CURSOR_POS
@@ -324,7 +324,7 @@ F00:0113       	; copy keyboard state in to screen
 F00:0114       .1	moveq	#$0,d0
                S01:00FF0134:  70 00
 F00:0115       	movea.l	VICV_TXT,a0
-               S01:00FF0136:  20 79 00 FE 04 02
+               S01:00FF0136:  20 79 00 FE 04 04
 F00:0116       	lea		$400(a0),a0
                S01:00FF013C:  41 E8 04 00
 F00:0117       	lea		CIA_BASE,a1
@@ -349,9 +349,9 @@ F00:0127       clear_screen
 F00:0128       	movem.l	d0-d1/a0-a2,-(a7)
                S01:00FF0160:  48 E7 C0 E0
 F00:0129       	movea.l	(VICV_TXT),a0
-               S01:00FF0164:  20 79 00 FE 04 02
+               S01:00FF0164:  20 79 00 FE 04 04
 F00:0130       	movea.l	(VICV_COL),a1
-               S01:00FF016A:  22 79 00 FE 04 06
+               S01:00FF016A:  22 79 00 FE 04 08
 F00:0131       	movea.l	a0,a2
                S01:00FF0170:  24 48
 F00:0132       	lea		$800(a2),a2
@@ -396,9 +396,9 @@ F00:0152       	move.w	CURSOR_POS,d1				; load current cursor position into d1
 F00:0153       	move.b	CURR_TEXT_COLOR,d2			; load current text colour into d2
                S01:00FF01B4:  14 39 00 00 80 00
 F00:0154       	movea.l	VICV_TXT,a0					; load pointer to current text screen into a0
-               S01:00FF01BA:  20 79 00 FE 04 02
+               S01:00FF01BA:  20 79 00 FE 04 04
 F00:0155       	movea.l	VICV_COL,a1					; load pointer to current color screen into a1
-               S01:00FF01C0:  22 79 00 FE 04 06
+               S01:00FF01C0:  22 79 00 FE 04 08
 F00:0156       	lea		ascii_to_screencode,a2		; a2 now points to ascii-screencode table
                S01:00FF01C6:  45 FA 01 02
 F00:0157       	cmp.b	#ASCII_LF,d0				; do we have a line feed as the next ascii?
@@ -459,7 +459,7 @@ F00:0187
 F00:0188       ; level 2 interrupt autovector (vicv vblank)
 F00:0189       interrupt_2_autovector
 F00:0190       	move.b	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
-               S01:00FF021C:  13 FC 00 01 00 FE 04 0C
+               S01:00FF021C:  13 FC 00 01 00 FE 04 0E
 F00:0191       									; switch buffers
 F00:0192       									; clear the backbuffer
 F00:0193       									; plan some blitter stuff (text screen, ...)
@@ -521,7 +521,7 @@ F00:0229       timer0_irq_handler
 F00:0230       	move.l	a0,-(a7)
                S01:00FF026A:  2F 08
 F00:0231       	movea.l	VICV_COL,a0
-               S01:00FF026C:  20 79 00 FE 04 06
+               S01:00FF026C:  20 79 00 FE 04 08
 F00:0232       	addq.b	#$1,(a0)
                S01:00FF0272:  52 10
 F00:0233       	andi.b	#%00001111,(a0)
@@ -535,7 +535,7 @@ F00:0237       timer1_irq_handler
 F00:0238       	move.l	a0,-(a7)
                S01:00FF027C:  2F 08
 F00:0239       	movea.l	VICV_COL,a0
-               S01:00FF027E:  20 79 00 FE 04 06
+               S01:00FF027E:  20 79 00 FE 04 08
 F00:0240       	addq.b	#$1,(1,a0)
                S01:00FF0284:  52 28 00 01
 F00:0241       	andi.b	#%00001111,(1,a0)
@@ -543,7 +543,7 @@ F00:0241       	andi.b	#%00001111,(1,a0)
 F00:0242       	movea.l	(a7)+,a0
                S01:00FF028E:  20 5F
 F00:0243       	addq.b	#1,VICV_BORDER_SIZE
-               S01:00FF0290:  52 39 00 FE 04 0A
+               S01:00FF0290:  52 39 00 FE 04 0C
 F00:0244       	bra		timer2_check
                S01:00FF0296:  60 C4
 F00:0245       
@@ -1078,10 +1078,10 @@ SID1_BASE EXPR(16647456=0xfe0520) EQU
 SID0_BASE EXPR(16647424=0xfe0500) EQU 
 SOUND_BASE EXPR(16647424=0xfe0500) EQU 
 BLITTER_BASE EXPR(16647936=0xfe0700) UNUSED EQU 
-VICV_ISR EXPR(16647180=0xfe040c) EQU 
-VICV_BORDER_SIZE EXPR(16647178=0xfe040a) EQU 
-VICV_COL EXPR(16647174=0xfe0406) EQU 
-VICV_TXT EXPR(16647170=0xfe0402) EQU 
+VICV_ISR EXPR(16647182=0xfe040e) EQU 
+VICV_BORDER_SIZE EXPR(16647180=0xfe040c) EQU 
+VICV_COL EXPR(16647176=0xfe0408) EQU 
+VICV_TXT EXPR(16647172=0xfe0404) EQU 
 VICV_BASE EXPR(16647168=0xfe0400) EQU 
 TIMER_BASE EXPR(16647680=0xfe0600) EQU 
 CIA_BASE EXPR(16646912=0xfe0300) EQU 

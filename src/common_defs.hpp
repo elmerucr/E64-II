@@ -26,8 +26,6 @@
 #define IO_BLITTER_PAGE             0xfe07
 #define IO_RESET_VECTOR_MASK        0xfffff8
 #define IO_KERNEL_MASK              0xff
-#define DEBUGGER_FOREGROUND_COLOR   0x3b
-#define DEBUGGER_BACKGROUND_COLOR   0x34
 
 // some objects must be visible at global level
 extern E64::video host_video;

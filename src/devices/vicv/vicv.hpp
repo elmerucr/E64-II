@@ -10,16 +10,20 @@
 #define vicv_hpp
 
 // internal vicv registers (appear at a different base address in main memory)
-#define VICV_REG_BOR            0x00    // reg00 - Border color register
-#define VICV_REG_BKG            0x01    // reg01 - Background color register
-// reg 02-05 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
-#define VICV_REG_TXT            0x02
-// reg 06-09 combined are a 32 bit pointer for the location of the default color screen (2k), big endian
-#define VICV_REG_COL            0x06
-#define VICV_REG_BORDER_SIZE    0x0a    // a byte telling the size of the horizontal border
-// reg 0c interrupt status register
+
+// reg 00-01 combined are a 16 bit color value for the border color
+#define VICV_REG_BOR            0x00
+// reg 02-03 combined are a 16 bit color value for the background color
+#define VICV_REG_BKG            0x02
+// reg 04-07 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
+#define VICV_REG_TXT            0x04
+// reg 08-0b combined are a 32 bit pointer for the location of the default color screen (2k), big endian
+#define VICV_REG_COL            0x08
+
+#define VICV_REG_BORDER_SIZE    0x0c    // a byte telling the size of the horizontal border
+// reg 0e interrupt status register
 // write to bit 0 = acknowldge VBLANK interrupt
-#define VICV_REG_ISR            0x0c
+#define VICV_REG_ISR            0x0e
 
 namespace E64 {
 
