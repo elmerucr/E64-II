@@ -35,11 +35,6 @@ private:
     int window_height;
     SDL_Rect destination;
     
-    /* Palette, 4096 colors (3 x 4 bit)
-     *
-     */
-    uint32_t *palette;
-    
     /* These are host framebuffers for double buffering. We need two
      * buffers as the calls for refreshing the screen might happen when
      * the next screen is already being drawn.
@@ -51,6 +46,10 @@ private:
 public:
     video();
     ~video();
+
+    /* Palette, 4096 colors (3 x 4 bit)
+     */
+    uint32_t *palette;
     
     // pointer to the buffer that currently can be shown
     uint32_t *frontbuffer;

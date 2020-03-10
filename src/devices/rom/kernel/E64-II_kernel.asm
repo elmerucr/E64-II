@@ -38,8 +38,8 @@ kernel_main
 
 
 	; set screen colors
-	move.b	#$00,VICV_BASE			; c64 black border
-	move.b	#$06,VICV_BASE+2		; c64 blue background
+	move.w	#C64_BLACK,VICV_BASE
+	move.w	#C64_BLUE,VICV_BASE+2
 	; set border size
 	move.b	#$20,VICV_BORDER_SIZE
 	; set text color

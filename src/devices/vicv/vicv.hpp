@@ -34,8 +34,8 @@ private:
     uint8_t registers[256];
     
     // framebuffer pointers inside the virtual machine
-    uint32_t *framebuffer0;
-    uint32_t *framebuffer1;
+    uint16_t *framebuffer0;
+    uint16_t *framebuffer1;
 
     uint32_t cycle_clock;
     uint32_t dot_clock;
@@ -46,7 +46,6 @@ private:
     void render_scanline();
     void render_border_scanline();
     void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
-    void setup_color_palettes();
     uint32_t borders_contrast_foreground_color();
 public:
     vicv(void);
@@ -56,16 +55,13 @@ public:
     
     inline void clear_framebuffer0()
     {
-        memset(framebuffer0, 0x00, 512*320*4);
+        memset(framebuffer0, 0x00, 512*320*2);
     }
     
     inline void clear_framebuffer1()
     {
-        memset(framebuffer1, 0x00, 512*320*4);
+        memset(framebuffer1, 0x00, 512*320*2);
     }
-
-    // move this member to private again????   !!!!
-    uint32_t *color_palette;
 
     // this will be flagged if a frame is completely done
     bool frame_done;

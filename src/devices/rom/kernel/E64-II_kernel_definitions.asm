@@ -28,6 +28,23 @@ VICV_COL			equ VICV_BASE+$08
 VICV_BORDER_SIZE	equ VICV_BASE+$0c
 VICV_ISR			equ VICV_BASE+$0e
 
+C64_BLACK		equ $f000
+C64_WHITE		equ	$ffff
+C64_RED			equ	$f733
+C64_CYAN		equ	$f8cc
+C64_PURPLE		equ	$f849
+C64_GREEN		equ	$f6a5
+C64_BLUE		equ $f339
+C64_YELLOW		equ	$fee8
+C64_ORANGE		equ	$f853
+C64_BROWN		equ	$f531
+C64_LIGHTRED	equ	$fb77
+C64_DARKGREY	equ	$f444
+C64_GREY		equ	$f777
+C64_LIGHTGREEN	equ	$fbfa
+C64_LIGHTBLUE	equ	$f67d
+C64_LIGHTGREY	equ	$faaa
+
 ; blitter
 BLITTER_BASE		equ $fe0700
 

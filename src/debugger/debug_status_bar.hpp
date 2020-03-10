@@ -9,8 +9,8 @@
 #define DEBUG_STATUS_BAR_HPP
 
 extern uint8_t status_bar_chars[];
-extern uint8_t status_bar_foreground_color_buffer[];
-extern uint8_t status_bar_background_color_buffer[];
+extern uint16_t status_bar_foreground_color_buffer[];
+extern uint16_t status_bar_background_color_buffer[];
 
 void debug_status_bar_clear(void);
 void debug_status_bar_refresh(void);

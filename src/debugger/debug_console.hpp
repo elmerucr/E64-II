@@ -11,8 +11,8 @@
 typedef struct
 {
     uint8_t console_character_buffer[2048];
-    uint8_t console_foreground_color_buffer[2048];
-    uint8_t console_background_color_buffer[2048];
+    uint16_t console_foreground_color_buffer[2048];
+    uint16_t console_background_color_buffer[2048];
 
     // cursor related vars
     int16_t     cursor_pos;
@@ -20,8 +20,8 @@ typedef struct
     uint8_t     cursor_blink_time;
     uint8_t     cursor_count_down;
 
-    uint8_t  current_foreground_color;
-    uint8_t  current_background_color;
+    uint16_t  current_foreground_color;
+    uint16_t  current_background_color;
 
     // status bar related things
     bool        status_bar_active;
@@ -29,8 +29,8 @@ typedef struct
     uint16_t    status_bar_total_chars;
     uint16_t    status_bar_cursor_pos;
     uint16_t    status_bar_base_pos;
-    uint8_t     status_bar_foreground_color;
-    uint8_t     status_bar_background_color;
+    uint16_t     status_bar_foreground_color;
+    uint16_t     status_bar_background_color;
 } debug_console_struct;
 
 extern debug_console_struct debug_console;

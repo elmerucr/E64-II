@@ -7,8 +7,8 @@
 #include "common_defs.hpp"
 
 uint8_t debug_screen_character_buffer[32*64];            // 32 lines of 64 chars
-uint8_t debug_screen_foreground_color_buffer[32*64];     // 32x64
-uint8_t debug_screen_background_color_buffer[32*64];     // 32x64
+uint16_t debug_screen_foreground_color_buffer[32*64];     // 32x64
+uint16_t debug_screen_background_color_buffer[32*64];     // 32x64
 
 void E64::debug_screen_update()
 {
@@ -48,8 +48,8 @@ inline void E64::debug_screen_render_scanline(int line_number)
     // reserve a byte for internal rendering use, defaults to 0
     uint8_t eight_pixels = 0;
     uint8_t current_char = 0;
-    uint8_t current_foreground_color = 0;
-    uint8_t current_background_color = 0;
+    uint16_t current_foreground_color = 0;
+    uint16_t current_background_color = 0;
 
     for(int x=0; x < VICV_PIXELS_PER_SCANLINE; x++)
     {
@@ -63,7 +63,8 @@ inline void E64::debug_screen_render_scanline(int line_number)
             current_background_color = debug_screen_background_color_buffer[char_position];
             eight_pixels = patched_char_rom[(current_char<<3) | current_character_line];
         }
-        host_video.debug_screen_buffer[base|x] = (eight_pixels & 0x80) ? computer.vicv_ic->color_palette[current_foreground_color] : computer.vicv_ic->color_palette[current_background_color];
+        host_video.debug_screen_buffer[base|x] = (eight_pixels & 0x80) ? host_video.palette[current_foreground_color] : host_video.palette[current_background_color];
+        
         // shift all bits in internal byte 1 place to the left
         eight_pixels = eight_pixels << 1;
     }

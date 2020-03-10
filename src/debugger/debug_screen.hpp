@@ -18,7 +18,7 @@ namespace E64
 }
 
 extern uint8_t debug_screen_character_buffer[];
-extern uint8_t debug_screen_foreground_color_buffer[];
-extern uint8_t debug_screen_background_color_buffer[];
+extern uint16_t debug_screen_foreground_color_buffer[];
+extern uint16_t debug_screen_background_color_buffer[];
 
 #endif
