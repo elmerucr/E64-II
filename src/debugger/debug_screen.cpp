@@ -29,10 +29,25 @@ void E64::debug_screen_update()
     {
         scanline_normalized = 0;
     }
+    
+    uint32_t base = VICV_PIXELS_PER_SCANLINE * scanline_normalized;
+    
     for(int i=0; i<VICV_PIXELS_PER_SCANLINE*64; i++)
     {
-        host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + i] = host_video.backbuffer[i + (VICV_PIXELS_PER_SCANLINE*scanline_normalized)];
+        // Backbuffer is the one currently being drawn into, so that one
+        // should be shown.
+        host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + i] = host_video.backbuffer[base + i];
     }
+    
+    uint16_t current_pixel = computer.vicv_ic->get_current_pixel();
+    uint32_t pixel_cursor_color = 0xff00ff00;
+    if (current_pixel > 511)
+    {
+        current_pixel = 511;
+        pixel_cursor_color = 0xffff0000;
+    }
+    
+    host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + ((computer.vicv_ic->get_current_scanline() - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
 }
 
 inline void E64::debug_screen_render_scanline(int line_number)

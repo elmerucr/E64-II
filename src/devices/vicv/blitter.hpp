@@ -51,6 +51,8 @@ private:
 public:
     void run(int no_of_cycles);
     
+    void add_operation();
+    
     // Register access
     uint8_t read_byte(uint8_t address);
     void write_byte(uint8_t address, uint8_t byte);

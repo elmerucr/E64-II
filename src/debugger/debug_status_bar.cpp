@@ -21,12 +21,12 @@ void debug_status_bar_clear()
     for(int i=0; i<(debug_console.status_bar_rows * 64); i++)
     {
         status_bar_chars[i] = ascii_to_screencode[ASCII_SPACE];
-        status_bar_foreground_color_buffer[i] = NEW_COBALT_06;
-        status_bar_background_color_buffer[i] = NEW_COBALT_02;
+        status_bar_foreground_color_buffer[i] = COBALT_06;
+        status_bar_background_color_buffer[i] = COBALT_02;
     }
     debug_console.status_bar_cursor_pos = 0;
-    debug_console.status_bar_foreground_color = NEW_COBALT_06;  // default value
-    debug_console.status_bar_background_color = NEW_COBALT_02;  // default value
+    debug_console.status_bar_foreground_color = COBALT_06;  // default value
+    debug_console.status_bar_background_color = COBALT_02;  // default value
 }
 
 void debug_status_bar_refresh()
@@ -43,7 +43,7 @@ void debug_status_bar_refresh()
     uint32_t temp_pc = computer.m68k_ic->getPC();
     for(int i=0; i<6; i++ )
     {
-        if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc)) debug_console.status_bar_foreground_color = NEW_C64_ORANGE; // bright amber
+        if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc)) debug_console.status_bar_foreground_color = AMBER_06; // bright amber
         snprintf(help_string, 256, "%06x ", temp_pc );
         debug_status_bar_print(help_string);
         int no_of_bytes = computer.m68k_ic->disassemble(temp_pc, help_string);
@@ -64,14 +64,14 @@ void debug_status_bar_refresh()
             default:
                 snprintf(help_string_2, 256, "%04x %04x %04x ", computer.mmu_ic->read_memory_16(temp_pc), computer.mmu_ic->read_memory_16(temp_pc+2), computer.mmu_ic->read_memory_16(temp_pc+4));
                 debug_status_bar_print(help_string_2);
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = NEW_COBALT_05;
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = NEW_COBALT_04;
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = NEW_COBALT_03;
+                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = COBALT_05;
+                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = COBALT_04;
+                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = COBALT_03;
                 break;
         };
         debug_status_bar_print(help_string);
         debug_status_bar_putchar('\n');
-        debug_console.status_bar_foreground_color = NEW_COBALT_06; // revert to normal color
+        debug_console.status_bar_foreground_color = COBALT_06; // revert to normal color
         temp_pc += no_of_bytes;
     }
     
@@ -81,8 +81,8 @@ void debug_status_bar_refresh()
     debug_status_bar_print(help_string);
 
     // set accent colors for titles etc...
-    debug_console.status_bar_foreground_color = NEW_COBALT_07;
-    debug_console.status_bar_background_color = NEW_COBALT_04;
+    debug_console.status_bar_foreground_color = COBALT_07;
+    debug_console.status_bar_background_color = COBALT_04;
 
     snprintf(help_string, 256, " CPU Status                              ");
     debug_status_bar_set_cursor_pos(0);

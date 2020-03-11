@@ -20,8 +20,8 @@ void debug_console_init()
     debug_console.cursor_pos = 0;
     // 55 is blink speed in xcode :-) 32 is c64
     debug_console.cursor_blink_time = 32;
-    debug_console.current_foreground_color = NEW_COBALT_06;
-    debug_console.current_background_color = NEW_COBALT_01;
+    debug_console.current_foreground_color = COBALT_06;
+    debug_console.current_background_color = COBALT_01;
     for(int i=0; i<2048; i++)
     {
         debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];

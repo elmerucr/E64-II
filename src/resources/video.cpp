@@ -53,8 +53,10 @@ E64::video::video()
     // prepare debug_screen_buffer
     debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     
-    // prepare 4096 color palette and populate it with the right colors
-    // 0x0 = 0x00 and 0xf means 0xff per channel
+    // Prepare the 12 bit color palette and populate it with the right colors.
+    // Index in the array is the actual 12 bit color, the 32 bit value is
+    // the color in host space.
+    //
     palette = new uint32_t[0x10000];
     for(int i = 0x0; i<0x10000; i++)
     {

@@ -4,12 +4,11 @@
 //  Copyright © 2017-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
-#include <cstring>
 
 #ifndef vicv_hpp
 #define vicv_hpp
 
-// internal vicv registers (appear at a different base address in main memory)
+// internal vicv registers
 
 // reg 00-01 combined are a 16 bit color value for the border color
 #define VICV_REG_BOR            0x00
@@ -43,8 +42,6 @@ private:
     // current state of the overlay (presenting stats to the user)
     bool overlay_present;
 
-    void render_scanline();
-    void render_border_scanline();
     void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
     uint32_t borders_contrast_foreground_color();
 public:
@@ -52,16 +49,6 @@ public:
     ~vicv(void);
 
     bool vblank_irq;
-    
-    inline void clear_framebuffer0()
-    {
-        memset(framebuffer0, 0x00, 512*320*2);
-    }
-    
-    inline void clear_framebuffer1()
-    {
-        memset(framebuffer1, 0x00, 512*320*2);
-    }
 
     // this will be flagged if a frame is completely done
     bool frame_done;
@@ -83,8 +70,25 @@ public:
     inline void toggle_overlay() { overlay_present = !overlay_present; }
     
     // Register access to vicv
-    uint8_t read_byte(uint8_t address);
-    void write_byte(uint8_t address, uint8_t byte);
+    inline uint8_t read_byte(uint8_t address)
+    {
+        return registers[address];
+        
+    }
+    
+    inline void write_byte(uint8_t address, uint8_t byte)
+    {
+        switch( address )
+        {
+            case VICV_REG_ISR:
+                if( byte & 0b00000001 ) vblank_irq = true;  // acknowledge pending irq
+                break;
+            default:
+                registers[address] = byte;
+                break;
+        }
+    }
+
 };
 
 }
