@@ -13,12 +13,20 @@
 
 namespace E64
 {
-    void debug_screen_update();
-    void debug_screen_render_scanline(int line_number);
+
+void debug_screen_init();
+void debug_screen_update();
+void debug_screen_render_scanline(int line_number);
+
+void debug_screen_pixel_cursor_reset();
+void debug_screen_pixel_cursor_flash();
+
 }
 
 extern uint8_t debug_screen_character_buffer[];
 extern uint16_t debug_screen_foreground_color_buffer[];
 extern uint16_t debug_screen_background_color_buffer[];
+
+extern uint16_t debug_screen_pixel_cursor_blink_time_countdown;
 
 #endif

@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200311
+#define E64_BUILD               20200312
 #define E64_YEAR                2020
 
 #define CPU_CLOCK_SPEED             5600000
@@ -27,7 +27,7 @@
 #define IO_RESET_VECTOR_MASK        0xfffff8
 #define IO_KERNEL_MASK              0xff
 
-// some objects must be visible at global level
+// some objects are visible at global level
 extern E64::video host_video;
 extern E64::pid_delay frame_delay;
 extern E64::machine computer;

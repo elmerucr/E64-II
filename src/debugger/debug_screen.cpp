@@ -10,6 +10,26 @@ uint8_t debug_screen_character_buffer[32*64];            // 32 lines of 64 chars
 uint16_t debug_screen_foreground_color_buffer[32*64];     // 32x64
 uint16_t debug_screen_background_color_buffer[32*64];     // 32x64
 
+uint16_t debug_screen_pixel_cursor_blink_time;
+uint16_t debug_screen_pixel_cursor_blink_time_countdown;
+
+void E64::debug_screen_init()
+{
+    debug_screen_pixel_cursor_blink_time = 40;
+    debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
+}
+
+void E64::debug_screen_pixel_cursor_flash()
+{
+    debug_screen_pixel_cursor_blink_time_countdown--;
+    if(debug_screen_pixel_cursor_blink_time_countdown == 1) E64::debug_screen_pixel_cursor_reset();
+}
+
+void E64::debug_screen_pixel_cursor_reset()
+{
+    debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
+}
+
 void E64::debug_screen_update()
 {
     // update all 32 rows (0-31), 32x8 = 256 scanlines
@@ -30,6 +50,8 @@ void E64::debug_screen_update()
         scanline_normalized = 0;
     }
     
+    /* Copy relevant part of the framebuffer onto the debug screen
+     */
     uint32_t base = VICV_PIXELS_PER_SCANLINE * scanline_normalized;
     
     for(int i=0; i<VICV_PIXELS_PER_SCANLINE*64; i++)
@@ -40,14 +62,23 @@ void E64::debug_screen_update()
     }
     
     uint16_t current_pixel = computer.vicv_ic->get_current_pixel();
+    uint16_t current_scanline = computer.vicv_ic->get_current_scanline();
     uint32_t pixel_cursor_color = 0xff00ff00;
-    if (current_pixel > 511)
+    if(current_pixel > 511)
     {
         current_pixel = 511;
         pixel_cursor_color = 0xffff0000;
     }
+    if(current_scanline > 319)
+    {
+        current_scanline = 319;
+        pixel_cursor_color = 0xffff0000;
+    }
     
-    host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + ((computer.vicv_ic->get_current_scanline() - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
+    if(debug_screen_pixel_cursor_blink_time_countdown > (debug_screen_pixel_cursor_blink_time / 2))
+    {
+        host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
+    }
 }
 
 inline void E64::debug_screen_render_scanline(int line_number)

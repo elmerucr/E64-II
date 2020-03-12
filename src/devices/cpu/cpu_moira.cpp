@@ -28,17 +28,6 @@ void cpu_moira::write16 (u32 addr, u16 val)
     computer.mmu_ic->write_memory_16(addr, val);
 };
 
-i64 cpu_moira::run(int no_of_cycles)
-{
-    i64 start_cycles = getClock();
-    do
-    {
-        execute();
-    }
-    while( ( (getClock() - start_cycles) < no_of_cycles) && !breakpoint_reached );
-    return getClock() - start_cycles;
-}
-
 void cpu_moira::breakpointReached(u32 addr)
 {
     breakpoint_reached = true;

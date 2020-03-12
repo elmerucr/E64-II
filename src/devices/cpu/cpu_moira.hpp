@@ -21,7 +21,17 @@ class cpu_moira : public Moira
     void breakpointReached(u32 addr) override;
     //
 public:
-    i64 run(int no_of_cycles);
+    inline i64 run(int no_of_cycles)
+    {
+        i64 start_cycles = getClock();
+        do
+        {
+            execute();
+        }
+        while( ( (getClock() - start_cycles) < no_of_cycles) && !breakpoint_reached );
+        return getClock() - start_cycles;
+    }
+    
     void dump_registers(char *temp_string);
     bool breakpoint_reached;
 };

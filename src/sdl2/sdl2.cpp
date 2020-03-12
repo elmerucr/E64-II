@@ -275,6 +275,7 @@ int E64::sdl2_process_events()
                                 debug_console_toggle_status_bar();
                                 debug_console_cursor_activate();
                             }
+                            debug_screen_pixel_cursor_reset();
                             break;
                     }
                 }

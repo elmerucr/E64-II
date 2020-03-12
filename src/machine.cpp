@@ -4,6 +4,7 @@
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "debug_console.hpp"
+#include "debug_screen.hpp"
 #include "machine.hpp"
 #include "sdl2.hpp"
 #include "common_defs.hpp"
@@ -72,6 +73,7 @@ void E64::machine::switch_to_debug()
 {
     current_mode = DEBUG_MODE;
     debug_console_cursor_activate();
+    E64::debug_screen_pixel_cursor_reset();
     host_video.update_title();
     E64::sdl2_stop_audio();
 }

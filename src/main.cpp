@@ -36,6 +36,7 @@ int main(int argc, char **argv)
     // set up window management, audio and some other stuff
     E64::sdl2_init();
 
+    E64::debug_screen_init();
     debug_console_init();
 
     // Select starting mode of E64-II
@@ -85,6 +86,8 @@ int main(int argc, char **argv)
                     E64::debug_screen_update();
                     host_video.update_screen();
                 }
+                
+                E64::debug_screen_pixel_cursor_flash();
                 
                 // 10ms is a reasonable delay
                 E64::sdl2_delay_10ms();
