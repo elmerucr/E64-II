@@ -114,21 +114,22 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //            debug_console_print("========                        ============\n");
 //            debug_console_print("F1    next cpu instruction      F9    switch mode\n");
 //            debug_console_print("b     cpu breakpoints           F10   toggle runtime stats\n");
+//            debug_console_print("bc    clear all cpu breakpoints\n");
 //            debug_console_print("c     continue execution\n");
 //            debug_console_print("d     disassemble\n");
 //            debug_console_print("m     memory dump\n");
 //            debug_console_print("r     cpu registers\n");
-//            debug_console_print("t     show top of the stack\n");
+//            debug_console_print("sb    scanline breakpoints\n);
+//            debug_console_print("sbc   clear all scanline breakpoints\n);
 //            debug_console_print("bar   debug status bar on/off\n");
 //            debug_console_print("clear clear screen\n");
 //            debug_console_print("exit  exit application\n");
 //            debug_console_print("full  toggle window/fullscreen\n");
 //            debug_console_print("help  print this help message\n");
 //            debug_console_print("irq   irq related commands\n");
-//            debug_console_print("nmi   nmi related commands\n");
 //            debug_console_print("ver   version information\n");
 //            debug_console_print("win   window options\n\n");
-//            debug_console_print("<help> <command name> for more info\n");
+//            debug_console_print("<help> <command name> for more info on some commands\n");
 //        }
 //        else if( strcmp(token1, "b") == 0 )
 //        {
@@ -154,6 +155,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //    }
     else if( strcmp(token0, "irq") == 0 )
     {
+        debug_console_put_char('\n');
         snprintf(command_help_string, 256, "debugger irq pin status: %1u\n", computer.toggle_debugger_irq_pin() ? 1 : 0);
         debug_console_print(command_help_string);
         computer.TTL74LS148_ic->update_interrupt_level();
@@ -241,7 +243,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         computer.vicv_ic->clear_scanline_breakpoints();
         debug_console_put_char('\n');
-        debug_console_print("removing all scanline breakpoints\n");
+        debug_console_print("all scanline breakpoints removed\n");
     }
     else if( strcmp(token0, "ver") == 0 )
     {

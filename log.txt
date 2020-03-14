@@ -21,21 +21,19 @@ v basic pulse working (breakpoints and continue execution with correct scanlines
 
 todo / bugs
 ===========
-- put_char doesn't work perfectly for several values (in monitor output ff0310 etc...)
+- irq functionality in console is strange
 - currently access is granted to sdl2 to read registers etc... from cia
-- debug mode needs to its own irq connection (one of the lines)
-- make next pixel to be drawn visible in debug mode
 - call stack, stack tracing, former instructions log etc...
-- reentrant vicv functionality (parts of a scanline etc...), running and debug mode use the same function
 
 2020
 ====
-2020-01-27 Debugger m command partly working (with scrolling functions)
-2020-01-21 Split E64-II completely from E64, it is a separate project
+2020-03-14 Scanline breakpoints seem to work nicely
+2020-01-27 Debugger m command partly working (with scrolling functions), edit not yet functional
+2020-01-21 Split E64-II completely from E64, it's a separate project
 2020-01-18 Breakpoints in Moira now work for exception handler code as well
 2020-01-15 Musashi removed, Moira implemented, breakpoints still need to be done (and a bug in Moira)
-2020-01-14 Moira is a new 68000 emulation core from Dirk w. Hoffmann
-2020-01-08 Revert back to old style Musashi 3.4: Exception handling is preferred over new style
+2020-01-14 Moira is a new 68000 emulation core from Dirk W. Hoffmann
+2020-01-08 Revert back to old style Musashi 3.4: the exception handling is preferred over new style
 2020-01-03 Changed to 68000 (in stead of 68020)
 
 2019
