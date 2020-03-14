@@ -25,10 +25,10 @@ void E64::debug_screen_update()
     for(int i=0; i < 256; i++) debug_screen_render_scanline(i);
 
     // copy relevant area of vicv screen buffer to bottom of debug screen buffer
-    uint8_t scanline_normalized;
-    if(computer.vicv_ic->get_current_scanline() > 287)
+    uint16_t scanline_normalized;
+    if(computer.vicv_ic->get_current_scanline() >= 288)
     {
-        scanline_normalized = 255;
+        scanline_normalized = 256;
     }
     else if(computer.vicv_ic->get_current_scanline() >= 32)
     {
