@@ -106,7 +106,10 @@ int E64::machine::run(uint16_t no_of_cycles)
     }
     if( vicv_ic->breakpoint_reached )
     {
-        //
+        snprintf(machine_help_string, 256, "scanline breakpoint occurred at line %i\n", vicv_ic->get_current_scanline());
+        debug_console_print(machine_help_string);
+        vicv_ic->breakpoint_reached = false;
+        exit_code = SCANLINE_BREAKPOINT;
     }
     // run cycles on vicv
     vicv_ic->run(m68k_to_vicv->clock(processed_cycles));

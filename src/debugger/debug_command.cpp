@@ -5,6 +5,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 
 #include "common_defs.hpp"
 #include "debug_command.hpp"
@@ -59,39 +60,6 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             {
                 debug_console_print("error: invalid address\n");
             }
-        }
-    }
-    else if( strcmp(token0, "bs") == 0)
-    {
-        debug_console_put_char('\n');
-        if(token1 == NULL)
-        {
-            unsigned int no_of_scanline_breakpoints = 0;
-            for(int i=0; i<1024; i++)
-            {
-                if(computer.vicv_ic->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
-            }
-            if(no_of_scanline_breakpoints)
-            {
-                snprintf(command_help_string, 256, "currently %i scanline breakpoint(s) defined at:\n", no_of_scanline_breakpoints);
-                debug_console_print(command_help_string);
-                for(int i=0; i<1024; i++)
-                {
-                    if(computer.vicv_ic->is_scanline_breakpoint(i))
-                    {
-                        snprintf(command_help_string, 256, "%i4\n", i);
-                        debug_console_print(command_help_string);
-                    }
-                }
-            }
-            else
-            {
-                debug_console_print("no scanline breakpoints defined\n");
-            }
-        }
-        else
-        {
-            uint32_t temp_32bit;
         }
     }
     else if( strcmp(token0, "bar") == 0 )
@@ -222,6 +190,58 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         debug_console_put_char('\n');
         computer.reset();
+    }
+    else if( strcmp(token0, "sb") == 0)
+    {
+        debug_console_put_char('\n');
+        if(token1 == NULL)
+        {
+            unsigned int no_of_scanline_breakpoints = 0;
+            for(int i=0; i<1024; i++)
+            {
+                if(computer.vicv_ic->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
+            }
+            if(no_of_scanline_breakpoints)
+            {
+                snprintf(command_help_string, 256, "currently %i scanline breakpoint(s) defined at:\n", no_of_scanline_breakpoints);
+                debug_console_print(command_help_string);
+                for(int i=0; i<1024; i++)
+                {
+                    if(computer.vicv_ic->is_scanline_breakpoint(i))
+                    {
+                        snprintf(command_help_string, 256, " %3i\n", i);
+                        debug_console_print(command_help_string);
+                    }
+                }
+            }
+            else
+            {
+                debug_console_print("no scanline breakpoints defined\n");
+            }
+        }
+        else
+        {
+            uint32_t temp_32bit = atoi(token1);
+            temp_32bit &= 1023;
+            if(computer.vicv_ic->is_scanline_breakpoint(temp_32bit))
+            {
+                snprintf(command_help_string, 256, "removing scanline breakpoint %i\n", temp_32bit);
+                debug_console_print(command_help_string);
+                computer.vicv_ic->remove_scanline_breakpoint(temp_32bit);
+            }
+            else
+            {
+                snprintf(command_help_string, 256, "adding scanline breakpoint %i\n", temp_32bit);
+                debug_console_print(command_help_string);
+                computer.vicv_ic->add_scanline_breakpoint(temp_32bit);
+            }
+        }
+    }
+    else if( strcmp(token0, "sbc") == 0 )
+    {
+        computer.vicv_ic->clear_scanline_breakpoints();
+        debug_console_put_char('\n');
+        debug_console_print("removing all scanline breakpoints\n");
     }
     else if( strcmp(token0, "ver") == 0 )
     {

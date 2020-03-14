@@ -27,7 +27,8 @@ namespace E64
     enum output_states
     {
         NOTHING = 0,
-        CPU_BREAKPOINT = 1
+        CPU_BREAKPOINT = 1,
+        SCANLINE_BREAKPOINT = 2
     };
     
     class machine

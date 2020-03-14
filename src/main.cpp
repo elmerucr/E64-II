@@ -53,11 +53,14 @@ int main(int argc, char **argv)
         switch(computer.current_mode)
         {
             case E64::NORMAL_MODE:
-                switch( computer.run(511) )
+                switch( computer.run(127) )
                 {
                     case E64::NOTHING:
                         break;
                     case E64::CPU_BREAKPOINT:
+                        computer.switch_to_debug();
+                        break;
+                    case E64::SCANLINE_BREAKPOINT:
                         computer.switch_to_debug();
                         break;
                 }
