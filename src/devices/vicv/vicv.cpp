@@ -14,6 +14,10 @@ E64::vicv::vicv()
 
     framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];
+    
+    breakpoint_reached = false;
+    clear_scanline_breakpoints();
+    old_y_pos = 0;
 }
 
 E64::vicv::~vicv()
@@ -36,7 +40,7 @@ void E64::vicv::reset()
 #define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
 //#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
 
-//#define HBLANK       (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
+//#define HBLANK          (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
 #define HBLANK          (X_POS & 0xfffffe00)
 #define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 #define BLANK           (HBLANK || VBLANK)
@@ -70,7 +74,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES):
                 vblank_irq = false;
                 break;
-            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_PIXELS_VBLANK):
+            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 if(overlay_present) render_overlay(117, 300, frame_delay.stats());
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
@@ -79,6 +83,9 @@ void E64::vicv::run(uint32_t number_of_cycles)
         }
         number_of_cycles--;
     }
+    
+    if( (Y_POS != old_y_pos) && scanline_breakpoints[Y_POS] == true) breakpoint_reached = true;
+    old_y_pos = Y_POS;
 }
 
 bool E64::vicv::is_hblank() { return HBLANK; }
@@ -153,3 +160,24 @@ inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
 
 uint16_t E64::vicv::get_current_scanline() { return Y_POS; }
 uint16_t E64::vicv::get_current_pixel() { return X_POS; }
+
+
+void E64::vicv::clear_scanline_breakpoints()
+{
+    for(int i=0; i<1024; i++) scanline_breakpoints[i] = false;
+}
+    
+void E64::vicv::add_scanline_breakpoint(uint16_t scanline)
+{
+    scanline_breakpoints[scanline & 1023] = true;
+}
+
+void E64::vicv::remove_scanline_breakpoint(uint16_t scanline)
+{
+    scanline_breakpoints[scanline & 1023] = false;
+}
+
+bool E64::vicv::is_scanline_breakpoint(uint16_t scanline)
+{
+    return scanline_breakpoints[scanline & 1023];
+}

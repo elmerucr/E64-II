@@ -106,7 +106,7 @@ void E64::video::update_screen()
             SDL_UpdateTexture(texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
     }
-    SDL_RenderCopy(renderer, texture, NULL, &destination);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
 }
 

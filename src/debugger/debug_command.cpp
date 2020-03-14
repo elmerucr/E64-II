@@ -32,7 +32,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         if(token1 == NULL)
         {
             unsigned int no_of_breakpoints = (unsigned int)computer.m68k_ic->debugger.breakpoints.elements();
-            snprintf(command_help_string, 256, "currently %i breakpoint(s) defined\n", no_of_breakpoints);
+            snprintf(command_help_string, 256, "currently %i cpu breakpoint(s) defined\n", no_of_breakpoints);
             debug_console_print(command_help_string);
             if( no_of_breakpoints > 0 )
             {
@@ -52,13 +52,46 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             {
                 temp_32bit &= (RAM_SIZE - 1);
                 computer.m68k_ic->debugger.breakpoints.addAt(temp_32bit);
-                snprintf(command_help_string, 256, "breakpoint at $%06x added\n", temp_32bit);
+                snprintf(command_help_string, 256, "cpu breakpoint at $%06x added\n", temp_32bit);
                 debug_console_print(command_help_string);
             }
             else
             {
                 debug_console_print("error: invalid address\n");
             }
+        }
+    }
+    else if( strcmp(token0, "bs") == 0)
+    {
+        debug_console_put_char('\n');
+        if(token1 == NULL)
+        {
+            unsigned int no_of_scanline_breakpoints = 0;
+            for(int i=0; i<1024; i++)
+            {
+                if(computer.vicv_ic->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
+            }
+            if(no_of_scanline_breakpoints)
+            {
+                snprintf(command_help_string, 256, "currently %i scanline breakpoint(s) defined at:\n", no_of_scanline_breakpoints);
+                debug_console_print(command_help_string);
+                for(int i=0; i<1024; i++)
+                {
+                    if(computer.vicv_ic->is_scanline_breakpoint(i))
+                    {
+                        snprintf(command_help_string, 256, "%i4\n", i);
+                        debug_console_print(command_help_string);
+                    }
+                }
+            }
+            else
+            {
+                debug_console_print("no scanline breakpoints defined\n");
+            }
+        }
+        else
+        {
+            uint32_t temp_32bit;
         }
     }
     else if( strcmp(token0, "bar") == 0 )
@@ -70,7 +103,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         debug_console_put_char('\n');
         computer.m68k_ic->debugger.breakpoints.removeAll();
-        debug_console_print("all breakpoints removed\n");
+        debug_console_print("all cpu breakpoints removed\n");
     }
     else if( strcmp(token0, "c") == 0 )
     {

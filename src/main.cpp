@@ -87,8 +87,6 @@ int main(int argc, char **argv)
                     host_video.update_screen();
                 }
                 
-                E64::debug_screen_pixel_cursor_flash();
-                
                 // 10ms is a reasonable delay
                 E64::sdl2_delay_10ms();
                 

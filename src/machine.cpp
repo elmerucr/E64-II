@@ -73,7 +73,6 @@ void E64::machine::switch_to_debug()
 {
     current_mode = DEBUG_MODE;
     debug_console_cursor_activate();
-    E64::debug_screen_pixel_cursor_reset();
     host_video.update_title();
     E64::sdl2_stop_audio();
 }
@@ -104,6 +103,10 @@ int E64::machine::run(uint16_t no_of_cycles)
         debug_console_print(machine_help_string);
         m68k_ic->breakpoint_reached = false;
         exit_code = CPU_BREAKPOINT;
+    }
+    if( vicv_ic->breakpoint_reached )
+    {
+        //
     }
     // run cycles on vicv
     vicv_ic->run(m68k_to_vicv->clock(processed_cycles));

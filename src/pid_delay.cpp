@@ -83,7 +83,7 @@ void E64::pid_delay::run()
         smoothed_framerate = (alpha * smoothed_framerate) + ((1.0 - alpha) * framerate);
 
         
-        mhz = (double)(framerate * (VICV_SCANLINES+VICV_PIXELS_VBLANK) * CPU_CYCLES_PER_SCANLINE)/1000000;
+        mhz = (double)(framerate * (VICV_SCANLINES+VICV_SCANLINES_VBLANK) * CPU_CYCLES_PER_SCANLINE)/1000000;
         smoothed_mhz = (alpha * smoothed_mhz) + ((1.0 - alpha) * mhz);
 
         // run pid's

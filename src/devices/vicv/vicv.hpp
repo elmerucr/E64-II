@@ -41,6 +41,10 @@ private:
 
     // current state of the overlay (presenting stats to the user)
     bool overlay_present;
+    
+    // breakpoint related stuff
+    bool scanline_breakpoints[1024];
+    uint16_t old_y_pos;
 
     void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
     uint32_t borders_contrast_foreground_color();
@@ -49,6 +53,7 @@ public:
     ~vicv(void);
 
     bool vblank_irq;
+    bool breakpoint_reached;
 
     // this will be flagged if a frame is completely done
     bool frame_done;
@@ -66,6 +71,11 @@ public:
     inline uint32_t get_dot_clock() { return dot_clock; }
     bool            is_hblank();
     bool            is_vblank();
+    
+    void clear_scanline_breakpoints();
+    void add_scanline_breakpoint(uint16_t scanline);
+    void remove_scanline_breakpoint(uint16_t scanline);
+    bool is_scanline_breakpoint(uint16_t scanline);
     
     inline void toggle_overlay() { overlay_present = !overlay_present; }
     

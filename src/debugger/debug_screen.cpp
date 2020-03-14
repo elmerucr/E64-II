@@ -19,17 +19,6 @@ void E64::debug_screen_init()
     debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
 }
 
-void E64::debug_screen_pixel_cursor_flash()
-{
-    debug_screen_pixel_cursor_blink_time_countdown--;
-    if(debug_screen_pixel_cursor_blink_time_countdown == 1) E64::debug_screen_pixel_cursor_reset();
-}
-
-void E64::debug_screen_pixel_cursor_reset()
-{
-    debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
-}
-
 void E64::debug_screen_update()
 {
     // update all 32 rows (0-31), 32x8 = 256 scanlines
@@ -75,10 +64,7 @@ void E64::debug_screen_update()
         pixel_cursor_color = 0xffff0000;
     }
     
-    if(debug_screen_pixel_cursor_blink_time_countdown > (debug_screen_pixel_cursor_blink_time / 2))
-    {
-        host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
-    }
+    host_video.debug_screen_buffer[(256*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
 }
 
 inline void E64::debug_screen_render_scanline(int line_number)
