@@ -26,151 +26,153 @@ F01:0021       ; timer
 F01:0022       TIMER_BASE	equ $fe0600
 F01:0023       
 F01:0024       ; vicv
-F01:0025       VICV_BASE			equ	$fe0400 	; vicv base register
-F01:0026       VICV_TXT			equ VICV_BASE+$04
-F01:0027       VICV_COL			equ VICV_BASE+$08
-F01:0028       VICV_BORDER_SIZE	equ VICV_BASE+$0c
-F01:0029       VICV_ISR			equ VICV_BASE+$0e
-F01:0030       
-F01:0031       C64_BLACK		equ $f000
-F01:0032       C64_WHITE		equ	$ffff
-F01:0033       C64_RED			equ	$f733
-F01:0034       C64_CYAN		equ	$f8cc
-F01:0035       C64_PURPLE		equ	$f849
-F01:0036       C64_GREEN		equ	$f6a5
-F01:0037       C64_BLUE		equ $f339
-F01:0038       C64_YELLOW		equ	$fee8
-F01:0039       C64_ORANGE		equ	$f853
-F01:0040       C64_BROWN		equ	$f531
-F01:0041       C64_LIGHTRED	equ	$fb77
-F01:0042       C64_DARKGREY	equ	$f444
-F01:0043       C64_GREY		equ	$f777
-F01:0044       C64_LIGHTGREEN	equ	$fbfa
-F01:0045       C64_LIGHTBLUE	equ	$f67d
-F01:0046       C64_LIGHTGREY	equ	$faaa
-F01:0047       
-F01:0048       ; blitter
-F01:0049       BLITTER_BASE		equ $fe0700
-F01:0050       
-F01:0051       ; sound
-F01:0052       SOUND_BASE	equ $fe0500	; sound base register
-F01:0053       SID0_BASE	equ	SOUND_BASE
-F01:0054       SID1_BASE	equ	SOUND_BASE+$20
-F01:0055       ; sound indices
-F01:0056       SID0_LEFT	equ $80
-F01:0057       SID0_RGHT	equ $81
-F01:0058       SID1_LEFT	equ $82
-F01:0059       SID1_RGHT	equ	$83
-F01:0060       
-F01:0061       N_C0_	equ	00*2
-F01:0062       N_C0S	equ	01*2
-F01:0063       N_D0_	equ	02*2
-F01:0064       N_D0S	equ	03*2
-F01:0065       N_E0_	equ	04*2
-F01:0066       N_F0_	equ	05*2
-F01:0067       N_F0S	equ	06*2
-F01:0068       N_G0_	equ	07*2
-F01:0069       N_G0S	equ	08*2
-F01:0070       N_A0_	equ	09*2
-F01:0071       N_A0S	equ	10*2
-F01:0072       N_B0_	equ	11*2
-F01:0073       
-F01:0074       N_C1_	equ	12*2
-F01:0075       N_C1S	equ	13*2
-F01:0076       N_D1_	equ	14*2
-F01:0077       N_D1S	equ	15*2
-F01:0078       N_E1_	equ	16*2
-F01:0079       N_F1_	equ	17*2
-F01:0080       N_F1S	equ	18*2
-F01:0081       N_G1_	equ	19*2
-F01:0082       N_G1S	equ	20*2
-F01:0083       N_A1_	equ	21*2
-F01:0084       N_A1S	equ	22*2
-F01:0085       N_B1_	equ	23*2
-F01:0086       
-F01:0087       N_C2_	equ	24*2
-F01:0088       N_C2S	equ	25*2
-F01:0089       N_D2_	equ	26*2
-F01:0090       N_D2S	equ	27*2
-F01:0091       N_E2_	equ	28*2
-F01:0092       N_F2_	equ	29*2
-F01:0093       N_F2S	equ	30*2
-F01:0094       N_G2_	equ	31*2
-F01:0095       N_G2S	equ	32*2
-F01:0096       N_A2_	equ	33*2
-F01:0097       N_A2S	equ	34*2
-F01:0098       N_B2_	equ	35*2
-F01:0099       
-F01:0100       N_C3_	equ	36*2
-F01:0101       N_C3S	equ	37*2
-F01:0102       N_D3_	equ	38*2
-F01:0103       N_D3S	equ	39*2
-F01:0104       N_E3_	equ	40*2
-F01:0105       N_F3_	equ	41*2
-F01:0106       N_F3S	equ	42*2
-F01:0107       N_G3_	equ	43*2
-F01:0108       N_G3S	equ	44*2
-F01:0109       N_A3_	equ	45*2
-F01:0110       N_A3S	equ	46*2
-F01:0111       N_B3_	equ	47*2
-F01:0112       
-F01:0113       N_C4_	equ	48*2
-F01:0114       N_C4S	equ	49*2
-F01:0115       N_D4_	equ	50*2
-F01:0116       N_D4S	equ	51*2
-F01:0117       N_E4_	equ	52*2
-F01:0118       N_F4_	equ	53*2
-F01:0119       N_F4S	equ	54*2
-F01:0120       N_G4_	equ	55*2
-F01:0121       N_G4S	equ	56*2
-F01:0122       N_A4_	equ	57*2
-F01:0123       N_A4S	equ	58*2
-F01:0124       N_B4_	equ	59*2
-F01:0125       
-F01:0126       N_C5_	equ	60*2
-F01:0127       N_C5S	equ	61*2
-F01:0128       N_D5_	equ	62*2
-F01:0129       N_D5S	equ	63*2
-F01:0130       N_E5_	equ	64*2
-F01:0131       N_F5_	equ	65*2
-F01:0132       N_F5S	equ	66*2
-F01:0133       N_G5_	equ	67*2
-F01:0134       N_G5S	equ	68*2
-F01:0135       N_A5_	equ	69*2
-F01:0136       N_A5S	equ	70*2
-F01:0137       N_B5_	equ	71*2
-F01:0138       
-F01:0139       N_C6_	equ	72*2
-F01:0140       N_C6S	equ	73*2
-F01:0141       N_D6_	equ	74*2
-F01:0142       N_D6S	equ	75*2
-F01:0143       N_E6_	equ	76*2
-F01:0144       N_F6_	equ	77*2
-F01:0145       N_F6S	equ	78*2
-F01:0146       N_G6_	equ	79*2
-F01:0147       N_G6S	equ	80*2
-F01:0148       N_A6_	equ	81*2
-F01:0149       N_A6S	equ	82*2
-F01:0150       N_B6_	equ	83*2
-F01:0151       
-F01:0152       N_C7_	equ	84*2
-F01:0153       N_C7S	equ	85*2
-F01:0154       N_D7_	equ	86*2
-F01:0155       N_D7S	equ	87*2
-F01:0156       N_E7_	equ	88*2
-F01:0157       N_F7_	equ	89*2
-F01:0158       N_F7S	equ	90*2
-F01:0159       N_G7_	equ	91*2
-F01:0160       N_G7S	equ	92*2
-F01:0161       N_A7_	equ	93*2
-F01:0162       N_A7S	equ	94*2
-F01:0163       
-F01:0164       CURR_TEXT_COLOR	equ $008000	; byte
-F01:0165       CURSOR_POS		equ	$008002	; word
-F01:0166       TIMER0_VECTOR	equ	$008004	; long
-F01:0167       TIMER1_VECTOR	equ	$008008	; long
-F01:0168       TIMER2_VECTOR	equ	$00800c	; long
-F01:0169       TIMER3_VECTOR	equ	$008010	; long
+F01:0025       VICV_BASE				equ	$fe0400 	; vicv base register
+F01:0026       VICV_BORDER_COLOR		equ VICV_BASE
+F01:0027       VICV_BACKGROUND_COLOR	equ VICV_BASE+$02
+F01:0028       VICV_TXT				equ VICV_BASE+$04
+F01:0029       VICV_COL				equ VICV_BASE+$08
+F01:0030       VICV_BORDER_SIZE		equ VICV_BASE+$0c
+F01:0031       VICV_ISR				equ VICV_BASE+$0e
+F01:0032       
+F01:0033       C64_BLACK		equ $f000
+F01:0034       C64_WHITE		equ	$ffff
+F01:0035       C64_RED			equ	$f733
+F01:0036       C64_CYAN		equ	$f8cc
+F01:0037       C64_PURPLE		equ	$f849
+F01:0038       C64_GREEN		equ	$f6a5
+F01:0039       C64_BLUE		equ $f339
+F01:0040       C64_YELLOW		equ	$fee8
+F01:0041       C64_ORANGE		equ	$f853
+F01:0042       C64_BROWN		equ	$f531
+F01:0043       C64_LIGHTRED	equ	$fb77
+F01:0044       C64_DARKGREY	equ	$f444
+F01:0045       C64_GREY		equ	$f777
+F01:0046       C64_LIGHTGREEN	equ	$fbfa
+F01:0047       C64_LIGHTBLUE	equ	$f67d
+F01:0048       C64_LIGHTGREY	equ	$faaa
+F01:0049       
+F01:0050       ; blitter
+F01:0051       BLITTER_BASE		equ $fe0700
+F01:0052       
+F01:0053       ; sound
+F01:0054       SOUND_BASE	equ $fe0500	; sound base register
+F01:0055       SID0_BASE	equ	SOUND_BASE
+F01:0056       SID1_BASE	equ	SOUND_BASE+$20
+F01:0057       ; sound indices
+F01:0058       SID0_LEFT	equ $80
+F01:0059       SID0_RGHT	equ $81
+F01:0060       SID1_LEFT	equ $82
+F01:0061       SID1_RGHT	equ	$83
+F01:0062       
+F01:0063       N_C0_	equ	00*2
+F01:0064       N_C0S	equ	01*2
+F01:0065       N_D0_	equ	02*2
+F01:0066       N_D0S	equ	03*2
+F01:0067       N_E0_	equ	04*2
+F01:0068       N_F0_	equ	05*2
+F01:0069       N_F0S	equ	06*2
+F01:0070       N_G0_	equ	07*2
+F01:0071       N_G0S	equ	08*2
+F01:0072       N_A0_	equ	09*2
+F01:0073       N_A0S	equ	10*2
+F01:0074       N_B0_	equ	11*2
+F01:0075       
+F01:0076       N_C1_	equ	12*2
+F01:0077       N_C1S	equ	13*2
+F01:0078       N_D1_	equ	14*2
+F01:0079       N_D1S	equ	15*2
+F01:0080       N_E1_	equ	16*2
+F01:0081       N_F1_	equ	17*2
+F01:0082       N_F1S	equ	18*2
+F01:0083       N_G1_	equ	19*2
+F01:0084       N_G1S	equ	20*2
+F01:0085       N_A1_	equ	21*2
+F01:0086       N_A1S	equ	22*2
+F01:0087       N_B1_	equ	23*2
+F01:0088       
+F01:0089       N_C2_	equ	24*2
+F01:0090       N_C2S	equ	25*2
+F01:0091       N_D2_	equ	26*2
+F01:0092       N_D2S	equ	27*2
+F01:0093       N_E2_	equ	28*2
+F01:0094       N_F2_	equ	29*2
+F01:0095       N_F2S	equ	30*2
+F01:0096       N_G2_	equ	31*2
+F01:0097       N_G2S	equ	32*2
+F01:0098       N_A2_	equ	33*2
+F01:0099       N_A2S	equ	34*2
+F01:0100       N_B2_	equ	35*2
+F01:0101       
+F01:0102       N_C3_	equ	36*2
+F01:0103       N_C3S	equ	37*2
+F01:0104       N_D3_	equ	38*2
+F01:0105       N_D3S	equ	39*2
+F01:0106       N_E3_	equ	40*2
+F01:0107       N_F3_	equ	41*2
+F01:0108       N_F3S	equ	42*2
+F01:0109       N_G3_	equ	43*2
+F01:0110       N_G3S	equ	44*2
+F01:0111       N_A3_	equ	45*2
+F01:0112       N_A3S	equ	46*2
+F01:0113       N_B3_	equ	47*2
+F01:0114       
+F01:0115       N_C4_	equ	48*2
+F01:0116       N_C4S	equ	49*2
+F01:0117       N_D4_	equ	50*2
+F01:0118       N_D4S	equ	51*2
+F01:0119       N_E4_	equ	52*2
+F01:0120       N_F4_	equ	53*2
+F01:0121       N_F4S	equ	54*2
+F01:0122       N_G4_	equ	55*2
+F01:0123       N_G4S	equ	56*2
+F01:0124       N_A4_	equ	57*2
+F01:0125       N_A4S	equ	58*2
+F01:0126       N_B4_	equ	59*2
+F01:0127       
+F01:0128       N_C5_	equ	60*2
+F01:0129       N_C5S	equ	61*2
+F01:0130       N_D5_	equ	62*2
+F01:0131       N_D5S	equ	63*2
+F01:0132       N_E5_	equ	64*2
+F01:0133       N_F5_	equ	65*2
+F01:0134       N_F5S	equ	66*2
+F01:0135       N_G5_	equ	67*2
+F01:0136       N_G5S	equ	68*2
+F01:0137       N_A5_	equ	69*2
+F01:0138       N_A5S	equ	70*2
+F01:0139       N_B5_	equ	71*2
+F01:0140       
+F01:0141       N_C6_	equ	72*2
+F01:0142       N_C6S	equ	73*2
+F01:0143       N_D6_	equ	74*2
+F01:0144       N_D6S	equ	75*2
+F01:0145       N_E6_	equ	76*2
+F01:0146       N_F6_	equ	77*2
+F01:0147       N_F6S	equ	78*2
+F01:0148       N_G6_	equ	79*2
+F01:0149       N_G6S	equ	80*2
+F01:0150       N_A6_	equ	81*2
+F01:0151       N_A6S	equ	82*2
+F01:0152       N_B6_	equ	83*2
+F01:0153       
+F01:0154       N_C7_	equ	84*2
+F01:0155       N_C7S	equ	85*2
+F01:0156       N_D7_	equ	86*2
+F01:0157       N_D7S	equ	87*2
+F01:0158       N_E7_	equ	88*2
+F01:0159       N_F7_	equ	89*2
+F01:0160       N_F7S	equ	90*2
+F01:0161       N_G7_	equ	91*2
+F01:0162       N_G7S	equ	92*2
+F01:0163       N_A7_	equ	93*2
+F01:0164       N_A7S	equ	94*2
+F01:0165       
+F01:0166       CURR_TEXT_COLOR	equ $008000	; byte
+F01:0167       CURSOR_POS		equ	$008002	; word
+F01:0168       TIMER0_VECTOR	equ	$008004	; long
+F01:0169       TIMER1_VECTOR	equ	$008008	; long
+F01:0170       TIMER2_VECTOR	equ	$00800c	; long
+F01:0171       TIMER3_VECTOR	equ	$008010	; long
 F00:0005       
 F00:0006       	org		KERNEL_LOC
 F00:0007       
@@ -231,9 +233,9 @@ F00:0037       	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by 
 F00:0038       
 F00:0039       
 F00:0040       	; set screen colors
-F00:0041       	move.w	#C64_BLACK,VICV_BASE
+F00:0041       	move.w	#C64_BLACK,VICV_BORDER_COLOR
                S01:00FF0074:  33 FC F0 00 00 FE 04 00
-F00:0042       	move.w	#C64_BLUE,VICV_BASE+2
+F00:0042       	move.w	#C64_BLUE,VICV_BACKGROUND_COLOR
                S01:00FF007C:  33 FC F3 39 00 FE 04 02
 F00:0043       	; set border size
 F00:0044       	move.b	#$20,VICV_BORDER_SIZE
@@ -1115,6 +1117,8 @@ VICV_ISR EXPR(16647182=0xfe040e) EQU
 VICV_BORDER_SIZE EXPR(16647180=0xfe040c) EQU 
 VICV_COL EXPR(16647176=0xfe0408) EQU 
 VICV_TXT EXPR(16647172=0xfe0404) EQU 
+VICV_BACKGROUND_COLOR EXPR(16647170=0xfe0402) EQU 
+VICV_BORDER_COLOR EXPR(16647168=0xfe0400) EQU 
 VICV_BASE EXPR(16647168=0xfe0400) EQU 
 TIMER_BASE EXPR(16647680=0xfe0600) EQU 
 CIA_BASE EXPR(16646912=0xfe0300) EQU 

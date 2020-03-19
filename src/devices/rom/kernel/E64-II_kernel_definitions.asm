@@ -22,11 +22,13 @@ CIA_BASE	equ	$fe0300
 TIMER_BASE	equ $fe0600
 
 ; vicv
-VICV_BASE			equ	$fe0400 	; vicv base register
-VICV_TXT			equ VICV_BASE+$04
-VICV_COL			equ VICV_BASE+$08
-VICV_BORDER_SIZE	equ VICV_BASE+$0c
-VICV_ISR			equ VICV_BASE+$0e
+VICV_BASE				equ	$fe0400 	; vicv base register
+VICV_BORDER_COLOR		equ VICV_BASE
+VICV_BACKGROUND_COLOR	equ VICV_BASE+$02
+VICV_TXT				equ VICV_BASE+$04
+VICV_COL				equ VICV_BASE+$08
+VICV_BORDER_SIZE		equ VICV_BASE+$0c
+VICV_ISR				equ VICV_BASE+$0e
 
 C64_BLACK		equ $f000
 C64_WHITE		equ	$ffff

@@ -19,7 +19,7 @@ The E64-II (Enhanced 64-II) is a virtual computer system (under construction) th
 * Install [Xcode](https://developer.apple.com/xcode)
 * Install the [SDL2 framework](https://www.libsdl.org/download-2.0.php) development library to /Library/Frameworks
 * Open the Xcode project in the ./macOS/E64 folder and build
-#### Ubuntu Linux and derivatives (build system currently broken)
+#### Ubuntu Linux / Debian
 Run the following commands in a terminal:
 
 ````console
