@@ -32,7 +32,7 @@ namespace E64
         // when connecting a device, both a pointer to a pin and an interrupt level (1-6) must be supplied
         void connect_device(bool *device_pin, int level);
         
-        
+        // recalculates the interrupt level based on individual connections
         void update_interrupt_level();
     };
 }

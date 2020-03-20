@@ -15,6 +15,10 @@ E64::vicv::vicv()
     framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];
     
+    // temp crap for debugging
+    for(int i=0; i<320*512; i++) framebuffer1[i] = C64_BLUE;
+    //
+    
     breakpoint_reached = false;
     clear_scanline_breakpoints();
     old_y_pos = 0;
@@ -34,6 +38,9 @@ void E64::vicv::reset()
     cycle_clock = dot_clock = 0;
 
     for(int i=0; i<256; i++) registers[i] = 0;
+    
+    frontbuffer = framebuffer0;
+    backbuffer  = framebuffer1;
 }
 
 #define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
@@ -58,29 +65,43 @@ void E64::vicv::run(uint32_t number_of_cycles)
             }
             else
             {
-                host_video.backbuffer[dot_clock] = framebuffer0[dot_clock];
-                
-                //host_video.backbuffer[dot_clock] = framebuffer0[dot_clock] ? framebuffer0[dot_clock] : host_video.palette[*((uint16_t *)(&registers[VICV_REG_BKG]))];
+                host_video.backbuffer[dot_clock] = host_video.palette[frontbuffer[dot_clock]];
             }
-            // only progress the dot clock if a pixel was actually sent
-            // to screen (!BLANK)
+            // only progress the dot clock if a pixel was actually sent to screen (!BLANK)
             dot_clock++;
         }
 
         cycle_clock++;
 
-        switch(cycle_clock)
+        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES) )
         {
-            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES):
-                vblank_irq = false;
-                break;
-            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
-                if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-                host_video.swap_buffers();
-                cycle_clock = dot_clock = 0;
-                frame_done = true;
-                break;
+            // start of vblank
+            vblank_irq = false;
         }
+        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)) )
+        {
+            // finished vblank, do other necessary stuff
+            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+            host_video.swap_buffers();
+            cycle_clock = dot_clock = 0;
+            frame_done = true;
+        }
+        
+//        switch(cycle_clock)
+//        {
+//            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
+//                // start of vblank
+//                vblank_irq = false;
+//                break;
+//            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
+//                // finished vblank, do other necessary stuff
+//                if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+//                host_video.swap_buffers();
+//                cycle_clock = dot_clock = 0;
+//                frame_done = true;
+//                break;
+//        }
+        
         number_of_cycles--;
     }
     
@@ -180,4 +201,31 @@ void E64::vicv::remove_scanline_breakpoint(uint16_t scanline)
 bool E64::vicv::is_scanline_breakpoint(uint16_t scanline)
 {
     return scanline_breakpoints[scanline & 1023];
+}
+
+uint8_t E64::vicv::read_byte(uint8_t address)
+{
+    return registers[address];
+}
+
+void E64::vicv::write_byte(uint8_t address, uint8_t byte)
+{
+    switch( address )
+    {
+        case VICV_REG_ISR:
+            if( byte & 0b00000001 ) vblank_irq = true;  // acknowledge pending irq
+            computer.TTL74LS148_ic->update_interrupt_level();
+            break;
+        case VICV_REG_BUFFER:
+            if( byte & 0b00000001 )
+            {
+                uint16_t *tempbuffer = frontbuffer;
+                frontbuffer = backbuffer;
+                backbuffer = tempbuffer;
+            }
+            break;
+        default:
+            registers[address] = byte;
+            break;
+    }
 }

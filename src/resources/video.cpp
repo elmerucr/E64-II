@@ -97,6 +97,8 @@ void E64::video::reset()
 
 void E64::video::update_screen()
 {
+    SDL_RenderClear(renderer);
+    
     switch(computer.current_mode)
     {
         case NORMAL_MODE:

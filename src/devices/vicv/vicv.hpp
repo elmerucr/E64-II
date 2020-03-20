@@ -23,6 +23,8 @@
 // reg 0e interrupt status register
 // write to bit 0 = acknowldge VBLANK interrupt
 #define VICV_REG_ISR            0x0e
+// reg 10, write to bit 0 = swap front and back buffer (machine internally)
+#define VICV_REG_BUFFER         0x10
 
 namespace E64 {
 
@@ -35,6 +37,8 @@ private:
     // framebuffer pointers inside the virtual machine
     uint16_t *framebuffer0;
     uint16_t *framebuffer1;
+    uint16_t *frontbuffer;
+    uint16_t *backbuffer;
 
     uint32_t cycle_clock;
     uint32_t dot_clock;
@@ -80,25 +84,8 @@ public:
     inline void toggle_overlay() { overlay_present = !overlay_present; }
     
     // Register access to vicv
-    inline uint8_t read_byte(uint8_t address)
-    {
-        return registers[address];
-        
-    }
-    
-    inline void write_byte(uint8_t address, uint8_t byte)
-    {
-        switch( address )
-        {
-            case VICV_REG_ISR:
-                if( byte & 0b00000001 ) vblank_irq = true;  // acknowledge pending irq
-                break;
-            default:
-                registers[address] = byte;
-                break;
-        }
-    }
-
+    uint8_t read_byte(uint8_t address);
+    void write_byte(uint8_t address, uint8_t byte);
 };
 
 }

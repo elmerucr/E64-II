@@ -43,7 +43,12 @@ void debug_status_bar_refresh()
     uint32_t temp_pc = computer.m68k_ic->getPC();
     for(int i=0; i<6; i++ )
     {
-        if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc)) debug_console.status_bar_foreground_color = AMBER_06; // bright amber
+        bool is_debug_statement = false;
+        if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc))
+        {
+            debug_console.status_bar_foreground_color = AMBER_06; // bright amber
+            is_debug_statement = true;
+        }
         snprintf(help_string, 256, "%06x ", temp_pc );
         debug_status_bar_print(help_string);
         int no_of_bytes = computer.m68k_ic->disassemble(temp_pc, help_string);
@@ -64,9 +69,18 @@ void debug_status_bar_refresh()
             default:
                 snprintf(help_string_2, 256, "%04x %04x %04x ", computer.mmu_ic->read_memory_16(temp_pc), computer.mmu_ic->read_memory_16(temp_pc+2), computer.mmu_ic->read_memory_16(temp_pc+4));
                 debug_status_bar_print(help_string_2);
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = COBALT_05;
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = COBALT_04;
-                status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = COBALT_03;
+                if(!is_debug_statement)
+                {
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = COBALT_05;
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = COBALT_04;
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = COBALT_03;
+                }
+                else
+                {
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = AMBER_04;
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = AMBER_03;
+                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = AMBER_02;
+                }
                 break;
         };
         debug_status_bar_print(help_string);
