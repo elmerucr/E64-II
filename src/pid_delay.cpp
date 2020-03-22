@@ -89,10 +89,10 @@ void E64::pid_delay::run()
         // run pid's
         //current_delay = fps_pid.process(framerate, evaluation_interval);
         current_delay = audiobuffer_pid.process(smoothed_audio_queue_size, evaluation_interval);
-        if (current_delay < 2500)
+        if (current_delay < 1000)
         {
             std::cout << "[PID Delay] system too slow?" << std::endl;
-            current_delay = 2500;
+            current_delay = 1000;
         }
         if (current_delay > (1000000/FPS) ) current_delay = (1000000/FPS);
     }

@@ -20,7 +20,7 @@
 // global components of the system
 E64::video host_video;
 E64::machine computer;
-E64::pid_delay frame_delay(12800.0);
+E64::pid_delay frame_delay(15000.0);
 
 int main(int argc, char **argv)
 {

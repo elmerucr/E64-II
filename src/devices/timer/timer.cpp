@@ -8,7 +8,7 @@
 
 E64::timer::timer()
 {
-    reset();
+    //
 }
 
 void E64::timer::reset()

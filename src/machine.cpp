@@ -127,5 +127,6 @@ void E64::machine::reset()
     m68k_ic->reset();
     sound_ic->reset();
     vicv_ic->reset();
+    timer_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
 }

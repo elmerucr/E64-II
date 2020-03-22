@@ -33,7 +33,7 @@ kernel_main
 	move.w	#$003c,TIMER_BASE+2		; load value 60 ($003c = 60bpm = 1Hz) into high and low bytes
 	ori.b	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
 	; set up timer1 interrupt
-	move.w	#$0bb8,TIMER_BASE+2		; load value 3000
+	move.w	#$0708,TIMER_BASE+2		; load value
 	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
 

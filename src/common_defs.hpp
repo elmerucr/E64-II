@@ -18,7 +18,6 @@
 #define E64_BUILD               20200322
 #define E64_YEAR                2020
 
-#define CPU_CLOCK_SPEED             5600000
 #define IO_CIA_PAGE                 0xfe03
 #define IO_VICV_PAGE                0xfe04
 #define IO_SND_PAGE                 0xfe05
@@ -34,11 +33,13 @@ extern E64::machine computer;
 extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
+#define CPU_CLOCK_SPEED             6048000
+
 #define RAM_SIZE                    0x1000000                           // 16mb system
 
-#define FPS                         50
+#define FPS                         30
 #define VICV_PIXELS_PER_SCANLINE    512
-#define VICV_PIXELS_HBLANK          128
+#define VICV_PIXELS_HBLANK          64
 #define VICV_SCANLINES              320
 #define VICV_SCANLINES_VBLANK       30
 

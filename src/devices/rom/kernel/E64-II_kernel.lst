@@ -227,8 +227,8 @@ F00:0033       	move.w	#$003c,TIMER_BASE+2		; load value 60 ($003c = 60bpm = 1Hz
 F00:0034       	ori.b	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
                S01:00FF005C:  00 39 00 01 00 FE 06 01
 F00:0035       	; set up timer1 interrupt
-F00:0036       	move.w	#$0bb8,TIMER_BASE+2		; load value 3000
-               S01:00FF0064:  33 FC 0B B8 00 FE 06 02
+F00:0036       	move.w	#$0708,TIMER_BASE+2		; load value
+               S01:00FF0064:  33 FC 07 08 00 FE 06 02
 F00:0037       	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
                S01:00FF006C:  00 39 00 02 00 FE 06 01
 F00:0038       
