@@ -68,8 +68,8 @@ namespace E64
         timer();
         // reset, called by constructor
         void reset(void);
-        // irq pin is owned by the timer
-        bool irq_pin;
+        
+        uint8_t interrupt_device_no;
 
         // register access functions
         uint8_t read_byte(uint8_t address);

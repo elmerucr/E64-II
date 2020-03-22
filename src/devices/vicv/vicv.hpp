@@ -56,7 +56,9 @@ public:
     vicv(void);
     ~vicv(void);
 
-    bool vblank_irq;
+    // interrupt device no for vblanc irq
+    uint8_t interrupt_device_no_vblank;
+    
     bool breakpoint_reached;
 
     // this will be flagged if a frame is completely done

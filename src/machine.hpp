@@ -38,7 +38,6 @@ namespace E64
         frequency_divider *m68k_to_blitter;
         frequency_divider *m68k_to_sid;
         frequency_divider *m68k_to_timer;
-        bool debugger_irq_pin;
         char machine_help_string[2048];
     public:
         enum machine_mode   current_mode;
@@ -57,8 +56,6 @@ namespace E64
         ~machine();
         
         int  run(uint16_t no_of_cycles);
-        
-        bool toggle_debugger_irq_pin();
         
         void reset();
         

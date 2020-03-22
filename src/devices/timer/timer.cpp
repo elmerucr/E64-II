@@ -13,7 +13,7 @@ E64::timer::timer()
 
 void E64::timer::reset()
 {
-    irq_pin = true;
+    computer.TTL74LS148_ic->release_line(interrupt_device_no);
     
     registers[0] = 0x00;        // no pending irq's
     registers[1] = 0x00;        // all interrupt times turned off
@@ -49,25 +49,25 @@ void E64::timer::run(uint32_t number_of_cycles)
     if( (timer0_counter >= timer0_clock_interval) && (registers[1] & 0x01) )
     {
         timer0_counter -= timer0_clock_interval;
-        irq_pin = false;
+        computer.TTL74LS148_ic->pull_line(interrupt_device_no);
         registers[0] |= 0x81;       // turn on bits 7 and 0
     }
     if( (timer1_counter >= timer1_clock_interval) && (registers[1] & 0x02) )
     {
         timer1_counter -= timer1_clock_interval;
-        irq_pin = false;
+        computer.TTL74LS148_ic->pull_line(interrupt_device_no);
         registers[0] |= 0x82;       // turn on bits 7 and 1
     }
     if( (timer2_counter >= timer2_clock_interval) && (registers[1] & 0x04) )
     {
         timer2_counter -= timer2_clock_interval;
-        irq_pin = false;
+        computer.TTL74LS148_ic->pull_line(interrupt_device_no);
         registers[0] |= 0x84;       // turn on bits 7 and 2
     }
     if( (timer3_counter >= timer3_clock_interval) && (registers[1] & 0x08) )
     {
         timer3_counter -= timer3_clock_interval;
-        irq_pin = false;
+        computer.TTL74LS148_ic->pull_line(interrupt_device_no);
         registers[0] |= 0x88;       // turn on bits 7 and 3
     }
 }
@@ -103,7 +103,7 @@ void E64::timer::write_byte(uint8_t address, uint8_t byte)
             if( (registers[0] & 0x0f) == 0 )
             {
                 // there are no pending interrupts anymore
-                irq_pin = true;
+                computer.TTL74LS148_ic->release_line(interrupt_device_no);
                 registers[0] = 0x00;    // clear timer status register
             }
             break;

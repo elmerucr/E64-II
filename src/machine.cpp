@@ -21,19 +21,16 @@ E64::machine::machine()
     TTL74LS148_ic = new TTL74LS148();
     
     timer_ic = new timer();
-    TTL74LS148_ic->connect_device(&timer_ic->irq_pin, 4);
+    timer_ic->interrupt_device_no = TTL74LS148_ic->connect_device(4);
     
     vicv_ic = new vicv();
-    TTL74LS148_ic->connect_device(&vicv_ic->vblank_irq, 2);
+    vicv_ic->interrupt_device_no_vblank = TTL74LS148_ic->connect_device(2);
     
     blitter_ic = new blitter();
     
     sound_ic = new sound(true);
     
     cia_ic = new cia();
-    
-    debugger_irq_pin = true;
-    TTL74LS148_ic->connect_device(&debugger_irq_pin, 5);
     
     // init frequency dividers (make sure the right amount of cycles will run on different ic's)
     m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
@@ -121,8 +118,6 @@ int E64::machine::run(uint16_t no_of_cycles)
     sound_ic->run(m68k_to_sid->clock(processed_cycles));
     if(E64::sdl2_get_queued_audio_size() > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
     
-    TTL74LS148_ic->update_interrupt_level();
-    
     return exit_code;
 }
 
@@ -130,13 +125,7 @@ void E64::machine::reset()
 {
     host_video.reset();
     m68k_ic->reset();
-    TTL74LS148_ic->update_interrupt_level();
     sound_ic->reset();
     vicv_ic->reset();
-}
-
-bool E64::machine::toggle_debugger_irq_pin()
-{
-    debugger_irq_pin = !debugger_irq_pin;
-    return debugger_irq_pin;
+    TTL74LS148_ic->update_interrupt_level();
 }

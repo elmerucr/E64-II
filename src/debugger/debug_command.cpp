@@ -153,13 +153,6 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //            debug_console_print(c256_string2);
 //        }
 //    }
-    else if( strcmp(token0, "irq") == 0 )
-    {
-        debug_console_put_char('\n');
-        snprintf(command_help_string, 256, "debugger irq pin status: %1u\n", computer.toggle_debugger_irq_pin() ? 1 : 0);
-        debug_console_print(command_help_string);
-        computer.TTL74LS148_ic->update_interrupt_level();
-    }
     else if( strcmp(token0, "m") == 0 )
     {
         debug_console_put_char('\n');
@@ -372,5 +365,4 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
 void E64::debug_command_single_step_cpu()
 {
     computer.run(0);
-    computer.TTL74LS148_ic->update_interrupt_level();
 }

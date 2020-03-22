@@ -1,7 +1,7 @@
 //  TTL74LS148.hpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 //
 // exception collector and
 // priority encoder
@@ -19,21 +19,26 @@ namespace E64
     private:
         struct device
         {
-            bool *device_pin;
+            bool state;
             int level;
         };
         struct device devices[256];
         uint8_t number_of_devices;
-        bool default_device = true;
         int output_level;
     public:
         TTL74LS148();
         
-        // when connecting a device, both a pointer to a pin and an interrupt level (1-6) must be supplied
-        void connect_device(bool *device_pin, int level);
+        void pull_line(uint8_t handler);
+        void release_line(uint8_t handler);
         
         // recalculates the interrupt level based on individual connections
         void update_interrupt_level();
+        
+        // when connecting a device, both a pointer to a pin and an interrupt level (1-6) must be supplied
+        // returns a unique interrupt_device_no
+        uint8_t connect_device(int level);
+        
+
     };
 }
 
