@@ -18,30 +18,33 @@
 namespace E64
 {
 
-struct surface
+struct surface_blit_action
 {
     /* bit 0    : Character mode (0) or bit map mode (1)
      * bit 1    : Single color (0), or multi color mode (1)
      * bit 2-7  : Reserved
-     * bit 8    : Horizontal single pixel (0) or double pixel (1) size
-     * bit 9    : Vertical single pixel (0) or double pixel (1) size
-     * bit 10-15: Reserved
      */
-    uint16_t    flags;
+    uint8_t     flags_0;
+    
+    /* bit 0    : Horizontal single pixel (0) or double pixel (1) size
+     * bit 1    : Vertical single pixel (0) or double pixel (1) size
+     * bit 2-7  : Reserved
+     */
+    uint8_t     flags_1;
     
     /* 16 bit big endian number
      * with the x position of the
      * surface
      */
     uint8_t     x_pos_high_byte;
-    uint8_t     x_pos_low__byte;
+    uint8_t     x_pos_low_byte;
     
     /* 16 bit big endian number
      * with the y position of the
      * surface
      */
     uint8_t     y_pos_high_byte;
-    uint8_t     y_pos_low__byte;
+    uint8_t     y_pos_low_byte;
 };
 
 class blitter

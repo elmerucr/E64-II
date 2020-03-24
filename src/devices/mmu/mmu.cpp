@@ -53,13 +53,17 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     {
         return kernel[address & 0x0000ffff];
     }
+    else if( (address >> 16) == IO_PATCHED_CHAR_ROM_MASK)
+    {
+        return patched_char_rom[address & 0x000007ff];
+    }
     else
     {
         // ram  access
         return ram[address & 0x00ffffff];
     }
 }
-    
+
 unsigned int E64::mmu::read_memory_16(unsigned int address)
 {
     unsigned int result;

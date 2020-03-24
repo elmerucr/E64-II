@@ -1,6 +1,7 @@
 ; E64 definitions - 2019-11-21 elmerucr
 
 KERNEL_LOC	equ	$ff0000
+
 VEC_04_ILLEGAL_INSTRUCTION		equ	$00000010
 VEC_10_UNIMPL_INSTRUCTION		equ	$00000028
 VEC_11_UNIMPL_INSTRUCTION		equ	$0000002c
@@ -14,6 +15,10 @@ VEC_31_LEVEL7_IRQ_AUTOVECT		equ	$0000007c
 ; ascii definitions
 ASCII_NULL	equ	$00
 ASCII_LF	equ	$0a
+
+; char rom
+CHAR_ROM	equ $fd0000
+CHAR_RAM	equ $e50000
 
 ; cia
 CIA_BASE	equ	$fe0300

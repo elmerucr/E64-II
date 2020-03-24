@@ -36,6 +36,8 @@ kernel_main
 	move.w	#$0708,TIMER_BASE+2		; load value
 	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
+	; copy char rom to ram (go from 2k to 32k)
+	bsr		copy_charrom_to_charram
 
 	; set screen colors
 	move.w	#C64_BLACK,VICV_BORDER_COLOR
@@ -243,9 +245,13 @@ timer1_irq_handler
 	addq.b	#1,VICV_BORDER_SIZE
 	bra		timer2_check
 
+copy_charrom_to_charram
+
+	rts
+
 ; string data
 welcome
-	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200211",ASCII_LF,ASCII_NULL
+	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200324",ASCII_LF,ASCII_NULL
 
 	align 1
 	include "E64-II_kernel_tables.asm"

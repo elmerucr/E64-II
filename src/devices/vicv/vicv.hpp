@@ -18,8 +18,8 @@
 #define VICV_REG_TXT            0x04
 // reg 08-0b combined are a 32 bit pointer for the location of the default color screen (2k), big endian
 #define VICV_REG_COL            0x08
-
-#define VICV_REG_BORDER_SIZE    0x0c    // a byte telling the size of the horizontal border
+// reg 0c is a byte telling the size of the horizontal border
+#define VICV_REG_BORDER_SIZE    0x0c
 // reg 0e interrupt status register
 // write to bit 0 = acknowldge VBLANK interrupt
 #define VICV_REG_ISR            0x0e

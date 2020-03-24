@@ -14,6 +14,7 @@
 #define IO_TIMER_PAGE               0xfe06
 #define IO_BLITTER_PAGE             0xfe07
 #define IO_RESET_VECTOR_MASK        0xfffff8
+#define IO_PATCHED_CHAR_ROM_MASK    0xfd
 #define IO_KERNEL_MASK              0xff
 
 extern uint8_t patched_char_rom[];
