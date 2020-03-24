@@ -15,27 +15,17 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200322
+#define E64_BUILD               20200324
 #define E64_YEAR                2020
 
-#define IO_CIA_PAGE                 0xfe03
-#define IO_VICV_PAGE                0xfe04
-#define IO_SND_PAGE                 0xfe05
-#define IO_TIMER_PAGE               0xfe06
-#define IO_BLITTER_PAGE             0xfe07
-#define IO_RESET_VECTOR_MASK        0xfffff8
-#define IO_KERNEL_MASK              0xff
-
-// some objects are visible at global level
+// some global objects
 extern E64::video host_video;
-extern E64::pid_delay frame_delay;
 extern E64::machine computer;
+extern E64::pid_delay frame_delay;
 extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
-#define CPU_CLOCK_SPEED             6048000
-
-#define RAM_SIZE                    0x1000000                           // 16mb system
+#define RAM_SIZE                    0x1000000   // 16mb system, can't be changed easily
 
 #define FPS                         30
 #define VICV_PIXELS_PER_SCANLINE    512
@@ -45,13 +35,14 @@ extern const char screencode_to_ascii[];
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
 #define BLITTER_DOT_CLOCK_SPEED     (8*VICV_DOT_CLOCK_SPEED)
+#define CPU_CLOCK_SPEED             (1*VICV_DOT_CLOCK_SPEED)
 #define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/((VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS))
 
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
 #define AUDIO_BUFFER_SIZE           8192.0
 
-// VirtualC64 colors
+// c64 (VirtualC64)
 #define C64_BLACK       0x00f0
 #define C64_WHITE       0xffff
 #define C64_RED         0x33f7
@@ -69,40 +60,35 @@ extern const char screencode_to_ascii[];
 #define C64_LIGHTBLUE   0x7df6
 #define C64_LIGHTGREY   0xaafa
 
-#define C64_GREY_00 0x00f0
-#define C64_GREY_01 0x11f1
-#define C64_GREY_02 0x22f2
-#define C64_GREY_03 0x33f3
-#define C64_GREY_04 0x44f4
-#define C64_GREY_05 0x55f5
-#define C64_GREY_06 0x66f6
-#define C64_GREY_07 0x77f7
-#define C64_GREY_08 0x88f8
-#define C64_GREY_09 0x99f9
-#define C64_GREY_10 0xaafa
-#define C64_GREY_11 0xbbfb
-#define C64_GREY_12 0xccfc
-#define C64_GREY_13 0xddfd
-#define C64_GREY_14 0xeefe
-#define C64_GREY_15 0xffff
+// grey
+#define GREY_00 0x00f0
+#define GREY_01 0x11f1
+#define GREY_02 0x22f2
+#define GREY_03 0x33f3
+#define GREY_04 0x44f4
+#define GREY_05 0x55f5
+#define GREY_06 0x66f6
+#define GREY_07 0x77f7
+#define GREY_08 0x88f8
+#define GREY_09 0x99f9
+#define GREY_10 0xaafa
+#define GREY_11 0xbbfb
+#define GREY_12 0xccfc
+#define GREY_13 0xddfd
+#define GREY_14 0xeefe
+#define GREY_15 0xffff
 
-#define C64_GRN_00  0xff000000
-#define C64_GRN_01  0xff0b110a
-#define C64_GRN_02  0xff162214
-#define C64_GRN_03  0xff21331e
-#define C64_GRN_04  0xff2c4428
-#define C64_GRN_05  0xff375533
-#define C64_GRN_06  0xff42663d
-#define C64_GRN_07  0xff4d7747
-#define C64_GRN_08  0xff598851
-#define C64_GRN_09  0xff64995c
-#define C64_GRN_10  0xff6faa66      // This one comes closest to the original C64_GREEN
-#define C64_GRN_11  0xff7abb70
-#define C64_GRN_12  0xff85cc7a
-#define C64_GRN_13  0xff90dd85
-#define C64_GRN_14  0xff9bee8f
-#define C64_GRN_15  0xffa7ff99
+// green
+#define GRN_00  0x00f0
+#define GRN_01  0x21f1
+#define GRN_02  0x42f2
+#define GRN_03  0x63f3
+#define GRN_04  0x84f4
+#define GRN_05  0xa5f5
+#define GRN_06  0xc6f6
+#define GRN_07  0xe7f7
 
+// cobalt
 #define COBALT_00   0x00f0
 #define COBALT_01   0x12f1
 #define COBALT_02   0x24f2

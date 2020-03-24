@@ -9,7 +9,7 @@
 #include "cia.hpp"
 #include "cpu_moira.hpp"
 #include "frequency_divider.hpp"
-#include "mmu_E64_II.hpp"
+#include "mmu.hpp"
 #include "sound.hpp"
 #include "timer.hpp"
 #include "TTL74LS148.hpp"

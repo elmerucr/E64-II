@@ -27,7 +27,7 @@
 		4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7BC23D7B57100E9E78D /* cpu_moira.cpp */; };
 		4691C7D023D7B59900E9E78D /* Moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7C523D7B59800E9E78D /* Moira.cpp */; };
 		4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7CF23D7B59900E9E78D /* MoiraDebugger.cpp */; };
-		4691C7D523D7B5BF00E9E78D /* mmu_E64_II.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7D423D7B5BF00E9E78D /* mmu_E64_II.cpp */; };
+		4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7D423D7B5BF00E9E78D /* mmu.cpp */; };
 		4691C7F123D7B5F200E9E78D /* wave8580_PS_.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7D923D7B5F100E9E78D /* wave8580_PS_.cc */; };
 		4691C7F223D7B5F200E9E78D /* sid.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7DA23D7B5F100E9E78D /* sid.cc */; };
 		4691C7F323D7B5F200E9E78D /* wave6581__ST.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7DB23D7B5F100E9E78D /* wave6581__ST.cc */; };
@@ -119,8 +119,8 @@
 		4691C7CD23D7B59900E9E78D /* MoiraInit_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraInit_cpp.h; path = ../../../src/devices/cpu/Moira/MoiraInit_cpp.h; sourceTree = "<group>"; };
 		4691C7CE23D7B59900E9E78D /* MoiraTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraTypes.h; path = ../../../src/devices/cpu/Moira/MoiraTypes.h; sourceTree = "<group>"; };
 		4691C7CF23D7B59900E9E78D /* MoiraDebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoiraDebugger.cpp; path = ../../../src/devices/cpu/Moira/MoiraDebugger.cpp; sourceTree = "<group>"; };
-		4691C7D323D7B5BF00E9E78D /* mmu_E64_II.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = mmu_E64_II.hpp; path = ../../../src/devices/mmu/mmu_E64_II.hpp; sourceTree = "<group>"; };
-		4691C7D423D7B5BF00E9E78D /* mmu_E64_II.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mmu_E64_II.cpp; path = ../../../src/devices/mmu/mmu_E64_II.cpp; sourceTree = "<group>"; };
+		4691C7D323D7B5BF00E9E78D /* mmu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = mmu.hpp; path = ../../../src/devices/mmu/mmu.hpp; sourceTree = "<group>"; };
+		4691C7D423D7B5BF00E9E78D /* mmu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mmu.cpp; path = ../../../src/devices/mmu/mmu.cpp; sourceTree = "<group>"; };
 		4691C7D823D7B5F100E9E78D /* siddefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = siddefs.h; path = "../../../src/devices/sound/resid-0.16/siddefs.h"; sourceTree = "<group>"; };
 		4691C7D923D7B5F100E9E78D /* wave8580_PS_.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wave8580_PS_.cc; path = "../../../src/devices/sound/resid-0.16/wave8580_PS_.cc"; sourceTree = "<group>"; };
 		4691C7DA23D7B5F100E9E78D /* sid.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sid.cc; path = "../../../src/devices/sound/resid-0.16/sid.cc"; sourceTree = "<group>"; };
@@ -335,8 +335,8 @@
 		4691C7D223D7B5A700E9E78D /* mmu */ = {
 			isa = PBXGroup;
 			children = (
-				4691C7D323D7B5BF00E9E78D /* mmu_E64_II.hpp */,
-				4691C7D423D7B5BF00E9E78D /* mmu_E64_II.cpp */,
+				4691C7D323D7B5BF00E9E78D /* mmu.hpp */,
+				4691C7D423D7B5BF00E9E78D /* mmu.cpp */,
 			);
 			name = mmu;
 			sourceTree = "<group>";
@@ -529,7 +529,7 @@
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,
 				4691C80F23D7B70500E9E78D /* kernel.cpp in Sources */,
-				4691C7D523D7B5BF00E9E78D /* mmu_E64_II.cpp in Sources */,
+				4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */,
 				4691C80723D7B62400E9E78D /* timer.cpp in Sources */,
 				4691C81223D7B74300E9E78D /* patched_char_rom.cpp in Sources */,
 				4691C7D023D7B59900E9E78D /* Moira.cpp in Sources */,

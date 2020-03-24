@@ -1,3 +1,3 @@
-add_library(mmu STATIC mmu_E64_II.cpp)
+add_library(mmu STATIC mmu.cpp)
 
 target_link_libraries(mmu kernel)

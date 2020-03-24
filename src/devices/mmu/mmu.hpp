@@ -1,12 +1,20 @@
-//  mmu_E64_II.hpp
+//  mmu.hpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
-#ifndef MMU_E64_II_HPP
-#define MMU_E64_II_HPP
+#ifndef MMU_HPP
+#define MMU_HPP
 
 #include <cstdint>
+
+#define IO_CIA_PAGE                 0xfe03
+#define IO_VICV_PAGE                0xfe04
+#define IO_SND_PAGE                 0xfe05
+#define IO_TIMER_PAGE               0xfe06
+#define IO_BLITTER_PAGE             0xfe07
+#define IO_RESET_VECTOR_MASK        0xfffff8
+#define IO_KERNEL_MASK              0xff
 
 extern uint8_t patched_char_rom[];
 

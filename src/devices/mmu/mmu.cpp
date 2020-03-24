@@ -1,9 +1,9 @@
-//  mmu_E64_II.cpp
+//  mmu.cpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
-#include "mmu_E64_II.hpp"
+#include "mmu.hpp"
 #include "common_defs.hpp"
 
 extern uint8_t kernel[];
@@ -55,7 +55,7 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     }
     else
     {
-        // normal memory access
+        // ram  access
         return ram[address & 0x00ffffff];
     }
 }
@@ -105,7 +105,7 @@ void E64::mmu::write_memory_8(unsigned int address, unsigned int value)
     }
     else
     {
-        // normal memory access
+        // ram access
         ram[address & 0x00ffffff] = value & 0x000000ff;
     }
 }
