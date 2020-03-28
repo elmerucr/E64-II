@@ -246,8 +246,29 @@ timer1_irq_handler
 	bra		timer2_check
 
 copy_charrom_to_charram
+	movem	d0-d2/a0-a1,-(a7)	; save registers
 
-	rts
+	moveq	#0,d0
+	moveq	#0,d1
+	lea		CHAR_RAM,a0
+	lea		CHAR_ROM,a1
+
+.1	cmpa	CHAR_ROM+$800,a1	; did we reach the end of char rom?
+	beq		.5					; yes, jump to end of routine
+	move.b	(a1)+,d0			; load a byte from char set and increase pointer
+	moveq	#7,d2				; set bit counter on 7
+.2	btst	#$7,d0
+	beq		.3					; bit 7 not set
+	move.w	#C64_GREY,(a0)+		; bit 7 is set, so set color
+	bra		.4
+.3	move.w	#$0000,(a0)+		; bit 7 not set, make empty
+.4	lsl.b	#$01,d0				; move all the bits one place to the left
+	subq	#$01,d2
+	beq		.1					; did the bit counter reach zero? goto .1
+	bra		.2
+
+.5	movem	(a7)+,d0-d2/a0-a1	; restore registers
+	rts							; return
 
 ; string data
 welcome
