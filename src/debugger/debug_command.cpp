@@ -165,11 +165,31 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             uint32_t temp_32bit;
             if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
             {
-                debug_console_print("\nerror: invalid address\n");
+                debug_console_print("error: invalid address\n");
             }
             else
             {
                 debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 1);
+            }
+        }
+    }
+    else if( strcmp(token0, "mc") == 0 )
+    {
+        debug_console_put_char('\n');
+        if( token1 == NULL )
+        {
+            debug_console_print("error: need address\n");
+        }
+        else
+        {
+            uint32_t temp_32bit;
+            if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
+            {
+                debug_console_print("error: invalid address\n");
+            }
+            else
+            {
+                debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 8);
             }
         }
     }
@@ -321,6 +341,46 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         debug_console.cursor_pos -= 43;
     }
 }
+
+void E64::debug_command_memory_character_dump(uint32_t address, int rows)
+{
+    for(int i=0; i<rows; i++ )
+    {
+        uint32_t temp_address = address;
+        snprintf(command_help_string, 256, "\r;%06x ", temp_address);
+        debug_console_print(command_help_string);
+        for(int i=0; i<16; i++)
+        {
+            if( (i & 1) == 0 ) debug_console_put_char(' ');
+            snprintf(command_help_string, 256, "%02x", computer.mmu_ic->read_memory_8(temp_address));
+            debug_console_print(command_help_string);
+            temp_address ++;
+            temp_address &= RAM_SIZE - 1;
+        }
+        
+        debug_console_put_char(' ');
+        debug_console_put_char(' ');
+        
+        temp_address = address;
+        for(int i=0; i<8; i++)
+        {
+            debug_console.current_background_color = *(uint16_t *)(&(computer.mmu_ic->ram[temp_address]));
+            debug_console_put_char(' ');
+            //if( (( temp_byte & 0x7f) == ASCII_LF) || ( (temp_byte & 0x7f) == ASCII_CR) ) temp_byte = 0x80;
+            //debug_console_put_char( temp_byte );
+            temp_address += 2;
+        }
+
+        debug_console.current_background_color = COBALT_01;
+        
+        debug_console_put_char('\n');
+        
+        address += 16;
+        address &= RAM_SIZE - 1;
+        //debug_console.cursor_pos -= 43;
+    }
+}
+
 
 /*
  * hex2int

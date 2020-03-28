@@ -30,6 +30,8 @@ public:
     ~mmu();
     uint8_t *ram;
     
+    void reset();
+    
     unsigned int read_memory_8(unsigned int address);
     unsigned int read_memory_16(unsigned int address);
     

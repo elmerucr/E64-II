@@ -124,6 +124,7 @@ int E64::machine::run(uint16_t no_of_cycles)
 void E64::machine::reset()
 {
     host_video.reset();
+    mmu_ic->reset();
     m68k_ic->reset();
     sound_ic->reset();
     vicv_ic->reset();
