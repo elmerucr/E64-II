@@ -589,8 +589,8 @@ F00:0253       	lea		CHAR_RAM,a0
 F00:0254       	lea		CHAR_ROM,a1
                S01:00FF02B2:  43 F9 00 FD 00 00
 F00:0255       
-F00:0256       .1	cmpa	CHAR_ROM+$800,a1	; did we reach the end of char rom?
-               S01:00FF02B8:  B2 F9 00 FD 08 00
+F00:0256       .1	cmpa.l	CHAR_ROM+$800,a1	; did we reach the end of char rom?
+               S01:00FF02B8:  B3 F9 00 FD 08 00
 F00:0257       	beq		.5					; yes, jump to end of routine
                S01:00FF02BE:  67 1C
 F00:0258       	move.b	(a1)+,d0			; load a byte from char set and increase pointer

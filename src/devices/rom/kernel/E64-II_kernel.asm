@@ -253,7 +253,7 @@ copy_charrom_to_charram
 	lea		CHAR_RAM,a0
 	lea		CHAR_ROM,a1
 
-.1	cmpa	CHAR_ROM+$800,a1	; did we reach the end of char rom?
+.1	cmpa.l	CHAR_ROM+$800,a1	; did we reach the end of char rom?
 	beq		.5					; yes, jump to end of routine
 	move.b	(a1)+,d0			; load a byte from char set and increase pointer
 	moveq	#7,d2				; set bit counter on 7
