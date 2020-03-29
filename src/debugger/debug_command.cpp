@@ -189,7 +189,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             }
             else
             {
-                debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 8);
+                debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 1);
             }
         }
     }
@@ -373,11 +373,9 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
 
         debug_console.current_background_color = COBALT_01;
         
-        debug_console_put_char('\n');
-        
         address += 16;
         address &= RAM_SIZE - 1;
-        //debug_console.cursor_pos -= 43;
+        debug_console.cursor_pos -= 49;
     }
 }
 

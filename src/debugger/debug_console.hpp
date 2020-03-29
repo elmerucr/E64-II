@@ -8,6 +8,12 @@
 #ifndef debug_console_hpp
 #define debug_console_hpp
 
+enum monitor_type {
+    NOTHING,
+    ASCII,
+    CHARACTER
+};
+
 typedef struct
 {
     uint8_t console_character_buffer[2048];
@@ -63,14 +69,14 @@ void debug_console_add_bottom_row();
  * This function checks the screen output for presence of specific
  * monitor output such as ':' at the beginning of a line.
  *
- * The function will return a BOOL if something was
+ * The function will return the type if something was
  * found.
  *
  * If the 1st argument is TRUE, it will look top down, if FALSE, bottom
  * up. The 2nd argument is a pointer to an uint16_t in which the result
  * will be written if something was found.
  */
-bool debug_console_check_output(bool top_down, uint32_t *address);
+enum monitor_type debug_console_check_output(bool top_down, uint32_t *address);
 
 void debug_console_add_top_row();
 void debug_console_clear();
