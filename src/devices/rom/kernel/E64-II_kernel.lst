@@ -64,121 +64,122 @@ F01:0059       ; sound
 F01:0060       SOUND_BASE	equ $fe0500	; sound base register
 F01:0061       SID0_BASE	equ	SOUND_BASE
 F01:0062       SID1_BASE	equ	SOUND_BASE+$20
-F01:0063       ; sound indices
-F01:0064       SID0_LEFT	equ $80
-F01:0065       SID0_RGHT	equ $81
-F01:0066       SID1_LEFT	equ $82
-F01:0067       SID1_RGHT	equ	$83
-F01:0068       
-F01:0069       N_C0_	equ	00*2
-F01:0070       N_C0S	equ	01*2
-F01:0071       N_D0_	equ	02*2
-F01:0072       N_D0S	equ	03*2
-F01:0073       N_E0_	equ	04*2
-F01:0074       N_F0_	equ	05*2
-F01:0075       N_F0S	equ	06*2
-F01:0076       N_G0_	equ	07*2
-F01:0077       N_G0S	equ	08*2
-F01:0078       N_A0_	equ	09*2
-F01:0079       N_A0S	equ	10*2
-F01:0080       N_B0_	equ	11*2
-F01:0081       
-F01:0082       N_C1_	equ	12*2
-F01:0083       N_C1S	equ	13*2
-F01:0084       N_D1_	equ	14*2
-F01:0085       N_D1S	equ	15*2
-F01:0086       N_E1_	equ	16*2
-F01:0087       N_F1_	equ	17*2
-F01:0088       N_F1S	equ	18*2
-F01:0089       N_G1_	equ	19*2
-F01:0090       N_G1S	equ	20*2
-F01:0091       N_A1_	equ	21*2
-F01:0092       N_A1S	equ	22*2
-F01:0093       N_B1_	equ	23*2
-F01:0094       
-F01:0095       N_C2_	equ	24*2
-F01:0096       N_C2S	equ	25*2
-F01:0097       N_D2_	equ	26*2
-F01:0098       N_D2S	equ	27*2
-F01:0099       N_E2_	equ	28*2
-F01:0100       N_F2_	equ	29*2
-F01:0101       N_F2S	equ	30*2
-F01:0102       N_G2_	equ	31*2
-F01:0103       N_G2S	equ	32*2
-F01:0104       N_A2_	equ	33*2
-F01:0105       N_A2S	equ	34*2
-F01:0106       N_B2_	equ	35*2
-F01:0107       
-F01:0108       N_C3_	equ	36*2
-F01:0109       N_C3S	equ	37*2
-F01:0110       N_D3_	equ	38*2
-F01:0111       N_D3S	equ	39*2
-F01:0112       N_E3_	equ	40*2
-F01:0113       N_F3_	equ	41*2
-F01:0114       N_F3S	equ	42*2
-F01:0115       N_G3_	equ	43*2
-F01:0116       N_G3S	equ	44*2
-F01:0117       N_A3_	equ	45*2
-F01:0118       N_A3S	equ	46*2
-F01:0119       N_B3_	equ	47*2
-F01:0120       
-F01:0121       N_C4_	equ	48*2
-F01:0122       N_C4S	equ	49*2
-F01:0123       N_D4_	equ	50*2
-F01:0124       N_D4S	equ	51*2
-F01:0125       N_E4_	equ	52*2
-F01:0126       N_F4_	equ	53*2
-F01:0127       N_F4S	equ	54*2
-F01:0128       N_G4_	equ	55*2
-F01:0129       N_G4S	equ	56*2
-F01:0130       N_A4_	equ	57*2
-F01:0131       N_A4S	equ	58*2
-F01:0132       N_B4_	equ	59*2
-F01:0133       
-F01:0134       N_C5_	equ	60*2
-F01:0135       N_C5S	equ	61*2
-F01:0136       N_D5_	equ	62*2
-F01:0137       N_D5S	equ	63*2
-F01:0138       N_E5_	equ	64*2
-F01:0139       N_F5_	equ	65*2
-F01:0140       N_F5S	equ	66*2
-F01:0141       N_G5_	equ	67*2
-F01:0142       N_G5S	equ	68*2
-F01:0143       N_A5_	equ	69*2
-F01:0144       N_A5S	equ	70*2
-F01:0145       N_B5_	equ	71*2
-F01:0146       
-F01:0147       N_C6_	equ	72*2
-F01:0148       N_C6S	equ	73*2
-F01:0149       N_D6_	equ	74*2
-F01:0150       N_D6S	equ	75*2
-F01:0151       N_E6_	equ	76*2
-F01:0152       N_F6_	equ	77*2
-F01:0153       N_F6S	equ	78*2
-F01:0154       N_G6_	equ	79*2
-F01:0155       N_G6S	equ	80*2
-F01:0156       N_A6_	equ	81*2
-F01:0157       N_A6S	equ	82*2
-F01:0158       N_B6_	equ	83*2
-F01:0159       
-F01:0160       N_C7_	equ	84*2
-F01:0161       N_C7S	equ	85*2
-F01:0162       N_D7_	equ	86*2
-F01:0163       N_D7S	equ	87*2
-F01:0164       N_E7_	equ	88*2
-F01:0165       N_F7_	equ	89*2
-F01:0166       N_F7S	equ	90*2
-F01:0167       N_G7_	equ	91*2
-F01:0168       N_G7S	equ	92*2
-F01:0169       N_A7_	equ	93*2
-F01:0170       N_A7S	equ	94*2
-F01:0171       
-F01:0172       CURR_TEXT_COLOR	equ $008000	; byte
-F01:0173       CURSOR_POS		equ	$008002	; word
-F01:0174       TIMER0_VECTOR	equ	$008004	; long
-F01:0175       TIMER1_VECTOR	equ	$008008	; long
-F01:0176       TIMER2_VECTOR	equ	$00800c	; long
-F01:0177       TIMER3_VECTOR	equ	$008010	; long
+F01:0063       SID2_BASE	equ	SOUND_BASE+$40
+F01:0064       ; sound indices
+F01:0065       SID0_LEFT	equ $80
+F01:0066       SID0_RGHT	equ $81
+F01:0067       SID1_LEFT	equ $82
+F01:0068       SID1_RGHT	equ	$83
+F01:0069       
+F01:0070       N_C0_	equ	00*2
+F01:0071       N_C0S	equ	01*2
+F01:0072       N_D0_	equ	02*2
+F01:0073       N_D0S	equ	03*2
+F01:0074       N_E0_	equ	04*2
+F01:0075       N_F0_	equ	05*2
+F01:0076       N_F0S	equ	06*2
+F01:0077       N_G0_	equ	07*2
+F01:0078       N_G0S	equ	08*2
+F01:0079       N_A0_	equ	09*2
+F01:0080       N_A0S	equ	10*2
+F01:0081       N_B0_	equ	11*2
+F01:0082       
+F01:0083       N_C1_	equ	12*2
+F01:0084       N_C1S	equ	13*2
+F01:0085       N_D1_	equ	14*2
+F01:0086       N_D1S	equ	15*2
+F01:0087       N_E1_	equ	16*2
+F01:0088       N_F1_	equ	17*2
+F01:0089       N_F1S	equ	18*2
+F01:0090       N_G1_	equ	19*2
+F01:0091       N_G1S	equ	20*2
+F01:0092       N_A1_	equ	21*2
+F01:0093       N_A1S	equ	22*2
+F01:0094       N_B1_	equ	23*2
+F01:0095       
+F01:0096       N_C2_	equ	24*2
+F01:0097       N_C2S	equ	25*2
+F01:0098       N_D2_	equ	26*2
+F01:0099       N_D2S	equ	27*2
+F01:0100       N_E2_	equ	28*2
+F01:0101       N_F2_	equ	29*2
+F01:0102       N_F2S	equ	30*2
+F01:0103       N_G2_	equ	31*2
+F01:0104       N_G2S	equ	32*2
+F01:0105       N_A2_	equ	33*2
+F01:0106       N_A2S	equ	34*2
+F01:0107       N_B2_	equ	35*2
+F01:0108       
+F01:0109       N_C3_	equ	36*2
+F01:0110       N_C3S	equ	37*2
+F01:0111       N_D3_	equ	38*2
+F01:0112       N_D3S	equ	39*2
+F01:0113       N_E3_	equ	40*2
+F01:0114       N_F3_	equ	41*2
+F01:0115       N_F3S	equ	42*2
+F01:0116       N_G3_	equ	43*2
+F01:0117       N_G3S	equ	44*2
+F01:0118       N_A3_	equ	45*2
+F01:0119       N_A3S	equ	46*2
+F01:0120       N_B3_	equ	47*2
+F01:0121       
+F01:0122       N_C4_	equ	48*2
+F01:0123       N_C4S	equ	49*2
+F01:0124       N_D4_	equ	50*2
+F01:0125       N_D4S	equ	51*2
+F01:0126       N_E4_	equ	52*2
+F01:0127       N_F4_	equ	53*2
+F01:0128       N_F4S	equ	54*2
+F01:0129       N_G4_	equ	55*2
+F01:0130       N_G4S	equ	56*2
+F01:0131       N_A4_	equ	57*2
+F01:0132       N_A4S	equ	58*2
+F01:0133       N_B4_	equ	59*2
+F01:0134       
+F01:0135       N_C5_	equ	60*2
+F01:0136       N_C5S	equ	61*2
+F01:0137       N_D5_	equ	62*2
+F01:0138       N_D5S	equ	63*2
+F01:0139       N_E5_	equ	64*2
+F01:0140       N_F5_	equ	65*2
+F01:0141       N_F5S	equ	66*2
+F01:0142       N_G5_	equ	67*2
+F01:0143       N_G5S	equ	68*2
+F01:0144       N_A5_	equ	69*2
+F01:0145       N_A5S	equ	70*2
+F01:0146       N_B5_	equ	71*2
+F01:0147       
+F01:0148       N_C6_	equ	72*2
+F01:0149       N_C6S	equ	73*2
+F01:0150       N_D6_	equ	74*2
+F01:0151       N_D6S	equ	75*2
+F01:0152       N_E6_	equ	76*2
+F01:0153       N_F6_	equ	77*2
+F01:0154       N_F6S	equ	78*2
+F01:0155       N_G6_	equ	79*2
+F01:0156       N_G6S	equ	80*2
+F01:0157       N_A6_	equ	81*2
+F01:0158       N_A6S	equ	82*2
+F01:0159       N_B6_	equ	83*2
+F01:0160       
+F01:0161       N_C7_	equ	84*2
+F01:0162       N_C7S	equ	85*2
+F01:0163       N_D7_	equ	86*2
+F01:0164       N_D7S	equ	87*2
+F01:0165       N_E7_	equ	88*2
+F01:0166       N_F7_	equ	89*2
+F01:0167       N_F7S	equ	90*2
+F01:0168       N_G7_	equ	91*2
+F01:0169       N_G7S	equ	92*2
+F01:0170       N_A7_	equ	93*2
+F01:0171       N_A7S	equ	94*2
+F01:0172       
+F01:0173       CURR_TEXT_COLOR	equ $008000	; byte
+F01:0174       CURSOR_POS		equ	$008002	; word
+F01:0175       TIMER0_VECTOR	equ	$008004	; long
+F01:0176       TIMER1_VECTOR	equ	$008008	; long
+F01:0177       TIMER2_VECTOR	equ	$00800c	; long
+F01:0178       TIMER3_VECTOR	equ	$008010	; long
 F00:0005       
 F00:0006       	org		KERNEL_LOC
 F00:0007       
@@ -247,8 +248,8 @@ F00:0043       	move.w	#C64_BLACK,VICV_BORDER_COLOR
 F00:0044       	move.w	#C64_BLUE,VICV_BACKGROUND_COLOR
                S01:00FF0080:  33 FC F3 39 00 FE 04 02
 F00:0045       	; set border size
-F00:0046       	move.b	#$20,VICV_BORDER_SIZE
-               S01:00FF0088:  13 FC 00 20 00 FE 04 0C
+F00:0046       	move.b	#$0,VICV_BORDER_SIZE
+               S01:00FF0088:  13 FC 00 00 00 FE 04 0C
 F00:0047       	; set text color
 F00:0048       	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
                S01:00FF0090:  13 FC 00 0C 00 00 80 00
@@ -599,7 +600,7 @@ F00:0263       .1	cmpa.l	#CHAR_ROM+$800,a1	;	while(char_ram != CHAR_ROM+$800)	//
                S01:00FF02B6:  B3 FC 00 FD 08 00
 F00:0264       	beq		.5					;	{									//	branch to end of compound statement
                S01:00FF02BC:  67 1C
-F00:0265       	move.b	(a1)+,d0			;		current_byte = char_rom++;		//	load a byte from char set and increase pointer
+F00:0265       	move.b	(a1)+,d0			;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
                S01:00FF02BE:  10 19
 F00:0266       	moveq	#8,d1				;		i = 8;
                S01:00FF02C0:  72 08
@@ -1160,6 +1161,7 @@ SID1_RGHT EXPR(131=0x83) EQU
 SID1_LEFT EXPR(130=0x82) EQU 
 SID0_RGHT EXPR(129=0x81) EQU 
 SID0_LEFT EXPR(128=0x80) EQU 
+SID2_BASE EXPR(16647488=0xfe0540) UNUSED EQU 
 SID1_BASE EXPR(16647456=0xfe0520) EQU 
 SID0_BASE EXPR(16647424=0xfe0500) EQU 
 SOUND_BASE EXPR(16647424=0xfe0500) EQU 

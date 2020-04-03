@@ -92,7 +92,7 @@ void E64::sound::write_byte(uint8_t address, uint8_t byte)
 {
     // each sid requires 32 addresses (of which 29 are used)
     // bit 7 of address determines if a sid chip should be addressed
-    // bits 5 and 6 determine which sid chip of the four
+    // bits 5 determines which sid chip of the two
     // bits 0 to 4 are the actual address within one sid chip
     if(address & 0x80)
     {
@@ -100,7 +100,8 @@ void E64::sound::write_byte(uint8_t address, uint8_t byte)
     }
     else
     {
-        sid[(address & 0x60) >> 5].write( register_index[address & 0x1f], byte); // NEEDS CHECKING!!!
+        // nb change 0x20 into 0x60 if four SID chips are being used
+        sid[ (address & 0x20) >> 5 ].write( register_index[address & 0x1f], byte); // NEEDS CHECKING!!!
     }
 }
 

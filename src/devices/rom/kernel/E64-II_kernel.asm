@@ -43,7 +43,7 @@ kernel_main
 	move.w	#C64_BLACK,VICV_BORDER_COLOR
 	move.w	#C64_BLUE,VICV_BACKGROUND_COLOR
 	; set border size
-	move.b	#$20,VICV_BORDER_SIZE
+	move.b	#$0,VICV_BORDER_SIZE
 	; set text color
 	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
 
@@ -262,7 +262,7 @@ copy_charrom_to_charram
 
 .1	cmpa.l	#CHAR_ROM+$800,a1	;	while(char_ram != CHAR_ROM+$800)	//	if we're not at the end of char rom
 	beq		.5					;	{									//	branch to end of compound statement
-	move.b	(a1)+,d0			;		current_byte = char_rom++;		//	load a byte from char set and increase pointer
+	move.b	(a1)+,d0			;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
 	moveq	#8,d1				;		i = 8;
 .2	btst	#$7,d0
 	beq		.3					; bit 7 not set

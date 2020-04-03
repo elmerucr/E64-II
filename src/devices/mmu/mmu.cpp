@@ -24,7 +24,7 @@ E64::mmu::~mmu()
 void E64::mmu::reset()
 {
     // fill alternating blocks with 0x00 and 0x80
-    for(int i=0; i<RAM_SIZE; i++) ram[i] = (i & 64) ? 0x40 : 0x00;
+    for(int i=0; i<RAM_SIZE; i++) ram[i] = (i & 64) ? 0x20 : 0x00;
 }
 
 unsigned int E64::mmu::read_memory_8(unsigned int address)

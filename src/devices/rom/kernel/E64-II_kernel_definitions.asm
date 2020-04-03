@@ -60,6 +60,7 @@ BLITTER_BASE		equ $fe0700
 SOUND_BASE	equ $fe0500	; sound base register
 SID0_BASE	equ	SOUND_BASE
 SID1_BASE	equ	SOUND_BASE+$20
+SID2_BASE	equ	SOUND_BASE+$40
 ; sound indices
 SID0_LEFT	equ $80
 SID0_RGHT	equ $81

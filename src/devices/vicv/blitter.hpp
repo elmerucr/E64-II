@@ -18,7 +18,7 @@
 namespace E64
 {
 
-struct surface_blit_action
+struct surface_blit
 {
     /* bit 0    : Character mode (0) or bit map mode (1)
      * bit 1    : Single color (0), or multi color mode (1)

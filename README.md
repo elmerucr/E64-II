@@ -1,7 +1,7 @@
 # E64-II
 ![E64](./docs/E64-II_icon.png)
 ## Description
-The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and other more advanced computer systems of the time like the Amiga 500.
+The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and more advanced computer systems like the Amiga 500.
 
 ## Technical specifications:
 * Motorola 68000 CPU running at 6.048MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
@@ -42,24 +42,24 @@ The sourcecode comes with a working version of the kernel ````kernel.cpp````. If
 Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
 In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.asm```` sourcefiles into a binary rom image. Furthermore, a small ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the larger E64-II project.
 ## Other websites and projects of interest
-* [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives
-* [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others
-* [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time
-* [CCS64](http://www.ccs64.com) - A Commodore 64 Emulator by Per Håkan Sundell
+* [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
+* [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others.
+* [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time.
+* [CCS64](http://www.ccs64.com) - A Commodore 64 Emulator by Per Håkan Sundell.
 * [Commander x64](https://github.com/commanderx16) - The Commander X16 is a modern 8-bit computer currently in active development. It is the brainchild of David "the 8 Bit Guy" Murray.
-* [Hatari](https://hatari.tuxfamily.org) - Hatari is an Atari ST/STE/TT/Falcon emulator
-* [lib65ce02](https://github.com/elmerucr/lib65ce02) - CSG65CE02 emulator written in C
-* [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage
-* [Moira](https://github.com/dirkwhoffmann/Moira) - New Motorola 68000 emulator written in C++ by Dirk W. Hoffmann
-* [Musashi](https://github.com/kstenerud/Musashi) - Motorola 680x0 emulator written in C by Karl Stenerud
+* [Hatari](https://hatari.tuxfamily.org) - Hatari is an Atari ST/STE/TT/Falcon emulator.
+* [lib65ce02](https://github.com/elmerucr/lib65ce02) - CSG65CE02 emulator written in C.
+* [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage.
+* [Moira](https://github.com/dirkwhoffmann/Moira) - New Motorola 68000 emulator written in C++ by Dirk W. Hoffmann.
+* [Musashi](https://github.com/kstenerud/Musashi) - Motorola 680x0 emulator written in C by Karl Stenerud.
 * [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) - ReSID is a Commodore 6581 or 8580 Sound Interface Device emulator by Dag Lem.
-* [SDL Simple DirectMedia Layer](https://www.libsdl.org) - A cross-platform development library by Sam Lantinga designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware
-* [ultimate64](https://ultimate64.com/Ultimate-64) - A hardware implementation (FPGA) of the C64
-* [vAmiga](http://www.dirkwhoffmann.de/software/vAmiga.html) - An Amiga 500, 1000, or 2000 on your Apple Macintosh by Dirk W. Hoffmann
-* [vasm](http://sun.hasenbraten.de/vasm/) - A portable and retargetable assembler with very good support for the Motorola 680x0 family by Volker Barthelmann / Frank Wille
-* [VICE](http://vice-emu.sourceforge.net) - The Versatile Commodore Emulator
-* [VirtualC64](http://www.dirkwhoffmann.de/software/virtualC64.html) - A Commodore 64 on your Apple Macintosh by Dirk W. Hoffmann
-* [visual6502](http://www.visual6502.org) - Visual Transistor-level Simulation of the 6502 CPU and other chips
+* [SDL Simple DirectMedia Layer](https://www.libsdl.org) - A cross-platform development library by Sam Lantinga designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware.
+* [ultimate64](https://ultimate64.com/Ultimate-64) - A hardware implementation (FPGA) of the C64.
+* [vAmiga](http://www.dirkwhoffmann.de/software/vAmiga.html) - An Amiga 500, 1000, or 2000 on your Apple Macintosh by Dirk W. Hoffmann.
+* [vasm](http://sun.hasenbraten.de/vasm/) - A portable and retargetable assembler with very good support for the Motorola 680x0 family by Volker Barthelmann / Frank Wille.
+* [VICE](http://vice-emu.sourceforge.net) - The Versatile Commodore Emulator.
+* [VirtualC64](http://www.dirkwhoffmann.de/software/virtualC64.html) - A Commodore 64 on your Apple Macintosh by Dirk W. Hoffmann.
+* [visual6502](http://www.visual6502.org) - Visual Transistor-level Simulation of the 6502 CPU and other chips.
 ## MIT License
 Copyright (c) 2020 elmerucr
 
