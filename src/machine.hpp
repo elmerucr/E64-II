@@ -10,7 +10,7 @@
 #include "cpu_moira.hpp"
 #include "frequency_divider.hpp"
 #include "mmu.hpp"
-#include "sound.hpp"
+#include "sids.hpp"
 #include "timer.hpp"
 #include "TTL74LS148.hpp"
 #include "vicv.hpp"
@@ -49,7 +49,7 @@ namespace E64
         timer               *timer_ic;
         vicv                *vicv_ic;
         blitter             *blitter_ic;
-        sound               *sound_ic;
+        sids                *sids_ic;
         cia                 *cia_ic;
 
         machine();

@@ -1,13 +1,13 @@
-//  sound.cpp
+//  sids.cpp
 //  E64
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
 
-#include "sound.hpp"
+#include "sids.hpp"
 #include "sdl2.hpp"
 #include "common_defs.hpp"
 
-E64::sound::sound(bool big_endian)
+E64::sids::sids(bool big_endian)
 {
     for(int i=0; i<32; i++) register_index[i] = i;
     if( big_endian == true )
@@ -71,12 +71,12 @@ E64::sound::sound(bool big_endian)
     }
 }
 
-E64::sound::~sound()
+E64::sids::~sids()
 {
     // nothing
 }
 
-uint8_t E64::sound::read_byte(uint8_t address)
+uint8_t E64::sids::read_byte(uint8_t address)
 {
     if(address & 0x80)
     {
@@ -88,7 +88,7 @@ uint8_t E64::sound::read_byte(uint8_t address)
     }
 }
 
-void E64::sound::write_byte(uint8_t address, uint8_t byte)
+void E64::sids::write_byte(uint8_t address, uint8_t byte)
 {
     // each sid requires 32 addresses (of which 29 are used)
     // bit 7 of address determines if a sid chip should be addressed
@@ -105,7 +105,7 @@ void E64::sound::write_byte(uint8_t address, uint8_t byte)
     }
 }
 
-void E64::sound::run(uint32_t number_of_cycles)
+void E64::sids::run(uint32_t number_of_cycles)
 {
     delta_t_sid0 += number_of_cycles;
     delta_t_sid1 = delta_t_sid0;
@@ -129,7 +129,7 @@ void E64::sound::run(uint32_t number_of_cycles)
     E64::sdl2_queue_audio((void *)sample_buffer_stereo, 2 * n * sizeof(int16_t));
 }
 
-void E64::sound::reset()
+void E64::sids::reset()
 {
     sid[0].reset();
     sid[1].reset();

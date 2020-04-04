@@ -47,11 +47,20 @@ struct surface_blit
     uint8_t     y_pos_low_byte;
 };
 
+enum state
+{
+    IDLE,
+    CLEAR_FRAMEBUFFER,
+    BLIT
+};
+
 class blitter
 {
 private:
     uint8_t registers[256];
+    enum state current_state;
 public:
+    void reset();
     void run(int no_of_cycles);
     
     void add_operation();

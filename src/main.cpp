@@ -14,7 +14,7 @@
 #include "debug_screen.hpp"
 #include "debug_status_bar.hpp"
 #include "cia.hpp"
-#include "sound.hpp"
+#include "sids.hpp"
 #include "timer.hpp"
 
 // global components of the system

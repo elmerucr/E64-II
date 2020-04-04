@@ -1,4 +1,4 @@
-//  sound.hpp
+//  sids.hpp
 //  E64
 //
 //  Copyright © 2019 elmerucr. All rights reserved.
@@ -9,12 +9,12 @@
 // resid header
 #include "sid.h"
 
-#ifndef sound_hpp
-#define sound_hpp
+#ifndef sids_hpp
+#define sids_hpp
 
 namespace E64
 {
-    class sound
+    class sids
     {
         SID sid[2];
         uint8_t balance_registers[8];
@@ -27,8 +27,8 @@ namespace E64
         // used to exchange freq lo/hi registers for big_endian system
         uint8_t register_index[32];
     public:
-        sound(bool big_endian);
-        ~sound();
+        sids(bool big_endian);
+        ~sids();
         // read and write functions to data registers of sid array and mixer
         uint8_t read_byte(uint8_t address);
         void    write_byte(uint8_t address, uint8_t byte);

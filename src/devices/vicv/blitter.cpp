@@ -7,15 +7,15 @@
 #include "common_defs.hpp"
 
 /*
- *  blend_color function takes the original color (destination, which is
+ *  blend_color function takes the current color (destination, which is
  *  also the destination) and the color that must be blended (source). It
- *  returns the value of the blend which, normally, will be written on
+ *  returns the value of the blend which, normally, will be written to the
  *  destination.
  *  The ordering (from little endian perspective) seems strange: GBAR4444
  *  Actually, it isn't: inside the virtual machine (big endian) it is
  *  in ARGB444 format.
  *  At first, this function seemed to drag down total emulation speed. But,
- *  with optimizations (-O2) turned on, it is ok.
+ *  with optimizations (minimum -O2) turned on, it is ok.
  *
  *  The idea to use an inline function (and not a lookup table comes from
  *  this website:
@@ -28,7 +28,7 @@
  *
  */
 
-inline uint16_t blend_color(uint16_t destination, uint16_t source)
+inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
 {
     uint8_t r_dest, g_dest, b_dest;
     uint8_t a_src, r_src, g_src, b_src;
@@ -49,9 +49,11 @@ inline uint16_t blend_color(uint16_t destination, uint16_t source)
     return (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 
-/* dummy function
- * replace it!
- */
+void E64::blitter::reset()
+{
+    current_state = IDLE;
+}
+
 void E64::blitter::run(int no_of_cycles)
 {
     uint16_t destination_color = computer.mmu_ic->ram[0x00d001];
@@ -60,8 +62,18 @@ void E64::blitter::run(int no_of_cycles)
     while(no_of_cycles > 0)
     {
         no_of_cycles--;
+        
+        switch( current_state )
+        {
+            case IDLE:
+                break;
+            case CLEAR_FRAMEBUFFER:
+                break;
+            case BLIT:
+                break;
+        }
 
-        destination_color = blend_color(destination_color, source_color);
+        destination_color = alpha_blend(destination_color, source_color);
     }
 }
 

@@ -28,7 +28,7 @@ E64::machine::machine()
     
     blitter_ic = new blitter();
     
-    sound_ic = new sound(true);
+    sids_ic = new sids(true);
     
     cia_ic = new cia();
     
@@ -49,7 +49,7 @@ E64::machine::~machine()
     delete m68k_to_vicv;
     
     delete cia_ic;
-    delete sound_ic;
+    delete sids_ic;
     delete blitter_ic;
     delete vicv_ic;
     delete timer_ic;
@@ -115,7 +115,7 @@ int E64::machine::run(uint16_t no_of_cycles)
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
     // calculate no. of cycles to run on sound device & start audio if buffer large enough
-    sound_ic->run(m68k_to_sid->clock(processed_cycles));
+    sids_ic->run(m68k_to_sid->clock(processed_cycles));
     if(E64::sdl2_get_queued_audio_size() > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
     
     return exit_code;
@@ -126,8 +126,9 @@ void E64::machine::reset()
     host_video.reset();
     mmu_ic->reset();
     m68k_ic->reset();
-    sound_ic->reset();
+    sids_ic->reset();
     vicv_ic->reset();
+    blitter_ic->reset();
     timer_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
 }
