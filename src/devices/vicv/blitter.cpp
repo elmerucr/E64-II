@@ -13,9 +13,9 @@
  *  destination.
  *  The ordering (from little endian perspective) seems strange: GBAR4444
  *  Actually, it isn't: inside the virtual machine (big endian) it is
- *  in ARGB444 format.
- *  At first, this function seemed to drag down total emulation speed. But,
- *  with optimizations (minimum -O2) turned on, it is ok.
+ *  in ARGB444 format. At first, this function seemed to drag down total
+ *  emulation speed. But, with optimizations (minimum -O2) turned on, it
+ *  is ok.
  *
  *  The idea to use an inline function (and not a lookup table comes from
  *  this website:
@@ -66,6 +66,7 @@ void E64::blitter::run(int no_of_cycles)
         switch( current_state )
         {
             case IDLE:
+                // check for a new operation in FIFO list
                 break;
             case CLEAR_FRAMEBUFFER:
                 break;
@@ -93,9 +94,7 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     {
         case 0x00:
             if( byte & 0b00000001 ) printf("dummy for clearing a framebuffer\n");
-            break;
-        case 0x01:
-            if( byte & 0b00000001 ) printf("dummy for addition of an operation\n");
+            if( byte & 0b00000010 ) printf("dummy for adding a blit operation\n");
             break;
         default:
             break;

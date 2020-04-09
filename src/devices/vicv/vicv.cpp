@@ -215,7 +215,7 @@ void E64::vicv::write_byte(uint8_t address, uint8_t byte)
         case VICV_REG_ISR:
             if( byte & 0b00000001 ) computer.TTL74LS148_ic->release_line(interrupt_device_no_vblank);  // acknowledge pending irq
             break;
-        case VICV_REG_BUFFER:
+        case VICV_REG_BUFFERSWAP:
             if( byte & 0b00000001 )
             {
                 uint16_t *tempbuffer = frontbuffer;

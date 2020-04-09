@@ -34,7 +34,11 @@ VICV_TXT				equ VICV_BASE+$04
 VICV_COL				equ VICV_BASE+$08
 VICV_BORDER_SIZE		equ VICV_BASE+$0c
 VICV_ISR				equ VICV_BASE+$0e
-VICV_BUFFER				equ	VICV_BASE+$10
+VICV_BUFFERSWAP			equ	VICV_BASE+$10
+
+; blitter
+BLITTER_BASE		equ $fe0700
+BLITTER_CONTROL		equ	BLITTER_BASE
 
 C64_BLACK		equ $f000
 C64_WHITE		equ	$ffff
@@ -52,9 +56,6 @@ C64_GREY		equ	$f777
 C64_LIGHTGREEN	equ	$fbfa
 C64_LIGHTBLUE	equ	$f67d
 C64_LIGHTGREY	equ	$faaa
-
-; blitter
-BLITTER_BASE		equ $fe0700
 
 ; sound
 SOUND_BASE	equ $fe0500	; sound base register

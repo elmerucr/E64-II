@@ -90,8 +90,9 @@ void E64::machine::switch_mode()
 int E64::machine::run(uint16_t no_of_cycles)
 {
     // default exit_code of the function is 0, no breakpoints have occurred
-    int exit_code = NOTHING;
+    enum output_states state = NOTHING;
     
+    // run cycles on the cpu and check for breakpoints
     unsigned int processed_cycles = (unsigned int)computer.m68k_ic->run(no_of_cycles);
     if( m68k_ic->breakpoint_reached )
     {
@@ -99,26 +100,30 @@ int E64::machine::run(uint16_t no_of_cycles)
         snprintf(machine_help_string, 256, "cpu breakpoint occurred at $%06x\n", m68k_ic->getPC());
         debug_console_print(machine_help_string);
         m68k_ic->breakpoint_reached = false;
-        exit_code = CPU_BREAKPOINT;
+        state = CPU_BREAKPOINT;
     }
+    
+    // run cycles on vicv and check for breakpoints
+    vicv_ic->run(m68k_to_vicv->clock(processed_cycles));
     if( vicv_ic->breakpoint_reached )
     {
         snprintf(machine_help_string, 256, "scanline breakpoint occurred at line %i\n", vicv_ic->get_current_scanline());
         debug_console_print(machine_help_string);
         vicv_ic->breakpoint_reached = false;
-        exit_code = SCANLINE_BREAKPOINT;
+        state = SCANLINE_BREAKPOINT;
     }
-    // run cycles on vicv
-    vicv_ic->run(m68k_to_vicv->clock(processed_cycles));
+    
     // run cycles on blitter
     blitter_ic->run(m68k_to_blitter->clock(processed_cycles));
+    
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
-    // calculate no. of cycles to run on sound device & start audio if buffer large enough
+    
+    // run cycles on sound device & start audio if buffer is large enough
     sids_ic->run(m68k_to_sid->clock(processed_cycles));
     if(E64::sdl2_get_queued_audio_size() > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
     
-    return exit_code;
+    return state;
 }
 
 void E64::machine::reset()

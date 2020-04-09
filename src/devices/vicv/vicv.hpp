@@ -24,7 +24,7 @@
 // write to bit 0 = acknowldge VBLANK interrupt
 #define VICV_REG_ISR            0x0e
 // reg 10, write to bit 0 = swap front and back buffer (machine internally)
-#define VICV_REG_BUFFER         0x10
+#define VICV_REG_BUFFERSWAP     0x10
 
 namespace E64 {
 

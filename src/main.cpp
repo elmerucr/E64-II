@@ -53,20 +53,10 @@ int main(int argc, char **argv)
         switch(computer.current_mode)
         {
             case E64::NORMAL_MODE:
-                switch( computer.run(127) )
-                {
-                    case E64::NOTHING:
-                        break;
-                    case E64::CPU_BREAKPOINT:
-                        computer.switch_to_debug();
-                        break;
-                    case E64::SCANLINE_BREAKPOINT:
-                        computer.switch_to_debug();
-                        break;
-                }
+                if( computer.run(127) ) computer.switch_to_debug();
                 
                 // if full frame was drawn call other update functions:
-                if(computer.vicv_ic->frame_done == true)
+                if( computer.vicv_ic->frame_done )
                 {
                     computer.vicv_ic->frame_done = false;
                     

@@ -189,10 +189,10 @@ exception_handler
 
 ; level 2 interrupt autovector (vicv vblank)
 interrupt_2_autovector
-	move.b	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
-	move.b	#%00000001,VICV_BUFFER	; switch buffers
-									; clear the backbuffer
-									; plan some blitter stuff (text screen, ...)
+	move.b	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
+	move.b	#%00000001,VICV_BUFFERSWAP	; switch buffers
+	move.b	#%00000001,BLITTER_CONTROL	; clear the backbuffer
+									; plan some other blitter stuff (text screen, ...)
 	rte
 
 ; level 4 interrupt autovector (timer)
