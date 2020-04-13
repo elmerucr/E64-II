@@ -8,7 +8,13 @@
  *  clock speed of 8 times CPU. Copy operations run independent and can
  *  be added to a FIFO linked list through an I/O memory mapped interface.
  *
- *  Reg 00: bit 0: On 1 blitter is busy, on 0 blitter is idle.
+ *  Registers
+ *  Reg 0x00 read: bit 0: On 1 blitter is busy, on 0 blitter is idle.
+ *
+ *  Reg 0x02 read/write: data bits 24 - 31
+ *  Reg 0x03 read/write: data bits 16 - 23
+ *  Reg 0x04 read/write: data bits 8 - 15
+ *  Reg 0x05 read/write: data bits 0 - 7
  *
  */
 
@@ -80,12 +86,26 @@ class blitter
 {
 private:
     uint8_t registers[256];
+    
     enum blitter_state current_state;
+    
+    // circular buffer containing operations
+    // if more than 256 operation would be written (unlikely) and not
+    // finished, something will be overwritten
+    struct operation fifo_operations[256];
+    uint8_t head_fifo;
+    uint8_t tail_fifo;
+    
+    // finite state machine clearing framebuffer
+    
+    
+    // finite state machine blitting
+    
 public:
     void reset();
     void run(int no_of_cycles);
     
-    void add_operation();
+    void add_operation(enum operation_type type, uint32_t data_element);
     
     // Register access
     uint8_t read_byte(uint8_t address);

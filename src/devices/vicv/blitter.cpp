@@ -52,6 +52,9 @@ inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
 void E64::blitter::reset()
 {
     current_state = IDLE;
+    
+    head_fifo = 0;
+    tail_fifo = 0;
 }
 
 void E64::blitter::run(int no_of_cycles)
@@ -77,14 +80,29 @@ void E64::blitter::run(int no_of_cycles)
     }
 }
 
-void E64::blitter::add_operation()
+void E64::blitter::add_operation(enum operation_type type, uint32_t data_element)
 {
-    //
+    printf("dummy for clearing screen by blitter\n");
 }
 
 uint8_t E64::blitter::read_byte(uint8_t address)
 {
-    return 0;
+    switch( address )
+    {
+        case 0x00:
+            if( current_state == IDLE )
+            {
+                return 0b00000000;
+            }
+            else
+            {
+                return 0b00000001;
+            }
+            break;
+        default:
+            return registers[address];
+            break;
+    }
 }
 
 void E64::blitter::write_byte(uint8_t address, uint8_t byte)
@@ -92,7 +110,7 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     switch( address )
     {
         case 0x00:
-            if( byte & 0b00000001 ) printf("dummy for clearing a framebuffer\n");
+            if( byte & 0b00000001 ) add_operation(CLEAR_FRAMEBUFFER, (registers[0x04] << 8) | registers[0x05]);
             if( byte & 0b00000010 ) printf("dummy for adding a blit operation\n");
             break;
         default:
