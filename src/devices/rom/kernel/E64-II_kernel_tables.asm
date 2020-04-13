@@ -133,6 +133,10 @@ ascii_to_screencode
 hex_table
 	dc.b	'0123456789abcdef'
 
+;	The following table is based on a SID clock frequency of 985248Hz (PAL)
+;	Calculations were made according to Codebase64 article
+;	https://codebase64.org/doku.php?id=base:how_to_calculate_your_own_sid_frequency_table
+;
 notes
 	dc.w	$0116,$0127,$0139,$014b,$015f,$0174,$018a,$01a1,$01ba,$01d4,$01f0,$020e	; N_C0_ to N_B0_
 	dc.w	$022d,$024e,$0271,$0296,$02be,$02e7,$0314,$0342,$0374,$03a9,$03e0,$041b	; N_C1_ to N_B1_

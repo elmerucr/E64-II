@@ -67,14 +67,13 @@ void E64::blitter::run(int no_of_cycles)
         {
             case IDLE:
                 // check for a new operation in FIFO list
+                destination_color = alpha_blend(destination_color, source_color);
                 break;
-            case CLEAR_FRAMEBUFFER:
+            case CLEARING_FRAMEBUFFER:
                 break;
-            case BLIT:
+            case BLITTING:
                 break;
-        }
-
-        destination_color = alpha_blend(destination_color, source_color);
+        }        
     }
 }
 

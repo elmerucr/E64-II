@@ -15,10 +15,6 @@ E64::vicv::vicv()
     framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];
     
-    // temp crap for debugging
-    for(int i=0; i<320*512; i++) framebuffer1[i] = C64_BLUE;
-    //
-    
     breakpoint_reached = false;
     clear_scanline_breakpoints();
     old_y_pos = 0;
@@ -39,8 +35,17 @@ void E64::vicv::reset()
 
     for(int i=0; i<256; i++) registers[i] = 0;
     
+    // temp crap for debugging
+    for(int i=0; i<320*512; i++)
+    {
+        framebuffer1[i] = C64_BLUE;
+    }
+    //
+    
     frontbuffer = framebuffer0;
     backbuffer  = framebuffer1;
+    
+    
 }
 
 #define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))

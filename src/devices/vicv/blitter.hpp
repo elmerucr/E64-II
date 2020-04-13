@@ -23,13 +23,28 @@ namespace E64
 enum blitter_state
 {
     IDLE,
+    CLEARING_FRAMEBUFFER,
+    BLITTING
+};
+
+enum operation_type
+{
     CLEAR_FRAMEBUFFER,
     BLIT
 };
 
 struct operation
 {
+    enum operation_type type;
     
+    /*
+     *  In the case of a CLEAR_FRAMEBUFFER, this data_element contains
+     *  the color in gbar4444 format (lower 16 bits). In the case of a
+     *  BLIT operation, this data_element contains the address of the
+     *  surface_blit descriptor (see other structure).
+     *
+     */
+    uint32_t data_element;
 };
 
 struct surface_blit
