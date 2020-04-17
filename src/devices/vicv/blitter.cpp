@@ -82,7 +82,15 @@ void E64::blitter::run(int no_of_cycles)
 
 void E64::blitter::add_operation(enum operation_type type, uint32_t data_element)
 {
-    printf("dummy for clearing screen by blitter\n");
+    switch( type )
+    {
+        case CLEAR_FRAMEBUFFER:
+            printf("dummy for clearing screen by blitter with color $%04x\n", data_element);
+            break;
+        case BLIT:
+            printf("dummy for blit by blitter described at address $%08x\n", data_element);
+            break;
+    }
 }
 
 uint8_t E64::blitter::read_byte(uint8_t address)
@@ -111,9 +119,10 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     {
         case 0x00:
             if( byte & 0b00000001 ) add_operation(CLEAR_FRAMEBUFFER, (registers[0x04] << 8) | registers[0x05]);
-            if( byte & 0b00000010 ) printf("dummy for adding a blit operation\n");
+            if( byte & 0b00000010 ) add_operation(BLIT, (registers[0x02] << 24) | (registers[0x03] << 16) | (registers[0x04] << 8) | registers[0x05]);
             break;
         default:
+            registers[address] = byte;
             break;
     }
 }

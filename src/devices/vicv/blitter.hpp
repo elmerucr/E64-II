@@ -39,6 +39,35 @@ enum operation_type
     BLIT
 };
 
+struct surface_blit
+{
+    /*  bit 0    : Character mode (0) or bit map mode (1)
+     *  bit 1    : Single color (0), or multi color mode (1)
+     *  bit 2-7  : Reserved
+     */
+    uint8_t     flags_0;
+    
+    /*  bit 0    : Horizontal single pixel (0) or double pixel (1) size
+     *  bit 1    : Vertical single pixel (0) or double pixel (1) size
+     *  bit 2-7  : Reserved
+     */
+    uint8_t     flags_1;
+    
+    /*  16 bit big endian number
+     *  with the x position of the
+     *  surface
+     */
+    uint8_t     x_pos_high_byte;
+    uint8_t     x_pos_low_byte;
+    
+    /*  16 bit big endian number
+     *  with the y position of the
+     *  surface
+     */
+    uint8_t     y_pos_high_byte;
+    uint8_t     y_pos_low_byte;
+};
+
 struct operation
 {
     enum operation_type type;
@@ -51,35 +80,8 @@ struct operation
      *
      */
     uint32_t data_element;
-};
-
-struct surface_blit
-{
-    /* bit 0    : Character mode (0) or bit map mode (1)
-     * bit 1    : Single color (0), or multi color mode (1)
-     * bit 2-7  : Reserved
-     */
-    uint8_t     flags_0;
     
-    /* bit 0    : Horizontal single pixel (0) or double pixel (1) size
-     * bit 1    : Vertical single pixel (0) or double pixel (1) size
-     * bit 2-7  : Reserved
-     */
-    uint8_t     flags_1;
-    
-    /* 16 bit big endian number
-     * with the x position of the
-     * surface
-     */
-    uint8_t     x_pos_high_byte;
-    uint8_t     x_pos_low_byte;
-    
-    /* 16 bit big endian number
-     * with the y position of the
-     * surface
-     */
-    uint8_t     y_pos_high_byte;
-    uint8_t     y_pos_low_byte;
+    struct surface_blit this_blit;
 };
 
 class blitter
