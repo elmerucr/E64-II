@@ -4,7 +4,7 @@
 //  Copyright © 2017 elmerucr. All rights reserved.
 
 #include "debug_screen.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 uint8_t debug_screen_character_buffer[32*64];            // 32 lines of 64 chars
 uint16_t debug_screen_foreground_color_buffer[32*64];     // 32x64

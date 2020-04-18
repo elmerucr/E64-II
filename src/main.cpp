@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdio>
 
-#include "common_defs.hpp"
+#include "common.hpp"
 #include "sdl2.hpp"
 #include "pid_delay.hpp"
 #include "vicv.hpp"

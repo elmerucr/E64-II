@@ -9,7 +9,7 @@
 #include <iostream>
 #include "pid_delay.hpp"
 #include "sdl2.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::pid_controller::pid_controller(double k1, double k2, double k3, double setpoint, double initial_output)
 {

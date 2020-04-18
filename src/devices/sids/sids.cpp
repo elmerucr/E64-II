@@ -5,7 +5,7 @@
 
 #include "sids.hpp"
 #include "sdl2.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::sids::sids(bool big_endian)
 {

@@ -4,7 +4,7 @@
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "mmu.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 extern uint8_t kernel[];
 

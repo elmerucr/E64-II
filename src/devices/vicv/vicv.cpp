@@ -6,7 +6,7 @@
 #include <cstdio>
 
 #include "vicv.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::vicv::vicv()
 {

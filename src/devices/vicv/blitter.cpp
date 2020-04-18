@@ -4,7 +4,7 @@
 //  Copyright © 2020 elmerucr. All rights reserved.
 
 #include "blitter.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 /*
  *  blend_color function takes the current color (destination, which is
@@ -59,8 +59,10 @@ void E64::blitter::reset()
 
 void E64::blitter::run(int no_of_cycles)
 {
+    // temp crap
     uint16_t destination_color = computer.mmu_ic->ram[0x00d001];
     uint16_t source_color = computer.mmu_ic->ram[0x00eff2];
+    //
     
     while(no_of_cycles > 0)
     {
@@ -70,6 +72,10 @@ void E64::blitter::run(int no_of_cycles)
         {
             case IDLE:
                 // check for a new operation in FIFO list
+                if( head_fifo != tail_fifo)
+                {
+                    // there must be an operation, start processing it
+                }
                 destination_color = alpha_blend(destination_color, source_color);
                 break;
             case CLEARING_FRAMEBUFFER:
@@ -85,6 +91,9 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
     switch( type )
     {
         case CLEAR_FRAMEBUFFER:
+            fifo_operations[head_fifo].type = CLEAR_FRAMEBUFFER;
+            fifo_operations[head_fifo].data_element = data_element;
+            head_fifo++;
             printf("dummy for clearing screen by blitter with color $%04x\n", data_element);
             break;
         case BLIT:

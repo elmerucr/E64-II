@@ -7,7 +7,7 @@
 #include <cstring>
 #include <cstdlib>
 
-#include "common_defs.hpp"
+#include "common.hpp"
 #include "debug_command.hpp"
 #include "debug_console.hpp"
 #include "sdl2.hpp"

@@ -21,7 +21,7 @@
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C7B123D7B40600E9E78D /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7A923D7B40600E9E78D /* machine.cpp */; };
 		4691C7B223D7B40600E9E78D /* pid_delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AA23D7B40600E9E78D /* pid_delay.cpp */; };
-		4691C7B323D7B40600E9E78D /* common_defs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AB23D7B40600E9E78D /* common_defs.cpp */; };
+		4691C7B323D7B40600E9E78D /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AB23D7B40600E9E78D /* common.cpp */; };
 		4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */; };
 		4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7B723D7B4DC00E9E78D /* cia.cpp */; };
 		4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7BC23D7B57100E9E78D /* cpu_moira.cpp */; };
@@ -91,11 +91,11 @@
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		4691C7A923D7B40600E9E78D /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine.cpp; sourceTree = "<group>"; };
 		4691C7AA23D7B40600E9E78D /* pid_delay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pid_delay.cpp; path = ../../../src/pid_delay.cpp; sourceTree = "<group>"; };
-		4691C7AB23D7B40600E9E78D /* common_defs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = common_defs.cpp; path = ../../../src/common_defs.cpp; sourceTree = "<group>"; };
+		4691C7AB23D7B40600E9E78D /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = common.cpp; path = ../../../src/common.cpp; sourceTree = "<group>"; };
 		4691C7AC23D7B40600E9E78D /* machine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = machine.hpp; path = ../../../src/machine.hpp; sourceTree = "<group>"; };
 		4691C7AD23D7B40600E9E78D /* pid_delay.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pid_delay.hpp; path = ../../../src/pid_delay.hpp; sourceTree = "<group>"; };
 		4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frequency_divider.cpp; path = ../../../src/frequency_divider.cpp; sourceTree = "<group>"; };
-		4691C7AF23D7B40600E9E78D /* common_defs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common_defs.hpp; path = ../../../src/common_defs.hpp; sourceTree = "<group>"; };
+		4691C7AF23D7B40600E9E78D /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common.hpp; path = ../../../src/common.hpp; sourceTree = "<group>"; };
 		4691C7B023D7B40600E9E78D /* frequency_divider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = frequency_divider.hpp; path = ../../../src/frequency_divider.hpp; sourceTree = "<group>"; };
 		4691C7B623D7B4DC00E9E78D /* cia.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cia.hpp; path = ../../../src/devices/cia/cia.hpp; sourceTree = "<group>"; };
 		4691C7B723D7B4DC00E9E78D /* cia.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cia.cpp; path = ../../../src/devices/cia/cia.cpp; sourceTree = "<group>"; };
@@ -204,8 +204,8 @@
 				4691C79223D7B32300E9E78D /* devices */,
 				4633A79523FD560600AFD176 /* resources */,
 				4691C78E23D7B30400E9E78D /* sdl2 */,
-				4691C7AF23D7B40600E9E78D /* common_defs.hpp */,
-				4691C7AB23D7B40600E9E78D /* common_defs.cpp */,
+				4691C7AF23D7B40600E9E78D /* common.hpp */,
+				4691C7AB23D7B40600E9E78D /* common.cpp */,
 				4691C7B023D7B40600E9E78D /* frequency_divider.hpp */,
 				4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */,
 				4691C7AC23D7B40600E9E78D /* machine.hpp */,
@@ -508,7 +508,7 @@
 				46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */,
 				46C4CC1324388CBC002BD371 /* wave6581__ST.cc in Sources */,
 				46C4CC2124388CBC002BD371 /* wave.cc in Sources */,
-				4691C7B323D7B40600E9E78D /* common_defs.cpp in Sources */,
+				4691C7B323D7B40600E9E78D /* common.cpp in Sources */,
 				46C4CC1824388CBC002BD371 /* wave8580_P_T.cc in Sources */,
 				46C4CBF824388BD2002BD371 /* sids.cpp in Sources */,
 				4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */,

@@ -6,7 +6,7 @@
 //  c256_debug_screen covers 32 rows (256 lines)
 //  the bottom 64 lines are used to display part of the current framebuffer
 
-#include "common_defs.hpp"
+#include "common.hpp"
 
 #ifndef debug_screen_hpp
 #define debug_screen_hpp

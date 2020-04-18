@@ -33,7 +33,7 @@ add_executable(
     E64-II
     src/main.cpp
     src/machine.cpp
-    src/common_defs.cpp
+    src/common.cpp
     src/frequency_divider.cpp
     src/pid_delay.cpp)
 

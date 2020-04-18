@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-#include "common_defs.hpp"
+#include "common.hpp"
 #include "debug_status_bar.hpp"
 #include "debug_console.hpp"
 

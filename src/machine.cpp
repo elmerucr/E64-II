@@ -7,7 +7,7 @@
 #include "debug_screen.hpp"
 #include "machine.hpp"
 #include "sdl2.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::machine::machine()
 {

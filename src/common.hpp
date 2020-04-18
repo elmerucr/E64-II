@@ -1,4 +1,4 @@
-//  common_defs.h
+//  common.h
 //  E64-II
 //
 //  Copyright © 2017-2020 elmerucr. All rights reserved.
@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200417
+#define E64_BUILD               20200418
 #define E64_YEAR                2020
 
 // some global objects

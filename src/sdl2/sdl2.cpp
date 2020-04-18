@@ -7,7 +7,7 @@
 #include <thread>
 #include <chrono>
 #include <SDL2/SDL.h>
-#include "common_defs.hpp"
+#include "common.hpp"
 #include "sdl2.hpp"
 #include "debug_screen.hpp"
 #include "debug_console.hpp"

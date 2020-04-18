@@ -4,7 +4,7 @@
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "TTL74LS148.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::TTL74LS148::TTL74LS148()
 {

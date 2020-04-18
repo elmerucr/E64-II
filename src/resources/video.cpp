@@ -4,7 +4,7 @@
 //  Copyright © 2020 elmerucr. All rights reserved.
 
 #include "video.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 E64::video::video()
 {

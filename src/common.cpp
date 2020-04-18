@@ -1,9 +1,9 @@
-//  common_defs.c
+//  common.c
 //  E64-II
 //
 //  Copyright © 2018-2020 elmerucr. All rights reserved.
 
-#include "common_defs.hpp"
+#include "common.hpp"
 
 const uint8_t ascii_to_screencode[128] =
 {

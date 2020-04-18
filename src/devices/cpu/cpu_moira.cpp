@@ -4,7 +4,7 @@
 //  Copyright © 2019 elmerucr. All rights reserved.
 
 #include "cpu_moira.hpp"
-#include "common_defs.hpp"
+#include "common.hpp"
 
 #include <cstdio>
 
