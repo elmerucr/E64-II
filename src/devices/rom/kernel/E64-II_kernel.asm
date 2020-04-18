@@ -191,7 +191,7 @@ exception_handler
 interrupt_2_autovector
 	move.b	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
 	move.b	#%00000001,VICV_BUFFERSWAP	; switch buffers
-	move.w	#$f131,BLITTER_DATA_16_BIT	; load color black in data register
+	move.w	#C64_BLUE,BLITTER_DATA_16_BIT	; load color black in data register
 	move.b	#%00000001,BLITTER_CONTROL	; clear the backbuffer
 									; plan some other blitter stuff (text screen, ...)
 	rte

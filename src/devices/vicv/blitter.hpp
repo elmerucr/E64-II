@@ -94,11 +94,13 @@ private:
     // circular buffer containing operations
     // if more than 256 operation would be written (unlikely) and not
     // finished, something will be overwritten
-    struct operation fifo_operations[256];
-    uint8_t head_fifo;
-    uint8_t tail_fifo;
+    struct operation operations[256];
+    uint8_t head;
+    uint8_t tail;
     
     // finite state machine clearing framebuffer
+    uint16_t clear_color;
+    uint32_t clear_counter;
     
     
     // finite state machine blitting

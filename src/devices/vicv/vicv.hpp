@@ -37,8 +37,6 @@ private:
     // framebuffer pointers inside the virtual machine
     uint16_t *framebuffer0;
     uint16_t *framebuffer1;
-    uint16_t *frontbuffer;
-    uint16_t *backbuffer;
 
     uint32_t cycle_clock;
     uint32_t dot_clock;
@@ -55,6 +53,10 @@ private:
 public:
     vicv(void);
     ~vicv(void);
+    
+    // framebuffer pointers inside the virtual machine
+    uint16_t *frontbuffer;
+    uint16_t *backbuffer;
 
     // interrupt device no for vblanc irq
     uint8_t interrupt_device_no_vblank;

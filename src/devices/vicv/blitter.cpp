@@ -43,8 +43,8 @@ inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
     b_src = (source & 0x0f00) >> 8;
     
     r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
-    g_dest = g_dest + (((g_src - g_dest) * g_src) / 15);
-    b_dest = b_dest + (((b_src - b_dest) * b_src) / 15);
+    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
+    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
     
     return (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
@@ -53,17 +53,12 @@ void E64::blitter::reset()
 {
     current_state = IDLE;
     
-    head_fifo = 0;
-    tail_fifo = 0;
+    head = 0;
+    tail = 0;
 }
 
 void E64::blitter::run(int no_of_cycles)
 {
-    // temp crap
-    uint16_t destination_color = computer.mmu_ic->ram[0x00d001];
-    uint16_t source_color = computer.mmu_ic->ram[0x00eff2];
-    //
-    
     while(no_of_cycles > 0)
     {
         no_of_cycles--;
@@ -72,13 +67,32 @@ void E64::blitter::run(int no_of_cycles)
         {
             case IDLE:
                 // check for a new operation in FIFO list
-                if( head_fifo != tail_fifo)
+                if( head != tail)
                 {
-                    // there must be an operation, start processing it
+                    switch( operations[tail].type )
+                    {
+                        case CLEAR_FRAMEBUFFER:
+                            current_state = CLEARING_FRAMEBUFFER;
+                            clear_counter = 0;
+                            clear_color = (operations[tail].data_element) & 0x0000ffff;
+                            tail++;
+                            break;
+                        case BLIT:
+                            // todo
+                            break;
+                    }
                 }
-                destination_color = alpha_blend(destination_color, source_color);
                 break;
             case CLEARING_FRAMEBUFFER:
+                if( clear_counter < (512*320) )
+                {
+                    computer.vicv_ic->backbuffer[clear_counter] = alpha_blend(computer.vicv_ic->backbuffer[clear_counter], clear_color);
+                    clear_counter++;
+                }
+                else
+                {
+                    current_state = IDLE;
+                }
                 break;
             case BLITTING:
                 break;
@@ -91,10 +105,9 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
     switch( type )
     {
         case CLEAR_FRAMEBUFFER:
-            fifo_operations[head_fifo].type = CLEAR_FRAMEBUFFER;
-            fifo_operations[head_fifo].data_element = data_element;
-            head_fifo++;
-            printf("dummy for clearing screen by blitter with color $%04x\n", data_element);
+            operations[head].type = CLEAR_FRAMEBUFFER;
+            operations[head].data_element = data_element;
+            head++;
             break;
         case BLIT:
             printf("dummy for blit by blitter described at address $%08x\n", data_element);
@@ -127,7 +140,7 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     switch( address )
     {
         case 0x00:
-            if( byte & 0b00000001 ) add_operation(CLEAR_FRAMEBUFFER, (registers[0x04] << 8) | registers[0x05]);
+            if( byte & 0b00000001 ) add_operation(CLEAR_FRAMEBUFFER, (registers[0x05] << 8) | registers[0x04]);
             if( byte & 0b00000010 ) add_operation(BLIT, (registers[0x02] << 24) | (registers[0x03] << 16) | (registers[0x04] << 8) | registers[0x05]);
             break;
         default:

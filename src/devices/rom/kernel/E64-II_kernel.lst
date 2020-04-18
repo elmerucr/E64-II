@@ -183,6 +183,7 @@ F01:0178       TIMER0_VECTOR	equ	$008004	; long
 F01:0179       TIMER1_VECTOR	equ	$008008	; long
 F01:0180       TIMER2_VECTOR	equ	$00800c	; long
 F01:0181       TIMER3_VECTOR	equ	$008010	; long
+F01:0182       
 F00:0005       
 F00:0006       	org		KERNEL_LOC
 F00:0007       
@@ -494,8 +495,8 @@ F00:0192       	move.b	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
                S01:00FF0220:  13 FC 00 01 00 FE 04 0E
 F00:0193       	move.b	#%00000001,VICV_BUFFERSWAP	; switch buffers
                S01:00FF0228:  13 FC 00 01 00 FE 04 10
-F00:0194       	move.w	#$f131,BLITTER_DATA_16_BIT	; load color black in data register
-               S01:00FF0230:  33 FC F1 31 00 FE 07 04
+F00:0194       	move.w	#C64_BLUE,BLITTER_DATA_16_BIT	; load color black in data register
+               S01:00FF0230:  33 FC F3 39 00 FE 07 04
 F00:0195       	move.b	#%00000001,BLITTER_CONTROL	; clear the backbuffer
                S01:00FF0238:  13 FC 00 01 00 FE 07 00
 F00:0196       									; plan some other blitter stuff (text screen, ...)
