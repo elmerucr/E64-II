@@ -35,17 +35,8 @@ void E64::vicv::reset()
 
     for(int i=0; i<256; i++) registers[i] = 0;
     
-    // temp crap for debugging
-    for(int i=0; i<320*512; i++)
-    {
-        framebuffer1[i] = C64_BLUE;
-    }
-    //
-    
     frontbuffer = framebuffer0;
     backbuffer  = framebuffer1;
-    
-    
 }
 
 #define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
@@ -223,6 +214,11 @@ void E64::vicv::write_byte(uint8_t address, uint8_t byte)
         case VICV_REG_BUFFERSWAP:
             if( byte & 0b00000001 )
             {
+                if( computer.blitter_ic->current_state != IDLE )
+                {
+                    computer.blitter_ic->current_state = IDLE;
+                    printf("[VICV] warning: blitter was not finished when swapping buffers\n");
+                }
                 uint16_t *tempbuffer = frontbuffer;
                 frontbuffer = backbuffer;
                 backbuffer = tempbuffer;

@@ -242,57 +242,57 @@ F00:0036       	move.w	#$0708,TIMER_BASE+2		; load value
 F00:0037       	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
                S01:00FF006C:  00 39 00 02 00 FE 06 01
 F00:0038       
-F00:0039       	; copy char rom to ram (go from 2k to 32k)
-F00:0040       	bsr		copy_charrom_to_charram
-               S01:00FF0074:  61 00 02 42
-F00:0041       
-F00:0042       	; set screen colors
-F00:0043       	move.w	#C64_BLACK,VICV_BORDER_COLOR
-               S01:00FF0078:  33 FC F0 00 00 FE 04 00
-F00:0044       	move.w	#C64_BLUE,VICV_BACKGROUND_COLOR
-               S01:00FF0080:  33 FC F3 39 00 FE 04 02
-F00:0045       	; set border size
-F00:0046       	move.b	#$0,VICV_BORDER_SIZE
-               S01:00FF0088:  13 FC 00 00 00 FE 04 0C
-F00:0047       	; set text color
-F00:0048       	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
-               S01:00FF0090:  13 FC 00 0C 00 00 80 00
-F00:0049       
-F00:0050       	; set txt pointer
-F00:0051       	move.l	#$00f00000,VICV_TXT
-               S01:00FF0098:  23 FC 00 F0 00 00 00 FE 04 04
-F00:0052       	move.l	#$00f00800,VICV_COL
-               S01:00FF00A2:  23 FC 00 F0 08 00 00 FE 04 08
-F00:0053       
-F00:0054       	; reset cursor position
-F00:0055       	move.w	#$0,CURSOR_POS
-               S01:00FF00AC:  33 FC 00 00 00 00 80 02
-F00:0056       
-F00:0057       	; clear screen
-F00:0058       	bsr		clear_screen
-               S01:00FF00B4:  61 00 00 AE
+F00:0039       	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
+F00:0040       	move.w	sr,d0
+               S01:00FF0074:  40 C0
+F00:0041       	andi.w	#%1111100011111111,d0
+               S01:00FF0076:  02 40 F8 FF
+F00:0042       	ori.w	#%0000000100000000,d0
+               S01:00FF007A:  00 40 01 00
+F00:0043       	move.w	d0,sr
+               S01:00FF007E:  46 C0
+F00:0044       
+F00:0045       	; copy char rom to ram (go from 2k to 32k)
+F00:0046       	bsr		copy_charrom_to_charram
+               S01:00FF0080:  61 00 02 36
+F00:0047       
+F00:0048       	; set screen colors
+F00:0049       	move.w	#C64_BLACK,VICV_BORDER_COLOR
+               S01:00FF0084:  33 FC F0 00 00 FE 04 00
+F00:0050       	move.w	#C64_BLUE,VICV_BACKGROUND_COLOR
+               S01:00FF008C:  33 FC F3 39 00 FE 04 02
+F00:0051       	; set border size
+F00:0052       	move.b	#$0,VICV_BORDER_SIZE
+               S01:00FF0094:  13 FC 00 00 00 FE 04 0C
+F00:0053       	; set text color
+F00:0054       	move.b	#$0c,CURR_TEXT_COLOR	; c64 grey
+               S01:00FF009C:  13 FC 00 0C 00 00 80 00
+F00:0055       
+F00:0056       	; set txt pointer
+F00:0057       	move.l	#$00f00000,VICV_TXT
+               S01:00FF00A4:  23 FC 00 F0 00 00 00 FE 04 04
+F00:0058       	move.l	#$00f00800,VICV_COL
+               S01:00FF00AE:  23 FC 00 F0 08 00 00 FE 04 08
 F00:0059       
-F00:0060       	lea		welcome,a0
-               S01:00FF00B8:  41 FA 02 3A
-F00:0061       	bsr		put_string
-               S01:00FF00BC:  61 00 01 4A
+F00:0060       	; reset cursor position
+F00:0061       	move.w	#$0,CURSOR_POS
+               S01:00FF00B8:  33 FC 00 00 00 00 80 02
 F00:0062       
-F00:0063       	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
-F00:0064       	move.w	sr,d0
-               S01:00FF00C0:  40 C0
-F00:0065       	andi.w	#%1111100011111111,d0
-               S01:00FF00C2:  02 40 F8 FF
-F00:0066       	ori.w	#%0000000100000000,d0
-               S01:00FF00C6:  00 40 01 00
-F00:0067       	move.w	d0,sr
-               S01:00FF00CA:  46 C0
+F00:0063       	; clear screen
+F00:0064       	bsr		clear_screen
+               S01:00FF00C0:  61 00 00 A2
+F00:0065       
+F00:0066       	lea		welcome,a0
+               S01:00FF00C4:  41 FA 02 34
+F00:0067       	bsr		put_string
+               S01:00FF00C8:  61 00 01 3E
 F00:0068       
 F00:0069       	; play a welcome sound on SID0
 F00:0070       	lea		SID0_BASE,a0
                S01:00FF00CC:  41 F9 00 FE 05 00
 F00:0071       	; frequency of voice 1
 F00:0072       	lea		notes,a1
-               S01:00FF00D2:  43 FA 02 E2
+               S01:00FF00D2:  43 FA 02 E8
 F00:0073       	move.w	(N_D3_,a1),(a0)
                S01:00FF00D6:  30 A9 00 4C
 F00:0074       	; attack and decay of voice 1
@@ -321,7 +321,7 @@ F00:0090       	lea		SID1_BASE,a0
                S01:00FF00FE:  41 F9 00 FE 05 20
 F00:0091       	; frequency of voice 1
 F00:0092       	lea		notes,a1
-               S01:00FF0104:  43 FA 02 B0
+               S01:00FF0104:  43 FA 02 B6
 F00:0093       	move.w	(N_A3_,a1),(a0)
                S01:00FF0108:  30 A9 00 5A
 F00:0094       	;move.w	#N_A3_,(a0)
@@ -433,7 +433,7 @@ F00:0156       	movea.l	VICV_TXT,a0					; load pointer to current text screen in
 F00:0157       	movea.l	VICV_COL,a1					; load pointer to current color screen into a1
                S01:00FF01C4:  22 79 00 FE 04 08
 F00:0158       	lea		ascii_to_screencode,a2		; a2 now points to ascii-screencode table
-               S01:00FF01CA:  45 FA 01 5A
+               S01:00FF01CA:  45 FA 01 60
 F00:0159       	cmp.b	#ASCII_LF,d0				; do we have a line feed as the next ascii?
                S01:00FF01CE:  B0 3C 00 0A
 F00:0160       	beq		.1
@@ -639,279 +639,291 @@ F00:0280       .5	movem	(a7)+,d0-d1/a0-a1	;
 F00:0281       	rts							;
                S01:00FF02F2:  4E 75
 F00:0282       
-F00:0283       ; string data
-F00:0284       welcome
-F00:0285       	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200324",ASCII_LF,ASCII_NULL
-               S01:00FF02F4:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
-               S01:00FF0304:  30 32 30 20 6B 65 72 6E 65 6C 20 76 65 72 73 69
-               S01:00FF0314:  0A
-               S01:00FF0315:  00
-F00:0286       
-F00:0287       	align 1
-F00:0288       	include "E64-II_kernel_tables.asm"
+F00:0283       ; logo blit description
+F00:0284       logo_blit
+F00:0285       	dc.b	%00000011	; multicolor and bitmap mode
+               S01:00FF02F4:  03
+F00:0286       	dc.b	%00000000
+               S01:00FF02F5:  00
+F00:0287       	;dc.w	$
+F00:0288       	dc.w	$0010		; x_pos
+               S01:00FF02F6:  00 10
+F00:0289       	dc.w	$0010		; y_pos
+               S01:00FF02F8:  00 10
+F00:0290       
+F00:0291       ; string data
+F00:0292       welcome
+F00:0293       	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200324",ASCII_LF,ASCII_NULL
+               S01:00FF02FA:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
+               S01:00FF030A:  30 32 30 20 6B 65 72 6E 65 6C 20 76 65 72 73 69
+               S01:00FF031A:  0A
+               S01:00FF031B:  00
+F00:0294       
+F00:0295       	align 1
+F00:0296       	include "E64-II_kernel_tables.asm"
 F02:0001       ; rom tables
 F02:0002       
 F02:0003       ascii_to_screencode
 F02:0004       	dc.b	$80		; 0x00 - NUL	non printable character
-               S01:00FF0326:  80
-F02:0005       	dc.b	$80		; 0x01 - SOH	non printable character
-               S01:00FF0327:  80
-F02:0006       	dc.b	$80		; 0x02 - STX	non printable character
-               S01:00FF0328:  80
-F02:0007       	dc.b	$80		; 0x03 - ETX	non printable character
-               S01:00FF0329:  80
-F02:0008       	dc.b	$80		; 0x04 - EOT	non printable character
-               S01:00FF032A:  80
-F02:0009       	dc.b	$80		; 0x05 - ENQ	non printable character
-               S01:00FF032B:  80
-F02:0010       	dc.b	$80		; 0x06 - ACK	non printable character
                S01:00FF032C:  80
-F02:0011       	dc.b	$80		; 0x07 - BEL	non printable character
+F02:0005       	dc.b	$80		; 0x01 - SOH	non printable character
                S01:00FF032D:  80
-F02:0012       	dc.b	$80		; 0x08 - BS	non printable character
+F02:0006       	dc.b	$80		; 0x02 - STX	non printable character
                S01:00FF032E:  80
-F02:0013       	dc.b	$80		; 0x09 - TAB	non printable character
+F02:0007       	dc.b	$80		; 0x03 - ETX	non printable character
                S01:00FF032F:  80
-F02:0014       	dc.b	$80		; 0x0a - LF	non printable character
+F02:0008       	dc.b	$80		; 0x04 - EOT	non printable character
                S01:00FF0330:  80
-F02:0015       	dc.b	$80		; 0x0b - VT	non printable character
+F02:0009       	dc.b	$80		; 0x05 - ENQ	non printable character
                S01:00FF0331:  80
-F02:0016       	dc.b	$80		; 0x0c - FF	non printable character
+F02:0010       	dc.b	$80		; 0x06 - ACK	non printable character
                S01:00FF0332:  80
-F02:0017       	dc.b	$80		; 0x0d - CR	non printable character
+F02:0011       	dc.b	$80		; 0x07 - BEL	non printable character
                S01:00FF0333:  80
-F02:0018       	dc.b	$80		; 0x0e - SO	non printable character
+F02:0012       	dc.b	$80		; 0x08 - BS	non printable character
                S01:00FF0334:  80
-F02:0019       	dc.b	$80		; 0x0f - SI	non printable character
+F02:0013       	dc.b	$80		; 0x09 - TAB	non printable character
                S01:00FF0335:  80
-F02:0020       	dc.b	$80		; 0x10 - DLE	non printable character
+F02:0014       	dc.b	$80		; 0x0a - LF	non printable character
                S01:00FF0336:  80
-F02:0021       	dc.b	$80		; 0x11 - DC1	non printable character
+F02:0015       	dc.b	$80		; 0x0b - VT	non printable character
                S01:00FF0337:  80
-F02:0022       	dc.b	$80		; 0x12 - DC2	non printable character
+F02:0016       	dc.b	$80		; 0x0c - FF	non printable character
                S01:00FF0338:  80
-F02:0023       	dc.b	$80		; 0x13 - DC3	non printable character
+F02:0017       	dc.b	$80		; 0x0d - CR	non printable character
                S01:00FF0339:  80
-F02:0024       	dc.b	$80		; 0x14 - DC4	non printable character
+F02:0018       	dc.b	$80		; 0x0e - SO	non printable character
                S01:00FF033A:  80
-F02:0025       	dc.b	$80		; 0x15 - NAC	non printable character
+F02:0019       	dc.b	$80		; 0x0f - SI	non printable character
                S01:00FF033B:  80
-F02:0026       	dc.b	$80		; 0x16 - SYN	non printable character
+F02:0020       	dc.b	$80		; 0x10 - DLE	non printable character
                S01:00FF033C:  80
-F02:0027       	dc.b	$80		; 0x17 - ETB	non printable character
+F02:0021       	dc.b	$80		; 0x11 - DC1	non printable character
                S01:00FF033D:  80
-F02:0028       	dc.b	$80		; 0x18 - CAN	non printable character
+F02:0022       	dc.b	$80		; 0x12 - DC2	non printable character
                S01:00FF033E:  80
-F02:0029       	dc.b	$80		; 0x19 - EM	non printable character
+F02:0023       	dc.b	$80		; 0x13 - DC3	non printable character
                S01:00FF033F:  80
-F02:0030       	dc.b	$80		; 0x1a - SUB	non printable character
+F02:0024       	dc.b	$80		; 0x14 - DC4	non printable character
                S01:00FF0340:  80
-F02:0031       	dc.b	$80		; 0x1b - ESC	non printable character
+F02:0025       	dc.b	$80		; 0x15 - NAC	non printable character
                S01:00FF0341:  80
-F02:0032       	dc.b	$80		; 0x1c - FS	non printable character
+F02:0026       	dc.b	$80		; 0x16 - SYN	non printable character
                S01:00FF0342:  80
-F02:0033       	dc.b	$80		; 0x1d - GS	non printable character
+F02:0027       	dc.b	$80		; 0x17 - ETB	non printable character
                S01:00FF0343:  80
-F02:0034       	dc.b	$80		; 0x1e - RS	non printable character
+F02:0028       	dc.b	$80		; 0x18 - CAN	non printable character
                S01:00FF0344:  80
-F02:0035       	dc.b	$80		; 0x1f - US	non printable character
+F02:0029       	dc.b	$80		; 0x19 - EM	non printable character
                S01:00FF0345:  80
+F02:0030       	dc.b	$80		; 0x1a - SUB	non printable character
+               S01:00FF0346:  80
+F02:0031       	dc.b	$80		; 0x1b - ESC	non printable character
+               S01:00FF0347:  80
+F02:0032       	dc.b	$80		; 0x1c - FS	non printable character
+               S01:00FF0348:  80
+F02:0033       	dc.b	$80		; 0x1d - GS	non printable character
+               S01:00FF0349:  80
+F02:0034       	dc.b	$80		; 0x1e - RS	non printable character
+               S01:00FF034A:  80
+F02:0035       	dc.b	$80		; 0x1f - US	non printable character
+               S01:00FF034B:  80
 F02:0036       	dc.b	$20		; 0x20 - (space)
-               S01:00FF0346:  20
+               S01:00FF034C:  20
 F02:0037       	dc.b	$21		; 0x21 - !
-               S01:00FF0347:  21
+               S01:00FF034D:  21
 F02:0038       	dc.b	$22		; 0x22 - "
-               S01:00FF0348:  22
+               S01:00FF034E:  22
 F02:0039       	dc.b	$23		; 0x23 - #
-               S01:00FF0349:  23
+               S01:00FF034F:  23
 F02:0040       	dc.b	$24		; 0x24 - $
-               S01:00FF034A:  24
+               S01:00FF0350:  24
 F02:0041       	dc.b	$25		; 0x25 - %
-               S01:00FF034B:  25
+               S01:00FF0351:  25
 F02:0042       	dc.b	$26		; 0x26 - &
-               S01:00FF034C:  26
+               S01:00FF0352:  26
 F02:0043       	dc.b	$27		; 0x27 - '
-               S01:00FF034D:  27
+               S01:00FF0353:  27
 F02:0044       	dc.b	$28		; 0x28 - (
-               S01:00FF034E:  28
+               S01:00FF0354:  28
 F02:0045       	dc.b	$29		; 0x29 - )
-               S01:00FF034F:  29
+               S01:00FF0355:  29
 F02:0046       	dc.b	$2a		; 0x2a - *
-               S01:00FF0350:  2A
+               S01:00FF0356:  2A
 F02:0047       	dc.b	$2b		; 0x2b - +
-               S01:00FF0351:  2B
+               S01:00FF0357:  2B
 F02:0048       	dc.b	$2c		; 0x2c - ,
-               S01:00FF0352:  2C
+               S01:00FF0358:  2C
 F02:0049       	dc.b	$2d		; 0x2d - -
-               S01:00FF0353:  2D
+               S01:00FF0359:  2D
 F02:0050       	dc.b	$2e		; 0x2e - .
-               S01:00FF0354:  2E
+               S01:00FF035A:  2E
 F02:0051       	dc.b	$2f		; 0x2f - /
-               S01:00FF0355:  2F
+               S01:00FF035B:  2F
 F02:0052       	dc.b	$30		; 0x30 - 0
-               S01:00FF0356:  30
+               S01:00FF035C:  30
 F02:0053       	dc.b	$31		; 0x31 - 1
-               S01:00FF0357:  31
+               S01:00FF035D:  31
 F02:0054       	dc.b	$32		; 0x32 - 2
-               S01:00FF0358:  32
+               S01:00FF035E:  32
 F02:0055       	dc.b	$33		; 0x33 - 3
-               S01:00FF0359:  33
+               S01:00FF035F:  33
 F02:0056       	dc.b	$34		; 0x34 - 4
-               S01:00FF035A:  34
+               S01:00FF0360:  34
 F02:0057       	dc.b	$35		; 0x35 - 5
-               S01:00FF035B:  35
+               S01:00FF0361:  35
 F02:0058       	dc.b	$36		; 0x36 - 6
-               S01:00FF035C:  36
+               S01:00FF0362:  36
 F02:0059       	dc.b	$37		; 0x37 - 7
-               S01:00FF035D:  37
+               S01:00FF0363:  37
 F02:0060       	dc.b	$38		; 0x38 - 8
-               S01:00FF035E:  38
+               S01:00FF0364:  38
 F02:0061       	dc.b	$39		; 0x39 - 9
-               S01:00FF035F:  39
+               S01:00FF0365:  39
 F02:0062       	dc.b	$3a		; 0x3a - :
-               S01:00FF0360:  3A
+               S01:00FF0366:  3A
 F02:0063       	dc.b	$3b		; 0x3b - ;
-               S01:00FF0361:  3B
+               S01:00FF0367:  3B
 F02:0064       	dc.b	$3c		; 0x3c - <
-               S01:00FF0362:  3C
+               S01:00FF0368:  3C
 F02:0065       	dc.b	$3d		; 0x3d - =
-               S01:00FF0363:  3D
+               S01:00FF0369:  3D
 F02:0066       	dc.b	$3e		; 0x3e - >
-               S01:00FF0364:  3E
+               S01:00FF036A:  3E
 F02:0067       	dc.b	$3f		; 0x3f - ?
-               S01:00FF0365:  3F
+               S01:00FF036B:  3F
 F02:0068       	dc.b	$00		; 0x40 - @
-               S01:00FF0366:  00
+               S01:00FF036C:  00
 F02:0069       	dc.b	$41		; 0x41 - A
-               S01:00FF0367:  41
+               S01:00FF036D:  41
 F02:0070       	dc.b	$42		; 0x42 - B
-               S01:00FF0368:  42
+               S01:00FF036E:  42
 F02:0071       	dc.b	$43		; 0x43 - C
-               S01:00FF0369:  43
+               S01:00FF036F:  43
 F02:0072       	dc.b	$44		; 0x44 - D
-               S01:00FF036A:  44
+               S01:00FF0370:  44
 F02:0073       	dc.b	$45		; 0x45 - E
-               S01:00FF036B:  45
+               S01:00FF0371:  45
 F02:0074       	dc.b	$46		; 0x46 - F
-               S01:00FF036C:  46
+               S01:00FF0372:  46
 F02:0075       	dc.b	$47		; 0x47 - G
-               S01:00FF036D:  47
+               S01:00FF0373:  47
 F02:0076       	dc.b	$48		; 0x48 - H
-               S01:00FF036E:  48
+               S01:00FF0374:  48
 F02:0077       	dc.b	$49		; 0x49 - I
-               S01:00FF036F:  49
+               S01:00FF0375:  49
 F02:0078       	dc.b	$4a		; 0x4a - J
-               S01:00FF0370:  4A
+               S01:00FF0376:  4A
 F02:0079       	dc.b	$4b		; 0x4b - K
-               S01:00FF0371:  4B
+               S01:00FF0377:  4B
 F02:0080       	dc.b	$4c		; 0x4c - L
-               S01:00FF0372:  4C
+               S01:00FF0378:  4C
 F02:0081       	dc.b	$4d		; 0x4d - M
-               S01:00FF0373:  4D
+               S01:00FF0379:  4D
 F02:0082       	dc.b	$4e		; 0x4e - N
-               S01:00FF0374:  4E
+               S01:00FF037A:  4E
 F02:0083       	dc.b	$4f		; 0x4f - O
-               S01:00FF0375:  4F
+               S01:00FF037B:  4F
 F02:0084       	dc.b	$50		; 0x50 - P
-               S01:00FF0376:  50
+               S01:00FF037C:  50
 F02:0085       	dc.b	$51		; 0x51 - Q
-               S01:00FF0377:  51
+               S01:00FF037D:  51
 F02:0086       	dc.b	$52		; 0x52 - R
-               S01:00FF0378:  52
+               S01:00FF037E:  52
 F02:0087       	dc.b	$53		; 0x53 - S
-               S01:00FF0379:  53
+               S01:00FF037F:  53
 F02:0088       	dc.b	$54		; 0x54 - T
-               S01:00FF037A:  54
+               S01:00FF0380:  54
 F02:0089       	dc.b	$55		; 0x55 - U
-               S01:00FF037B:  55
+               S01:00FF0381:  55
 F02:0090       	dc.b	$56		; 0x56 - V
-               S01:00FF037C:  56
+               S01:00FF0382:  56
 F02:0091       	dc.b	$57		; 0x57 - W
-               S01:00FF037D:  57
+               S01:00FF0383:  57
 F02:0092       	dc.b	$58		; 0x58 - X
-               S01:00FF037E:  58
+               S01:00FF0384:  58
 F02:0093       	dc.b	$59		; 0x59 - Y
-               S01:00FF037F:  59
+               S01:00FF0385:  59
 F02:0094       	dc.b	$5a		; 0x5a - Z
-               S01:00FF0380:  5A
+               S01:00FF0386:  5A
 F02:0095       	dc.b	$1b		; 0x5b - [
-               S01:00FF0381:  1B
+               S01:00FF0387:  1B
 F02:0096       	dc.b	$5c		; 0x5c - \	patched
-               S01:00FF0382:  5C
+               S01:00FF0388:  5C
 F02:0097       	dc.b	$1d		; 0x5d - ]
-               S01:00FF0383:  1D
+               S01:00FF0389:  1D
 F02:0098       	dc.b	$5e		; 0x5e - ^	patched
-               S01:00FF0384:  5E
+               S01:00FF038A:  5E
 F02:0099       	dc.b	$5f		; 0x5f - _	patched
-               S01:00FF0385:  5F
+               S01:00FF038B:  5F
 F02:0100       	dc.b	$63		; 0x60 - `	patched
-               S01:00FF0386:  63
+               S01:00FF038C:  63
 F02:0101       	dc.b	$01		; 0x61 - a
-               S01:00FF0387:  01
+               S01:00FF038D:  01
 F02:0102       	dc.b	$02		; 0x62 - b
-               S01:00FF0388:  02
+               S01:00FF038E:  02
 F02:0103       	dc.b	$03		; 0x63 - c
-               S01:00FF0389:  03
+               S01:00FF038F:  03
 F02:0104       	dc.b	$04		; 0x64 - d
-               S01:00FF038A:  04
+               S01:00FF0390:  04
 F02:0105       	dc.b	$05		; 0x65 - e
-               S01:00FF038B:  05
+               S01:00FF0391:  05
 F02:0106       	dc.b	$06		; 0x66 - f
-               S01:00FF038C:  06
+               S01:00FF0392:  06
 F02:0107       	dc.b	$07		; 0x67 - g
-               S01:00FF038D:  07
+               S01:00FF0393:  07
 F02:0108       	dc.b	$08		; 0x68 - h
-               S01:00FF038E:  08
+               S01:00FF0394:  08
 F02:0109       	dc.b	$09		; 0x69 - i
-               S01:00FF038F:  09
+               S01:00FF0395:  09
 F02:0110       	dc.b	$0a		; 0x6a - j
-               S01:00FF0390:  0A
+               S01:00FF0396:  0A
 F02:0111       	dc.b	$0b		; 0x6b - k
-               S01:00FF0391:  0B
+               S01:00FF0397:  0B
 F02:0112       	dc.b	$0c		; 0x6c - l
-               S01:00FF0392:  0C
+               S01:00FF0398:  0C
 F02:0113       	dc.b	$0d		; 0x6d - m
-               S01:00FF0393:  0D
+               S01:00FF0399:  0D
 F02:0114       	dc.b	$0e		; 0x6e - n
-               S01:00FF0394:  0E
+               S01:00FF039A:  0E
 F02:0115       	dc.b	$0f		; 0x6f - o
-               S01:00FF0395:  0F
+               S01:00FF039B:  0F
 F02:0116       	dc.b	$10		; 0x70 - p
-               S01:00FF0396:  10
+               S01:00FF039C:  10
 F02:0117       	dc.b	$11		; 0x71 - q
-               S01:00FF0397:  11
+               S01:00FF039D:  11
 F02:0118       	dc.b	$12		; 0x72 - r
-               S01:00FF0398:  12
+               S01:00FF039E:  12
 F02:0119       	dc.b	$13		; 0x73 - s
-               S01:00FF0399:  13
+               S01:00FF039F:  13
 F02:0120       	dc.b	$14		; 0x74 - t
-               S01:00FF039A:  14
+               S01:00FF03A0:  14
 F02:0121       	dc.b	$15		; 0x75 - u
-               S01:00FF039B:  15
+               S01:00FF03A1:  15
 F02:0122       	dc.b	$16		; 0x76 - v
-               S01:00FF039C:  16
+               S01:00FF03A2:  16
 F02:0123       	dc.b	$17		; 0x77 - w
-               S01:00FF039D:  17
+               S01:00FF03A3:  17
 F02:0124       	dc.b	$18		; 0x78 - x
-               S01:00FF039E:  18
+               S01:00FF03A4:  18
 F02:0125       	dc.b	$19		; 0x79 - y
-               S01:00FF039F:  19
+               S01:00FF03A5:  19
 F02:0126       	dc.b	$1a		; 0x7a - z
-               S01:00FF03A0:  1A
+               S01:00FF03A6:  1A
 F02:0127       	dc.b	$64		; 0x7b - {	patched
-               S01:00FF03A1:  64
+               S01:00FF03A7:  64
 F02:0128       	dc.b	$65		; 0x7c - |	patched
-               S01:00FF03A2:  65
+               S01:00FF03A8:  65
 F02:0129       	dc.b	$66		; 0x7d - }	patched
-               S01:00FF03A3:  66
+               S01:00FF03A9:  66
 F02:0130       	dc.b	$67		; 0x7e - ~	patched
-               S01:00FF03A4:  67
+               S01:00FF03AA:  67
 F02:0131       	dc.b	$80		; 0x7f - DEL	non printable character
-               S01:00FF03A5:  80
+               S01:00FF03AB:  80
 F02:0132       
 F02:0133       hex_table
 F02:0134       	dc.b	'0123456789abcdef'
-               S01:00FF03A6:  30 31 32 33 34 35 36 37 38 39 61 62 63 64 65 66
+               S01:00FF03AC:  30 31 32 33 34 35 36 37 38 39 61 62 63 64 65 66
 F02:0135       
 F02:0136       ;	The following table is based on a SID clock frequency of 985248Hz (PAL)
 F02:0137       ;	Calculations were made according to Codebase64 article
@@ -919,108 +931,108 @@ F02:0138       ;	https://codebase64.org/doku.php?id=base:how_to_calculate_your_o
 F02:0139       ;
 F02:0140       notes
 F02:0141       	dc.w	$0116,$0127,$0139,$014b,$015f,$0174,$018a,$01a1,$01ba,$01d4,$01f0,$020e	; N_C0_ to N_B0_
-               S01:00FF03B6:  01 16
-               S01:00FF03B8:  01 27
-               S01:00FF03BA:  01 39
-               S01:00FF03BC:  01 4B
-               S01:00FF03BE:  01 5F
-               S01:00FF03C0:  01 74
-               S01:00FF03C2:  01 8A
-               S01:00FF03C4:  01 A1
-               S01:00FF03C6:  01 BA
-               S01:00FF03C8:  01 D4
-               S01:00FF03CA:  01 F0
-               S01:00FF03CC:  02 0E
+               S01:00FF03BC:  01 16
+               S01:00FF03BE:  01 27
+               S01:00FF03C0:  01 39
+               S01:00FF03C2:  01 4B
+               S01:00FF03C4:  01 5F
+               S01:00FF03C6:  01 74
+               S01:00FF03C8:  01 8A
+               S01:00FF03CA:  01 A1
+               S01:00FF03CC:  01 BA
+               S01:00FF03CE:  01 D4
+               S01:00FF03D0:  01 F0
+               S01:00FF03D2:  02 0E
 F02:0142       	dc.w	$022d,$024e,$0271,$0296,$02be,$02e7,$0314,$0342,$0374,$03a9,$03e0,$041b	; N_C1_ to N_B1_
-               S01:00FF03CE:  02 2D
-               S01:00FF03D0:  02 4E
-               S01:00FF03D2:  02 71
-               S01:00FF03D4:  02 96
-               S01:00FF03D6:  02 BE
-               S01:00FF03D8:  02 E7
-               S01:00FF03DA:  03 14
-               S01:00FF03DC:  03 42
-               S01:00FF03DE:  03 74
-               S01:00FF03E0:  03 A9
-               S01:00FF03E2:  03 E0
-               S01:00FF03E4:  04 1B
+               S01:00FF03D4:  02 2D
+               S01:00FF03D6:  02 4E
+               S01:00FF03D8:  02 71
+               S01:00FF03DA:  02 96
+               S01:00FF03DC:  02 BE
+               S01:00FF03DE:  02 E7
+               S01:00FF03E0:  03 14
+               S01:00FF03E2:  03 42
+               S01:00FF03E4:  03 74
+               S01:00FF03E6:  03 A9
+               S01:00FF03E8:  03 E0
+               S01:00FF03EA:  04 1B
 F02:0143       	dc.w	$045a,$049c,$04e2,$052d,$057b,$05cf,$0627,$0685,$06e8,$0751,$07c1,$0837	; N_C2_ to N_B2_
-               S01:00FF03E6:  04 5A
-               S01:00FF03E8:  04 9C
-               S01:00FF03EA:  04 E2
-               S01:00FF03EC:  05 2D
-               S01:00FF03EE:  05 7B
-               S01:00FF03F0:  05 CF
-               S01:00FF03F2:  06 27
-               S01:00FF03F4:  06 85
-               S01:00FF03F6:  06 E8
-               S01:00FF03F8:  07 51
-               S01:00FF03FA:  07 C1
-               S01:00FF03FC:  08 37
+               S01:00FF03EC:  04 5A
+               S01:00FF03EE:  04 9C
+               S01:00FF03F0:  04 E2
+               S01:00FF03F2:  05 2D
+               S01:00FF03F4:  05 7B
+               S01:00FF03F6:  05 CF
+               S01:00FF03F8:  06 27
+               S01:00FF03FA:  06 85
+               S01:00FF03FC:  06 E8
+               S01:00FF03FE:  07 51
+               S01:00FF0400:  07 C1
+               S01:00FF0402:  08 37
 F02:0144       	dc.w	$08b4,$0938,$09c4,$0a59,$0af7,$0b9d,$0c4e,$0d0a,$0dd0,$0ea2,$0f81,$106d	; N_C3_ to N_B3_
-               S01:00FF03FE:  08 B4
-               S01:00FF0400:  09 38
-               S01:00FF0402:  09 C4
-               S01:00FF0404:  0A 59
-               S01:00FF0406:  0A F7
-               S01:00FF0408:  0B 9D
-               S01:00FF040A:  0C 4E
-               S01:00FF040C:  0D 0A
-               S01:00FF040E:  0D D0
-               S01:00FF0410:  0E A2
-               S01:00FF0412:  0F 81
-               S01:00FF0414:  10 6D
+               S01:00FF0404:  08 B4
+               S01:00FF0406:  09 38
+               S01:00FF0408:  09 C4
+               S01:00FF040A:  0A 59
+               S01:00FF040C:  0A F7
+               S01:00FF040E:  0B 9D
+               S01:00FF0410:  0C 4E
+               S01:00FF0412:  0D 0A
+               S01:00FF0414:  0D D0
+               S01:00FF0416:  0E A2
+               S01:00FF0418:  0F 81
+               S01:00FF041A:  10 6D
 F02:0145       	dc.w	$1167,$1270,$1389,$14b2,$15ed,$173b,$189c,$1a13,$1ba0,$1d45,$1f02,$20da	; N_C4_ to N_B4_
-               S01:00FF0416:  11 67
-               S01:00FF0418:  12 70
-               S01:00FF041A:  13 89
-               S01:00FF041C:  14 B2
-               S01:00FF041E:  15 ED
-               S01:00FF0420:  17 3B
-               S01:00FF0422:  18 9C
-               S01:00FF0424:  1A 13
-               S01:00FF0426:  1B A0
-               S01:00FF0428:  1D 45
-               S01:00FF042A:  1F 02
-               S01:00FF042C:  20 DA
+               S01:00FF041C:  11 67
+               S01:00FF041E:  12 70
+               S01:00FF0420:  13 89
+               S01:00FF0422:  14 B2
+               S01:00FF0424:  15 ED
+               S01:00FF0426:  17 3B
+               S01:00FF0428:  18 9C
+               S01:00FF042A:  1A 13
+               S01:00FF042C:  1B A0
+               S01:00FF042E:  1D 45
+               S01:00FF0430:  1F 02
+               S01:00FF0432:  20 DA
 F02:0146       	dc.w	$22ce,$24e0,$2711,$2964,$2bda,$2e76,$3139,$3426,$3740,$3a89,$3e04,$41b4	; N_C5_ to N_B5_
-               S01:00FF042E:  22 CE
-               S01:00FF0430:  24 E0
-               S01:00FF0432:  27 11
-               S01:00FF0434:  29 64
-               S01:00FF0436:  2B DA
-               S01:00FF0438:  2E 76
-               S01:00FF043A:  31 39
-               S01:00FF043C:  34 26
-               S01:00FF043E:  37 40
-               S01:00FF0440:  3A 89
-               S01:00FF0442:  3E 04
-               S01:00FF0444:  41 B4
+               S01:00FF0434:  22 CE
+               S01:00FF0436:  24 E0
+               S01:00FF0438:  27 11
+               S01:00FF043A:  29 64
+               S01:00FF043C:  2B DA
+               S01:00FF043E:  2E 76
+               S01:00FF0440:  31 39
+               S01:00FF0442:  34 26
+               S01:00FF0444:  37 40
+               S01:00FF0446:  3A 89
+               S01:00FF0448:  3E 04
+               S01:00FF044A:  41 B4
 F02:0147       	dc.w	$459c,$49c0,$4e23,$52c8,$57b4,$5ceb,$6272,$684c,$6e80,$7512,$7c08,$8368	; N_C6_ to N_B6_
-               S01:00FF0446:  45 9C
-               S01:00FF0448:  49 C0
-               S01:00FF044A:  4E 23
-               S01:00FF044C:  52 C8
-               S01:00FF044E:  57 B4
-               S01:00FF0450:  5C EB
-               S01:00FF0452:  62 72
-               S01:00FF0454:  68 4C
-               S01:00FF0456:  6E 80
-               S01:00FF0458:  75 12
-               S01:00FF045A:  7C 08
-               S01:00FF045C:  83 68
+               S01:00FF044C:  45 9C
+               S01:00FF044E:  49 C0
+               S01:00FF0450:  4E 23
+               S01:00FF0452:  52 C8
+               S01:00FF0454:  57 B4
+               S01:00FF0456:  5C EB
+               S01:00FF0458:  62 72
+               S01:00FF045A:  68 4C
+               S01:00FF045C:  6E 80
+               S01:00FF045E:  75 12
+               S01:00FF0460:  7C 08
+               S01:00FF0462:  83 68
 F02:0148       	dc.w	$8b39,$9380,$9c45,$a590,$af68,$b9d6,$c4e3,$d099,$dd00,$ea24,$f810		; N_C7_	to N_A7S
-               S01:00FF045E:  8B 39
-               S01:00FF0460:  93 80
-               S01:00FF0462:  9C 45
-               S01:00FF0464:  A5 90
-               S01:00FF0466:  AF 68
-               S01:00FF0468:  B9 D6
-               S01:00FF046A:  C4 E3
-               S01:00FF046C:  D0 99
-               S01:00FF046E:  DD 00
-               S01:00FF0470:  EA 24
-               S01:00FF0472:  F8 10
+               S01:00FF0464:  8B 39
+               S01:00FF0466:  93 80
+               S01:00FF0468:  9C 45
+               S01:00FF046A:  A5 90
+               S01:00FF046C:  AF 68
+               S01:00FF046E:  B9 D6
+               S01:00FF0470:  C4 E3
+               S01:00FF0472:  D0 99
+               S01:00FF0474:  DD 00
+               S01:00FF0476:  EA 24
+               S01:00FF0478:  F8 10
 F02:0149       
 F02:0150       ;notes_old
 F02:0151       ;	dc.w	$0112,$0123,$0134,$0146,$015a,$016e,$0184,$018b,$01b3,$01cd,$01e9,$0206	; N_C0_ to N_B0_
@@ -1031,9 +1043,9 @@ F02:0155       ;	dc.w	$1125,$122a,$133f,$1464,$159a,$16e3,$183f,$1981,$1b38,$1cd
 F02:0156       ;	dc.w	$224b,$2455,$267e,$28c8,$2b34,$2dc6,$307f,$3361,$366f,$39ac,$3d1a,$40bc	; N_C5_ to N_B5_
 F02:0157       ;	dc.w	$4495,$48a9,$4cfc,$518f,$5669,$5b8c,$60fe,$6602,$6cdf,$7358,$7a34,$8178	; N_C6_ to N_B6_
 F02:0158       ;	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0,$f467		; N_C7_	to N_A7S
-F00:0289       
-F00:0290       	org		KERNEL_LOC+$fffc
-F00:0291       	dc.l	$deadbeef
+F00:0297       
+F00:0298       	org		KERNEL_LOC+$fffc
+F00:0299       	dc.l	$deadbeef
                S02:00FFFFFC:  DE AD BE EF
 
 
@@ -1049,7 +1061,8 @@ F02  E64-II_kernel_tables.asm
 
 
 Symbols:
-hex_table EXPR(16712614=0xff03a6) UNUSED ABS 
+hex_table EXPR(16712620=0xff03ac) UNUSED ABS 
+logo_blit EXPR(16712436=0xff02f4) UNUSED ABS 
  copy_charrom_to_charram .4 EXPR(16712422=0xff02e6) ABS 
  copy_charrom_to_charram .3 EXPR(16712418=0xff02e2) ABS 
  copy_charrom_to_charram .2 EXPR(16712406=0xff02d6) ABS 
@@ -1061,15 +1074,15 @@ timer0_check EXPR(16712264=0xff0248) UNUSED ABS
  put_string .2 EXPR(16712212=0xff0214) ABS 
  put_string .1 EXPR(16712202=0xff020a) ABS 
  put_char .1 EXPR(16712180=0xff01f4) ABS 
-ascii_to_screencode EXPR(16712486=0xff0326) ABS 
+ascii_to_screencode EXPR(16712492=0xff032c) ABS 
 put_char EXPR(16712110=0xff01ae) ABS 
  clear_screen .1 EXPR(16712096=0xff01a0) ABS 
  mainloop .2 EXPR(16712014=0xff014e) ABS 
  mainloop .1 EXPR(16711992=0xff0138) ABS 
 mainloop EXPR(16711984=0xff0130) UNUSED ABS 
-notes EXPR(16712630=0xff03b6) ABS 
+notes EXPR(16712636=0xff03bc) ABS 
 put_string EXPR(16712200=0xff0208) ABS 
-welcome EXPR(16712436=0xff02f4) ABS 
+welcome EXPR(16712442=0xff02fa) ABS 
 clear_screen EXPR(16712036=0xff0164) ABS 
 copy_charrom_to_charram EXPR(16712376=0xff02b8) ABS 
 timer1_irq_handler EXPR(16712348=0xff029c) ABS 
@@ -1234,7 +1247,7 @@ VEC_11_UNIMPL_INSTRUCTION EXPR(44=0x2c) EQU
 VEC_10_UNIMPL_INSTRUCTION EXPR(40=0x28) EQU 
 VEC_04_ILLEGAL_INSTRUCTION EXPR(16=0x10) EQU 
 KERNEL_LOC EXPR(16711680=0xff0000) EQU 
-__LINE__ EXPR(291=0x123) INTERNAL 
+__LINE__ EXPR(299=0x12b) INTERNAL 
 __FO EXPR(0=0x0) INTERNAL 
 __RS EXPR(0=0x0) INTERNAL 
 REPTN EXPR(-1=0xffffffff) INTERNAL 

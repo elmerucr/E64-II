@@ -37,11 +37,11 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_print(command_help_string);
             if( no_of_breakpoints > 0 )
             {
-                snprintf(command_help_string, 256, "\n # address\n");
+                snprintf(command_help_string, 256, "\n # address active\n");
                 debug_console_print(command_help_string);
                 for(int i=0; i<no_of_breakpoints; i++)
                 {
-                    snprintf(command_help_string, 256, "%2u $%06x %1u\n", i, computer.m68k_ic->debugger.breakpoints.guardAddr(i), computer.m68k_ic->debugger.breakpoints.isEnabled(i) ? 1 : 0);
+                    snprintf(command_help_string, 256, "%2u $%06x  %s\n", i, computer.m68k_ic->debugger.breakpoints.guardAddr(i), computer.m68k_ic->debugger.breakpoints.isEnabled(i) ? "yes" : "no");
                     debug_console_print(command_help_string);
                 }
             }

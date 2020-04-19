@@ -36,6 +36,12 @@ kernel_main
 	move.w	#$0708,TIMER_BASE+2		; load value
 	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
+	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
+	move.w	sr,d0
+	andi.w	#%1111100011111111,d0
+	ori.w	#%0000000100000000,d0
+	move.w	d0,sr
+
 	; copy char rom to ram (go from 2k to 32k)
 	bsr		copy_charrom_to_charram
 
@@ -59,12 +65,6 @@ kernel_main
 
 	lea		welcome,a0
 	bsr		put_string
-
-	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
-	move.w	sr,d0
-	andi.w	#%1111100011111111,d0
-	ori.w	#%0000000100000000,d0
-	move.w	d0,sr
 
 	; play a welcome sound on SID0
 	lea		SID0_BASE,a0
@@ -279,6 +279,14 @@ copy_charrom_to_charram
 								;	}
 .5	movem	(a7)+,d0-d1/a0-a1	;
 	rts							;
+
+; logo blit description
+logo_blit
+	dc.b	%00000011	; multicolor and bitmap mode
+	dc.b	%00000000
+	;dc.w	$
+	dc.w	$0010		; x_pos
+	dc.w	$0010		; y_pos
 
 ; string data
 welcome

@@ -5,8 +5,8 @@
 //
 //  General definitions for the whole project
 
-#ifndef COMMON_DEFS_H
-#define COMMON_DEFS_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <cstdint>
 #include "video.hpp"
