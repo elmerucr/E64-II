@@ -184,16 +184,18 @@ put_string
 
 ; fake exception handler
 exception_handler
+	move.l	d0,-(a7)
 	move.l #$deadbeef,d0
+	move.l	(a7)+,d0
 	rte
 
 ; level 2 interrupt autovector (vicv vblank)
 interrupt_2_autovector
-	move.b	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
-	move.b	#%00000001,VICV_BUFFERSWAP	; switch buffers
-	move.w	#C64_BLUE,BLITTER_DATA_16_BIT	; load color black in data register
-	move.b	#%00000001,BLITTER_CONTROL	; clear the backbuffer
-									; plan some other blitter stuff (text screen, ...)
+	move.b	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
+	move.b	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
+	move.w	#C64_BLUE,BLITTER_DATA_16_BIT	; load color blue in data register of blitter
+	move.b	#%00000001,BLITTER_CONTROL		; clear the backbuffer
+											; plan some other blitter stuff (text screen, ...)
 	rte
 
 ; level 4 interrupt autovector (timer)
