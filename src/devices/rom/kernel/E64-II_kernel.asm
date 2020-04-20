@@ -284,13 +284,88 @@ copy_charrom_to_charram
 logo_blit
 	dc.b	%00000011	; multicolor and bitmap mode
 	dc.b	%00000000
-	;dc.w	$
+	dc.w	%00000011	; width 2^3 = 8 chars = 64 pixels
+	dc.w	%00000000	; height 2^0 = 1 char =  8 pixels
 	dc.w	$0010		; x_pos
 	dc.w	$0010		; y_pos
 
+; logo blit bitmap data
+logo_bitmap
+	dc.w	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+
+	dc.w	$f444,$f444,$f733,$f733,$f733,$f733,$f733,$f733
+	dc.w	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
+	dc.w	$f733,$f733,$f444,$faaa,$faaa,$faaa,$faaa,$f444
+	dc.w	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
+	dc.w	$faaa,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
+	dc.w	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f733,$f733
+	dc.w	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
+	dc.w	$f733,$f733,$f733,$f733,$f733,$f733,$f444,$f444
+
+	dc.w	$f444,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+	dc.w	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+	dc.w	$f853,$f853,$f444,$faaa,$f444,$f444,$f444,$f444
+	dc.w	$faaa,$f444,$f444,$f444,$f444,$f444,$f444,$faaa
+	dc.w	$f444,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
+	dc.w	$f444,$f444,$f444,$faaa,$f444,$f444,$f853,$f853
+	dc.w	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+	dc.w	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f444
+
+	dc.w	$f444,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+	dc.w	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+	dc.w	$fee8,$fee8,$f444,$faaa,$faaa,$faaa,$f444,$f444
+	dc.w	$faaa,$faaa,$faaa,$faaa,$f444,$f444,$faaa,$f444
+	dc.w	$f444,$faaa,$f444,$faaa,$faaa,$f444,$f444,$faaa
+	dc.w	$f444,$f444,$f444,$faaa,$f444,$f444,$fee8,$fee8
+	dc.w	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+	dc.w	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$f444
+
+	dc.w	$f444,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+	dc.w	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+	dc.w	$fbfa,$fbfa,$f444,$faaa,$f444,$f444,$f444,$f444
+	dc.w	$faaa,$f444,$f444,$f444,$faaa,$f444,$faaa,$faaa
+	dc.w	$faaa,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
+	dc.w	$f444,$f444,$f444,$faaa,$f444,$f444,$fbfa,$fbfa
+	dc.w	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+	dc.w	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$f444
+
+	dc.w	$f444,$f444,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+	dc.w	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+	dc.w	$f67d,$f67d,$f444,$faaa,$faaa,$faaa,$faaa,$f444
+	dc.w	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
+	dc.w	$f444,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
+	dc.w	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f67d,$f67d
+	dc.w	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+	dc.w	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f444,$f444
+
+	dc.w	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+	dc.w	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+	dc.w	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
+
 ; string data
 welcome
-	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200324",ASCII_LF,ASCII_NULL
+	dc.b	"E64-II (C)2019-2020 kernel version 0.1.20200420",ASCII_LF,ASCII_NULL
 
 	align 1
 	include "E64-II_kernel_tables.asm"

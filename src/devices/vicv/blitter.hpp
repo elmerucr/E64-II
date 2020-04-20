@@ -46,12 +46,20 @@ struct surface_blit
      */
     uint8_t     flags_1;
     
-    /*  16 bit unsigned big endian number width of blit. Upon adding the
-     *  operation, the number is and'ed with 0b0000000111111000. Its
-     *  minimum is therefore 8
+    /*  8 bit unsigned numbers width and height of blit. Upon adding the
+     *  operation, these numbers are and'ed with 0b00000111:
+     *  000 = 0 = 2^0 =   1 char  =    8 pixels
+     *  001 = 1 = 2^1 =   2 chars =   16 pixels
+     *  010 = 2 = 2^2 =   4 chars =   32 pixels
+     *  011 = 3 = 2^3 =   8 chars =   64 pixels
+     *  100 = 4 = 2^4 =  16 chars =  128 pixels
+     *  101 = 5 = 2^5 =  32 chars =  256 pixels
+     *  110 = 6 = 2^6 =  64 chars =  512 pixels
+     *  111 = 7 = 2^7 = 128 chars = 1024 pixels
+     *
      */
-    //uint8_t     width_high_byte;
-    //uint8_t     width_low_byte;
+    uint8_t     width;
+    uint8_t     height;
     
     /*  16 bit signed big endian number
      *  with the x position of the
