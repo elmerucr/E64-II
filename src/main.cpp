@@ -20,7 +20,7 @@
 // global components of the system
 E64::video host_video;
 E64::machine computer;
-E64::pid_delay frame_delay(15000.0);
+E64::pid_delay frame_delay(20500.0);
 
 int main(int argc, char **argv)
 {
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         switch(computer.current_mode)
         {
             case E64::NORMAL_MODE:
-                if( computer.run(127) != 0 ) computer.switch_to_debug();
+                if( computer.run(0) != 0 ) computer.switch_to_debug();
                 
                 // if full frame was drawn call other update functions:
                 if( computer.vicv_ic->frame_done )

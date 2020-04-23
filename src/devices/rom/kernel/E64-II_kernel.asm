@@ -28,13 +28,22 @@ kernel_main
 	move.l	a0,TIMER0_VECTOR
 	lea		timer1_irq_handler,a0
 	move.l	a0,TIMER1_VECTOR
+	lea		timer2_irq_handler,a0
+	move.l	a0,TIMER2_VECTOR
+	lea		timer3_irq_handler,a0
+	move.l	a0,TIMER3_VECTOR
 
-	; set up timer0 interrupt
+	; set up timer0 interrupts
 	move.w	#$003c,TIMER_BASE+2		; load value 60 ($003c = 60bpm = 1Hz) into high and low bytes
 	ori.b	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
-	; set up timer1 interrupt
+
+	; set up timer1 interrupts
 	move.w	#$0708,TIMER_BASE+2		; load value
 	ori.b	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
+
+	; set up timer3 interrupts at 50.125Hz for music / sid tunes
+	move.w	#$0bc0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
+	ori.b	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
 
 	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
 	move.w	sr,d0
@@ -42,8 +51,20 @@ kernel_main
 	ori.w	#%0000000100000000,d0
 	move.w	d0,sr
 
+	; max volume for both sids
+	lea		SID0_BASE,a0
+	move.b	#$0f,($18,a0)
+	lea		SID1_BASE,a0
+	move.b	#$0f,($18,a0)
+
 	; copy char rom to ram (go from 2k to 32k)
 	bsr		copy_charrom_to_charram
+
+	; copy kernel into ram to make it visible for VICV
+	movea.l	#KERNEL_LOC,a0
+	movea.l	a0,a1
+	move.l	#$10000,d0
+	bsr		memcopy
 
 	; set screen colors
 	move.w	#C64_BLACK,VICV_BORDER_COLOR
@@ -73,39 +94,36 @@ kernel_main
 	move.w	(N_D3_,a1),(a0)
 	; attack and decay of voice 1
 	move.b	#%00001001,($05,a0)
+	; pulse width of voice 1
+	move.w	#$f0f,($02,a0)
 	; freq of voice 3
 	move.w	#$1e00,($0e,a0)
-	; max volume
-	move.b	#$0f,($18,a0)
 	; left channel mix
 	move.b	#$ff,(SID0_LEFT,a0)
 	; right channel mix
 	move.b	#$10,(SID0_RGHT,a0)
-	; play bell by opening gate on bit0 register #4
-	; bit 4 is for a triangle wave form
-    ; bit 2 is for a ring modulation connected to voice 3
-	move.b	#%00100001,($04,a0)
+	; play sound by opening gate on bit0 register #4
+	; bit 6 is for a pulse wave form
+	move.b	#%01000001,($04,a0)
 
 	; play a welcome sound on SID1
 	lea		SID1_BASE,a0
 	; frequency of voice 1
 	lea		notes,a1
 	move.w	(N_A3_,a1),(a0)
-	;move.w	#N_A3_,(a0)
 	; attack and decay of voice 1
 	move.b	#%00001001,($05,a0)
+	; pulse width of voice 1
+	move.w	#$f0f,($02,a0)
 	; freq of voice 3
 	move.w	#$1e00,($0e,a0)
-	; max volume
-	move.b	#$0f,($18,a0)
 	; left channel mix
 	move.b	#$10,(SID1_LEFT,a0)
 	; right channel mix
 	move.b	#$ff,(SID1_RGHT,a0)
-	; play bell by opening gate on bit0 register #4
-	; bit 4 is for a triangle wave form
-    ; bit 2 is for a ring modulation connected to voice 3
-	move.b	#%00100001,($04,a0)
+	; play sound by opening gate on bit0 register #4
+	; bit 6 is for a pulse wave form
+	move.b	#%01000001,($04,a0)
 
 mainloop
 	; put something in the usp
@@ -214,6 +232,18 @@ timer1_check
 	movea.l	TIMER1_VECTOR,a0
 	jmp		(a0)
 timer2_check
+	btst	#2,TIMER_BASE			; did timer 2 cause the interrupt?
+	beq		timer3_check			; no, go to next timer
+	move.b	#%00000100,TIMER_BASE	; yes, acknowledge interrupt
+	movea.l	TIMER2_VECTOR,a0
+	jmp		(a0)
+timer3_check
+	btst	#3,TIMER_BASE
+	beq		timer_finish			; no, go to finish
+	move.b	#%00001000,TIMER_BASE	; yes, acknowledge
+	movea.l	TIMER3_VECTOR,a0
+	jmp		(a0)
+timer_finish
 	move.l	(a7)+,a0				; restore a0
 	rte
 
@@ -245,8 +275,41 @@ timer1_irq_handler
 	addq.b	#$1,(1,a0)
 	andi.b	#%00001111,(1,a0)
 	movea.l	(a7)+,a0
-	addq.b	#1,VICV_BORDER_SIZE
 	bra		timer2_check
+
+timer2_irq_handler
+	;
+	;
+	bra		timer3_check
+
+timer3_irq_handler
+	;
+	addq.b	#1,VICV_BORDER_SIZE
+	;
+	bra		timer_finish
+
+memcopy
+	;
+	;	bytewise memory copy - probably very slow...
+	;
+	;	Arguments
+	;
+	;	a0	source_start_address
+	;	d0	no_of_bytes
+	;	a1	destination_start_address
+	;
+	move.l	d1,-(a7)			; save d1
+	moveq	#$0,d1
+.1	move.b	(a0,d1.l),(a1,d1.l)
+	add.l	#$1,d1
+	cmp.l	d1,d0
+	bne		.1
+
+	move.l	(a7)+,d1			; restore d1
+	rts
+
+
+
 
 copy_charrom_to_charram
 	;
@@ -281,7 +344,7 @@ copy_charrom_to_charram
 	rts							;
 
 ; logo blit description
-logo_blit
+logo_blit_structure
 	dc.b	%00000011	; multicolor and bitmap mode
 	dc.b	%00000000
 	dc.w	%00000011	; width 2^3 = 8 chars = 64 pixels
