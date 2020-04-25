@@ -13,7 +13,7 @@ The E64-II (Enhanced 64-II) is a virtual computer system (under construction) th
 ## Screenshots
 ### Running in normal mode:
 ### Debugger:
-![E64-II debugger](./docs/E64-II_debug_2020-03-10.png)
+![E64-II debugger](./docs/E64-II_debug_2020-04-25.png)
 ## Compiling
 ### Core application
 #### macOS

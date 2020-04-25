@@ -53,6 +53,15 @@ int main(int argc, char **argv)
         switch(computer.current_mode)
         {
             case E64::NORMAL_MODE:
+                
+                /*  Note: using run(0) function causes the cpu to run only
+                 *  1 instruction per call. This will increase the overall
+                 *  host cpu load, but also increases accuracy of the
+                 *  system as a whole. Most importantly, SID emulation will
+                 *  be more realistic. Instant changes to SID's registers
+                 *  will be reflected in audio output.
+                 */
+                
                 if( computer.run(0) != 0 ) computer.switch_to_debug();
                 
                 // if full frame was drawn call other update functions:
@@ -63,7 +72,6 @@ int main(int argc, char **argv)
                     // process events and catch a possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) computer.running = false;
                     
-                    // we want to run this one only once per frame
                     computer.cia_ic->run();
                     
                     host_video.update_screen();
@@ -104,7 +112,7 @@ int main(int argc, char **argv)
 
     // end of mainloop
 
-    printf("detected quit event\n");
+    printf("detecting quit event\n");
 
     // cleanup window management
     E64::sdl2_cleanup();
