@@ -175,7 +175,9 @@ N_A7S	equ	94*2
 
 CURR_TEXT_COLOR	equ $008000	; byte
 CURSOR_POS		equ	$008002	; word
+
 TIMER0_VECTOR	equ	$008004	; long
 TIMER1_VECTOR	equ	$008008	; long
 TIMER2_VECTOR	equ	$00800c	; long
 TIMER3_VECTOR	equ	$008010	; long
+
