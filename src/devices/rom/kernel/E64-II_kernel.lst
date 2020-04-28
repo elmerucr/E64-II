@@ -499,7 +499,7 @@ F00:0207       	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode t
                S01:00FF020A:  45 FA 05 B0
 F00:0208       	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
                S01:00FF020E:  B0 3C 00 0A
-F00:0209       	beq	.1
+F00:0209       	BEQ	.1
                S01:00FF0212:  67 20
 F00:0210       	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
                S01:00FF0214:  10 32 00 00
@@ -755,46 +755,46 @@ F00:0380       	;	D1	i, counter from 7 to 0 (8 bits per byte have to be processe
 F00:0381       	;	A0	*char_ram, pointer
 F00:0382       	;	A1	*char_rom, pointer
 F00:0383       	;
-F00:0384       	movem	d0-d1/a0-a1,-(a7)
-               S01:00FF0344:  48 A7 C0 C0
+F00:0384       	MOVEM.L	D0-D1/A0-A1,-(A7)
+               S01:00FF0344:  48 E7 C0 C0
 F00:0385       
-F00:0386       	moveq	#0,d0			;	current_byte = 0;
+F00:0386       	MOVEQ	#0,D0			;	current_byte = 0;
                S01:00FF0348:  70 00
-F00:0387       	lea	CHAR_RAM,a0		;	char_ram = CHAR_RAM;
+F00:0387       	LEA	CHAR_RAM,A0		;	char_ram = CHAR_RAM;
                S01:00FF034A:  41 F9 00 E5 00 00
-F00:0388       	lea	CHAR_ROM,a1		;	char_rom = CHAR_ROM;
+F00:0388       	LEA	CHAR_ROM,A1		;	char_rom = CHAR_ROM;
                S01:00FF0350:  43 F9 00 FD 00 00
 F00:0389       
-F00:0390       .1	cmpa.l	#CHAR_ROM+$800,a1	;	while(char_ram != CHAR_ROM+$800)	//	if we're not at the end of char rom
+F00:0390       .1	CMPA.L	#CHAR_ROM+$800,A1	;	while(char_ram != CHAR_ROM+$800)
                S01:00FF0356:  B3 FC 00 FD 08 00
-F00:0391       	beq	.5			;	{								//	branch to end of compound statement
+F00:0391       	BEQ	.5			;	{								//	branch to end of compound statement
                S01:00FF035C:  67 1C
-F00:0392       	move.b	(a1)+,d0		;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
+F00:0392       	MOVE.B	(A1)+,D0		;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
                S01:00FF035E:  10 19
-F00:0393       	moveq	#8,d1			;		i = 8;
+F00:0393       	MOVEQ	#8,D1			;		i = 8;
                S01:00FF0360:  72 08
-F00:0394       .2	btst	#$7,d0
+F00:0394       .2	BTST	#$7,D0
                S01:00FF0362:  08 00 00 07
-F00:0395       	beq	.3			; bit 7 not set
+F00:0395       	BEQ	.3			; bit 7 not set
                S01:00FF0366:  67 06
-F00:0396       	move.w	#C64_GREY,(a0)+		; bit 7 is set, so set color
+F00:0396       	MOVE.W	#C64_GREY,(A0)+		; bit 7 is set, so set color
                S01:00FF0368:  30 FC F7 77
-F00:0397       	bra	.4
+F00:0397       	BRA	.4
                S01:00FF036C:  60 04
-F00:0398       .3	move.w	#$0000,(a0)+		; bit 7 not set, make empty
+F00:0398       .3	MOVE.W	#$0000,(A0)+		; bit 7 not set, make empty
                S01:00FF036E:  30 FC 00 00
-F00:0399       .4	lsl.b	#$01,d0			; move all the bits one place to the left
+F00:0399       .4	LSL.B	#$01,D0			; move all the bits one place to the left
                S01:00FF0372:  E3 08
-F00:0400       	subq	#$01,d1			;	i = i - 1;
+F00:0400       	SUBQ	#$01,D1			;	i = i - 1;
                S01:00FF0374:  53 41
-F00:0401       	beq	.1			;	did i reach zero? goto .1
+F00:0401       	BEQ	.1			;	did i reach zero? goto .1
                S01:00FF0376:  67 DE
-F00:0402       	bra	.2
+F00:0402       	BRA	.2
                S01:00FF0378:  60 E8
 F00:0403       					;	}
-F00:0404       .5	movem	(a7)+,d0-d1/a0-a1	;
-               S01:00FF037A:  4C 9F 03 03
-F00:0405       	rts				;
+F00:0404       .5	MOVEM.L	(A7)+,D0-D1/A0-A1
+               S01:00FF037A:  4C DF 03 03
+F00:0405       	RTS
                S01:00FF037E:  4E 75
 F00:0406       
 F00:0407       init_song
@@ -2012,8 +2012,8 @@ VEC_11_UNIMPL_INSTRUCTION EXPR(44=0x2c) EQU
 VEC_10_UNIMPL_INSTRUCTION EXPR(40=0x28) EQU 
 VEC_04_ILLEGAL_INSTRUCTION EXPR(16=0x10) EQU 
 KERNEL_LOC EXPR(16711680=0xff0000) EQU 
-_MOVEMBYTES EXPR(8=0x8) INTERNAL 
- MOVEMSIZE EXPR(2=0x2) INTERNAL 
+_MOVEMBYTES EXPR(16=0x10) INTERNAL 
+ MOVEMSIZE EXPR(4=0x4) INTERNAL 
 _MOVEMREGS EXPR(771=0x303) INTERNAL 
 __LINE__ EXPR(507=0x1fb) INTERNAL 
 __FO EXPR(0=0x0) INTERNAL 

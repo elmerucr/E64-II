@@ -206,7 +206,7 @@ put_char
 	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
 	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
 	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
-	beq	.1
+	BEQ	.1
 	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
 	MOVE.B	D0,(A0,D1)
 	MOVE.B	D2,(A1,D1)
@@ -381,28 +381,28 @@ copy_charrom_to_charram
 	;	A0	*char_ram, pointer
 	;	A1	*char_rom, pointer
 	;
-	movem	d0-d1/a0-a1,-(a7)
+	MOVEM.L	D0-D1/A0-A1,-(A7)
 
-	moveq	#0,d0			;	current_byte = 0;
-	lea	CHAR_RAM,a0		;	char_ram = CHAR_RAM;
-	lea	CHAR_ROM,a1		;	char_rom = CHAR_ROM;
+	MOVEQ	#0,D0			;	current_byte = 0;
+	LEA	CHAR_RAM,A0		;	char_ram = CHAR_RAM;
+	LEA	CHAR_ROM,A1		;	char_rom = CHAR_ROM;
 
-.1	cmpa.l	#CHAR_ROM+$800,a1	;	while(char_ram != CHAR_ROM+$800)	//	if we're not at the end of char rom
-	beq	.5			;	{								//	branch to end of compound statement
-	move.b	(a1)+,d0		;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
-	moveq	#8,d1			;		i = 8;
-.2	btst	#$7,d0
-	beq	.3			; bit 7 not set
-	move.w	#C64_GREY,(a0)+		; bit 7 is set, so set color
-	bra	.4
-.3	move.w	#$0000,(a0)+		; bit 7 not set, make empty
-.4	lsl.b	#$01,d0			; move all the bits one place to the left
-	subq	#$01,d1			;	i = i - 1;
-	beq	.1			;	did i reach zero? goto .1
-	bra	.2
+.1	CMPA.L	#CHAR_ROM+$800,A1	;	while(char_ram != CHAR_ROM+$800)
+	BEQ	.5			;	{								//	branch to end of compound statement
+	MOVE.B	(A1)+,D0		;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
+	MOVEQ	#8,D1			;		i = 8;
+.2	BTST	#$7,D0
+	BEQ	.3			; bit 7 not set
+	MOVE.W	#C64_GREY,(A0)+		; bit 7 is set, so set color
+	BRA	.4
+.3	MOVE.W	#$0000,(A0)+		; bit 7 not set, make empty
+.4	LSL.B	#$01,D0			; move all the bits one place to the left
+	SUBQ	#$01,D1			;	i = i - 1;
+	BEQ	.1			;	did i reach zero? goto .1
+	BRA	.2
 					;	}
-.5	movem	(a7)+,d0-d1/a0-a1	;
-	rts				;
+.5	MOVEM.L	(A7)+,D0-D1/A0-A1
+	RTS
 
 init_song
 
