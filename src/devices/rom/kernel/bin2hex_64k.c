@@ -7,10 +7,10 @@
 int main() {
 	uint8_t romdata[65536];
 	FILE *f;
-	f = fopen("E64-II_kernel.bin", "r");
+	f = fopen("kernel.bin", "r");
 	fread(romdata, 65536, 1, f);
 	fclose(f);
-	printf("// 64k E64-II_kernel elmerucr (c)2020\n");
+	printf("// 64k E64-II kernel elmerucr (c)2020\n");
 	printf("//\n\n");
 	printf("#include <cstdint>\n\n");
 	printf("uint8_t kernel[65536] =\n{");

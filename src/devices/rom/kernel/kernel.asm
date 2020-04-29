@@ -1,7 +1,7 @@
 ; elmerucr - 28/04/2020
 ; compiles with vasmm68k_mot
 
-	INCLUDE 'E64-II_kernel_definitions.asm'
+	INCLUDE 'kernel_definitions.asm'
 
 	ORG	KERNEL_LOC
 
@@ -221,9 +221,12 @@ put_char
 	RTS
 
 
-; put_string expects a pointer to a string in a0
 
 put_string
+
+	;
+	; put_string expects a pointer to a string in a0
+	;
 
 	MOVE.L	A0,-(A7)
 .1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
@@ -363,7 +366,7 @@ memcopy
 	MOVE.L	D1,-(A7)
 	MOVEQ	#$0,D1
 .1	MOVE.B	(A0,D1.L),(A1,D1.L)
-	ADDI.L	#$1,D1
+	ADDQ.L	#$1,D1
 	CMP.L	D1,D0
 	BNE	.1
 
@@ -383,24 +386,25 @@ copy_charrom_to_charram
 	;
 	MOVEM.L	D0-D1/A0-A1,-(A7)
 
-	MOVEQ	#0,D0			;	current_byte = 0;
-	LEA	CHAR_RAM,A0		;	char_ram = CHAR_RAM;
-	LEA	CHAR_ROM,A1		;	char_rom = CHAR_ROM;
+	MOVEQ	#0,D0			;    current_byte = 0;
+	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
+	LEA	CHAR_ROM,A1		;    char_rom = CHAR_ROM;
 
-.1	CMPA.L	#CHAR_ROM+$800,A1	;	while(char_ram != CHAR_ROM+$800)
-	BEQ	.5			;	{								//	branch to end of compound statement
-	MOVE.B	(A1)+,D0		;		current_byte = char_rom++;		//	load a byte from charset and incr pntr
-	MOVEQ	#8,D1			;		i = 8;
+.1	CMPA.L	#CHAR_ROM+$800,A1	;    while(char_ram != CHAR_ROM+$800)
+	BEQ	.5			;    {   //	branch to end of compound statement
+					;        // load a byte from charset and incr pntr
+	MOVE.B	(A1)+,D0		;        current_byte = char_rom++;
+	MOVEQ	#8,D1			;        i = 8;
 .2	BTST	#$7,D0
-	BEQ	.3			; bit 7 not set
-	MOVE.W	#C64_GREY,(A0)+		; bit 7 is set, so set color
+	BEQ	.3			;    bit 7 not set
+	MOVE.W	#C64_GREY,(A0)+		;    bit 7 is set, so set color
 	BRA	.4
-.3	MOVE.W	#$0000,(A0)+		; bit 7 not set, make empty
-.4	LSL.B	#$01,D0			; move all the bits one place to the left
-	SUBQ	#$01,D1			;	i = i - 1;
-	BEQ	.1			;	did i reach zero? goto .1
+.3	MOVE.W	#$0000,(A0)+		;    bit 7 not set, make empty
+.4	LSL.B	#$01,D0			;    move all the bits one place to the left
+	SUBQ	#$01,D1			;    i = i - 1;
+	BEQ	.1			;    did i reach zero? goto .1
 	BRA	.2
-					;	}
+					;    }
 .5	MOVEM.L	(A7)+,D0-D1/A0-A1
 	RTS
 
@@ -413,8 +417,8 @@ play_song_frame
 logo_blit_structure
 	DC.B	%00000011	; multicolor and bitmap mode
 	DC.B	%00000000
-	DC.W	%00000011	; width 2^3 = 8 chars = 64 pixels
-	DC.W	%00000000	; height 2^0 = 1 char =  8 pixels
+	DC.B	%00000011	; width 2^3 = 8 chars = 64 pixels
+	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
 	DC.W	$0010		; x_pos
 	DC.W	$0010		; y_pos
 
@@ -497,11 +501,11 @@ logo_bitmap
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200420",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200429",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
-	INCLUDE	"E64-II_kernel_tables.asm"
+	INCLUDE	"kernel_tables.asm"
 
 	ORG	KERNEL_LOC+$fffc
 	DC.L	$deadbeef
