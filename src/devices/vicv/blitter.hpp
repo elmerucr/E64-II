@@ -32,6 +32,15 @@ enum operation_type
     BLIT
 };
 
+/*  The next structure is a description of the surface blit how it appears
+ *  in the memory of E64-II. Once a pointer to this structure is passed to
+ *  the blitter (addition of an operation), the structure is read and converted
+ *  into finite state machine data of the blitter.
+ *
+ *  Size of this structure:
+ *  -
+ */
+
 struct surface_blit
 {
     /*  bit 0    : Character mode (0) or bitmap mode (1)
@@ -46,17 +55,13 @@ struct surface_blit
      */
     uint8_t     flags_1;
     
-    /*  8 bit unsigned numbers width and height of blit. Upon adding the
-     *  operation, these numbers are and'ed with 0b00000111:
-     *  000 = 0 = 2^0 =   1 char  =    8 pixels
-     *  001 = 1 = 2^1 =   2 chars =   16 pixels
-     *  010 = 2 = 2^2 =   4 chars =   32 pixels
-     *  011 = 3 = 2^3 =   8 chars =   64 pixels
-     *  100 = 4 = 2^4 =  16 chars =  128 pixels
-     *  101 = 5 = 2^5 =  32 chars =  256 pixels
-     *  110 = 6 = 2^6 =  64 chars =  512 pixels
-     *  111 = 7 = 2^7 = 128 chars = 1024 pixels
+    /*  Width and height of blit, 8 bit unsigned.
      *
+     *  The 5 most significant bits are unused. Then, the 3 least significant
+     *  bits indicate a number of 0 - 7 (n). Finally, a bit shift occurs:
+     *      0b00000001 << n
+     *  Resulting in the final width/height in 'chars' (8 pixels / char)
+     *  { 1, 2, 4, 8, 16, 32, 64, 128 }
      */
     uint8_t     width;
     uint8_t     height;
@@ -74,6 +79,13 @@ struct surface_blit
      */
     uint8_t     y_pos_high_byte;
     uint8_t     y_pos_low_byte;
+    
+    /*  32 bit pointer to character / tile data
+     */
+    uint8_t     character_bits_24_31;
+    uint8_t     character_bits_16_23;
+    uint8_t     character_bits__8_15;
+    uint8_t     character_bits__0__7;
 };
 
 struct operation
@@ -126,6 +138,8 @@ private:
     uint32_t clear_counter;
     
     // finite state machine blitting
+    uint16_t width;
+    uint16_t height;
     
 public:
     

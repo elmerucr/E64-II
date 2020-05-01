@@ -1,11 +1,11 @@
-; elmerucr - 28/04/2020
+; elmerucr - 01/05/2020
 ; compiles with vasmm68k_mot
 
 	INCLUDE 'kernel_definitions.asm'
 
 	ORG	KERNEL_LOC
 
-	DC.L	$00d00000		; vector 0 - supervisor stackpointer
+	DC.L	$00D00000		; vector 0 - supervisor stackpointer
 	DC.L	kernel_main		; vector 1 - reset vector
 
 
@@ -50,19 +50,19 @@ kernel_main
 
 	; set up timer0 interrupts
 
-	MOVE.W	#$003c,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
+	MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
 	ORI.B	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
 
 
 	; set up timer1 interrupts
 
-	MOVE.W	#$0708,TIMER_BASE+2		; load value
+	MOVE.W	#$708,TIMER_BASE+2		; load value
 	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
 
 	; set up timer3 interrupts at 50.125Hz for music / sid tunes
 
-	MOVE.W	#$0bc0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
+	MOVE.W	#$BC0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
 	ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
 
 
@@ -77,9 +77,9 @@ kernel_main
 	; max volume for both sids
 
 	LEA	SID0_BASE,A0
-	MOVE.B	#$0f,($18,A0)
+	MOVE.B	#$0F,$18(A0)
 	LEA	SID1_BASE,A0
-	MOVE.B	#$0f,($18,A0)
+	MOVE.B	#$0F,$18(A0)
 
 
 	; copy char rom to ram (go from 2k to 32k)
@@ -106,14 +106,14 @@ kernel_main
 	MOVE.B	#$0,VICV_BORDER_SIZE
 
 
-	; set text color
+	; set text color / NEEDS WORK!
 
-	MOVE.B	#$0c,CURR_TEXT_COLOR	; c64 grey
+	MOVE.B	#$0C,CURR_TEXT_COLOR	; c64 grey
 
 
 	; set txt pointer
-	MOVE.L	#$00f00000,VICV_TXT
-	MOVE.L	#$00f00800,VICV_COL
+	MOVE.L	#$00F00000,VICV_TXT
+	MOVE.L	#$00F00800,VICV_COL
 
 
 	; reset cursor position
@@ -131,30 +131,30 @@ kernel_main
 
 	LEA	SID0_BASE,A0
 	LEA	notes,A1
-	MOVE.W	(N_D3_,A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,($05,A0)	; attack and decay of voice 1
-	MOVE.W	#$f0f,($02,A0)		; pulse width of voice 1
-	MOVE.B	#$ff,(SID0_LEFT,A0)	; left channel mix
+	MOVE.W	N_D3_(A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
+	MOVE.W	#$F0F,($02,A0)		; pulse width of voice 1
+	MOVE.B	#$FF,(SID0_LEFT,A0)	; left channel mix
 	MOVE.B	#$10,(SID0_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,($04,A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 	; play a welcome sound on SID1
 
 	LEA	SID1_BASE,A0
 	LEA	notes,A1
-	MOVE.W	(N_A3_,A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,($05,A0)	; attack and decay of voice 1
-	MOVE.W	#$f0f,($02,A0)		; pulse width of voice 1
+	MOVE.W	N_A3_(A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
+	MOVE.W	#$F0F,$2(A0)		; pulse width of voice 1
 	MOVE.B	#$10,(SID1_LEFT,A0)	; left channel mix
-	MOVE.B	#$ff,(SID1_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,($04,A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.B	#$FF,(SID1_RGHT,A0)	; right channel mix
+	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 mainloop
 
 	; put something in the usp
-	MOVEA.L	#$c00000,A0
+	LEA	$C00000,A0
 	MOVE	A0,USP
 
 	; copy keyboard state in to screen
@@ -168,7 +168,7 @@ mainloop
 	CMP.B	#$49,D0
 	BNE	.2
 
-	ADDQ.B	#$1,$00f00080
+	ADDQ.B	#$1,$00F00080
 	BRA.S	.1
 
 
@@ -211,7 +211,7 @@ put_char
 	MOVE.B	D0,(A0,D1)
 	MOVE.B	D2,(A1,D1)
 	ADDQ	#$1,CURSOR_POS
-	ANDI.W	#$07ff,CURSOR_POS
+	ANDI.W	#$7FF,CURSOR_POS
 	MOVEM.L	(A7)+,D1-D2/A0-A2	; restore registers
 	RTS
 .1	ADDI.W	#$40,D1			; add 64 positions to current cursor pos
@@ -243,7 +243,7 @@ put_string
 exception_handler
 
 	MOVE.L	D0,-(A7)
-	MOVE.L #$deadbeef,D0
+	MOVE.L #$DEADBEEF,D0
 	MOVE.L	(A7)+,D0
 	RTE
 
@@ -426,68 +426,68 @@ logo_blit_structure
 ; logo blit bitmap data
 
 logo_bitmap
-	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+	DC.W	$0000,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$0000
 
-	DC.W	$f444,$f444,$f733,$f733,$f733,$f733,$f733,$f733
-	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
-	DC.W	$f733,$f733,$f444,$faaa,$faaa,$faaa,$faaa,$f444
-	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
-	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
-	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f733,$f733
-	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
-	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f444,$f444
+	DC.W	$F444,$F444,$F733,$F733,$F733,$F733,$F733,$F733
+	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F733,$F733
+	DC.W	$F733,$F733,$F444,$FAAA,$FAAA,$FAAA,$FAAA,$F444
+	DC.W	$F444,$FAAA,$FAAA,$FAAA,$F444,$F444,$F444,$F444
+	DC.W	$FAAA,$FAAA,$F444,$F444,$F444,$F444,$FAAA,$FAAA
+	DC.W	$FAAA,$F444,$FAAA,$FAAA,$FAAA,$F444,$F733,$F733
+	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F733,$F733
+	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F444,$F444
 
-	DC.W	$f444,$f853,$f853,$f853,$f853,$f853,$f853,$f853
-	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
-	DC.W	$f853,$f853,$f444,$faaa,$f444,$f444,$f444,$f444
-	DC.W	$faaa,$f444,$f444,$f444,$f444,$f444,$f444,$faaa
-	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
-	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$f853,$f853
-	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
-	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f444
+	DC.W	$F444,$F853,$F853,$F853,$F853,$F853,$F853,$F853
+	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F853
+	DC.W	$F853,$F853,$F444,$FAAA,$F444,$F444,$F444,$F444
+	DC.W	$FAAA,$F444,$F444,$F444,$F444,$F444,$F444,$FAAA
+	DC.W	$F444,$FAAA,$F444,$F444,$F444,$F444,$F444,$FAAA
+	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$F853,$F853
+	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F853
+	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F444
 
-	DC.W	$f444,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
-	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
-	DC.W	$fee8,$fee8,$f444,$faaa,$faaa,$faaa,$f444,$f444
-	DC.W	$faaa,$faaa,$faaa,$faaa,$f444,$f444,$faaa,$f444
-	DC.W	$f444,$faaa,$f444,$faaa,$faaa,$f444,$f444,$faaa
-	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fee8,$fee8
-	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
-	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$f444
+	DC.W	$F444,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
+	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
+	DC.W	$FEE8,$FEE8,$F444,$FAAA,$FAAA,$FAAA,$F444,$F444
+	DC.W	$FAAA,$FAAA,$FAAA,$FAAA,$F444,$F444,$FAAA,$F444
+	DC.W	$F444,$FAAA,$F444,$FAAA,$FAAA,$F444,$F444,$FAAA
+	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$FEE8,$FEE8
+	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
+	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$F444
 
-	DC.W	$f444,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
-	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
-	DC.W	$fbfa,$fbfa,$f444,$faaa,$f444,$f444,$f444,$f444
-	DC.W	$faaa,$f444,$f444,$f444,$faaa,$f444,$faaa,$faaa
-	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
-	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fbfa,$fbfa
-	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
-	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$f444
+	DC.W	$F444,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
+	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
+	DC.W	$FBFA,$FBFA,$F444,$FAAA,$F444,$F444,$F444,$F444
+	DC.W	$FAAA,$F444,$F444,$F444,$FAAA,$F444,$FAAA,$FAAA
+	DC.W	$FAAA,$FAAA,$F444,$F444,$F444,$F444,$F444,$FAAA
+	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$FBFA,$FBFA
+	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
+	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$F444
 
-	DC.W	$f444,$f444,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
-	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
-	DC.W	$f67d,$f67d,$f444,$faaa,$faaa,$faaa,$faaa,$f444
-	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
-	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
-	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f67d,$f67d
-	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
-	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f444,$f444
+	DC.W	$F444,$F444,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
+	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
+	DC.W	$F67D,$F67D,$F444,$FAAA,$FAAA,$FAAA,$FAAA,$F444
+	DC.W	$F444,$FAAA,$FAAA,$FAAA,$F444,$F444,$F444,$F444
+	DC.W	$F444,$FAAA,$F444,$F444,$F444,$F444,$FAAA,$FAAA
+	DC.W	$FAAA,$F444,$FAAA,$FAAA,$FAAA,$F444,$F67D,$F67D
+	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
+	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F444,$F444
 
-	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
-	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+	DC.W	$0000,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
+	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$0000
 
 	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
 	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
@@ -501,11 +501,11 @@ logo_bitmap
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200429",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200501",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
 	INCLUDE	"kernel_tables.asm"
 
-	ORG	KERNEL_LOC+$fffc
-	DC.L	$deadbeef
+	ORG	KERNEL_LOC+$FFFC
+	DC.L	$DEADBEEF

@@ -1,4 +1,4 @@
-F00:0001       ; elmerucr - 28/04/2020
+F00:0001       ; elmerucr - 01/05/2020
 F00:0002       ; compiles with vasmm68k_mot
 F00:0003       
 F00:0004       	INCLUDE 'kernel_definitions.asm'
@@ -189,7 +189,7 @@ F01:0184
 F00:0005       
 F00:0006       	ORG	KERNEL_LOC
 F00:0007       
-F00:0008       	DC.L	$00d00000		; vector 0 - supervisor stackpointer
+F00:0008       	DC.L	$00D00000		; vector 0 - supervisor stackpointer
                S01:00FF0000:  00 D0 00 00
 F00:0009       	DC.L	kernel_main		; vector 1 - reset vector
                S01:00FF0004:  00 FF 00 08
@@ -258,7 +258,7 @@ F00:0049
 F00:0050       
 F00:0051       	; set up timer0 interrupts
 F00:0052       
-F00:0053       	MOVE.W	#$003c,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
+F00:0053       	MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
                S01:00FF0068:  33 FC 00 3C 00 FE 06 02
 F00:0054       	ORI.B	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
                S01:00FF0070:  00 39 00 01 00 FE 06 01
@@ -266,7 +266,7 @@ F00:0055
 F00:0056       
 F00:0057       	; set up timer1 interrupts
 F00:0058       
-F00:0059       	MOVE.W	#$0708,TIMER_BASE+2		; load value
+F00:0059       	MOVE.W	#$708,TIMER_BASE+2		; load value
                S01:00FF0078:  33 FC 07 08 00 FE 06 02
 F00:0060       	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
                S01:00FF0080:  00 39 00 02 00 FE 06 01
@@ -274,7 +274,7 @@ F00:0061
 F00:0062       
 F00:0063       	; set up timer3 interrupts at 50.125Hz for music / sid tunes
 F00:0064       
-F00:0065       	MOVE.W	#$0bc0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
+F00:0065       	MOVE.W	#$BC0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
                S01:00FF0088:  33 FC 0B C0 00 FE 06 02
 F00:0066       	ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
                S01:00FF0090:  00 39 00 08 00 FE 06 01
@@ -296,11 +296,11 @@ F00:0077       	; max volume for both sids
 F00:0078       
 F00:0079       	LEA	SID0_BASE,A0
                S01:00FF00A4:  41 F9 00 FE 05 00
-F00:0080       	MOVE.B	#$0f,($18,A0)
+F00:0080       	MOVE.B	#$0F,$18(A0)
                S01:00FF00AA:  11 7C 00 0F 00 18
 F00:0081       	LEA	SID1_BASE,A0
                S01:00FF00B0:  41 F9 00 FE 05 20
-F00:0082       	MOVE.B	#$0f,($18,A0)
+F00:0082       	MOVE.B	#$0F,$18(A0)
                S01:00FF00B6:  11 7C 00 0F 00 18
 F00:0083       
 F00:0084       
@@ -336,16 +336,16 @@ F00:0106       	MOVE.B	#$0,VICV_BORDER_SIZE
                S01:00FF00E0:  13 FC 00 00 00 FE 04 0C
 F00:0107       
 F00:0108       
-F00:0109       	; set text color
+F00:0109       	; set text color / NEEDS WORK!
 F00:0110       
-F00:0111       	MOVE.B	#$0c,CURR_TEXT_COLOR	; c64 grey
+F00:0111       	MOVE.B	#$0C,CURR_TEXT_COLOR	; c64 grey
                S01:00FF00E8:  13 FC 00 0C 00 00 80 00
 F00:0112       
 F00:0113       
 F00:0114       	; set txt pointer
-F00:0115       	MOVE.L	#$00f00000,VICV_TXT
+F00:0115       	MOVE.L	#$00F00000,VICV_TXT
                S01:00FF00F0:  23 FC 00 F0 00 00 00 FE 04 04
-F00:0116       	MOVE.L	#$00f00800,VICV_COL
+F00:0116       	MOVE.L	#$00F00800,VICV_COL
                S01:00FF00FA:  23 FC 00 F0 08 00 00 FE 04 08
 F00:0117       
 F00:0118       
@@ -370,17 +370,17 @@ F00:0132       	LEA	SID0_BASE,A0
                S01:00FF0118:  41 F9 00 FE 05 00
 F00:0133       	LEA	notes,A1
                S01:00FF011E:  43 FA 07 2A
-F00:0134       	MOVE.W	(N_D3_,A1),(A0)		; set frequency of voice 1
+F00:0134       	MOVE.W	N_D3_(A1),(A0)		; set frequency of voice 1
                S01:00FF0122:  30 A9 00 4C
-F00:0135       	MOVE.B	#%00001001,($05,A0)	; attack and decay of voice 1
+F00:0135       	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
                S01:00FF0126:  11 7C 00 09 00 05
-F00:0136       	MOVE.W	#$f0f,($02,A0)		; pulse width of voice 1
+F00:0136       	MOVE.W	#$F0F,($02,A0)		; pulse width of voice 1
                S01:00FF012C:  31 7C 0F 0F 00 02
-F00:0137       	MOVE.B	#$ff,(SID0_LEFT,A0)	; left channel mix
+F00:0137       	MOVE.B	#$FF,(SID0_LEFT,A0)	; left channel mix
                S01:00FF0132:  11 7C 00 FF 00 80
 F00:0138       	MOVE.B	#$10,(SID0_RGHT,A0)	; right channel mix
                S01:00FF0138:  11 7C 00 10 00 81
-F00:0139       	MOVE.B	#%01000001,($04,A0)	; pulse (bit 6) and open gate (bit 0)
+F00:0139       	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
                S01:00FF013E:  11 7C 00 41 00 04
 F00:0140       
 F00:0141       
@@ -390,25 +390,25 @@ F00:0144       	LEA	SID1_BASE,A0
                S01:00FF0144:  41 F9 00 FE 05 20
 F00:0145       	LEA	notes,A1
                S01:00FF014A:  43 FA 06 FE
-F00:0146       	MOVE.W	(N_A3_,A1),(A0)		; set frequency of voice 1
+F00:0146       	MOVE.W	N_A3_(A1),(A0)		; set frequency of voice 1
                S01:00FF014E:  30 A9 00 5A
-F00:0147       	MOVE.B	#%00001001,($05,A0)	; attack and decay of voice 1
+F00:0147       	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
                S01:00FF0152:  11 7C 00 09 00 05
-F00:0148       	MOVE.W	#$f0f,($02,A0)		; pulse width of voice 1
+F00:0148       	MOVE.W	#$F0F,$2(A0)		; pulse width of voice 1
                S01:00FF0158:  31 7C 0F 0F 00 02
 F00:0149       	MOVE.B	#$10,(SID1_LEFT,A0)	; left channel mix
                S01:00FF015E:  11 7C 00 10 00 82
-F00:0150       	MOVE.B	#$ff,(SID1_RGHT,A0)	; right channel mix
+F00:0150       	MOVE.B	#$FF,(SID1_RGHT,A0)	; right channel mix
                S01:00FF0164:  11 7C 00 FF 00 83
-F00:0151       	MOVE.B	#%01000001,($04,A0)	; pulse (bit 6) and open gate (bit 0)
+F00:0151       	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
                S01:00FF016A:  11 7C 00 41 00 04
 F00:0152       
 F00:0153       
 F00:0154       mainloop
 F00:0155       
 F00:0156       	; put something in the usp
-F00:0157       	MOVEA.L	#$c00000,A0
-               S01:00FF0170:  20 7C 00 C0 00 00
+F00:0157       	LEA	$C00000,A0
+               S01:00FF0170:  41 F9 00 C0 00 00
 F00:0158       	MOVE	A0,USP
                S01:00FF0176:  4E 60
 F00:0159       
@@ -432,7 +432,7 @@ F00:0168       	CMP.B	#$49,D0
 F00:0169       	BNE	.2
                S01:00FF019A:  66 F2
 F00:0170       
-F00:0171       	ADDQ.B	#$1,$00f00080
+F00:0171       	ADDQ.B	#$1,$00F00080
                S01:00FF019C:  52 39 00 F0 00 80
 F00:0172       	BRA.S	.1
                S01:00FF01A2:  60 D4
@@ -509,7 +509,7 @@ F00:0212       	MOVE.B	D2,(A1,D1)
                S01:00FF021C:  13 82 10 00
 F00:0213       	ADDQ	#$1,CURSOR_POS
                S01:00FF0220:  52 79 00 00 80 02
-F00:0214       	ANDI.W	#$07ff,CURSOR_POS
+F00:0214       	ANDI.W	#$7FF,CURSOR_POS
                S01:00FF0226:  02 79 07 FF 00 00 80 02
 F00:0215       	MOVEM.L	(A7)+,D1-D2/A0-A2	; restore registers
                S01:00FF022E:  4C DF 07 06
@@ -558,7 +558,7 @@ F00:0243       exception_handler
 F00:0244       
 F00:0245       	MOVE.L	D0,-(A7)
                S01:00FF0258:  2F 00
-F00:0246       	MOVE.L #$deadbeef,D0
+F00:0246       	MOVE.L #$DEADBEEF,D0
                S01:00FF025A:  20 3C DE AD BE EF
 F00:0247       	MOVE.L	(A7)+,D0
                S01:00FF0260:  20 1F
@@ -825,7 +825,7 @@ F00:0425
 F00:0426       ; logo blit bitmap data
 F00:0427       
 F00:0428       logo_bitmap
-F00:0429       	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0429       	DC.W	$0000,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF0388:  00 00
                S01:00FF038A:  F4 44
                S01:00FF038C:  F4 44
@@ -834,7 +834,7 @@ F00:0429       	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF0392:  F4 44
                S01:00FF0394:  F4 44
                S01:00FF0396:  F4 44
-F00:0430       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0430       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF0398:  F4 44
                S01:00FF039A:  F4 44
                S01:00FF039C:  F4 44
@@ -843,7 +843,7 @@ F00:0430       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03A2:  F4 44
                S01:00FF03A4:  F4 44
                S01:00FF03A6:  F4 44
-F00:0431       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0431       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF03A8:  F4 44
                S01:00FF03AA:  F4 44
                S01:00FF03AC:  F4 44
@@ -852,7 +852,7 @@ F00:0431       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03B2:  F4 44
                S01:00FF03B4:  F4 44
                S01:00FF03B6:  F4 44
-F00:0432       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0432       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF03B8:  F4 44
                S01:00FF03BA:  F4 44
                S01:00FF03BC:  F4 44
@@ -861,7 +861,7 @@ F00:0432       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03C2:  F4 44
                S01:00FF03C4:  F4 44
                S01:00FF03C6:  F4 44
-F00:0433       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0433       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF03C8:  F4 44
                S01:00FF03CA:  F4 44
                S01:00FF03CC:  F4 44
@@ -870,7 +870,7 @@ F00:0433       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03D2:  F4 44
                S01:00FF03D4:  F4 44
                S01:00FF03D6:  F4 44
-F00:0434       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0434       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF03D8:  F4 44
                S01:00FF03DA:  F4 44
                S01:00FF03DC:  F4 44
@@ -879,7 +879,7 @@ F00:0434       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03E2:  F4 44
                S01:00FF03E4:  F4 44
                S01:00FF03E6:  F4 44
-F00:0435       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0435       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF03E8:  F4 44
                S01:00FF03EA:  F4 44
                S01:00FF03EC:  F4 44
@@ -888,7 +888,7 @@ F00:0435       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF03F2:  F4 44
                S01:00FF03F4:  F4 44
                S01:00FF03F6:  F4 44
-F00:0436       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+F00:0436       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$0000
                S01:00FF03F8:  F4 44
                S01:00FF03FA:  F4 44
                S01:00FF03FC:  F4 44
@@ -898,7 +898,7 @@ F00:0436       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
                S01:00FF0404:  F4 44
                S01:00FF0406:  00 00
 F00:0437       
-F00:0438       	DC.W	$f444,$f444,$f733,$f733,$f733,$f733,$f733,$f733
+F00:0438       	DC.W	$F444,$F444,$F733,$F733,$F733,$F733,$F733,$F733
                S01:00FF0408:  F4 44
                S01:00FF040A:  F4 44
                S01:00FF040C:  F7 33
@@ -907,7 +907,7 @@ F00:0438       	DC.W	$f444,$f444,$f733,$f733,$f733,$f733,$f733,$f733
                S01:00FF0412:  F7 33
                S01:00FF0414:  F7 33
                S01:00FF0416:  F7 33
-F00:0439       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
+F00:0439       	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F733,$F733
                S01:00FF0418:  F7 33
                S01:00FF041A:  F7 33
                S01:00FF041C:  F7 33
@@ -916,7 +916,7 @@ F00:0439       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
                S01:00FF0422:  F7 33
                S01:00FF0424:  F7 33
                S01:00FF0426:  F7 33
-F00:0440       	DC.W	$f733,$f733,$f444,$faaa,$faaa,$faaa,$faaa,$f444
+F00:0440       	DC.W	$F733,$F733,$F444,$FAAA,$FAAA,$FAAA,$FAAA,$F444
                S01:00FF0428:  F7 33
                S01:00FF042A:  F7 33
                S01:00FF042C:  F4 44
@@ -925,7 +925,7 @@ F00:0440       	DC.W	$f733,$f733,$f444,$faaa,$faaa,$faaa,$faaa,$f444
                S01:00FF0432:  FA AA
                S01:00FF0434:  FA AA
                S01:00FF0436:  F4 44
-F00:0441       	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
+F00:0441       	DC.W	$F444,$FAAA,$FAAA,$FAAA,$F444,$F444,$F444,$F444
                S01:00FF0438:  F4 44
                S01:00FF043A:  FA AA
                S01:00FF043C:  FA AA
@@ -934,7 +934,7 @@ F00:0441       	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
                S01:00FF0442:  F4 44
                S01:00FF0444:  F4 44
                S01:00FF0446:  F4 44
-F00:0442       	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
+F00:0442       	DC.W	$FAAA,$FAAA,$F444,$F444,$F444,$F444,$FAAA,$FAAA
                S01:00FF0448:  FA AA
                S01:00FF044A:  FA AA
                S01:00FF044C:  F4 44
@@ -943,7 +943,7 @@ F00:0442       	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
                S01:00FF0452:  F4 44
                S01:00FF0454:  FA AA
                S01:00FF0456:  FA AA
-F00:0443       	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f733,$f733
+F00:0443       	DC.W	$FAAA,$F444,$FAAA,$FAAA,$FAAA,$F444,$F733,$F733
                S01:00FF0458:  FA AA
                S01:00FF045A:  F4 44
                S01:00FF045C:  FA AA
@@ -952,7 +952,7 @@ F00:0443       	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f733,$f733
                S01:00FF0462:  F4 44
                S01:00FF0464:  F7 33
                S01:00FF0466:  F7 33
-F00:0444       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
+F00:0444       	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F733,$F733
                S01:00FF0468:  F7 33
                S01:00FF046A:  F7 33
                S01:00FF046C:  F7 33
@@ -961,7 +961,7 @@ F00:0444       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f733,$f733
                S01:00FF0472:  F7 33
                S01:00FF0474:  F7 33
                S01:00FF0476:  F7 33
-F00:0445       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f444,$f444
+F00:0445       	DC.W	$F733,$F733,$F733,$F733,$F733,$F733,$F444,$F444
                S01:00FF0478:  F7 33
                S01:00FF047A:  F7 33
                S01:00FF047C:  F7 33
@@ -971,7 +971,7 @@ F00:0445       	DC.W	$f733,$f733,$f733,$f733,$f733,$f733,$f444,$f444
                S01:00FF0484:  F4 44
                S01:00FF0486:  F4 44
 F00:0446       
-F00:0447       	DC.W	$f444,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+F00:0447       	DC.W	$F444,$F853,$F853,$F853,$F853,$F853,$F853,$F853
                S01:00FF0488:  F4 44
                S01:00FF048A:  F8 53
                S01:00FF048C:  F8 53
@@ -980,7 +980,7 @@ F00:0447       	DC.W	$f444,$f853,$f853,$f853,$f853,$f853,$f853,$f853
                S01:00FF0492:  F8 53
                S01:00FF0494:  F8 53
                S01:00FF0496:  F8 53
-F00:0448       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+F00:0448       	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F853
                S01:00FF0498:  F8 53
                S01:00FF049A:  F8 53
                S01:00FF049C:  F8 53
@@ -989,7 +989,7 @@ F00:0448       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
                S01:00FF04A2:  F8 53
                S01:00FF04A4:  F8 53
                S01:00FF04A6:  F8 53
-F00:0449       	DC.W	$f853,$f853,$f444,$faaa,$f444,$f444,$f444,$f444
+F00:0449       	DC.W	$F853,$F853,$F444,$FAAA,$F444,$F444,$F444,$F444
                S01:00FF04A8:  F8 53
                S01:00FF04AA:  F8 53
                S01:00FF04AC:  F4 44
@@ -998,7 +998,7 @@ F00:0449       	DC.W	$f853,$f853,$f444,$faaa,$f444,$f444,$f444,$f444
                S01:00FF04B2:  F4 44
                S01:00FF04B4:  F4 44
                S01:00FF04B6:  F4 44
-F00:0450       	DC.W	$faaa,$f444,$f444,$f444,$f444,$f444,$f444,$faaa
+F00:0450       	DC.W	$FAAA,$F444,$F444,$F444,$F444,$F444,$F444,$FAAA
                S01:00FF04B8:  FA AA
                S01:00FF04BA:  F4 44
                S01:00FF04BC:  F4 44
@@ -1007,7 +1007,7 @@ F00:0450       	DC.W	$faaa,$f444,$f444,$f444,$f444,$f444,$f444,$faaa
                S01:00FF04C2:  F4 44
                S01:00FF04C4:  F4 44
                S01:00FF04C6:  FA AA
-F00:0451       	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
+F00:0451       	DC.W	$F444,$FAAA,$F444,$F444,$F444,$F444,$F444,$FAAA
                S01:00FF04C8:  F4 44
                S01:00FF04CA:  FA AA
                S01:00FF04CC:  F4 44
@@ -1016,7 +1016,7 @@ F00:0451       	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
                S01:00FF04D2:  F4 44
                S01:00FF04D4:  F4 44
                S01:00FF04D6:  FA AA
-F00:0452       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$f853,$f853
+F00:0452       	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$F853,$F853
                S01:00FF04D8:  F4 44
                S01:00FF04DA:  F4 44
                S01:00FF04DC:  F4 44
@@ -1025,7 +1025,7 @@ F00:0452       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$f853,$f853
                S01:00FF04E2:  F4 44
                S01:00FF04E4:  F8 53
                S01:00FF04E6:  F8 53
-F00:0453       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
+F00:0453       	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F853
                S01:00FF04E8:  F8 53
                S01:00FF04EA:  F8 53
                S01:00FF04EC:  F8 53
@@ -1034,7 +1034,7 @@ F00:0453       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f853
                S01:00FF04F2:  F8 53
                S01:00FF04F4:  F8 53
                S01:00FF04F6:  F8 53
-F00:0454       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f444
+F00:0454       	DC.W	$F853,$F853,$F853,$F853,$F853,$F853,$F853,$F444
                S01:00FF04F8:  F8 53
                S01:00FF04FA:  F8 53
                S01:00FF04FC:  F8 53
@@ -1044,7 +1044,7 @@ F00:0454       	DC.W	$f853,$f853,$f853,$f853,$f853,$f853,$f853,$f444
                S01:00FF0504:  F8 53
                S01:00FF0506:  F4 44
 F00:0455       
-F00:0456       	DC.W	$f444,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+F00:0456       	DC.W	$F444,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
                S01:00FF0508:  F4 44
                S01:00FF050A:  FE E8
                S01:00FF050C:  FE E8
@@ -1053,7 +1053,7 @@ F00:0456       	DC.W	$f444,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
                S01:00FF0512:  FE E8
                S01:00FF0514:  FE E8
                S01:00FF0516:  FE E8
-F00:0457       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+F00:0457       	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
                S01:00FF0518:  FE E8
                S01:00FF051A:  FE E8
                S01:00FF051C:  FE E8
@@ -1062,7 +1062,7 @@ F00:0457       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
                S01:00FF0522:  FE E8
                S01:00FF0524:  FE E8
                S01:00FF0526:  FE E8
-F00:0458       	DC.W	$fee8,$fee8,$f444,$faaa,$faaa,$faaa,$f444,$f444
+F00:0458       	DC.W	$FEE8,$FEE8,$F444,$FAAA,$FAAA,$FAAA,$F444,$F444
                S01:00FF0528:  FE E8
                S01:00FF052A:  FE E8
                S01:00FF052C:  F4 44
@@ -1071,7 +1071,7 @@ F00:0458       	DC.W	$fee8,$fee8,$f444,$faaa,$faaa,$faaa,$f444,$f444
                S01:00FF0532:  FA AA
                S01:00FF0534:  F4 44
                S01:00FF0536:  F4 44
-F00:0459       	DC.W	$faaa,$faaa,$faaa,$faaa,$f444,$f444,$faaa,$f444
+F00:0459       	DC.W	$FAAA,$FAAA,$FAAA,$FAAA,$F444,$F444,$FAAA,$F444
                S01:00FF0538:  FA AA
                S01:00FF053A:  FA AA
                S01:00FF053C:  FA AA
@@ -1080,7 +1080,7 @@ F00:0459       	DC.W	$faaa,$faaa,$faaa,$faaa,$f444,$f444,$faaa,$f444
                S01:00FF0542:  F4 44
                S01:00FF0544:  FA AA
                S01:00FF0546:  F4 44
-F00:0460       	DC.W	$f444,$faaa,$f444,$faaa,$faaa,$f444,$f444,$faaa
+F00:0460       	DC.W	$F444,$FAAA,$F444,$FAAA,$FAAA,$F444,$F444,$FAAA
                S01:00FF0548:  F4 44
                S01:00FF054A:  FA AA
                S01:00FF054C:  F4 44
@@ -1089,7 +1089,7 @@ F00:0460       	DC.W	$f444,$faaa,$f444,$faaa,$faaa,$f444,$f444,$faaa
                S01:00FF0552:  F4 44
                S01:00FF0554:  F4 44
                S01:00FF0556:  FA AA
-F00:0461       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fee8,$fee8
+F00:0461       	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$FEE8,$FEE8
                S01:00FF0558:  F4 44
                S01:00FF055A:  F4 44
                S01:00FF055C:  F4 44
@@ -1098,7 +1098,7 @@ F00:0461       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fee8,$fee8
                S01:00FF0562:  F4 44
                S01:00FF0564:  FE E8
                S01:00FF0566:  FE E8
-F00:0462       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
+F00:0462       	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8
                S01:00FF0568:  FE E8
                S01:00FF056A:  FE E8
                S01:00FF056C:  FE E8
@@ -1107,7 +1107,7 @@ F00:0462       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8
                S01:00FF0572:  FE E8
                S01:00FF0574:  FE E8
                S01:00FF0576:  FE E8
-F00:0463       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$f444
+F00:0463       	DC.W	$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$FEE8,$F444
                S01:00FF0578:  FE E8
                S01:00FF057A:  FE E8
                S01:00FF057C:  FE E8
@@ -1117,7 +1117,7 @@ F00:0463       	DC.W	$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$fee8,$f444
                S01:00FF0584:  FE E8
                S01:00FF0586:  F4 44
 F00:0464       
-F00:0465       	DC.W	$f444,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+F00:0465       	DC.W	$F444,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
                S01:00FF0588:  F4 44
                S01:00FF058A:  FB FA
                S01:00FF058C:  FB FA
@@ -1126,7 +1126,7 @@ F00:0465       	DC.W	$f444,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
                S01:00FF0592:  FB FA
                S01:00FF0594:  FB FA
                S01:00FF0596:  FB FA
-F00:0466       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+F00:0466       	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
                S01:00FF0598:  FB FA
                S01:00FF059A:  FB FA
                S01:00FF059C:  FB FA
@@ -1135,7 +1135,7 @@ F00:0466       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
                S01:00FF05A2:  FB FA
                S01:00FF05A4:  FB FA
                S01:00FF05A6:  FB FA
-F00:0467       	DC.W	$fbfa,$fbfa,$f444,$faaa,$f444,$f444,$f444,$f444
+F00:0467       	DC.W	$FBFA,$FBFA,$F444,$FAAA,$F444,$F444,$F444,$F444
                S01:00FF05A8:  FB FA
                S01:00FF05AA:  FB FA
                S01:00FF05AC:  F4 44
@@ -1144,7 +1144,7 @@ F00:0467       	DC.W	$fbfa,$fbfa,$f444,$faaa,$f444,$f444,$f444,$f444
                S01:00FF05B2:  F4 44
                S01:00FF05B4:  F4 44
                S01:00FF05B6:  F4 44
-F00:0468       	DC.W	$faaa,$f444,$f444,$f444,$faaa,$f444,$faaa,$faaa
+F00:0468       	DC.W	$FAAA,$F444,$F444,$F444,$FAAA,$F444,$FAAA,$FAAA
                S01:00FF05B8:  FA AA
                S01:00FF05BA:  F4 44
                S01:00FF05BC:  F4 44
@@ -1153,7 +1153,7 @@ F00:0468       	DC.W	$faaa,$f444,$f444,$f444,$faaa,$f444,$faaa,$faaa
                S01:00FF05C2:  F4 44
                S01:00FF05C4:  FA AA
                S01:00FF05C6:  FA AA
-F00:0469       	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
+F00:0469       	DC.W	$FAAA,$FAAA,$F444,$F444,$F444,$F444,$F444,$FAAA
                S01:00FF05C8:  FA AA
                S01:00FF05CA:  FA AA
                S01:00FF05CC:  F4 44
@@ -1162,7 +1162,7 @@ F00:0469       	DC.W	$faaa,$faaa,$f444,$f444,$f444,$f444,$f444,$faaa
                S01:00FF05D2:  F4 44
                S01:00FF05D4:  F4 44
                S01:00FF05D6:  FA AA
-F00:0470       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fbfa,$fbfa
+F00:0470       	DC.W	$F444,$F444,$F444,$FAAA,$F444,$F444,$FBFA,$FBFA
                S01:00FF05D8:  F4 44
                S01:00FF05DA:  F4 44
                S01:00FF05DC:  F4 44
@@ -1171,7 +1171,7 @@ F00:0470       	DC.W	$f444,$f444,$f444,$faaa,$f444,$f444,$fbfa,$fbfa
                S01:00FF05E2:  F4 44
                S01:00FF05E4:  FB FA
                S01:00FF05E6:  FB FA
-F00:0471       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
+F00:0471       	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA
                S01:00FF05E8:  FB FA
                S01:00FF05EA:  FB FA
                S01:00FF05EC:  FB FA
@@ -1180,7 +1180,7 @@ F00:0471       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa
                S01:00FF05F2:  FB FA
                S01:00FF05F4:  FB FA
                S01:00FF05F6:  FB FA
-F00:0472       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$f444
+F00:0472       	DC.W	$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$FBFA,$F444
                S01:00FF05F8:  FB FA
                S01:00FF05FA:  FB FA
                S01:00FF05FC:  FB FA
@@ -1190,7 +1190,7 @@ F00:0472       	DC.W	$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$fbfa,$f444
                S01:00FF0604:  FB FA
                S01:00FF0606:  F4 44
 F00:0473       
-F00:0474       	DC.W	$f444,$f444,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+F00:0474       	DC.W	$F444,$F444,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
                S01:00FF0608:  F4 44
                S01:00FF060A:  F4 44
                S01:00FF060C:  F6 7D
@@ -1199,7 +1199,7 @@ F00:0474       	DC.W	$f444,$f444,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
                S01:00FF0612:  F6 7D
                S01:00FF0614:  F6 7D
                S01:00FF0616:  F6 7D
-F00:0475       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+F00:0475       	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
                S01:00FF0618:  F6 7D
                S01:00FF061A:  F6 7D
                S01:00FF061C:  F6 7D
@@ -1208,7 +1208,7 @@ F00:0475       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
                S01:00FF0622:  F6 7D
                S01:00FF0624:  F6 7D
                S01:00FF0626:  F6 7D
-F00:0476       	DC.W	$f67d,$f67d,$f444,$faaa,$faaa,$faaa,$faaa,$f444
+F00:0476       	DC.W	$F67D,$F67D,$F444,$FAAA,$FAAA,$FAAA,$FAAA,$F444
                S01:00FF0628:  F6 7D
                S01:00FF062A:  F6 7D
                S01:00FF062C:  F4 44
@@ -1217,7 +1217,7 @@ F00:0476       	DC.W	$f67d,$f67d,$f444,$faaa,$faaa,$faaa,$faaa,$f444
                S01:00FF0632:  FA AA
                S01:00FF0634:  FA AA
                S01:00FF0636:  F4 44
-F00:0477       	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
+F00:0477       	DC.W	$F444,$FAAA,$FAAA,$FAAA,$F444,$F444,$F444,$F444
                S01:00FF0638:  F4 44
                S01:00FF063A:  FA AA
                S01:00FF063C:  FA AA
@@ -1226,7 +1226,7 @@ F00:0477       	DC.W	$f444,$faaa,$faaa,$faaa,$f444,$f444,$f444,$f444
                S01:00FF0642:  F4 44
                S01:00FF0644:  F4 44
                S01:00FF0646:  F4 44
-F00:0478       	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
+F00:0478       	DC.W	$F444,$FAAA,$F444,$F444,$F444,$F444,$FAAA,$FAAA
                S01:00FF0648:  F4 44
                S01:00FF064A:  FA AA
                S01:00FF064C:  F4 44
@@ -1235,7 +1235,7 @@ F00:0478       	DC.W	$f444,$faaa,$f444,$f444,$f444,$f444,$faaa,$faaa
                S01:00FF0652:  F4 44
                S01:00FF0654:  FA AA
                S01:00FF0656:  FA AA
-F00:0479       	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f67d,$f67d
+F00:0479       	DC.W	$FAAA,$F444,$FAAA,$FAAA,$FAAA,$F444,$F67D,$F67D
                S01:00FF0658:  FA AA
                S01:00FF065A:  F4 44
                S01:00FF065C:  FA AA
@@ -1244,7 +1244,7 @@ F00:0479       	DC.W	$faaa,$f444,$faaa,$faaa,$faaa,$f444,$f67d,$f67d
                S01:00FF0662:  F4 44
                S01:00FF0664:  F6 7D
                S01:00FF0666:  F6 7D
-F00:0480       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
+F00:0480       	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F67D
                S01:00FF0668:  F6 7D
                S01:00FF066A:  F6 7D
                S01:00FF066C:  F6 7D
@@ -1253,7 +1253,7 @@ F00:0480       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f67d
                S01:00FF0672:  F6 7D
                S01:00FF0674:  F6 7D
                S01:00FF0676:  F6 7D
-F00:0481       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f444,$f444
+F00:0481       	DC.W	$F67D,$F67D,$F67D,$F67D,$F67D,$F67D,$F444,$F444
                S01:00FF0678:  F6 7D
                S01:00FF067A:  F6 7D
                S01:00FF067C:  F6 7D
@@ -1263,7 +1263,7 @@ F00:0481       	DC.W	$f67d,$f67d,$f67d,$f67d,$f67d,$f67d,$f444,$f444
                S01:00FF0684:  F4 44
                S01:00FF0686:  F4 44
 F00:0482       
-F00:0483       	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0483       	DC.W	$0000,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF0688:  00 00
                S01:00FF068A:  F4 44
                S01:00FF068C:  F4 44
@@ -1272,7 +1272,7 @@ F00:0483       	DC.W	$0000,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF0692:  F4 44
                S01:00FF0694:  F4 44
                S01:00FF0696:  F4 44
-F00:0484       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0484       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF0698:  F4 44
                S01:00FF069A:  F4 44
                S01:00FF069C:  F4 44
@@ -1281,7 +1281,7 @@ F00:0484       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06A2:  F4 44
                S01:00FF06A4:  F4 44
                S01:00FF06A6:  F4 44
-F00:0485       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0485       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF06A8:  F4 44
                S01:00FF06AA:  F4 44
                S01:00FF06AC:  F4 44
@@ -1290,7 +1290,7 @@ F00:0485       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06B2:  F4 44
                S01:00FF06B4:  F4 44
                S01:00FF06B6:  F4 44
-F00:0486       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0486       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF06B8:  F4 44
                S01:00FF06BA:  F4 44
                S01:00FF06BC:  F4 44
@@ -1299,7 +1299,7 @@ F00:0486       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06C2:  F4 44
                S01:00FF06C4:  F4 44
                S01:00FF06C6:  F4 44
-F00:0487       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0487       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF06C8:  F4 44
                S01:00FF06CA:  F4 44
                S01:00FF06CC:  F4 44
@@ -1308,7 +1308,7 @@ F00:0487       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06D2:  F4 44
                S01:00FF06D4:  F4 44
                S01:00FF06D6:  F4 44
-F00:0488       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0488       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF06D8:  F4 44
                S01:00FF06DA:  F4 44
                S01:00FF06DC:  F4 44
@@ -1317,7 +1317,7 @@ F00:0488       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06E2:  F4 44
                S01:00FF06E4:  F4 44
                S01:00FF06E6:  F4 44
-F00:0489       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
+F00:0489       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
                S01:00FF06E8:  F4 44
                S01:00FF06EA:  F4 44
                S01:00FF06EC:  F4 44
@@ -1326,7 +1326,7 @@ F00:0489       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$f444
                S01:00FF06F2:  F4 44
                S01:00FF06F4:  F4 44
                S01:00FF06F6:  F4 44
-F00:0490       	DC.W	$f444,$f444,$f444,$f444,$f444,$f444,$f444,$0000
+F00:0490       	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$0000
                S01:00FF06F8:  F4 44
                S01:00FF06FA:  F4 44
                S01:00FF06FC:  F4 44
@@ -1412,7 +1412,7 @@ F00:0500
 F00:0501       ; string data
 F00:0502       
 F00:0503       welcome
-F00:0504       	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200429",ASCII_LF,ASCII_NULL
+F00:0504       	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200501",ASCII_LF,ASCII_NULL
                S01:00FF0788:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
                S01:00FF0798:  30 32 30 20 6B 65 72 6E 65 6C 20 76 65 72 73 69
                S01:00FF07A8:  0A
@@ -1804,8 +1804,8 @@ F02:0156       ;	dc.w	$224b,$2455,$267e,$28c8,$2b34,$2dc6,$307f,$3361,$366f,$39a
 F02:0157       ;	dc.w	$4495,$48a9,$4cfc,$518f,$5669,$5b8c,$60fe,$6602,$6cdf,$7358,$7a34,$8178	; N_C6_ to N_B6_
 F02:0158       ;	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0,$f467		; N_C7_	to N_A7S
 F00:0509       
-F00:0510       	ORG	KERNEL_LOC+$fffc
-F00:0511       	DC.L	$deadbeef
+F00:0510       	ORG	KERNEL_LOC+$FFFC
+F00:0511       	DC.L	$DEADBEEF
                S02:00FFFFFC:  DE AD BE EF
 
 
