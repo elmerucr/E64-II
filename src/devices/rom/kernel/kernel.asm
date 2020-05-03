@@ -131,24 +131,24 @@ kernel_main
 
 	LEA	SID0_BASE,A0
 	LEA	notes,A1
-	MOVE.W	N_D3_(A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
+	MOVE.W	(N_D3_,A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,($5,A0)	; attack and decay of voice 1
 	MOVE.W	#$F0F,($02,A0)		; pulse width of voice 1
 	MOVE.B	#$FF,(SID0_LEFT,A0)	; left channel mix
 	MOVE.B	#$10,(SID0_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.B	#%01000001,($4,A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 	; play a welcome sound on SID1
 
 	LEA	SID1_BASE,A0
 	LEA	notes,A1
-	MOVE.W	N_A3_(A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
-	MOVE.W	#$F0F,$2(A0)		; pulse width of voice 1
+	MOVE.W	(N_A3_,A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,($5,A0)	; attack and decay of voice 1
+	MOVE.W	#$F0F,($2,A0)		; pulse width of voice 1
 	MOVE.B	#$10,(SID1_LEFT,A0)	; left channel mix
 	MOVE.B	#$FF,(SID1_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.B	#%01000001,($4,A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 mainloop
@@ -160,9 +160,9 @@ mainloop
 	; copy keyboard state in to screen
 .1	MOVEQ	#$0,D0
 	MOVEA.L	VICV_TXT,A0
-	LEA	$400(A0),A0
+	LEA	($400,A0),A0
 	LEA	CIA_BASE,A1
-	LEA	$80(A1),A1
+	LEA	($80,A1),A1
 .2	MOVE.B	(A1,D0),(A0,D0)
 	ADDQ	#$1,D0
 	CMP.B	#$49,D0
@@ -173,11 +173,11 @@ mainloop
 
 
 clear_screen
-	MOVEM.L	D0-D1/A0-A2,-(A7)
+	MOVEM.L	D0-D1/A0-A2,-(SP)
 	MOVEA.L	(VICV_TXT),A0
 	MOVEA.L	(VICV_COL),A1
 	MOVEA.L	A0,A2
-	LEA	$800(A2),A2
+	LEA	($800,A2),A2
 	MOVE.L	#$20202020,D0
 	MOVEQ	#$00,D1
 	MOVE.B	CURR_TEXT_COLOR,D1
@@ -191,7 +191,7 @@ clear_screen
 	MOVE.L	D1,(A1)+
 	CMP.L	A0,A2
 	BNE	.1
-	MOVEM.L	(A7)+,D0-D1/A0-A2
+	MOVEM.L	(SP)+,D0-D1/A0-A2
 	RTS
 
 
@@ -199,7 +199,7 @@ clear_screen
 
 put_char
 
-	MOVEM.L	D1-D2/A0-A2,-(A7)	; save registers
+	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
 	MOVE.B	CURR_TEXT_COLOR,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
@@ -212,12 +212,12 @@ put_char
 	MOVE.B	D2,(A1,D1)
 	ADDQ	#$1,CURSOR_POS
 	ANDI.W	#$7FF,CURSOR_POS
-	MOVEM.L	(A7)+,D1-D2/A0-A2	; restore registers
+	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
 	RTS
 .1	ADDI.W	#$40,D1			; add 64 positions to current cursor pos
 	ANDI.W	#%1111111111000000,D1	; move cursor pos to beginning of line
 	MOVE.W	D1,CURSOR_POS		; store new value
-	MOVEM.L	(A7)+,D1-D2/A0-A2	; restore registers
+	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
 	RTS
 
 
@@ -228,13 +228,13 @@ put_string
 	; put_string expects a pointer to a string in a0
 	;
 
-	MOVE.L	A0,-(A7)
+	MOVE.L	A0,-(SP)
 .1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
 	CMP.B	#ASCII_NULL,D0	; did we reach the end of the string?
 	BEQ	.2		; yes, go to end of function
 	BSR	put_char	; no, print char
 	BRA	.1
-.2	MOVE.L	(A7)+,A0
+.2	MOVE.L	(SP)+,A0
 	RTS
 
 
@@ -242,9 +242,9 @@ put_string
 
 exception_handler
 
-	MOVE.L	D0,-(A7)
-	MOVE.L #$DEADBEEF,D0
-	MOVE.L	(A7)+,D0
+	MOVE.L	D0,-(SP)
+	MOVE.L	#$DEADBEEF,D0
+	MOVE.L	(SP)+,D0
 	RTE
 
 
@@ -264,7 +264,7 @@ interrupt_2_autovector
 
 interrupt_4_autovector
 
-	MOVE.L	A0,-(A7)		; save a0
+	MOVE.L	A0,-(SP)		; save a0
 timer0_check
 	BTST	#0,TIMER_BASE		; did timer 0 cause the interrupt?
 	BEQ	timer1_check		; no, go to next timer
@@ -290,7 +290,7 @@ timer3_check
 	MOVEA.L	TIMER3_VECTOR,A0
 	JMP	(A0)
 timer_finish
-	MOVE.L	(A7)+,A0		; restore a0
+	MOVE.L	(SP)+,A0		; restore a0
 	RTE
 
 
@@ -298,8 +298,8 @@ timer_finish
 
 interrupt_5_autovector
 
-	MOVE.L	A0,-(A7)
-	MOVE.L	(A7)+,A0
+	MOVE.L	A0,-(SP)
+	MOVE.L	(SP)+,A0
 	RTE
 
 
@@ -319,21 +319,21 @@ interrupt_7_autovector
 
 timer0_handler
 
-	MOVE.L	A0,-(A7)
+	MOVE.L	A0,-(SP)
 	MOVEA.L	VICV_COL,A0
 	ADDQ.B	#$1,(A0)
 	ANDI.B	#%00001111,(A0)
-	MOVEA.L	(A7)+,A0
+	MOVEA.L	(SP)+,A0
 	BRA	timer1_check
 
 
 timer1_handler
 
-	MOVE.L	A0,-(A7)
+	MOVE.L	A0,-(SP)
 	MOVEA.L	VICV_COL,A0
 	ADDQ.B	#$1,(1,A0)
 	ANDI.B	#%00001111,(1,A0)
-	MOVEA.L	(A7)+,A0
+	MOVEA.L	(SP)+,A0
 	BRA	timer2_check
 
 
@@ -363,14 +363,14 @@ memcopy
 	;	A1	destination_start_address
 	;
 
-	MOVE.L	D1,-(A7)
+	MOVE.L	D1,-(SP)
 	MOVEQ	#$0,D1
 .1	MOVE.B	(A0,D1.L),(A1,D1.L)
 	ADDQ.L	#$1,D1
 	CMP.L	D1,D0
 	BNE	.1
 
-	MOVE.L	(A7)+,D1
+	MOVE.L	(SP)+,D1
 	RTS
 
 
@@ -384,7 +384,7 @@ copy_charrom_to_charram
 	;	A0	*char_ram, pointer
 	;	A1	*char_rom, pointer
 	;
-	MOVEM.L	D0-D1/A0-A1,-(A7)
+	MOVEM.L	D0-D1/A0-A1,-(SP)
 
 	MOVEQ	#0,D0			;    current_byte = 0;
 	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
@@ -405,7 +405,7 @@ copy_charrom_to_charram
 	BEQ	.1			;    did i reach zero? goto .1
 	BRA	.2
 					;    }
-.5	MOVEM.L	(A7)+,D0-D1/A0-A1
+.5	MOVEM.L	(SP)+,D0-D1/A0-A1
 	RTS
 
 init_song

@@ -11,12 +11,12 @@ ascii_to_screencode
 	dc.b	$80		; 0x07 - BEL	non printable character
 	dc.b	$80		; 0x08 - BS	non printable character
 	dc.b	$80		; 0x09 - TAB	non printable character
-	dc.b	$80		; 0x0a - LF	non printable character
-	dc.b	$80		; 0x0b - VT	non printable character
-	dc.b	$80		; 0x0c - FF	non printable character
-	dc.b	$80		; 0x0d - CR	non printable character
-	dc.b	$80		; 0x0e - SO	non printable character
-	dc.b	$80		; 0x0f - SI	non printable character
+	dc.b	$80		; 0x0A - LF	non printable character
+	dc.b	$80		; 0x0B - VT	non printable character
+	dc.b	$80		; 0x0C - FF	non printable character
+	dc.b	$80		; 0x0D - CR	non printable character
+	dc.b	$80		; 0x0E - SO	non printable character
+	dc.b	$80		; 0x0F - SI	non printable character
 	dc.b	$80		; 0x10 - DLE	non printable character
 	dc.b	$80		; 0x11 - DC1	non printable character
 	dc.b	$80		; 0x12 - DC2	non printable character
@@ -27,12 +27,12 @@ ascii_to_screencode
 	dc.b	$80		; 0x17 - ETB	non printable character
 	dc.b	$80		; 0x18 - CAN	non printable character
 	dc.b	$80		; 0x19 - EM	non printable character
-	dc.b	$80		; 0x1a - SUB	non printable character
-	dc.b	$80		; 0x1b - ESC	non printable character
-	dc.b	$80		; 0x1c - FS	non printable character
-	dc.b	$80		; 0x1d - GS	non printable character
-	dc.b	$80		; 0x1e - RS	non printable character
-	dc.b	$80		; 0x1f - US	non printable character
+	dc.b	$80		; 0x1A - SUB	non printable character
+	dc.b	$80		; 0x1B - ESC	non printable character
+	dc.b	$80		; 0x1C - FS	non printable character
+	dc.b	$80		; 0x1D - GS	non printable character
+	dc.b	$80		; 0x1E - RS	non printable character
+	dc.b	$80		; 0x1F - US	non printable character
 	dc.b	$20		; 0x20 - (space)
 	dc.b	$21		; 0x21 - !
 	dc.b	$22		; 0x22 - "
@@ -43,12 +43,12 @@ ascii_to_screencode
 	dc.b	$27		; 0x27 - '
 	dc.b	$28		; 0x28 - (
 	dc.b	$29		; 0x29 - )
-	dc.b	$2a		; 0x2a - *
-	dc.b	$2b		; 0x2b - +
-	dc.b	$2c		; 0x2c - ,
-	dc.b	$2d		; 0x2d - -
-	dc.b	$2e		; 0x2e - .
-	dc.b	$2f		; 0x2f - /
+	dc.b	$2A		; 0x2A - *
+	dc.b	$2B		; 0x2B - +
+	dc.b	$2C		; 0x2C - ,
+	dc.b	$2D		; 0x2D - -
+	dc.b	$2E		; 0x2E - .
+	dc.b	$2F		; 0x2F - /
 	dc.b	$30		; 0x30 - 0
 	dc.b	$31		; 0x31 - 1
 	dc.b	$32		; 0x32 - 2
@@ -59,12 +59,12 @@ ascii_to_screencode
 	dc.b	$37		; 0x37 - 7
 	dc.b	$38		; 0x38 - 8
 	dc.b	$39		; 0x39 - 9
-	dc.b	$3a		; 0x3a - :
-	dc.b	$3b		; 0x3b - ;
-	dc.b	$3c		; 0x3c - <
-	dc.b	$3d		; 0x3d - =
-	dc.b	$3e		; 0x3e - >
-	dc.b	$3f		; 0x3f - ?
+	dc.b	$3A		; 0x3A - :
+	dc.b	$3B		; 0x3B - ;
+	dc.b	$3C		; 0x3C - <
+	dc.b	$3D		; 0x3D - =
+	dc.b	$3E		; 0x3E - >
+	dc.b	$3F		; 0x3F - ?
 	dc.b	$00		; 0x40 - @
 	dc.b	$41		; 0x41 - A
 	dc.b	$42		; 0x42 - B
@@ -75,12 +75,12 @@ ascii_to_screencode
 	dc.b	$47		; 0x47 - G
 	dc.b	$48		; 0x48 - H
 	dc.b	$49		; 0x49 - I
-	dc.b	$4a		; 0x4a - J
-	dc.b	$4b		; 0x4b - K
-	dc.b	$4c		; 0x4c - L
-	dc.b	$4d		; 0x4d - M
-	dc.b	$4e		; 0x4e - N
-	dc.b	$4f		; 0x4f - O
+	dc.b	$4A		; 0x4A - J
+	dc.b	$4B		; 0x4B - K
+	dc.b	$4C		; 0x4C - L
+	dc.b	$4D		; 0x4D - M
+	dc.b	$4E		; 0x4E - N
+	dc.b	$4F		; 0x4F - O
 	dc.b	$50		; 0x50 - P
 	dc.b	$51		; 0x51 - Q
 	dc.b	$52		; 0x52 - R
@@ -91,12 +91,12 @@ ascii_to_screencode
 	dc.b	$57		; 0x57 - W
 	dc.b	$58		; 0x58 - X
 	dc.b	$59		; 0x59 - Y
-	dc.b	$5a		; 0x5a - Z
-	dc.b	$1b		; 0x5b - [
-	dc.b	$5c		; 0x5c - \	patched
-	dc.b	$1d		; 0x5d - ]
-	dc.b	$5e		; 0x5e - ^	patched
-	dc.b	$5f		; 0x5f - _	patched
+	dc.b	$5A		; 0x5A - Z
+	dc.b	$1B		; 0x5B - [
+	dc.b	$5C		; 0x5C - \	patched
+	dc.b	$1D		; 0x5D - ]
+	dc.b	$5E		; 0x5E - ^	patched
+	dc.b	$5F		; 0x5F - _	patched
 	dc.b	$63		; 0x60 - `	patched
 	dc.b	$01		; 0x61 - a
 	dc.b	$02		; 0x62 - b
@@ -107,12 +107,12 @@ ascii_to_screencode
 	dc.b	$07		; 0x67 - g
 	dc.b	$08		; 0x68 - h
 	dc.b	$09		; 0x69 - i
-	dc.b	$0a		; 0x6a - j
-	dc.b	$0b		; 0x6b - k
-	dc.b	$0c		; 0x6c - l
-	dc.b	$0d		; 0x6d - m
-	dc.b	$0e		; 0x6e - n
-	dc.b	$0f		; 0x6f - o
+	dc.b	$0A		; 0x6A - j
+	dc.b	$0B		; 0x6B - k
+	dc.b	$0C		; 0x6C - l
+	dc.b	$0D		; 0x6D - m
+	dc.b	$0E		; 0x6E - n
+	dc.b	$0F		; 0x6F - o
 	dc.b	$10		; 0x70 - p
 	dc.b	$11		; 0x71 - q
 	dc.b	$12		; 0x72 - r
@@ -123,12 +123,12 @@ ascii_to_screencode
 	dc.b	$17		; 0x77 - w
 	dc.b	$18		; 0x78 - x
 	dc.b	$19		; 0x79 - y
-	dc.b	$1a		; 0x7a - z
-	dc.b	$64		; 0x7b - {	patched
-	dc.b	$65		; 0x7c - |	patched
-	dc.b	$66		; 0x7d - }	patched
-	dc.b	$67		; 0x7e - ~	patched
-	dc.b	$80		; 0x7f - DEL	non printable character
+	dc.b	$1A		; 0x7A - z
+	dc.b	$64		; 0x7B - {	patched
+	dc.b	$65		; 0x7C - |	patched
+	dc.b	$66		; 0x7D - }	patched
+	dc.b	$67		; 0x7E - ~	patched
+	dc.b	$80		; 0x7F - DEL	non printable character
 
 hex_table
 	dc.b	'0123456789abcdef'
@@ -138,14 +138,14 @@ hex_table
 ;	https://codebase64.org/doku.php?id=base:how_to_calculate_your_own_sid_frequency_table
 ;
 notes
-	dc.w	$0116,$0127,$0139,$014b,$015f,$0174,$018a,$01a1,$01ba,$01d4,$01f0,$020e	; N_C0_ to N_B0_
-	dc.w	$022d,$024e,$0271,$0296,$02be,$02e7,$0314,$0342,$0374,$03a9,$03e0,$041b	; N_C1_ to N_B1_
-	dc.w	$045a,$049c,$04e2,$052d,$057b,$05cf,$0627,$0685,$06e8,$0751,$07c1,$0837	; N_C2_ to N_B2_
-	dc.w	$08b4,$0938,$09c4,$0a59,$0af7,$0b9d,$0c4e,$0d0a,$0dd0,$0ea2,$0f81,$106d	; N_C3_ to N_B3_
-	dc.w	$1167,$1270,$1389,$14b2,$15ed,$173b,$189c,$1a13,$1ba0,$1d45,$1f02,$20da	; N_C4_ to N_B4_
-	dc.w	$22ce,$24e0,$2711,$2964,$2bda,$2e76,$3139,$3426,$3740,$3a89,$3e04,$41b4	; N_C5_ to N_B5_
-	dc.w	$459c,$49c0,$4e23,$52c8,$57b4,$5ceb,$6272,$684c,$6e80,$7512,$7c08,$8368	; N_C6_ to N_B6_
-	dc.w	$8b39,$9380,$9c45,$a590,$af68,$b9d6,$c4e3,$d099,$dd00,$ea24,$f810		; N_C7_	to N_A7S
+	dc.w	$0116,$0127,$0139,$014B,$015F,$0174,$018A,$01A1,$01BA,$01D4,$01F0,$020E	; N_C0_ to N_B0_
+	dc.w	$022D,$024E,$0271,$0296,$02BE,$02E7,$0314,$0342,$0374,$03A9,$03E0,$041B	; N_C1_ to N_B1_
+	dc.w	$045A,$049C,$04E2,$052D,$057B,$05CF,$0627,$0685,$06E8,$0751,$07C1,$0837	; N_C2_ to N_B2_
+	dc.w	$08B4,$0938,$09C4,$0A59,$0AF7,$0B9D,$0C4E,$0D0A,$0DD0,$0EA2,$0F81,$106D	; N_C3_ to N_B3_
+	dc.w	$1167,$1270,$1389,$14B2,$15ED,$173B,$189C,$1A13,$1BA0,$1D45,$1F02,$20DA	; N_C4_ to N_B4_
+	dc.w	$22CE,$24E0,$2711,$2964,$2BDA,$2E76,$3139,$3426,$3740,$3A89,$3E04,$41B4	; N_C5_ to N_B5_
+	dc.w	$459C,$49C0,$4E23,$52C8,$57B4,$5CEB,$6272,$684C,$6E80,$7512,$7C08,$8368	; N_C6_ to N_B6_
+	dc.w	$8B39,$9380,$9C45,$A590,$AF68,$B9D6,$C4E3,$D099,$DD00,$EA24,$F810	; N_C7_	to N_A7S
 
 ;notes_old
 ;	dc.w	$0112,$0123,$0134,$0146,$015a,$016e,$0184,$018b,$01b3,$01cd,$01e9,$0206	; N_C0_ to N_B0_
@@ -155,4 +155,4 @@ notes
 ;	dc.w	$1125,$122a,$133f,$1464,$159a,$16e3,$183f,$1981,$1b38,$1cd6,$1e80,$205e	; N_C4_ to N_B4_
 ;	dc.w	$224b,$2455,$267e,$28c8,$2b34,$2dc6,$307f,$3361,$366f,$39ac,$3d1a,$40bc	; N_C5_ to N_B5_
 ;	dc.w	$4495,$48a9,$4cfc,$518f,$5669,$5b8c,$60fe,$6602,$6cdf,$7358,$7a34,$8178	; N_C6_ to N_B6_
-;	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0,$f467		; N_C7_	to N_A7S
+;	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0,$f467	; N_C7_	to N_A7S
