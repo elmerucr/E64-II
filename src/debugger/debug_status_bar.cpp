@@ -43,49 +43,36 @@ void debug_status_bar_refresh()
     uint32_t temp_pc = computer.m68k_ic->getPC();
     for(int i=0; i<6; i++ )
     {
-        bool is_debug_statement = false;
         if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc))
         {
             debug_console.status_bar_foreground_color = AMBER_06; // bright amber
-            is_debug_statement = true;
         }
-        snprintf(help_string, 256, "%06x ", temp_pc );
+        snprintf(help_string, 256, "%06x  ", temp_pc );
         debug_status_bar_print(help_string);
         int no_of_bytes = computer.m68k_ic->disassemble(temp_pc, help_string);
-        switch( no_of_bytes )
+        
+        if( debug_console.status_bar_hex_view == true )
         {
-            case 2:
-                snprintf(help_string_2, 256, "%04x           ", computer.mmu_ic->read_memory_16(temp_pc));
+            for(int i = 0; i< (no_of_bytes/2); i++)
+            {
+                snprintf(help_string_2, 256, "%04x ", computer.mmu_ic->read_memory_16(temp_pc + (2*i) ) );
                 debug_status_bar_print(help_string_2);
-                break;
-            case 4:
-                snprintf(help_string_2, 256, "%04x %04x      ", computer.mmu_ic->read_memory_16(temp_pc), computer.mmu_ic->read_memory_16(temp_pc+2));
-                debug_status_bar_print(help_string_2);
-                break;
-            case 6:
-                snprintf(help_string_2, 256, "%04x %04x %04x ", computer.mmu_ic->read_memory_16(temp_pc), computer.mmu_ic->read_memory_16(temp_pc+2), computer.mmu_ic->read_memory_16(temp_pc+4));
-                debug_status_bar_print(help_string_2);
-                break;
-            default:
-                snprintf(help_string_2, 256, "%04x %04x %04x ", computer.mmu_ic->read_memory_16(temp_pc), computer.mmu_ic->read_memory_16(temp_pc+2), computer.mmu_ic->read_memory_16(temp_pc+4));
-                debug_status_bar_print(help_string_2);
-                if(!is_debug_statement)
-                {
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = COBALT_05;
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = COBALT_04;
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = COBALT_03;
-                }
-                else
-                {
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-4] = AMBER_04;
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-3] = AMBER_03;
-                    status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos-2] = AMBER_02;
-                }
-                break;
-        };
-        debug_status_bar_print(help_string);
+            }
+        }
+        else
+        {
+//            // code to capitalize the mnemonics
+//            for(int i=0; i<8; i++)
+//            {
+//                if( (help_string[i] > 96)  && (help_string[i] < 123) ) help_string[i] = help_string[i] - 32;
+//            }
+            debug_status_bar_print(help_string);
+        }
+        
         debug_status_bar_putchar('\n');
-        debug_console.status_bar_foreground_color = COBALT_06; // revert to normal color
+        
+        debug_console.status_bar_foreground_color = COBALT_06;  // revert to normal color
+        
         temp_pc += no_of_bytes;
     }
     

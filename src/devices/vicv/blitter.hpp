@@ -5,8 +5,8 @@
 
 /*
  *  Blitter is able to copy data very fast from a memory location to the
- *  backbuffer (framebuffer), at a clock speed of 8 times CPU. Copy
- *  operations run independent and can be added to a FIFO linked list
+ *  backbuffer (framebuffer), at a clock speed of eight times CPU. Copy
+ *  operations run independently and can be added to a FIFO linked list
  *  through an I/O memory mapped interface.
  *
  */
@@ -43,6 +43,10 @@ enum operation_type
 
 struct surface_blit
 {
+    /*  The size of this structure is max 32 bytes. Inside the machine,
+     *  alignment at 32 bytes must be arranged.
+     */
+    
     /*  bit 0    : Character mode (0) or bitmap mode (1)
      *  bit 1    : Single color (0), or multi color mode (1)
      *  bit 2-7  : Reserved

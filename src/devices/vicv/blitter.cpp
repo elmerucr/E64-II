@@ -111,6 +111,18 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
             break;
         case BLIT:
             printf("dummy for blit by blitter described at address $%08x\n", data_element);
+            data_element &= 0x00ffffe0;
+            printf("dummy for blit by blitter accepted at address $%08x\n", data_element);
+            struct surface_blit *temp_blit;
+            temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element];
+            printf("   flags 0: %02x\n", temp_blit->flags_0);
+            printf("   flags 1: %02x\n", temp_blit->flags_1);
+            printf("   width  : %02x\n", temp_blit->width);
+            printf("   height : %02x\n", temp_blit->height);
+            printf("   xpos   : %i\n", temp_blit->x_pos_low_byte | temp_blit->x_pos_high_byte << 8);
+            printf("   ypos   : %i\n", temp_blit->y_pos_low_byte | temp_blit->y_pos_high_byte << 8);
+            
+            
             break;
     }
 }

@@ -276,6 +276,9 @@ int E64::sdl2_process_events()
                                 debug_console_cursor_activate();
                             }
                             break;
+                        case SDLK_F2:
+                            debug_console.status_bar_hex_view = !debug_console.status_bar_hex_view;
+                            break;
                     }
                 }
                 return_value = KEYPRESS_EVENT;

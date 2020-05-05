@@ -36,6 +36,7 @@ void debug_console_init()
     debug_console.status_bar_total_chars = debug_console.status_bar_rows * 64;
     debug_console.status_bar_cursor_pos = 0;
     debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos & (64-1);
+    debug_console.status_bar_hex_view = false;
     debug_status_bar_refresh();
     //
     for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");

@@ -252,11 +252,12 @@ exception_handler
 
 interrupt_2_autovector
 
-	MOVE.B	#%00000001,VICV_ISR		; acknowledge VBLANK interrupt
-	MOVE.B	#%00000001,VICV_BUFFERSWAP	; switch front- and backbuffer
-	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT	; load color blue in data register of blitter
-	MOVE.B	#%00000001,BLITTER_CONTROL	; clear the backbuffer
-						; plan other blitter stuff (text scr, ...)
+	MOVE.B	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
+	MOVE.B	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
+	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data register of blitter
+	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
+	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
 
 
@@ -414,18 +415,21 @@ play_song_frame
 
 
 ; logo blit description
+
 logo_blit_structure
-	DC.B	%00000011	; multicolor and bitmap mode
-	DC.B	%00000000
+	align	5		; blit data must be 32 byte (2^5) aligned
+	DC.B	%00000011	; flags 0 - multicolor and bitmap mode
+	DC.B	%00000000	; flags 1 - empty
 	DC.B	%00000011	; width 2^3 = 8 chars = 64 pixels
 	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
-	DC.W	$0010		; x_pos
-	DC.W	$0010		; y_pos
+	DC.W	$D020		; x_pos
+	DC.W	$D021		; y_pos
 
 
 ; logo blit bitmap data
 
 logo_bitmap
+	align 1
 	DC.W	$0000,$F444,$F444,$F444,$F444,$F444,$F444,$F444
 	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444
 	DC.W	$F444,$F444,$F444,$F444,$F444,$F444,$F444,$F444

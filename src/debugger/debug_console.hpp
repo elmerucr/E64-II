@@ -37,6 +37,7 @@ typedef struct
     uint16_t    status_bar_base_pos;
     uint16_t    status_bar_foreground_color;
     uint16_t    status_bar_background_color;
+    bool        status_bar_hex_view;
 } debug_console_struct;
 
 extern debug_console_struct debug_console;
