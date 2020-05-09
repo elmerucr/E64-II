@@ -180,3 +180,5 @@ TIMER0_VECTOR	equ	$008004	; long
 TIMER1_VECTOR	equ	$008008	; long
 TIMER2_VECTOR	equ	$00800C	; long
 TIMER3_VECTOR	equ	$008010	; long
+
+X_VALUE		equ	$008014	; word

@@ -18,6 +18,11 @@ E64::video::video()
     printf("[SDL] linked against SDL version %d.%d.%d\n",
            linked.major, linked.minor, linked.patch);
     
+    char *base_path = SDL_GetBasePath();
+    printf("[SDL] base path is: %s\n", base_path);
+    SDL_free(base_path);
+    
+    
     SDL_Init(SDL_INIT_VIDEO);
     
     // print the list of video backends

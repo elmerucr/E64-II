@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200505
+#define E64_BUILD               20200509
 #define E64_YEAR                2020
 
 // some global objects
@@ -79,14 +79,14 @@ extern const char screencode_to_ascii[];
 #define GREY_15 0xffff
 
 // green
-#define GRN_00  0x00f0
-#define GRN_01  0x21f1
-#define GRN_02  0x42f2
-#define GRN_03  0x63f3
-#define GRN_04  0x84f4
-#define GRN_05  0xa5f5
-#define GRN_06  0xc6f6
-#define GRN_07  0xe7f7
+#define GREEN_00  0x00f0
+#define GREEN_01  0x21f1
+#define GREEN_02  0x42f2
+#define GREEN_03  0x63f3
+#define GREEN_04  0x84f4
+#define GREEN_05  0xa5f5
+#define GREEN_06  0xc6f6
+#define GREEN_07  0xe7f7
 
 // cobalt
 #define COBALT_00   0x00f0

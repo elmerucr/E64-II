@@ -74,22 +74,27 @@ struct surface_blit
      *  with the x position of the
      *  surface
      */
-    uint8_t     x_pos_high_byte;
-    uint8_t     x_pos_low_byte;
+    uint8_t     x_high_byte;
+    uint8_t     x_low_byte;
     
     /*  16 bit signed big endian number
      *  with the y position of the
      *  surface
      */
-    uint8_t     y_pos_high_byte;
-    uint8_t     y_pos_low_byte;
+    uint8_t     y_high_byte;
+    uint8_t     y_low_byte;
     
-    /*  32 bit pointer to character / tile data
-     */
-    uint8_t     character_bits_24_31;
-    uint8_t     character_bits_16_23;
-    uint8_t     character_bits__8_15;
-    uint8_t     character_bits__0__7;
+    /*  32 bit pointer to picture data (can be character or bitmap */
+    uint8_t     picture_data_24_31;
+    uint8_t     picture_data_16_23;
+    uint8_t     picture_data__8_15;
+    uint8_t     picture_data__0__7;
+    
+    /*  32 bit pointer to start of character data */
+    uint8_t     character_data_24_31;
+    uint8_t     character_data_16_23;
+    uint8_t     character_data__8_15;
+    uint8_t     character_data__0__7;
 };
 
 struct operation
@@ -137,13 +142,21 @@ private:
     uint8_t tail;
     void add_operation(enum operation_type type, uint32_t data_element);
     
-    // finite state machine clearing framebuffer
-    uint16_t clear_color;
-    uint32_t clear_counter;
     
-    // finite state machine blitting
+    // finite state machine
     uint16_t width;
     uint16_t height;
+    uint32_t counter;
+    uint32_t max_count;
+    
+    // clearing framebuffer
+    uint16_t clear_color;
+    
+    // blitting
+    int16_t x;
+    int16_t y;
+    uint32_t picture_data;
+    
     
 public:
     

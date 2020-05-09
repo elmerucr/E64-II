@@ -73,21 +73,37 @@ void E64::blitter::run(int no_of_cycles)
                     {
                         case CLEAR_FRAMEBUFFER:
                             current_state = CLEARING_FRAMEBUFFER;
-                            clear_counter = 0;
+                            width = 512;
+                            height = 320;
+                            max_count = width * height;
+                            counter = 0;
                             clear_color = (operations[tail].data_element) & 0x0000ffff;
                             tail++;
                             break;
                         case BLIT:
-                            // todo
+                            // switch state
+                            current_state = BLITTING;
+                            // do other stuff to set up the blitting finite state machine
+                            width  = 1 << ( 3 + (operations[tail].this_blit.width  & 0b00000111) );
+                            height = 1 << ( 3 + (operations[tail].this_blit.height & 0b00000111) );
+                            counter = 0;
+                            max_count = width * height;
+                            x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
+                            y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
+                            picture_data = operations[tail].this_blit.picture_data__0__7 |
+                            operations[tail].this_blit.picture_data__8_15 << 8 |
+                            operations[tail].this_blit.picture_data_16_23 << 16 |
+                            operations[tail].this_blit.picture_data_24_31 << 24;
+                            tail++;
                             break;
                     }
                 }
                 break;
             case CLEARING_FRAMEBUFFER:
-                if( clear_counter < (512*320) )
+                if( counter < max_count )
                 {
-                    computer.vicv_ic->backbuffer[clear_counter] = alpha_blend(computer.vicv_ic->backbuffer[clear_counter], clear_color);
-                    clear_counter++;
+                    computer.vicv_ic->backbuffer[counter] = alpha_blend(computer.vicv_ic->backbuffer[counter], clear_color);
+                    counter++;
                 }
                 else
                 {
@@ -95,6 +111,24 @@ void E64::blitter::run(int no_of_cycles)
                 }
                 break;
             case BLITTING:
+                if( counter < max_count )
+                {
+                    int16_t new_x, new_y;
+                    new_x = x + (counter & (width - 1) );
+                    if( (new_x >=0) && (new_x < 512) )
+                    {
+                        new_y = y + ( counter / width );
+                        if( (new_y >= 0) && (new_y < VICV_SCANLINES) )
+                        {
+                            computer.vicv_ic->backbuffer[ new_x + (new_y * 512) ] = alpha_blend(computer.vicv_ic->backbuffer[ new_x + (new_y * 512) ], computer.mmu_ic->ram[picture_data + (2*counter)] | (computer.mmu_ic->ram[picture_data + 1 + (2 * counter)] << 8) );
+                        }
+                    }
+                    counter++;
+                }
+                else
+                {
+                    current_state = IDLE;
+                }
                 break;
         }        
     }
@@ -110,18 +144,28 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
             head++;
             break;
         case BLIT:
-            printf("dummy for blit by blitter described at address $%08x\n", data_element);
+//            printf("dummy for blit by blitter described at address $%08x\n", data_element);
             data_element &= 0x00ffffe0;
-            printf("dummy for blit by blitter accepted at address $%08x\n", data_element);
-            struct surface_blit *temp_blit;
-            temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element];
-            printf("   flags 0: %02x\n", temp_blit->flags_0);
-            printf("   flags 1: %02x\n", temp_blit->flags_1);
-            printf("   width  : %02x\n", temp_blit->width);
-            printf("   height : %02x\n", temp_blit->height);
-            printf("   xpos   : %i\n", temp_blit->x_pos_low_byte | temp_blit->x_pos_high_byte << 8);
-            printf("   ypos   : %i\n", temp_blit->y_pos_low_byte | temp_blit->y_pos_high_byte << 8);
+//            printf("dummy for blit by blitter accepted at address $%08x\n", data_element);
+            struct surface_blit *temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element];
             
+            operations[head].type = BLIT;
+            operations[head].data_element = data_element;
+            operations[head].this_blit = *temp_blit;
+            
+//            printf("   flags 0: %02x\n", operations[head].this_blit.flags_0);
+//            printf("   flags 1: %02x\n", operations[head].this_blit.flags_1);
+//            printf("   width  : %02x\n", operations[head].this_blit.width);
+//            printf("   height : %02x\n", operations[head].this_blit.height);
+//            printf("   x      : %i\n", operations[head].this_blit.x_low_byte | operations[head].this_blit.x_high_byte << 8);
+//            printf("   y      : %i\n", operations[head].this_blit.y_low_byte | operations[head].this_blit.y_high_byte << 8);
+//            printf("   pict d : $%08x\n", operations[head].this_blit.picture_data__0__7 |
+//                   operations[head].this_blit.picture_data__8_15 << 8 |
+//                   operations[head].this_blit.picture_data_16_23 << 16 |
+//                   operations[head].this_blit.picture_data_24_31 << 24
+//                   );
+            
+            head++;
             
             break;
     }
