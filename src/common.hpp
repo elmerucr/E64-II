@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200509
+#define E64_BUILD               20200510
 #define E64_YEAR                2020
 
 // some global objects

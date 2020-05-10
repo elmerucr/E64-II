@@ -84,11 +84,11 @@ struct surface_blit
     uint8_t     y_high_byte;
     uint8_t     y_low_byte;
     
-    /*  32 bit pointer to picture data (can be character or bitmap */
-    uint8_t     picture_data_24_31;
-    uint8_t     picture_data_16_23;
-    uint8_t     picture_data__8_15;
-    uint8_t     picture_data__0__7;
+    /*  32 bit pointer to pixel data (can be character pixels or bitmap pixels */
+    uint8_t     pixel_data_24_31;
+    uint8_t     pixel_data_16_23;
+    uint8_t     pixel_data__8_15;
+    uint8_t     pixel_data__0__7;
     
     /*  32 bit pointer to start of character data */
     uint8_t     character_data_24_31;
@@ -153,9 +153,17 @@ private:
     uint16_t clear_color;
     
     // blitting
+    uint16_t scr_x;
+    uint16_t scr_y;
+    
+    uint16_t char_width;
+    uint16_t char_height;
+    
+    uint16_t width_mask;
+    
     int16_t x;
     int16_t y;
-    uint32_t picture_data;
+    uint16_t *pixel_data;
     
     
 public:
