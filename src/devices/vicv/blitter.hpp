@@ -143,26 +143,32 @@ private:
     void add_operation(enum operation_type type, uint32_t data_element);
     
     
-    // finite state machine
+    // finite state machine general
+    uint16_t width_power_of_2;
+    uint16_t height_power_of_2;
     uint16_t width;
     uint16_t height;
     uint32_t counter;
     uint32_t max_count;
     
-    // clearing framebuffer
+    // finite state clearing framebuffer
     uint16_t clear_color;
     
-    // blitting
-    uint16_t scr_x;
-    uint16_t scr_y;
+    // finite state blitting
+    uint16_t scr_x;             // final screen x
+    uint16_t scr_y;             // final screen y
     
-    uint16_t char_width;
-    uint16_t char_height;
+    uint16_t char_width;        // width of blit measured in chars
+    uint16_t char_height;       // height of blit measured in chars
     
     uint16_t width_mask;
     
     int16_t x;
     int16_t y;
+    
+    uint16_t is_double_width;
+    uint16_t is_double_height;
+    
     uint16_t *pixel_data;
     
     

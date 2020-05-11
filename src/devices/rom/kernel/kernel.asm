@@ -459,7 +459,7 @@ screen_blit_structure
 	align	5		; blit data must be 32 bytes (2^5) aligned
 logo_blit_structure
 	DC.B	%00000011	; flags 0 - multicolor and bitmap mode
-	DC.B	%00000000	; flags 1 - empty
+	DC.B	%00000011	; flags 1 - double height and double width
 	DC.B	%00000011	; width 2^3 = 8 chars = 64 pixels
 	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
 	DC.W	$00E0		; x_pos (224)

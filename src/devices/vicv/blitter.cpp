@@ -85,11 +85,19 @@ void E64::blitter::run(int no_of_cycles)
                             current_state = BLITTING;
                             
                             // set up the blitting finite state machine
+                            
+                            // check flags
+                            is_double_width  = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
+                            is_double_height = (operations[tail].this_blit.flags_1 & 0b00000010) ? 1 : 0;
+                            
                             char_width  = operations[tail].this_blit.width  & 0b00000111;
                             char_height = operations[tail].this_blit.height & 0b00000111;
                             
-                            width  = 1 << (3 + char_width);
-                            height = 1 << (3 + char_height);
+                            width_power_of_2  = 3 + char_width + is_double_width;
+                            height_power_of_2 = 3 + char_height + is_double_height;
+                            
+                            width  = 1 << width_power_of_2;
+                            height = 1 << height_power_of_2;
                             width_mask = width - 1;
                             counter = 0;
                             max_count = width * height;
@@ -104,6 +112,7 @@ void E64::blitter::run(int no_of_cycles)
                                                         operations[tail].this_blit.pixel_data_16_23 << 16 |
                                                         operations[tail].this_blit.pixel_data_24_31 << 24
                                                     ];
+                            
                             tail++;
                             
                             break;
@@ -128,11 +137,23 @@ void E64::blitter::run(int no_of_cycles)
                     
                     if( !(scr_x & 0b1111111000000000) )
                     {
-                        scr_y = y + ( counter / width );
+                        scr_y = y + ( counter >> width_power_of_2 );
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )
                         {
-                            computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ] = alpha_blend(computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ], pixel_data[counter] );
+                            computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ] = alpha_blend
+                            (
+                                computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ],
+                                pixel_data
+                                [
+                                    // Rather complex piece of bitwise logic to pick the right pixels
+                                    // from the source material, depending on double width and height
+                                    // settings.
+                                    // First, it shifts all ...
+                                    (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width
+                                ]
+                            );
+                            
                         }
                     }
                     counter++;

@@ -69,34 +69,34 @@ void E64::vicv::run(uint32_t number_of_cycles)
 
         cycle_clock++;
 
-        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES) )
-        {
-            // start of vblank
-            computer.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
-        }
-        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)) )
-        {
-            // finished vblank, do other necessary stuff
-            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-            host_video.swap_buffers();
-            cycle_clock = dot_clock = 0;
-            frame_done = true;
-        }
-        
-//        switch(cycle_clock)
+//        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES) )
 //        {
-//            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
-//                // start of vblank
-//                vblank_irq = false;
-//                break;
-//            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
-//                // finished vblank, do other necessary stuff
-//                if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-//                host_video.swap_buffers();
-//                cycle_clock = dot_clock = 0;
-//                frame_done = true;
-//                break;
+//            // start of vblank
+//            computer.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
 //        }
+//        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)) )
+//        {
+//            // finished vblank, do other necessary stuff
+//            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+//            host_video.swap_buffers();
+//            cycle_clock = dot_clock = 0;
+//            frame_done = true;
+//        }
+        
+        switch(cycle_clock)
+        {
+            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
+                // start of vblank
+                computer.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
+                break;
+            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
+                // finished vblank, do other necessary stuff
+                if(overlay_present) render_overlay(117, 300, frame_delay.stats());
+                host_video.swap_buffers();
+                cycle_clock = dot_clock = 0;
+                frame_done = true;
+                break;
+        }
         
         number_of_cycles--;
     }

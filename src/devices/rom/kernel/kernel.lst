@@ -887,8 +887,8 @@ F00:0459       	align	5		; blit data must be 32 bytes (2^5) aligned
 F00:0460       logo_blit_structure
 F00:0461       	DC.B	%00000011	; flags 0 - multicolor and bitmap mode
                S01:00FF0440:  03
-F00:0462       	DC.B	%00000000	; flags 1 - empty
-               S01:00FF0441:  00
+F00:0462       	DC.B	%00000011	; flags 1 - double height and double width
+               S01:00FF0441:  03
 F00:0463       	DC.B	%00000011	; width 2^3 = 8 chars = 64 pixels
                S01:00FF0442:  03
 F00:0464       	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
