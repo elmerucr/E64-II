@@ -55,9 +55,6 @@ void E64::blitter::reset()
     
     head = 0;
     tail = 0;
-    
-    spek_en_bonen_1 = 0xdead;
-    spek_en_bonen_2 = 0xbeef;
 }
 
 void E64::blitter::run(int no_of_cycles)
@@ -124,9 +121,6 @@ void E64::blitter::run(int no_of_cycles)
                 else
                 {
                     // do something to take cpu time
-                    alpha_blend(spek_en_bonen_1, spek_en_bonen_2);
-                    spek_en_bonen_1++;
-                    spek_en_bonen_2++;
                 }
                 break;
             case CLEARING_FRAMEBUFFER:

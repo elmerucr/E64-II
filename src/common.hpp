@@ -40,7 +40,7 @@ extern const char screencode_to_ascii[];
 
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
-#define AUDIO_BUFFER_SIZE           8192.0
+#define AUDIO_BUFFER_SIZE           4096.0
 
 // c64 (VirtualC64)
 #define C64_BLACK       0x00f0
