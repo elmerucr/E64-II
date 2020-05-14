@@ -15,7 +15,7 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200511
+#define E64_BUILD               20200514
 #define E64_YEAR                2020
 
 // some global objects
@@ -27,15 +27,15 @@ extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, can't be changed easily
 
-#define FPS                         30
+#define FPS                         60
 #define VICV_PIXELS_PER_SCANLINE    512
 #define VICV_PIXELS_HBLANK          64
 #define VICV_SCANLINES              320
 #define VICV_SCANLINES_VBLANK       30
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
-#define BLITTER_DOT_CLOCK_SPEED     (8*VICV_DOT_CLOCK_SPEED)
-#define CPU_CLOCK_SPEED             (1*VICV_DOT_CLOCK_SPEED)
+#define BLITTER_DOT_CLOCK_SPEED     (4*VICV_DOT_CLOCK_SPEED)
+#define CPU_CLOCK_SPEED             (VICV_DOT_CLOCK_SPEED)
 #define CPU_CYCLES_PER_SCANLINE     (CPU_CLOCK_SPEED/((VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS))
 
 #define SID_CLOCK_SPEED             985248

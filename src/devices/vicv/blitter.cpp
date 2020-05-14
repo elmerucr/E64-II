@@ -55,6 +55,9 @@ void E64::blitter::reset()
     
     head = 0;
     tail = 0;
+    
+    spek_en_bonen_1 = 0xdead;
+    spek_en_bonen_2 = 0xbeef;
 }
 
 void E64::blitter::run(int no_of_cycles)
@@ -73,11 +76,11 @@ void E64::blitter::run(int no_of_cycles)
                     {
                         case CLEAR_FRAMEBUFFER:
                             current_state = CLEARING_FRAMEBUFFER;
-                            width = 512;
-                            height = 320;
-                            max_count = width * height;
+                            width = VICV_PIXELS_PER_SCANLINE;
+                            height = VICV_SCANLINES;
+                            max_count = (width * height);
                             counter = 0;
-                            clear_color = (operations[tail].data_element) & 0x0000ffff;
+                            clear_color = ((operations[tail].data_element) & 0x0000ff0f) | 0x00f0;
                             tail++;
                             break;
                         case BLIT:
@@ -118,11 +121,18 @@ void E64::blitter::run(int no_of_cycles)
                             break;
                     }
                 }
+                else
+                {
+                    // do something to take cpu time
+                    alpha_blend(spek_en_bonen_1, spek_en_bonen_2);
+                    spek_en_bonen_1++;
+                    spek_en_bonen_2++;
+                }
                 break;
             case CLEARING_FRAMEBUFFER:
                 if( counter < max_count )
                 {
-                    computer.vicv_ic->backbuffer[counter] = alpha_blend(computer.vicv_ic->backbuffer[counter], clear_color);
+                    computer.vicv_ic->backbuffer[counter] = clear_color;
                     counter++;
                 }
                 else
@@ -184,18 +194,6 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
             operations[head].type = BLIT;
             operations[head].data_element = data_element;
             operations[head].this_blit = *temp_blit;
-            
-//            printf("   flags 0: %02x\n", operations[head].this_blit.flags_0);
-//            printf("   flags 1: %02x\n", operations[head].this_blit.flags_1);
-//            printf("   width  : %02x\n", operations[head].this_blit.width);
-//            printf("   height : %02x\n", operations[head].this_blit.height);
-//            printf("   x      : %i\n", operations[head].this_blit.x_low_byte | operations[head].this_blit.x_high_byte << 8);
-//            printf("   y      : %i\n", operations[head].this_blit.y_low_byte | operations[head].this_blit.y_high_byte << 8);
-//            printf("   pict d : $%08x\n", operations[head].this_blit.picture_data__0__7 |
-//                   operations[head].this_blit.picture_data__8_15 << 8 |
-//                   operations[head].this_blit.picture_data_16_23 << 16 |
-//                   operations[head].this_blit.picture_data_24_31 << 24
-//                   );
             
             head++;
             

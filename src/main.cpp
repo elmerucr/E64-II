@@ -20,7 +20,7 @@
 // global components of the system
 E64::video host_video;
 E64::machine computer;
-E64::pid_delay frame_delay(20000.0);
+E64::pid_delay frame_delay(8000.0);
 
 int main(int argc, char **argv)
 {
@@ -60,9 +60,12 @@ int main(int argc, char **argv)
                  *  system as a whole. Most importantly, SID emulation will
                  *  be more realistic. Instant changes to SID's registers
                  *  will be reflected in audio output.
+                 *  However, run(63) significantly reduces host cpu load,
+                 *  once we have some music running in the virtual machine,
+                 *  test drive!
                  */
                 
-                if( computer.run(0) != 0 ) computer.switch_to_debug();
+                if( computer.run(63) != 0 ) computer.switch_to_debug();
                 
                 // if full frame was drawn call other update functions:
                 if( computer.vicv_ic->frame_done )

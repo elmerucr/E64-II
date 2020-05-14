@@ -83,13 +83,13 @@ kernel_main
 
 	; set up timer1 interrupts
 
-	MOVE.W	#$708,TIMER_BASE+2		; load value
+	MOVE.W	#$708,TIMER_BASE+2	; load value
 	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
 
 
 	; set up timer3 interrupts at 50.125Hz for music / sid tunes
 
-	MOVE.W	#$708,TIMER_BASE+2		; 1800bpm (=30Hz)
+	MOVE.W	#$E10,TIMER_BASE+2		; 3600bpm (=60Hz)
 	;MOVE.W	#$BC0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
 	ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
 

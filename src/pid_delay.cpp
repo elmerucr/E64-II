@@ -50,7 +50,7 @@ E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, 
 {
     current_delay = initial_delay;
     framecounter = 0;
-    evaluation_interval = 2;
+    evaluation_interval = 8;
 
     audio_queue_size = AUDIO_BUFFER_SIZE;
     smoothed_audio_queue_size = audio_queue_size;
@@ -89,10 +89,10 @@ void E64::pid_delay::run()
         // run pid's
         //current_delay = fps_pid.process(framerate, evaluation_interval);
         current_delay = audiobuffer_pid.process(smoothed_audio_queue_size, evaluation_interval);
-        if (current_delay < 1000)
+        if (current_delay < 500)
         {
             std::cout << "[PID Delay] system too slow?" << std::endl;
-            current_delay = 1000;
+            current_delay = 500;
         }
         if (current_delay > (1000000/FPS) ) current_delay = (1000000/FPS);
     }

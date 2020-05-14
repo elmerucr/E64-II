@@ -171,6 +171,9 @@ private:
     
     uint16_t *pixel_data;
     
+    uint16_t spek_en_bonen_1;
+    uint16_t spek_en_bonen_2;
+    
     
 public:
     

@@ -309,7 +309,7 @@ F00:0082
 F00:0083       
 F00:0084       	; set up timer1 interrupts
 F00:0085       
-F00:0086       	MOVE.W	#$708,TIMER_BASE+2		; load value
+F00:0086       	MOVE.W	#$708,TIMER_BASE+2	; load value
                S01:00FF00C4:  33 FC 07 08 00 FE 06 02
 F00:0087       	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
                S01:00FF00CC:  00 39 00 02 00 FE 06 01
@@ -317,8 +317,8 @@ F00:0088
 F00:0089       
 F00:0090       	; set up timer3 interrupts at 50.125Hz for music / sid tunes
 F00:0091       
-F00:0092       	MOVE.W	#$708,TIMER_BASE+2		; 1800bpm (=30Hz)
-               S01:00FF00D4:  33 FC 07 08 00 FE 06 02
+F00:0092       	MOVE.W	#$E10,TIMER_BASE+2		; 3600bpm (=60Hz)
+               S01:00FF00D4:  33 FC 0E 10 00 FE 06 02
 F00:0093       	;MOVE.W	#$BC0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
 F00:0094       	ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
                S01:00FF00DC:  00 39 00 08 00 FE 06 01
