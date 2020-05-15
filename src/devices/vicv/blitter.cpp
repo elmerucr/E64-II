@@ -17,11 +17,13 @@
  *  emulation speed. But, with optimizations (minimum -O2) turned on, it
  *  is ok.
  *
- *  The idea to use an inline function (and not a lookup table comes from
- *  this website:
+ *  The idea to use a function (and not a lookup table comes from this
+ *  website:
  *  https://stackoverflow.com/questions/30849261/alpha-blending-using-table-lookup-is-not-as-fast-as-expected
+ *  Generally, lookup tables mess around with the cpu cache.
  *
- *  In three steps a derivation:
+ *  In three steps a derivation (source is color to apply, destination
+ *  is the original color, a is alpha value):
  *  (1) ((source * a) + (destination * (COLOR_MAX - a))) / COLOR_MAX
  *  (2) ((source * a) - (destination * a) + (destination * COLOR_MAX)) / COLOR_MAX
  *  (3) destination + (((source - destination) * a) / COLOR_MAX)
@@ -30,8 +32,8 @@
 
 inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
 {
-    uint8_t r_dest, g_dest, b_dest;
-    uint8_t a_src, r_src, g_src, b_src;
+    uint16_t r_dest, g_dest, b_dest;
+    uint16_t a_src, r_src, g_src, b_src;
     
     r_dest = (destination & 0x000f);
     g_dest = (destination & 0xf000) >> 12;
@@ -41,6 +43,10 @@ inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
     r_src = (source & 0x000f);
     g_src = (source & 0xf000) >> 12;
     b_src = (source & 0x0f00) >> 8;
+    
+//    r_dest = r_dest + ((((r_src - r_dest) * a_src) * 68) >> 10);
+//    g_dest = g_dest + ((((g_src - g_dest) * a_src) * 68) >> 10);
+//    b_dest = b_dest + ((((b_src - b_dest) * a_src) * 68) >> 10);
     
     r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
     g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
@@ -89,6 +95,8 @@ void E64::blitter::run(int no_of_cycles)
                             // check flags
                             is_double_width  = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
                             is_double_height = (operations[tail].this_blit.flags_1 & 0b00000010) ? 1 : 0;
+                            horizontal_flip  = (operations[tail].this_blit.flags_1 & 0b00000100) ? true : false;
+                            vertical_flip    = (operations[tail].this_blit.flags_1 & 0b00001000) ? true : false;
                             
                             char_width  = operations[tail].this_blit.width  & 0b00000111;
                             char_height = operations[tail].this_blit.height & 0b00000111;
@@ -106,12 +114,13 @@ void E64::blitter::run(int no_of_cycles)
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
                             
                             pixel_data = (uint16_t *)
-                            &computer.mmu_ic->ram  [
-                                                        operations[tail].this_blit.pixel_data__0__7       |
-                                                        operations[tail].this_blit.pixel_data__8_15 <<  8 |
-                                                        operations[tail].this_blit.pixel_data_16_23 << 16 |
-                                                        operations[tail].this_blit.pixel_data_24_31 << 24
-                                                    ];
+                            &computer.mmu_ic->ram
+                            [
+                                operations[tail].this_blit.pixel_data__0__7       |
+                                operations[tail].this_blit.pixel_data__8_15 <<  8 |
+                                operations[tail].this_blit.pixel_data_16_23 << 16 |
+                                operations[tail].this_blit.pixel_data_24_31 << 24
+                            ];
                             
                             tail++;
                             
@@ -137,11 +146,13 @@ void E64::blitter::run(int no_of_cycles)
             case BLITTING:
                 if( counter < max_count )
                 {
-                    scr_x = x + (counter & width_mask);
+                    //scr_x = x + (counter & width_mask);
+                    scr_x = x + (horizontal_flip ? (width - (counter & width_mask)) : (counter & width_mask) );
                     
                     if( !(scr_x & 0b1111111000000000) )
                     {
-                        scr_y = y + ( counter >> width_power_of_2 );
+                        //scr_y = y + ( counter >> width_power_of_2 );
+                        scr_y = y + (vertical_flip ? (height - (counter >> width_power_of_2)) : (counter >> width_power_of_2) );
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )
                         {

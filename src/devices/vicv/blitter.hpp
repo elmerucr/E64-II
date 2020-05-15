@@ -44,7 +44,7 @@ enum operation_type
 struct surface_blit
 {
     /*  The size of this structure is max 32 bytes. Inside the machine,
-     *  alignment at 32 bytes must be arranged.
+     *  alignment at 2^5 = 32 bytes must be arranged.
      */
     
     /*  bit 0    : Character mode (0) or bitmap mode (1)
@@ -55,7 +55,9 @@ struct surface_blit
     
     /*  bit 0    : Horizontal single pixel (0) or double pixel (1) size
      *  bit 1    : Vertical single pixel (0) or double pixel (1) size
-     *  bit 2-7  : Reserved
+     *  bit 2    : Horizontal flip on (1)
+     *  bit 3    : Vertical flip on (1)
+     *  bit 4-7  : Reserved
      */
     uint8_t     flags_1;
     
@@ -168,6 +170,9 @@ private:
     
     uint16_t is_double_width;
     uint16_t is_double_height;
+    
+    bool horizontal_flip;
+    bool vertical_flip;
     
     uint16_t *pixel_data;
     
