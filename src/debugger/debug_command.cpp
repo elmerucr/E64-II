@@ -364,7 +364,7 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         temp_address = address;
         for(int i=0; i<8; i++)
         {
-            debug_console.current_background_color = *(uint16_t *)(&(computer.mmu_ic->ram[temp_address]));
+            debug_console.current_background_color = *(uint16_t *)(&(computer.mmu_ic->ram[temp_address & 0x00ffffff]));
             debug_console_put_char(' ');
             //if( (( temp_byte & 0x7f) == ASCII_LF) || ( (temp_byte & 0x7f) == ASCII_CR) ) temp_byte = 0x80;
             //debug_console_put_char( temp_byte );

@@ -93,6 +93,8 @@ void E64::blitter::run(int no_of_cycles)
                             // set up the blitting finite state machine
                             
                             // check flags
+                            bitmap_mode      = (operations[tail].this_blit.flags_0 & 0b00000001) ? true : false;
+                            multicolor_mode  = (operations[tail].this_blit.flags_0 & 0b00000010) ? true : false;
                             is_double_width  = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
                             is_double_height = (operations[tail].this_blit.flags_1 & 0b00000010) ? 1 : 0;
                             horizontal_flip  = (operations[tail].this_blit.flags_1 & 0b00000100) ? true : false;
@@ -101,11 +103,11 @@ void E64::blitter::run(int no_of_cycles)
                             char_width  = operations[tail].this_blit.width  & 0b00000111;
                             char_height = operations[tail].this_blit.height & 0b00000111;
                             
-                            width_power_of_2  = 3 + char_width + is_double_width;
-                            height_power_of_2 = 3 + char_height + is_double_height;
+                            width_log2  = 3 + char_width + is_double_width;
+                            height_log2 = 3 + char_height + is_double_height;
                             
-                            width  = 1 << width_power_of_2;
-                            height = 1 << height_power_of_2;
+                            width  = 1 << width_log2;
+                            height = 1 << height_log2;
                             width_mask = width - 1;
                             counter = 0;
                             max_count = width * height;
@@ -116,11 +118,13 @@ void E64::blitter::run(int no_of_cycles)
                             pixel_data = (uint16_t *)
                             &computer.mmu_ic->ram
                             [
-                                operations[tail].this_blit.pixel_data__0__7       |
-                                operations[tail].this_blit.pixel_data__8_15 <<  8 |
-                                operations[tail].this_blit.pixel_data_16_23 << 16 |
-                                operations[tail].this_blit.pixel_data_24_31 << 24
+                                (operations[tail].this_blit.pixel_data__0__7       |
+                                 operations[tail].this_blit.pixel_data__8_15 <<  8 |
+                                 operations[tail].this_blit.pixel_data_16_23 << 16 |
+                                 operations[tail].this_blit.pixel_data_24_31 << 24 ) & 0x00ffffff
                             ];
+                            
+                            //character_data = (uint8_t *)0;
                             
                             tail++;
                             
@@ -152,7 +156,7 @@ void E64::blitter::run(int no_of_cycles)
                     if( !(scr_x & 0b1111111000000000) )
                     {
                         //scr_y = y + ( counter >> width_power_of_2 );
-                        scr_y = y + (vertical_flip ? (height - (counter >> width_power_of_2)) : (counter >> width_power_of_2) );
+                        scr_y = y + (vertical_flip ? (height - (counter >> width_log2)) : (counter >> width_log2) );
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )
                         {
@@ -194,7 +198,7 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
         case BLIT:
             data_element &= 0x00ffffe0;
             
-            struct surface_blit *temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element];
+            struct surface_blit *temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element & 0x00ffffff];
             
             operations[head].type = BLIT;
             operations[head].data_element = data_element;

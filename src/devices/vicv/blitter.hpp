@@ -86,13 +86,13 @@ struct surface_blit
     uint8_t     y_high_byte;
     uint8_t     y_low_byte;
     
-    /*  32 bit pointer to pixel data (can be character pixels or bitmap pixels */
+    /*  32 bit pointer to pixels (can be character pixels or bitmap pixels */
     uint8_t     pixel_data_24_31;
     uint8_t     pixel_data_16_23;
     uint8_t     pixel_data__8_15;
     uint8_t     pixel_data__0__7;
     
-    /*  32 bit pointer to start of character data */
+    /*  32 bit pointer to start of characters */
     uint8_t     character_data_24_31;
     uint8_t     character_data_16_23;
     uint8_t     character_data__8_15;
@@ -146,8 +146,8 @@ private:
     
     
     // finite state machine general
-    uint16_t width_power_of_2;
-    uint16_t height_power_of_2;
+    uint16_t width_log2;
+    uint16_t height_log2;
     uint16_t width;
     uint16_t height;
     uint32_t counter;
@@ -157,6 +157,9 @@ private:
     uint16_t clear_color;
     
     // finite state blitting
+    bool bitmap_mode;
+    bool multicolor_mode;
+    
     uint16_t scr_x;             // final screen x
     uint16_t scr_y;             // final screen y
     
@@ -175,6 +178,7 @@ private:
     bool vertical_flip;
     
     uint16_t *pixel_data;
+    uint8_t  *character_data;
     
 public:
     

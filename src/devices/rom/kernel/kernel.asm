@@ -464,8 +464,8 @@ logo_blit_structure
 	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
 	DC.W	$00E0		; x_pos (224)
 	DC.W	$0021		; y_pos (33)
-	DC.L	logo_bitmap	; pixel data
-	DC.L	$0		; no chars
+	DC.L	logo_bitmap	; pixel_data
+	DC.L	$0		; character_data
 
 
 ; logo blit bitmap data

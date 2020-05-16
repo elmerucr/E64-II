@@ -28,7 +28,9 @@ private:
 public:
     mmu();
     ~mmu();
-    uint8_t *ram;
+    
+    uint8_t  *ram;                  // make this private and work with friend class?
+    uint16_t *ram_as_words;         // make this private and work with friend class?
     
     void reset();
     

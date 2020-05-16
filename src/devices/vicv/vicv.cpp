@@ -108,43 +108,6 @@ void E64::vicv::run(uint32_t number_of_cycles)
 bool E64::vicv::is_hblank() { return HBLANK; }
 bool E64::vicv::is_vblank() { return VBLANK; }
 
-//inline void E64::vicv::render_scanline()
-//{
-//    // 1st index in screen buffer to be used for display
-//    int base = current_scanline * VICV_PIXELS_PER_SCANLINE;
-//    // get the current textrow, divide by 8
-//    int currentTextRow = ((current_scanline-32) >> 3);
-//    // get current line within character
-//    int currentCharacterLine = (current_scanline-32) & 0x07;
-//
-//    uint32_t background_color = color_palette[registers[VICV_REG_BKG]];
-//
-//    uint32_t start_screen_buffer = (registers[VICV_REG_TXT] << 24) + (registers[VICV_REG_TXT+1] << 16) + (registers[VICV_REG_TXT+2] << 8) + registers[VICV_REG_TXT+3];
-//    uint32_t start_color_buffer = (registers[VICV_REG_COL] << 24) + (registers[VICV_REG_COL+1] << 16) + (registers[VICV_REG_COL+2] << 8) + registers[VICV_REG_COL+3];
-//
-//    // Reserve a byte for internal rendering use, defaults to 0
-//    uint8_t eight_pixels = 0;
-//    int current_column;
-//    uint8_t current_char;
-//    uint32_t current_char_color = 0;
-//
-//    for(int x=0; x<VICV_PIXELS_PER_SCANLINE; x++)
-//    {
-//        if( !(x & 0b00000111) ) // it's the first pixel of a char
-//        {
-//            // get current text column, current x divided by 8 (yields 0-63)
-//            current_column = (x >> 3);
-//            current_char = computer.mmu_ic->ram[(start_screen_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff];
-//            current_char_color = computer.vicv_ic->color_palette[computer.mmu_ic->ram[(start_color_buffer | (((currentTextRow << 6) | current_column))) & 0x00ffffff] ];
-//            // get byte information from char_rom
-//            eight_pixels = patched_char_rom[(current_char<<3) | currentCharacterLine];
-//        }
-//        host_backbuffer[base | x] = (eight_pixels & 0x80) ? current_char_color : background_color;
-//        // shift all bits in internal byte 1 place to the left
-//        eight_pixels = eight_pixels << 1;
-//    }
-//}
-
 inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
 {
     uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) % (VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);

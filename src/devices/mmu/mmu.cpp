@@ -12,6 +12,7 @@ E64::mmu::mmu()
 {
     // allocate main ram and fill with a pattern
     ram = new uint8_t[RAM_SIZE * sizeof(uint8_t)];
+    ram_as_words = (uint16_t *)ram;
     reset();
 }
 

@@ -21,12 +21,14 @@ v basic pulse working (breakpoints and continue execution with correct scanlines
 
 todo / bugs
 ===========
+- ram access by not-cpu chips is not protected!
 - irq functionality in console is strange
 - currently access is granted to sdl2 to read registers etc... from cia
 - call stack, stack tracing, former instructions log etc...
 
 2020
 ====
+2020-05-15 Most work on sprites is done. Double size, flipping, etc...
 2020-03-14 Scanline breakpoints seem to work nicely
 2020-01-27 Debugger m command partly working (with scrolling functions), edit not yet functional
 2020-01-21 Split E64-II completely from E64, it's a separate project
