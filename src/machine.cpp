@@ -120,8 +120,22 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
     
     // run cycles on sound device & start audio if buffer is large enough
-    sids_ic->run(m68k_to_sid->clock(processed_cycles));
-    if(E64::sdl2_get_queued_audio_size() > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
+    unsigned int audio_queue_size = E64::sdl2_get_queued_audio_size();
+    
+    if(audio_queue_size < 0.9 * AUDIO_BUFFER_SIZE)
+    {
+        sids_ic->run(m68k_to_sid->clock(1.1 * processed_cycles));
+    }
+    else if(audio_queue_size > 1.1 * AUDIO_BUFFER_SIZE)
+    {
+        sids_ic->run(m68k_to_sid->clock(0.1 * processed_cycles));
+    }
+    else
+    {
+        sids_ic->run(m68k_to_sid->clock(processed_cycles));
+    }
+    
+    if(audio_queue_size > (AUDIO_BUFFER_SIZE/2)) E64::sdl2_start_audio();
     
     return output_state;
 }

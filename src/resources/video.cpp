@@ -43,7 +43,7 @@ E64::video::video()
     // create renderer and link it to window
 //    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    // create a texture that is able to refresh very frequently
+//     create a texture that is able to refresh very frequently
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
     
     SDL_GetWindowSize(window, &window_width, &window_height);

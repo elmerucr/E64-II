@@ -1,7 +1,7 @@
-//  sdl2_pid_delay.cpp
+//  pid_delay.cpp
 //  E64
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include <chrono>
 #include <thread>
@@ -46,11 +46,11 @@ double E64::pid_controller::process(double input, double interval)
     return output;
 }
 
-E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay), audiobuffer_pid(-0.10, 0.00, -8.00, AUDIO_BUFFER_SIZE, initial_delay)
+E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay)
 {
     current_delay = initial_delay;
     framecounter = 0;
-    evaluation_interval = 8;
+    evaluation_interval = 8;        // must be a power of 2!
 
     audio_queue_size = AUDIO_BUFFER_SIZE;
     smoothed_audio_queue_size = audio_queue_size;
@@ -86,9 +86,8 @@ void E64::pid_delay::run()
         mhz = (double)(framerate * (VICV_SCANLINES+VICV_SCANLINES_VBLANK) * CPU_CYCLES_PER_SCANLINE)/1000000;
         smoothed_mhz = (alpha * smoothed_mhz) + ((1.0 - alpha) * mhz);
 
-        // run pid's
-        //current_delay = fps_pid.process(framerate, evaluation_interval);
-        current_delay = audiobuffer_pid.process(smoothed_audio_queue_size, evaluation_interval);
+        // run pid
+        current_delay = fps_pid.process(framerate, evaluation_interval);
         if (current_delay < 500)
         {
             std::cout << "[PID Delay] system too slow?" << std::endl;

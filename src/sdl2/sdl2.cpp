@@ -405,7 +405,7 @@ void E64::sdl2_queue_audio(void *buffer, unsigned size)
     SDL_QueueAudio(E64_sdl2_audio_dev, buffer, size);
 }
 
-unsigned E64::sdl2_get_queued_audio_size()
+unsigned int E64::sdl2_get_queued_audio_size()
 {
     return SDL_GetQueuedAudioSize(E64_sdl2_audio_dev);
 }

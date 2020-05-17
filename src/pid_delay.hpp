@@ -1,7 +1,7 @@
 //  pid_delay.hpp
 //  E64
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
 #include <chrono>
@@ -59,7 +59,6 @@ namespace E64
         double alpha;
 
         pid_controller fps_pid;
-        pid_controller audiobuffer_pid;
 
     public:
         // constructor

@@ -177,8 +177,8 @@ private:
     bool horizontal_flip;
     bool vertical_flip;
     
-    uint16_t *pixel_data;
-    uint8_t  *character_data;
+    uint32_t pixel_data;
+    uint32_t character_data;
     
 public:
     

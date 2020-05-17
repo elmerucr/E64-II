@@ -263,6 +263,8 @@ interrupt_2_autovector
 	MOVE.B	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
 	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data register of blitter
 	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
+	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.B	#%00000010,BLITTER_CONTROL
 	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
@@ -332,6 +334,11 @@ timer0_handler
 	ADDQ.B	#$1,(A0)
 	ANDI.B	#%00001111,(A0)
 	MOVEA.L	(SP)+,A0
+
+	LEA	SID0_BASE,A0
+	MOVE.B	#%00100000,$4(A0)
+	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+
 	BRA	timer1_check
 
 
@@ -358,6 +365,7 @@ timer3_handler
 
 	MOVE.W	X_VALUE,logo_blit_structure+4
 	MOVE.W	Y_VALUE,logo_blit_structure+6
+	MOVE.W	X_VALUE,screen_blit_structure+4
 
 	MOVE.W	DX,D0
 	ADD.W	D0,X_VALUE
@@ -448,11 +456,13 @@ play_song_frame
 	align	5
 screen_blit_structure
 	DC.B	%00000010	; flags 0 - multicolor and character mode
-	DC.B	%00000000	; empty
-	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
+	DC.B	%00000001	; empty
+	DC.B	%00000100	; width 2^6 = 64 chars  = 512 pixels
 	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
 	DC.W	$0		; x_pos (0)
 	DC.W	$20		; y_pos (32)
+	DC.L	CHAR_RAM	; pixel_data
+	DC.L	$0		; character_data
 
 ; logo blit description
 

@@ -77,9 +77,9 @@ int main(int argc, char **argv)
                     
                     computer.cia_ic->run();
                     
-                    host_video.update_screen();
-                    
                     frame_delay.run();
+                    
+                    host_video.update_screen();
                 }
                 break;
             case E64::DEBUG_MODE:

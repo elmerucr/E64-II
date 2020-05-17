@@ -115,16 +115,17 @@ void E64::blitter::run(int no_of_cycles)
                             x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
                             
-                            pixel_data = (uint16_t *)
-                            &computer.mmu_ic->ram
-                            [
-                                (operations[tail].this_blit.pixel_data__0__7       |
-                                 operations[tail].this_blit.pixel_data__8_15 <<  8 |
-                                 operations[tail].this_blit.pixel_data_16_23 << 16 |
-                                 operations[tail].this_blit.pixel_data_24_31 << 24 ) & 0x00ffffff
-                            ];
+                            pixel_data =
+                                operations[tail].this_blit.pixel_data__0__7       |
+                                operations[tail].this_blit.pixel_data__8_15 <<  8 |
+                                operations[tail].this_blit.pixel_data_16_23 << 16 |
+                                operations[tail].this_blit.pixel_data_24_31 << 24;
                             
-                            //character_data = (uint8_t *)0;
+                            character_data =
+                                operations[tail].this_blit.character_data__0__7       |
+                                operations[tail].this_blit.character_data__8_15 <<  8 |
+                                operations[tail].this_blit.character_data_16_23 << 16 |
+                                operations[tail].this_blit.character_data_24_31 << 24;
                             
                             tail++;
                             
@@ -163,14 +164,17 @@ void E64::blitter::run(int no_of_cycles)
                             computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ] = alpha_blend
                             (
                                 computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ],
-                                pixel_data
+                                computer.mmu_ic->ram_as_words
                                 [
+                                    (
+                                    (pixel_data >> 1) +
                                     // Rather complex piece of bitwise logic to pick the right pixels
                                     // from the source material, depending on double width and height
                                     // settings.
                                     // First, it shifts all ...
-                                    (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width
-                                ]
+                                    ( (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width )
+                                    ) & 0x007fffff
+                                 ]
                             );
                             
                         }
