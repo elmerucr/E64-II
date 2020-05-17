@@ -67,7 +67,7 @@ int main(int argc, char **argv)
                 
                 if( computer.run(63) != 0 ) computer.switch_to_debug();
                 
-                // if full frame was drawn call other update functions:
+                // if a full frame is done, call other update functions:
                 if( computer.vicv_ic->frame_done )
                 {
                     computer.vicv_ic->frame_done = false;
@@ -77,7 +77,18 @@ int main(int argc, char **argv)
                     
                     computer.cia_ic->run();
                     
-                    frame_delay.run();
+                    frame_delay.process();
+                    
+                    /*  If we have vsync enabled, the update screen function
+                     *  will take more time, i.e. it will return after a few
+                     *  milliseconds, exactly when vertical refresh can be
+                     *  done. A general way to solve issues with tearing.
+                     *
+                     *  If vsync is enabled, there is no need to let the
+                     *  system delay with yet another function.
+                     */
+                    
+                    if( host_video.vsync_disabled() ) frame_delay.sleep();
                     
                     host_video.update_screen();
                 }

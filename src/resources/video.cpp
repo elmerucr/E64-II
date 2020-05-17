@@ -22,32 +22,40 @@ E64::video::video()
     printf("[SDL] base path is: %s\n", base_path);
     SDL_free(base_path);
     
-    
     SDL_Init(SDL_INIT_VIDEO);
     
     // print the list of video backends
-    int numVideoDrivers = SDL_GetNumVideoDrivers();
-    printf("[SDL] %d video backend(s) compiled into SDL: ", numVideoDrivers);
-    for(int i=0; i<numVideoDrivers; i++)
-    {
-        printf(" \'%s\' ", SDL_GetVideoDriver(i));
-    }
+    int num_video_drivers = SDL_GetNumVideoDrivers();
+    printf("[SDL Video] %d video backend(s) compiled into SDL: ", num_video_drivers);
+    for(int i=0; i<num_video_drivers; i++) printf(" \'%s\' ", SDL_GetVideoDriver(i));
     printf("\n");
-    printf("[SDL] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
+    printf("[SDL Video] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
     
     current_window_size = 2;
     fullscreen = false;
     
+    
     // create window - title will be set later by function E64::sdl2_update_title()
     window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+    SDL_DisplayMode current_mode;
+    SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(window), &current_mode);
+    printf("[SDL Display]: refresh rate of current display is %iHz\n",current_mode.refresh_rate);
+    
+    
     // create renderer and link it to window
-//    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-//     create a texture that is able to refresh very frequently
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    //renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RendererInfo current_renderer;
+    SDL_GetRendererInfo(renderer, &current_renderer);
+    vsync = (current_renderer.flags & SDL_RENDERER_PRESENTVSYNC) ? true : false;
+    printf("[SDL Renderer Name]: %s\n", current_renderer.name);
+    printf("[SDL Renderer]: %saccelerated\n", (current_renderer.flags & SDL_RENDERER_ACCELERATED) ? "" : "not ");
+    printf("[SDL Renderer]: vsync is %s\n", vsync ? "enabled" : "disabled");
+    
+    // create a texture that is able to refresh very frequently
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
     
     SDL_GetWindowSize(window, &window_width, &window_height);
-    destination = { 0, 0, window_width, window_height };
 
     // make sure mouse cursor isn't visible
     SDL_ShowCursor(SDL_DISABLE);
@@ -59,7 +67,7 @@ E64::video::video()
     // prepare debug_screen_buffer
     debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
     
-    // Prepare the 12 bit color palette and populate it with the right colors.
+    // Prepare the 12 bit color palette and fill it with the right colors.
     // Index in the array is the actual 12 bit color, the 32 bit value is
     // the color in host space.
     //
@@ -114,7 +122,9 @@ void E64::video::update_screen()
             SDL_UpdateTexture(texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
     }
+    
     SDL_RenderCopy(renderer, texture, NULL, NULL);
+    
     SDL_RenderPresent(renderer);
 }
 
@@ -131,7 +141,6 @@ void E64::video::increase_window_size()
         current_window_size++;
         SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
         SDL_GetWindowSize(window, &window_width, &window_height);
-        destination = { 0, 0, window_width, window_height };
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
 }
@@ -143,7 +152,6 @@ void E64::video::decrease_window_size()
         current_window_size--;
         SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
         SDL_GetWindowSize(window, &window_width, &window_height);
-        destination = { 0, 0, window_width, window_height };
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
 }
@@ -160,7 +168,6 @@ void E64::video::toggle_fullscreen()
         SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
     }
     SDL_GetWindowSize(window, &window_width, &window_height);
-    destination = { 0, 0, window_width, window_height };
 }
 
 void E64::video::update_title()

@@ -63,7 +63,7 @@ E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, 
     then = std::chrono::steady_clock::now();
 }
 
-void E64::pid_delay::run()
+void E64::pid_delay::process()
 {
     framecounter++;
     if(!(framecounter & (evaluation_interval - 1) ))
@@ -102,7 +102,10 @@ void E64::pid_delay::run()
         snprintf(statistics_string, 256, "%4.2fMHz  %4.1ffps  %4.1fms  %4.0fbytes", smoothed_mhz, smoothed_framerate, current_delay/1000, smoothed_audio_queue_size);
         statistics_framecounter = 0;
     }
+}
 
+void E64::pid_delay::sleep()
+{
     // call delay
     // c++11 portable version of usleep():
     // see: https://gist.github.com/ngryman/6482577
@@ -110,7 +113,7 @@ void E64::pid_delay::run()
     std::this_thread::sleep_for(std::chrono::microseconds((uint32_t)current_delay));
 }
 
-char *E64::pid_delay::stats()
+char *E64::pid_delay::stats_info()
 {
     return statistics_string;
 }

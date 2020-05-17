@@ -28,12 +28,12 @@ private:
     };
     SDL_Window *window;
     SDL_Renderer *renderer;
+    bool vsync;
     SDL_Texture *texture;
     uint8_t current_window_size;
     bool fullscreen;
     int window_width;
     int window_height;
-    SDL_Rect destination;
     
     /* These are host framebuffers for double buffering. We need two
      * buffers as the calls for refreshing the screen might happen when
@@ -75,6 +75,7 @@ public:
     void increase_window_size();
     void decrease_window_size();
     void toggle_fullscreen();
+    inline bool vsync_disabled() { return !vsync; }
 };
 
 }
