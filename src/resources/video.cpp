@@ -36,26 +36,41 @@ E64::video::video()
     
     
     // create window - title will be set later by function E64::sdl2_update_title()
+    
     window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
-    SDL_DisplayMode current_mode;
-    SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(window), &current_mode);
-    printf("[SDL Display]: refresh rate of current display is %iHz\n",current_mode.refresh_rate);
+    
+    SDL_GetWindowSize(window, &window_width, &window_height);
     
     
     // create renderer and link it to window
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    //renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    
+    SDL_DisplayMode current_mode;
+    
+    SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(window), &current_mode);
+    
+    printf("[SDL Display]: refresh rate of current display is %iHz\n",current_mode.refresh_rate);
+    
+    if( current_mode.refresh_rate == FPS )
+    {
+        printf("[SDL Display]: this is equal to the FPS of E64-II, trying for vsync\n");
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    }
+    else
+    {
+        printf("[SDL Display]: this differs from the FPS of E64-II, going for software FPS\n");
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    }
+    
     SDL_RendererInfo current_renderer;
     SDL_GetRendererInfo(renderer, &current_renderer);
     vsync = (current_renderer.flags & SDL_RENDERER_PRESENTVSYNC) ? true : false;
+    
     printf("[SDL Renderer Name]: %s\n", current_renderer.name);
     printf("[SDL Renderer]: %saccelerated\n", (current_renderer.flags & SDL_RENDERER_ACCELERATED) ? "" : "not ");
     printf("[SDL Renderer]: vsync is %s\n", vsync ? "enabled" : "disabled");
     
     // create a texture that is able to refresh very frequently
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
-    
-    SDL_GetWindowSize(window, &window_width, &window_height);
 
     // make sure mouse cursor isn't visible
     SDL_ShowCursor(SDL_DISABLE);
