@@ -41,14 +41,14 @@ private:
     uint32_t cycle_clock;
     uint32_t dot_clock;
 
-    // current state of the overlay (presenting stats to the user)
-    bool overlay_present;
+    // current state of the stats overlay
+    bool stats_overlay_present;
     
     // breakpoint related stuff
     bool scanline_breakpoints[1024];
     uint16_t old_y_pos;
 
-    void render_overlay(uint16_t xpos, uint16_t ypos, char *text);
+    void render_stats(uint16_t xpos, uint16_t ypos, char *text);
     uint32_t borders_contrast_foreground_color();
 public:
     vicv(void);
@@ -85,7 +85,7 @@ public:
     void remove_scanline_breakpoint(uint16_t scanline);
     bool is_scanline_breakpoint(uint16_t scanline);
     
-    inline void toggle_overlay() { overlay_present = !overlay_present; }
+    inline void toggle_stats() { stats_overlay_present = !stats_overlay_present; }
     
     // Register access to vicv
     uint8_t read_byte(uint8_t address);

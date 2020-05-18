@@ -49,6 +49,9 @@ double E64::pid_controller::process(double input, double interval)
 E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay)
 {
     current_delay = initial_delay;
+    
+    nominal_frame_time = (double)1000000/FPS;
+    
     framecounter = 0;
     evaluation_interval = 8;        // must be a power of 2!
 
@@ -82,7 +85,6 @@ void E64::pid_delay::process()
         framerate = (double)(evaluation_interval * 1000) / duration;
         smoothed_framerate = (alpha * smoothed_framerate) + ((1.0 - alpha) * framerate);
 
-        
         mhz = (double)(framerate * (VICV_SCANLINES+VICV_SCANLINES_VBLANK) * CPU_CYCLES_PER_SCANLINE)/1000000;
         smoothed_mhz = (alpha * smoothed_mhz) + ((1.0 - alpha) * mhz);
 
@@ -93,7 +95,7 @@ void E64::pid_delay::process()
             std::cout << "[PID Delay] system too slow?" << std::endl;
             current_delay = 500;
         }
-        if (current_delay > (1000000/FPS) ) current_delay = (1000000/FPS);
+        if (current_delay > nominal_frame_time ) current_delay = nominal_frame_time;
     }
 
     statistics_framecounter++;

@@ -77,18 +77,40 @@ int main(int argc, char **argv)
                     
                     computer.cia_ic->run();
                     
+                    /*  Next function starts with a time measurement that
+                     *  is used for the calculation of the average frametime
+                     *  and FPS.
+                     *  Also, when vsync is not enabled the system uses a
+                     *  delay (sleep) function to reasonably approach a stable
+                     *  FPS. It is possible to calculate CPU usage by
+                     *  performing the next calculation:
+                     *
+                     *  %CPU = (nominal_frame_time - delay) / nominal_frame_time
+                     */
+                    
                     frame_delay.process();
                     
                     /*  If we have vsync enabled, the update screen function
                      *  will take more time, i.e. it will return after a few
                      *  milliseconds, exactly when vertical refresh can be
-                     *  done. A general way to solve issues with tearing.
+                     *  done. This will avoid tearing.
+                     *  Moreover, there's no need to let the system delay
+                     *  with a calculated value. But we will have to do
+                     *  a time measurement for estimation of %CPU usage.
                      *
-                     *  If vsync is enabled, there is no need to let the
-                     *  system delay with yet another function.
+                     *  Of course, if there's no vsync, we don't have to do
+                     *  a time measurement, but we have to let the system
+                     *  sleep the calculated delay.
                      */
                     
-                    if( host_video.vsync_disabled() ) frame_delay.sleep();
+                    if( host_video.vsync_enabled() )
+                    {
+                        // do a time measurement
+                    }
+                    else
+                    {
+                        frame_delay.sleep();
+                    }
                     
                     host_video.update_screen();
                 }

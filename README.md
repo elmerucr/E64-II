@@ -1,14 +1,13 @@
 # E64-II
 ![E64](./docs/E64-II_icon.png)
 ## Description
-The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and the Commodore Amiga 500.
-
+The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and the Amiga 500.
 ## Technical specifications:
 * Motorola 68000 CPU running at 12.096MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
 * A custom Video Interface Chip (VICV) with a resolution of 512x320 pixels and a palette of 4096 colors (12bit).
 * A custom Blitter Chip with alpha blending capabilities.
-* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for identical pitch to the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to ease use with the big endian Motorola 68000.
+* Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for the same pitch as the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to big endian format for interoperability with the Motorola 68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running in normal mode:
@@ -22,7 +21,6 @@ The E64-II (Enhanced 64-II) is a virtual computer system (under construction) th
 * Open the Xcode project in the ./macOS/E64 folder and build
 #### Ubuntu Linux / Debian
 Run the following commands in a terminal:
-
 ````console
 $ sudo apt install build-essential cmake git libsdl2-dev
 $ git clone https://github.com/elmerucr/E64-II
@@ -30,17 +28,14 @@ $ cd E64-II && mkdir build && cd build
 $ cmake ..
 $ make
 ````
-
 Finally, to run the application from the build directory:
-
 ````console
 $ ./E64-II
 ````
 ### Assembling the kernel ROM
 The sourcecode comes with a working version of the kernel ````kernel.cpp````. If you want to build it yourself however, you can do the following:
-
-Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
-In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.asm```` sourcefiles into a binary rom image. Furthermore, a small ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the larger E64-II project.
+* Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
+* In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.asm```` sourcefiles into a binary rom image. Furthermore, a small ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the larger E64-II project.
 ## Other websites and projects of interest
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
 * [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others.

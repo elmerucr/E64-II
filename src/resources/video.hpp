@@ -75,6 +75,7 @@ public:
     void increase_window_size();
     void decrease_window_size();
     void toggle_fullscreen();
+    inline bool vsync_enabled() { return vsync; }
     inline bool vsync_disabled() { return !vsync; }
 };
 

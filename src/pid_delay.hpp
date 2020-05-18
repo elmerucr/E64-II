@@ -36,8 +36,13 @@ public:
 class pid_delay
 {
 private:
-    double current_delay;   // delay per frame in microsec
-    double max_delay;
+    double current_delay;           // delay per frame in microsec
+    
+    /*  1000000/FPS is the expected time that passes per frame. This is
+     *  also the maximum allowed delay time in the case vsync is not
+     *  enabled.
+     */
+    double nominal_frame_time;
     
     // timers, for calculation of stable fps
     std::chrono::time_point<std::chrono::steady_clock> now, then;
@@ -56,6 +61,8 @@ private:
     double smoothed_mhz;
     double audio_queue_size;
     double smoothed_audio_queue_size;
+    double cpu_usage;
+    double smoothed_cpu_usage;
 
     // exp smoothing constant for average_audio_queue_size
     double alpha;
@@ -71,9 +78,6 @@ public:
     
     // perform the delay for stable fps (not called when vsync is enabled)
     void sleep();
-
-    // perform the delay: calc pars (fps/mhz/buffersize) and run both pid's
-    void run();
     
     char *stats_info();
 };

@@ -10,7 +10,7 @@
 
 E64::vicv::vicv()
 {
-    overlay_present = false;
+    stats_overlay_present = false;
 
     framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];
@@ -91,7 +91,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
-                if(overlay_present) render_overlay(117, 300, frame_delay.stats_info());
+                if(stats_overlay_present) render_stats(117, 300, frame_delay.stats_info());
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;
@@ -108,7 +108,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
 bool E64::vicv::is_hblank() { return HBLANK; }
 bool E64::vicv::is_vblank() { return VBLANK; }
 
-inline void E64::vicv::render_overlay(uint16_t xpos, uint16_t ypos, char *text)
+inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos, char *text)
 {
     uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) % (VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
     uint8_t  eight_pixels = 0;

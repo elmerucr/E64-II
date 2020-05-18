@@ -92,7 +92,7 @@ int E64::sdl2_process_events()
                 {
                     if(event.key.keysym.sym == SDLK_F10)
                     {
-                        computer.vicv_ic->toggle_overlay();
+                        computer.vicv_ic->toggle_stats();
                     }
                 }
                 else if(computer.current_mode == DEBUG_MODE)
