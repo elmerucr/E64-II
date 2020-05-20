@@ -1,4 +1,4 @@
-//  pid_delay.cpp
+//  delay.cpp
 //  E64
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
@@ -7,46 +7,12 @@
 #include <thread>
 #include <cstdint>
 #include <iostream>
-#include "pid_delay.hpp"
+#include "delay.hpp"
 #include "sdl2.hpp"
 #include "common.hpp"
 
-E64::pid_controller::pid_controller(double k1, double k2, double k3, double setpoint, double initial_output)
-{
-    // pid process parameters
-    this->k1 = k1;
-    this->k2 = k2;
-    this->k3 = k3;
-    this->setpoint = setpoint;
-    output = initial_output;
-    // internal parameters
-    error = 0.0;
-    previous_error = 0.0;
-    integral = 0.0;
-    derivative = 0.0;
-}
 
-void E64::pid_controller::change_setpoint(double setpoint)
-{
-    this->setpoint = setpoint;
-}
-
-double E64::pid_controller::process(double input, double interval)
-{
-    // proportional
-    error = setpoint - input;
-    // integral
-    integral = integral + (error * interval);
-    // derivative
-    derivative = (error - previous_error) / interval;
-    // update previous error
-    previous_error = error;
-    // calculate new output
-    output += (k1 * error) + (k2 * integral) + (k3 * derivative);
-    return output;
-}
-
-E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay)
+E64::delay::delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay)
 {
     current_delay = initial_delay;
     
@@ -66,7 +32,7 @@ E64::pid_delay::pid_delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, 
     then = std::chrono::steady_clock::now();
 }
 
-void E64::pid_delay::process()
+void E64::delay::process()
 {
     framecounter++;
     if(!(framecounter & (evaluation_interval - 1) ))
@@ -106,7 +72,7 @@ void E64::pid_delay::process()
     }
 }
 
-void E64::pid_delay::sleep()
+void E64::delay::sleep()
 {
     // call delay
     // c++11 portable version of usleep():
@@ -115,7 +81,7 @@ void E64::pid_delay::sleep()
     std::this_thread::sleep_for(std::chrono::microseconds((uint32_t)current_delay));
 }
 
-char *E64::pid_delay::stats_info()
+char *E64::delay::stats_info()
 {
     return statistics_string;
 }

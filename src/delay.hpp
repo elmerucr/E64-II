@@ -1,39 +1,19 @@
-//  pid_delay.hpp
+//  delay.hpp
 //  E64
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
 #include <chrono>
+#include "pid_controller.hpp"
 
-#ifndef SDL2_PID_DELAY_HPP
-#define SDL2_PID_DELAY_HPP
+#ifndef DELAY_HPP
+#define DELAY_HPP
 
 namespace E64
 {
 
-class pid_controller
-{
-private:
-    double k1;
-    double k2;
-    double k3;
-
-    double setpoint;
-    double output;
-
-    double error;
-    double previous_error;
-    double integral;
-    double derivative;
-public:
-    pid_controller(double _k1, double _k2, double _k3, double _setpoint, double initial_output);
-    void change_setpoint(double _setpoint);
-    double process(double input, double interval);
-};
-
-
-class pid_delay
+class delay
 {
 private:
     double current_delay;           // delay per frame in microsec
@@ -44,7 +24,7 @@ private:
      */
     double nominal_frame_time;
     
-    // timers, for calculation of stable fps
+    // timers, for calculation of fps
     std::chrono::time_point<std::chrono::steady_clock> now, then;
     int64_t duration;
 
@@ -71,7 +51,7 @@ private:
 
 public:
     // constructor
-    pid_delay(double initial_delay);
+    delay(double initial_delay);
     
     // process calculations on parameters (fps/mhz/buffersize) and run pid
     void process();

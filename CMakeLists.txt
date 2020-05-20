@@ -35,6 +35,8 @@ add_executable(
     src/machine.cpp
     src/common.cpp
     src/frequency_divider.cpp
-    src/pid_delay.cpp)
+	src/stats.cpp
+	src/pid_controller.cpp
+    src/delay.cpp)
 
 target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid sids timer TTL74LS148 vicv video ${SDL2_LIBRARIES})

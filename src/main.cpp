@@ -8,7 +8,8 @@
 
 #include "common.hpp"
 #include "sdl2.hpp"
-#include "pid_delay.hpp"
+#include "stats.hpp"
+#include "delay.hpp"
 #include "vicv.hpp"
 #include "debug_console.hpp"
 #include "debug_screen.hpp"
@@ -17,10 +18,18 @@
 #include "sids.hpp"
 #include "timer.hpp"
 
-// global components of the system
+// global component host video
 E64::video host_video;
+
+// global component the machine
 E64::machine computer;
-E64::pid_delay frame_delay(9000.0);
+
+// global component stats (keeps track of system performance)
+E64::stats  statistics;
+
+// global component delay (works with a PID controller, and is constructed with the assumption of 50% CPU usage on start)
+E64::delay frame_delay((1000000/FPS)/2);
+
 
 int main(int argc, char **argv)
 {
