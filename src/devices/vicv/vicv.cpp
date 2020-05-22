@@ -18,6 +18,8 @@ E64::vicv::vicv()
     breakpoint_reached = false;
     clear_scanline_breakpoints();
     old_y_pos = 0;
+    
+    stats_text = nullptr;
 }
 
 E64::vicv::~vicv()
@@ -91,7 +93,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
-                if(stats_overlay_present) render_stats(117, 300, frame_delay.stats_info());
+                if(stats_overlay_present) render_stats(117, 300);
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;
@@ -108,14 +110,14 @@ void E64::vicv::run(uint32_t number_of_cycles)
 bool E64::vicv::is_hblank() { return HBLANK; }
 bool E64::vicv::is_vblank() { return VBLANK; }
 
-inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos, char *text)
+inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
 {
     uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) % (VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
     uint8_t  eight_pixels = 0;
 
     for(int y=0; y<8; y++)
     {
-        char *temp_text = text;
+        char *temp_text = stats_text;
         uint16_t x = 0;
         // are we still pointing at a character
         while(*temp_text)

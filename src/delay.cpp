@@ -80,8 +80,3 @@ void E64::delay::sleep()
     // and: https://en.cppreference.com/w/cpp/chrono
     std::this_thread::sleep_for(std::chrono::microseconds((uint32_t)current_delay));
 }
-
-char *E64::delay::stats_info()
-{
-    return statistics_string;
-}

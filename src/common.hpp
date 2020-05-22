@@ -15,13 +15,12 @@
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
-#define E64_BUILD               20200520
+#define E64_BUILD               20200522
 #define E64_YEAR                2020
 
 // some global objects
 extern E64::video host_video;
 extern E64::machine computer;
-extern E64::delay frame_delay;
 extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 

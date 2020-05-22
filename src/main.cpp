@@ -24,11 +24,8 @@ E64::video host_video;
 // global component the machine
 E64::machine computer;
 
-// global component stats (keeps track of system performance)
+// global component stats (keeps track of system performance parameters)
 E64::stats  statistics;
-
-// global component delay (works with a PID controller, and is constructed with the assumption of 50% CPU usage on start)
-E64::delay frame_delay((1000000/FPS)/2);
 
 
 int main(int argc, char **argv)
@@ -42,6 +39,10 @@ int main(int argc, char **argv)
     
     printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_YEAR, E64_MAJOR_VERSION, E64_MINOR_VERSION, E64_BUILD);
 
+    // delay (with PID controller, constructed with the assumption of 50% CPU usage on start)
+    E64::delay frame_delay((1000000/FPS)/2);
+    computer.vicv_ic->set_stats(frame_delay.stats_info());
+    
     // set up window management, audio and some other stuff
     E64::sdl2_init();
 
@@ -97,6 +98,7 @@ int main(int argc, char **argv)
                      *  %CPU = (nominal_frame_time - delay) / nominal_frame_time
                      */
                     
+                    statistics.process_parameters();
                     frame_delay.process();
                     
                     /*  If we have vsync enabled, the update screen function
@@ -112,16 +114,13 @@ int main(int argc, char **argv)
                      *  sleep the calculated delay.
                      */
                     
-                    if( host_video.vsync_enabled() )
-                    {
-                        // do a time measurement
-                    }
-                    else
-                    {
-                        frame_delay.sleep();
-                    }
+                    statistics.start_idle();
+                    
+                    if( host_video.vsync_disabled() ) frame_delay.sleep();
                     
                     host_video.update_screen();
+                    
+                    statistics.done_idle();
                 }
                 break;
             case E64::DEBUG_MODE:

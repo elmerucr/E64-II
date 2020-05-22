@@ -41,15 +41,25 @@ private:
     uint32_t cycle_clock;
     uint32_t dot_clock;
 
-    // current state of the stats overlay
-    bool stats_overlay_present;
     
-    // breakpoint related stuff
+    // breakpoint related
+private:
     bool scanline_breakpoints[1024];
     uint16_t old_y_pos;
+public:
+    bool breakpoint_reached;
 
-    void render_stats(uint16_t xpos, uint16_t ypos, char *text);
-    uint32_t borders_contrast_foreground_color();
+    
+    // stats overlay
+private:
+    bool stats_overlay_present;
+    void render_stats(uint16_t xpos, uint16_t ypos);
+    char *stats_text;
+public:
+    inline void toggle_stats() { stats_overlay_present = !stats_overlay_present; }
+    void set_stats(char *text) { stats_text = text; }
+
+    
 public:
     vicv(void);
     ~vicv(void);
@@ -61,7 +71,7 @@ public:
     // interrupt device no for vblanc irq
     uint8_t interrupt_device_no_vblank;
     
-    bool breakpoint_reached;
+
 
     // this will be flagged if a frame is completely done
     bool frame_done;
@@ -84,8 +94,6 @@ public:
     void add_scanline_breakpoint(uint16_t scanline);
     void remove_scanline_breakpoint(uint16_t scanline);
     bool is_scanline_breakpoint(uint16_t scanline);
-    
-    inline void toggle_stats() { stats_overlay_present = !stats_overlay_present; }
     
     // Register access to vicv
     uint8_t read_byte(uint8_t address);

@@ -31,14 +31,15 @@ private:
     uint8_t framecounter;               // keeps track of no of frames since last evaluation
     uint8_t evaluation_interval;        // amount of frames between two evaluations, must be a power of 2!
 
-
     uint8_t statistics_framecounter;    // the status bar on the bottom is not refreshed every few frames, but once every few frames
     char statistics_string[256];
 
     double framerate;
     double smoothed_framerate;
+    
     double mhz;
     double smoothed_mhz;
+    
     double audio_queue_size;
     double smoothed_audio_queue_size;
     double cpu_usage;
@@ -59,7 +60,12 @@ public:
     // perform the delay for stable fps (not called when vsync is enabled)
     void sleep();
     
-    char *stats_info();
+    inline char *stats_info()
+    {
+        return statistics_string;
+    }
+
+    inline double get_smoothed_audio_queue_size() { return smoothed_audio_queue_size; }
 };
 
 
