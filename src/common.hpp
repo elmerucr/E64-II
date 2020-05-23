@@ -11,7 +11,7 @@
 #include <cstdint>
 #include "video.hpp"
 #include "machine.hpp"
-#include "delay.hpp"
+#include "stats.hpp"
 
 #define E64_MAJOR_VERSION       0
 #define E64_MINOR_VERSION       4
@@ -21,6 +21,7 @@
 // some global objects
 extern E64::video host_video;
 extern E64::machine computer;
+extern E64::stats  statistics;
 extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
@@ -39,7 +40,7 @@ extern const char screencode_to_ascii[];
 
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
-#define AUDIO_BUFFER_SIZE           4096.0
+#define AUDIO_BUFFER_SIZE           8192.0
 
 // c64 (VirtualC64)
 #define C64_BLACK       0x00f0

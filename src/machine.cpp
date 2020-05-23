@@ -122,7 +122,7 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
     // run cycles on sound device & start audio if buffer is large enough
     // some cheating by adjustment of cycles to run depending on current
     // audio queue size
-    unsigned int audio_queue_size = E64::sdl2_get_queued_audio_size();
+    unsigned int audio_queue_size = statistics.get_current_audio_queue_size();
     
     if(audio_queue_size < 0.9 * AUDIO_BUFFER_SIZE)
     {

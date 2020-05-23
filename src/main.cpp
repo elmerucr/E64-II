@@ -100,8 +100,6 @@ int main(int argc, char **argv)
                     
                     statistics.process_parameters();
                     
-                    frame_delay.process();
-                    
                     /*  If we have vsync enabled, the update screen function
                      *  will take more time, i.e. it will return after a few
                      *  milliseconds, exactly when vertical refresh can be
@@ -117,7 +115,7 @@ int main(int argc, char **argv)
                     
                     statistics.start_idle();
                     
-                    if( host_video.vsync_disabled() ) frame_delay.sleep();
+                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_framerate() );
                     
                     host_video.update_screen();
                     

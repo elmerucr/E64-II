@@ -53,8 +53,10 @@ public:
     void done_idle();
 
     // getting info
-    inline double current_framerate() { return framerate; }
-    inline double current_smoothed_framerate() { return smoothed_framerate; }
+    inline double get_current_framerate() { return framerate; }
+    inline double get_current_smoothed_framerate() { return smoothed_framerate; }
+    inline double get_current_audio_queue_size() { return audio_queue_size; }
+    inline double get_current_smoothed_audio_queue_size() { return smoothed_audio_queue_size; }
     inline char *stats_info() { return statistics_string; }
 };
 

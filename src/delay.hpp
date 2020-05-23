@@ -23,30 +23,9 @@ private:
      *  enabled.
      */
     double nominal_frame_time;
-    
-    // timers, for calculation of fps
-    std::chrono::time_point<std::chrono::steady_clock> now, then;
-    int64_t duration;
 
     uint8_t framecounter;               // keeps track of no of frames since last evaluation
-    uint8_t evaluation_interval;        // amount of frames between two evaluations, must be a power of 2!
-
-    uint8_t statistics_framecounter;    // the status bar on the bottom is not refreshed every few frames, but once every few frames
-    char statistics_string[256];
-
-    double framerate;
-    double smoothed_framerate;
-    
-    double mhz;
-    double smoothed_mhz;
-    
-    double audio_queue_size;
-    double smoothed_audio_queue_size;
-    double cpu_usage;
-    double smoothed_cpu_usage;
-
-    // exp smoothing constant for average_audio_queue_size
-    double alpha;
+    uint8_t evaluation_interval;        // amount of frames between two evaluations
 
     pid_controller fps_pid;
 
@@ -54,20 +33,9 @@ public:
     // constructor
     delay(double initial_delay);
     
-    // process calculations on parameters (fps/mhz/buffersize) and run pid
-    void process();
-    
-    // perform the delay for stable fps (not called when vsync is enabled)
-    void sleep();
-    
-    inline char *stats_info()
-    {
-        return statistics_string;
-    }
-
-    inline double get_smoothed_audio_queue_size() { return smoothed_audio_queue_size; }
+    // process pid and sleep
+    void process(double measured_framerate);
 };
-
 
 }
 
