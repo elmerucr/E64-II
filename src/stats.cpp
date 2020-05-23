@@ -17,8 +17,6 @@
 
 E64::stats::stats()
 {
-    nominal_frame_time = (double)1000000/FPS;
-    
     total_time = 0;
     idle_time = 0;
     
@@ -67,8 +65,7 @@ void E64::stats::process_parameters()
     statistics_framecounter++;
     if(statistics_framecounter == (FPS / 2) )
     {
-        snprintf(statistics_string, 256, "%4.2fMHz  %4.1ffps  %4.0fbytes", smoothed_mhz, smoothed_framerate, smoothed_audio_queue_size);
-        printf("[stats] %4.2fMHz  %4.1ffps idle %2.1f %4.0fbytes\n", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size);
+        snprintf(statistics_string, 256, "%4.2fMHz  %4.1ffps idle %2.1f %4.0fbytes", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size);
         statistics_framecounter = 0;
     }
 }

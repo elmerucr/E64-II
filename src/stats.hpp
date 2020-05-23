@@ -15,12 +15,6 @@ namespace E64
 class stats
 {
 private:
-    /*  1000000/FPS is the expected time that passes per frame. This is
-     *  also the maximum allowed delay time in the case vsync is not
-     *  enabled.
-     */
-    double nominal_frame_time;
-    
     // timers, for calculation of fps
     std::chrono::time_point<std::chrono::steady_clock> now, then, done;
     int64_t total_time;
@@ -54,15 +48,14 @@ public:
     // process calculations on parameters (fps/mhz/buffersize)
     void process_parameters();
 
+    // for time measurement during the main cycle
     void start_idle();
     void done_idle();
 
-    
-    inline char *stats_info()
-    {
-        return statistics_string;
-    }
-
+    // getting info
+    inline double current_framerate() { return framerate; }
+    inline double current_smoothed_framerate() { return smoothed_framerate; }
+    inline char *stats_info() { return statistics_string; }
 };
 
 }

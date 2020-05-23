@@ -10,7 +10,7 @@
 
 E64::vicv::vicv()
 {
-    stats_overlay_present = false;
+    stats_overlay_present = true;
 
     framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];

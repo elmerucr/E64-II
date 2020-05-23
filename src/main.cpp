@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     // delay (with PID controller, constructed with the assumption of 50% CPU usage on start)
     E64::delay frame_delay((1000000/FPS)/2);
-    computer.vicv_ic->set_stats(frame_delay.stats_info());
+    computer.vicv_ic->set_stats( statistics.stats_info() );
     
     // set up window management, audio and some other stuff
     E64::sdl2_init();
@@ -50,8 +50,8 @@ int main(int argc, char **argv)
     debug_console_init();
 
     // Select starting mode of E64-II
-    //computer.switch_to_running();
-    computer.switch_to_debug();
+    computer.switch_to_running();
+    //computer.switch_to_debug();
     
     computer.reset();
 
@@ -99,6 +99,7 @@ int main(int argc, char **argv)
                      */
                     
                     statistics.process_parameters();
+                    
                     frame_delay.process();
                     
                     /*  If we have vsync enabled, the update screen function
