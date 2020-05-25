@@ -11,14 +11,14 @@
 #include "common.hpp"
 
 
-E64::delay::delay(double initial_delay) : fps_pid(-8.0, 0.0, -8.0, FPS, initial_delay)
+E64::delay::delay(double initial_delay) : fps_pid(-80.0, 0.0, -700.0, FPS, initial_delay)
 {
     current_delay = initial_delay;
     
     nominal_frame_time = (double)1000000/FPS;
     
     framecounter = 0;
-    evaluation_interval = 8;        // must be a power of 2!
+    evaluation_interval = 32;        // must be a power of 2!
 }
 
 void E64::delay::process(double measured_framerate)

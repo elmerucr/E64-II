@@ -115,7 +115,7 @@ int main(int argc, char **argv)
                     
                     statistics.start_idle();
                     
-                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_framerate() );
+                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_smoothed_framerate() );
                     
                     host_video.update_screen();
                     

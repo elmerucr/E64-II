@@ -34,7 +34,7 @@ double E64::pid_controller::process(double input, double interval)
     error = setpoint - input;
     
     // integral
-    integral = integral + (error * interval);\
+    integral = integral + (error * interval);
     
     // derivative
     derivative = (error - previous_error) / interval;

@@ -22,7 +22,7 @@ E64::stats::stats()
     
     framecounter = 0;
     
-    evaluation_interval = 8;        // must be a power of 2!
+    evaluation_interval = 8;
 
     smoothed_audio_queue_size = AUDIO_BUFFER_SIZE;
     
@@ -65,20 +65,21 @@ void E64::stats::process_parameters()
     statistics_framecounter++;
     if(statistics_framecounter == (FPS / 2) )
     {
-        snprintf(statistics_string, 256, "%4.2fMHz  %4.1ffps idle %2.1f %4.0fbytes", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size);
+        snprintf(statistics_string, 256, "%5.2fMHz  %5.2ffps  %5.2fms %5.0fbytes", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size);
         statistics_framecounter = 0;
     }
 }
 
 void E64::stats::start_idle()
 {
+    // here we pinpoint done, because we're done with the "work"
     done = std::chrono::steady_clock::now();
-    idle_time += std::chrono::duration_cast<std::chrono::microseconds>(done - then).count();
 }
 
 void E64::stats::done_idle()
 {
     now = std::chrono::steady_clock::now();
+    idle_time += std::chrono::duration_cast<std::chrono::microseconds>(now - done).count();
     total_time += std::chrono::duration_cast<std::chrono::microseconds>(now - then).count();
     then = now;
 }

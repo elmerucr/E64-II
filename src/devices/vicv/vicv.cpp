@@ -93,7 +93,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
-                if(stats_overlay_present) render_stats(117, 300);
+                if(stats_overlay_present) render_stats(104, 300);
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;
