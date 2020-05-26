@@ -22,7 +22,7 @@ E64::stats::stats()
     
     framecounter = 0;
     
-    evaluation_interval = 8;
+    evaluation_interval = 4;
 
     smoothed_audio_queue_size = AUDIO_BUFFER_SIZE;
     
@@ -35,8 +35,10 @@ E64::stats::stats()
     alpha = 0.90f;
 
     statistics_framecounter = 0;
+    
+    nominal_time_per_frame = 1000000 / FPS;
 
-    then = std::chrono::steady_clock::now();
+    now = then = std::chrono::steady_clock::now();
 }
 
 void E64::stats::process_parameters()

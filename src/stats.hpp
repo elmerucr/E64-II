@@ -45,6 +45,8 @@ public:
     // constructor
     stats();
     
+    uint32_t nominal_time_per_frame;      // in microseconds
+    
     // process calculations on parameters (fps/mhz/buffersize)
     void process_parameters();
 

@@ -17,6 +17,8 @@
 #include "cia.hpp"
 #include "sids.hpp"
 #include "timer.hpp"
+#include <chrono>
+#include <thread>
 
 // global component host video
 E64::video host_video;
@@ -58,6 +60,8 @@ int main(int argc, char **argv)
     // start of main loop
     computer.running = true;
     
+    std::chrono::time_point<std::chrono::steady_clock> moment = std::chrono::steady_clock::now();
+    
     while(computer.running)
     {
         switch(computer.current_mode)
@@ -92,10 +96,8 @@ int main(int argc, char **argv)
                      *  and FPS.
                      *  Also, when vsync is not enabled the system uses a
                      *  delay (sleep) function to reasonably approach a stable
-                     *  FPS. It is possible to calculate CPU usage by
-                     *  performing the next calculation:
+                     *  FPS.
                      *
-                     *  %CPU = (nominal_frame_time - delay) / nominal_frame_time
                      */
                     
                     statistics.process_parameters();
@@ -108,18 +110,19 @@ int main(int argc, char **argv)
                      *  with a calculated value. But we will have to do
                      *  a time measurement for estimation of %CPU usage.
                      *
-                     *  Of course, if there's no vsync, we don't have to do
-                     *  a time measurement, but we have to let the system
-                     *  sleep the calculated delay.
                      */
                     
                     statistics.start_idle();
                     
-                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_smoothed_framerate() );
+//                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_smoothed_framerate() );
+                    if( host_video.vsync_disabled() ) std::this_thread::sleep_until(moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
+                    moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
+                    
                     
                     host_video.update_screen();
                     
                     statistics.done_idle();
+                    
                 }
                 break;
             case E64::DEBUG_MODE:

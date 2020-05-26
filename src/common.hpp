@@ -14,8 +14,8 @@
 #include "stats.hpp"
 
 #define E64_MAJOR_VERSION       0
-#define E64_MINOR_VERSION       4
-#define E64_BUILD               20200525
+#define E64_MINOR_VERSION       5
+#define E64_BUILD               20200526
 #define E64_YEAR                2020
 
 // some global objects
@@ -27,7 +27,7 @@ extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, can't be changed easily
 
-#define FPS                         60
+#define FPS                         70
 #define VICV_PIXELS_PER_SCANLINE    512
 #define VICV_PIXELS_HBLANK          64
 #define VICV_SCANLINES              320

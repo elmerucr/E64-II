@@ -5,8 +5,16 @@ goals
 =====
 v0.6
 ----
-- breakpoint functionality on scanlines
-- multiple instructions in debug mode, and still correct scanline behaviour
+- full vicv and blitter
+
+v0.5 (released 2020-05-25)
+--------------------------
+v most of vicv (12 bit color + 16 levels of transparency) is implemented, and most of blitter
+v works both with vsync and without
+v cpu core is Moira
+v breakpoint functionality on scanlines
+v two reSID chips, stereo mixing possibilities
+v some extra monitor views in debug mode
 
 v0.4 (released 2019-11-01)
 --------------------------
