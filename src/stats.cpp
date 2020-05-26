@@ -5,8 +5,6 @@
 
 #include <cstdint>
 #include <chrono>
-
-#include <chrono>
 #include <thread>
 #include <cstdint>
 #include <iostream>
@@ -15,14 +13,16 @@
 #include "common.hpp"
 
 
-E64::stats::stats()
+void E64::stats::reset_measurement()
 {
     total_time = 0;
     idle_time = 0;
     
     framecounter = 0;
+    framecounter_interval = 8;
     
-    evaluation_interval = 4;
+    status_bar_framecounter = 0;
+    status_bar_framecounter_interval = FPS / 2;
 
     smoothed_audio_queue_size = AUDIO_BUFFER_SIZE;
     
@@ -33,8 +33,6 @@ E64::stats::stats()
     smoothed_idle_per_frame = 1000000 / (FPS * 2);
     
     alpha = 0.90f;
-
-    statistics_framecounter = 0;
     
     nominal_time_per_frame = 1000000 / FPS;
 
@@ -44,7 +42,7 @@ E64::stats::stats()
 void E64::stats::process_parameters()
 {
     framecounter++;
-    if(framecounter == evaluation_interval)
+    if(framecounter == framecounter_interval)
     {
         framecounter = 0;
         
@@ -52,23 +50,23 @@ void E64::stats::process_parameters()
         smoothed_audio_queue_size = (alpha * smoothed_audio_queue_size) + ((1.0 - alpha) * audio_queue_size);
 
         // framerate is no. of frames in one measurement interval divided by the duration
-        framerate = (double)(evaluation_interval * 1000000) / total_time;
+        framerate = (double)(framecounter_interval * 1000000) / total_time;
         smoothed_framerate = (alpha * smoothed_framerate) + ((1.0 - alpha) * framerate);
 
         mhz = (double)(framerate * (CPU_CLOCK_SPEED / FPS) )/1000000;
         smoothed_mhz = (alpha * smoothed_mhz) + ((1.0 - alpha) * mhz);
         
-        idle_per_frame = idle_time / (evaluation_interval);
+        idle_per_frame = idle_time / (framecounter_interval);
         smoothed_idle_per_frame = (alpha * smoothed_idle_per_frame) + ((1.0 - alpha) * idle_per_frame);
         
         total_time = idle_time = 0;
     }
 
-    statistics_framecounter++;
-    if(statistics_framecounter == (FPS / 2) )
+    status_bar_framecounter++;
+    if( status_bar_framecounter == status_bar_framecounter_interval )
     {
         snprintf(statistics_string, 256, "%5.2fMHz  %5.2ffps  %5.2fms %5.0fbytes", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size);
-        statistics_framecounter = 0;
+        status_bar_framecounter = 0;
     }
 }
 

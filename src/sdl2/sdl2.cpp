@@ -380,10 +380,7 @@ void E64::sdl2_wait_until_enter_released()
     {
         SDL_PollEvent(&event);
         if( (event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_RETURN) ) wait = false;
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
+        std::this_thread::sleep_for(std::chrono::microseconds(40000));
     }
 }
 void E64::sdl2_wait_until_f9_released()
@@ -393,10 +390,7 @@ void E64::sdl2_wait_until_f9_released()
     while(wait) {
         SDL_PollEvent(&event);
         if( (event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_F9) ) wait = false;
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
-        E64::sdl2_delay_10ms();
+        std::this_thread::sleep_for(std::chrono::microseconds(40000));
     }
 }
 
@@ -438,9 +432,4 @@ void E64::sdl2_cleanup()
     E64::sdl2_stop_audio();
     SDL_CloseAudioDevice(E64_sdl2_audio_dev);
     //SDL_Quit();
-}
-
-void E64::sdl2_delay_10ms()
-{
-    std::this_thread::sleep_for(std::chrono::microseconds(10000));
 }

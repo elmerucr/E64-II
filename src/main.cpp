@@ -58,7 +58,10 @@ int main(int argc, char **argv)
     // start of main loop
     computer.running = true;
     
-    std::chrono::time_point<std::chrono::steady_clock> moment = std::chrono::steady_clock::now();
+    // temporary place to hold this variable, needs work!
+    std::chrono::time_point<std::chrono::steady_clock> moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+    
+    statistics.reset_measurement();
     
     while(computer.running)
     {
@@ -84,40 +87,31 @@ int main(int argc, char **argv)
                 {
                     computer.vicv_ic->frame_done = false;
                     
-                    // process events and catch a possible exit signal
+                    // process events and check for possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) computer.running = false;
                     
                     computer.cia_ic->run();
                     
-                    /*  Next function starts with a time measurement that
-                     *  is used for the calculation of the average frametime
-                     *  and FPS.
-                     *  Also, when vsync is not enabled the system uses a
-                     *  delay (sleep) function to reasonably approach a stable
-                     *  FPS.
-                     *
-                     */
-                    
                     statistics.process_parameters();
                     
                     /*  If we have vsync enabled, the update screen function
-                     *  will take more time, i.e. it will return after a few
-                     *  milliseconds, exactly when vertical refresh can be
+                     *  takes more time, i.e. it will return after a few
+                     *  milliseconds, exactly when vertical refresh is
                      *  done. This will avoid tearing.
-                     *  Moreover, there's no need to let the system delay
-                     *  with a calculated value. But we will have to do
-                     *  a time measurement for estimation of %CPU usage.
-                     *
+                     *  Moreover, there's no need then to let the system sleep
+                     *  with a calculated value. But we will still have to do
+                     *  a time measurement for estimation of idle time.
                      */
                     
                     statistics.start_idle();
                     
                     if( host_video.vsync_disabled() )
                     {
-                        // call sleep / sleep_until
-                        // c++11 portable version of usleep():
-                        // see: https://gist.github.com/ngryman/6482577
-                        // and: https://en.cppreference.com/w/cpp/chrono
+                        /*  call sleep / sleep_until
+                         *  c++11 portable version of usleep():
+                         *  see: https://gist.github.com/ngryman/6482577
+                         *  and: https://en.cppreference.com/w/cpp/chrono
+                         */
                         std::this_thread::sleep_until(moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
                         moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
                     }
@@ -125,7 +119,6 @@ int main(int argc, char **argv)
                     host_video.update_screen();
                     
                     statistics.done_idle();
-                    
                 }
                 break;
             case E64::DEBUG_MODE:
@@ -138,7 +131,7 @@ int main(int argc, char **argv)
                 }
                 
                 // 10ms is a reasonable delay
-                E64::sdl2_delay_10ms();
+                std::this_thread::sleep_for(std::chrono::microseconds(10000));
                 
                 switch( E64::sdl2_process_events() )
                 {

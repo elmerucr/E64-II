@@ -29,9 +29,6 @@ namespace E64
     void sdl2_stop_audio();
     void sdl2_queue_audio(void *buffer, unsigned size);
     unsigned int sdl2_get_queued_audio_size();
-
-    // delay related
-    void sdl2_delay_10ms(void);
 }
 
 #endif

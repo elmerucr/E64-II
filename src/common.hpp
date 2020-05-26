@@ -25,7 +25,7 @@ extern E64::stats  statistics;
 extern const uint8_t ascii_to_screencode[];
 extern const char screencode_to_ascii[];
 
-#define RAM_SIZE                    0x1000000   // 16mb system, can't be changed easily
+#define RAM_SIZE                    0x1000000   // 16mb system, don't change this number
 
 #define FPS                         60
 #define VICV_PIXELS_PER_SCANLINE    512
