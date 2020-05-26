@@ -20,7 +20,6 @@
 		4691C7A623D7B3B600E9E78D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; };
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C7B123D7B40600E9E78D /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7A923D7B40600E9E78D /* machine.cpp */; };
-		4691C7B223D7B40600E9E78D /* delay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AA23D7B40600E9E78D /* delay.cpp */; };
 		4691C7B323D7B40600E9E78D /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AB23D7B40600E9E78D /* common.cpp */; };
 		4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */; };
 		4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7B723D7B4DC00E9E78D /* cia.cpp */; };
@@ -34,7 +33,6 @@
 		4691C81223D7B74300E9E78D /* patched_char_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C81123D7B74300E9E78D /* patched_char_rom.cpp */; };
 		4691C81423D7B80B00E9E78D /* log.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4691C81323D7B80B00E9E78D /* log.txt */; };
 		4697AE1C24756DB100F498CE /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4697AE1A24756DB100F498CE /* stats.cpp */; };
-		4697AE1F24756EB600F498CE /* pid_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4697AE1D24756EB600F498CE /* pid_controller.cpp */; };
 		46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46B4480A23EF3AB30000DAB1 /* blitter.cpp */; };
 		46C4CBF824388BD2002BD371 /* sids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C4CBF624388BD2002BD371 /* sids.cpp */; };
 		46C4CC1224388CBC002BD371 /* wave6581_PS_.cc in Sources */ = {isa = PBXBuildFile; fileRef = 46C4CBF924388CBB002BD371 /* wave6581_PS_.cc */; };
@@ -92,10 +90,8 @@
 		4691C79F23D7B36C00E9E78D /* debug_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_command.cpp; path = ../../../src/debugger/debug_command.cpp; sourceTree = "<group>"; };
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		4691C7A923D7B40600E9E78D /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine.cpp; sourceTree = "<group>"; };
-		4691C7AA23D7B40600E9E78D /* delay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = delay.cpp; path = ../../../src/delay.cpp; sourceTree = "<group>"; };
 		4691C7AB23D7B40600E9E78D /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = common.cpp; path = ../../../src/common.cpp; sourceTree = "<group>"; };
 		4691C7AC23D7B40600E9E78D /* machine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = machine.hpp; path = ../../../src/machine.hpp; sourceTree = "<group>"; };
-		4691C7AD23D7B40600E9E78D /* delay.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = delay.hpp; path = ../../../src/delay.hpp; sourceTree = "<group>"; };
 		4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frequency_divider.cpp; path = ../../../src/frequency_divider.cpp; sourceTree = "<group>"; };
 		4691C7AF23D7B40600E9E78D /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common.hpp; path = ../../../src/common.hpp; sourceTree = "<group>"; };
 		4691C7B023D7B40600E9E78D /* frequency_divider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = frequency_divider.hpp; path = ../../../src/frequency_divider.hpp; sourceTree = "<group>"; };
@@ -132,8 +128,6 @@
 		4691C81323D7B80B00E9E78D /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = log.txt; path = ../../../log.txt; sourceTree = "<group>"; };
 		4697AE1A24756DB100F498CE /* stats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stats.cpp; path = ../../../src/stats.cpp; sourceTree = "<group>"; };
 		4697AE1B24756DB100F498CE /* stats.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = stats.hpp; path = ../../../src/stats.hpp; sourceTree = "<group>"; };
-		4697AE1D24756EB600F498CE /* pid_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pid_controller.cpp; path = ../../../src/pid_controller.cpp; sourceTree = "<group>"; };
-		4697AE1E24756EB600F498CE /* pid_controller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pid_controller.hpp; path = ../../../src/pid_controller.hpp; sourceTree = "<group>"; };
 		46B4480923EF3AB20000DAB1 /* blitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = blitter.hpp; path = ../../../src/devices/vicv/blitter.hpp; sourceTree = "<group>"; };
 		46B4480A23EF3AB30000DAB1 /* blitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = blitter.cpp; path = ../../../src/devices/vicv/blitter.cpp; sourceTree = "<group>"; };
 		46C4CBF624388BD2002BD371 /* sids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sids.cpp; path = ../../../src/devices/sids/sids.cpp; sourceTree = "<group>"; };
@@ -219,10 +213,6 @@
 				4691C78723D7B28600E9E78D /* main.cpp */,
 				4697AE1B24756DB100F498CE /* stats.hpp */,
 				4697AE1A24756DB100F498CE /* stats.cpp */,
-				4697AE1E24756EB600F498CE /* pid_controller.hpp */,
-				4697AE1D24756EB600F498CE /* pid_controller.cpp */,
-				4691C7AD23D7B40600E9E78D /* delay.hpp */,
-				4691C7AA23D7B40600E9E78D /* delay.cpp */,
 				4691C77823D7B23C00E9E78D /* Assets.xcassets */,
 				4691C78023D7B23C00E9E78D /* Info.plist */,
 				4691C81323D7B80B00E9E78D /* log.txt */,
@@ -508,7 +498,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4697AE1F24756EB600F498CE /* pid_controller.cpp in Sources */,
 				46C4CC1C24388CBC002BD371 /* voice.cc in Sources */,
 				4691C7A323D7B36C00E9E78D /* debug_command.cpp in Sources */,
 				4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */,
@@ -548,7 +537,6 @@
 				4691C7D023D7B59900E9E78D /* Moira.cpp in Sources */,
 				4691C80B23D7B64800E9E78D /* TTL74LS148.cpp in Sources */,
 				46C4CC1624388CBC002BD371 /* extfilt.cc in Sources */,
-				4691C7B223D7B40600E9E78D /* delay.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,6 @@
 #include "common.hpp"
 #include "sdl2.hpp"
 #include "stats.hpp"
-#include "delay.hpp"
 #include "vicv.hpp"
 #include "debug_console.hpp"
 #include "debug_screen.hpp"
@@ -41,8 +40,7 @@ int main(int argc, char **argv)
     
     printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_YEAR, E64_MAJOR_VERSION, E64_MINOR_VERSION, E64_BUILD);
 
-    // delay (with PID controller, constructed with the assumption of 50% CPU usage on start)
-    E64::delay frame_delay((1000000/FPS)/2);
+    // place this call into machine class?
     computer.vicv_ic->set_stats( statistics.stats_info() );
     
     // set up window management, audio and some other stuff
@@ -114,10 +112,15 @@ int main(int argc, char **argv)
                     
                     statistics.start_idle();
                     
-//                    if( host_video.vsync_disabled() ) frame_delay.process( statistics.get_current_smoothed_framerate() );
-                    if( host_video.vsync_disabled() ) std::this_thread::sleep_until(moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
-                    moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
-                    
+                    if( host_video.vsync_disabled() )
+                    {
+                        // call sleep / sleep_until
+                        // c++11 portable version of usleep():
+                        // see: https://gist.github.com/ngryman/6482577
+                        // and: https://en.cppreference.com/w/cpp/chrono
+                        std::this_thread::sleep_until(moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
+                        moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
+                    }
                     
                     host_video.update_screen();
                     

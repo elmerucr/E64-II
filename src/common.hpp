@@ -27,7 +27,7 @@ extern const char screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, can't be changed easily
 
-#define FPS                         70
+#define FPS                         60
 #define VICV_PIXELS_PER_SCANLINE    512
 #define VICV_PIXELS_HBLANK          64
 #define VICV_SCANLINES              320
