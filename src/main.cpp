@@ -58,10 +58,7 @@ int main(int argc, char **argv)
     // start of main loop
     computer.running = true;
     
-    // temporary place to hold this variable, needs work!
-    std::chrono::time_point<std::chrono::steady_clock> screen_update_moment, next_screen_update_moment;
-    
-    screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+    std::chrono::time_point<std::chrono::steady_clock> screen_update_moment = std::chrono::steady_clock::now();
     
     statistics.reset_measurement();
     
@@ -96,10 +93,11 @@ int main(int argc, char **argv)
                     
                     statistics.process_parameters();
                     
-                    /*  If we have vsync enabled, the update screen function
+                    /*  If vsync is enabled, the update screen function
                      *  takes more time, i.e. it will return after a few
                      *  milliseconds, exactly when vertical refresh is
                      *  done. This will avoid tearing.
+                     *
                      *  Moreover, there's no need then to let the system sleep
                      *  with a calculated value. But we will still have to do
                      *  a time measurement for estimation of idle time.
@@ -109,23 +107,26 @@ int main(int argc, char **argv)
                     
                     if( host_video.vsync_disabled() )
                     {
-                        /*  call sleep / sleep_until
+                        
+                        screen_update_moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        
+                        /*  Check if the next update lies in the past,
+                         *  this can be a result of a debug session.
+                         *
+                         *  If so, calculate a new update moment. This will
+                         *  avoid "playing catch-up" by the virtual machine.
+                         */
+
+                        if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        
+                        
+                        std::this_thread::sleep_until(screen_update_moment);
+                        
+                        /*  general info about sleep function / chrono / time:
                          *  c++11 portable version of usleep():
                          *  see: https://gist.github.com/ngryman/6482577
                          *  and: https://en.cppreference.com/w/cpp/chrono
                          */
-                        
-                        /*  The next statement checks if the next timepoint
-                         *  is in the past (that can be a result of a debug
-                         *  session). If so,
-                         */
-                        
-                        next_screen_update_moment = screen_update_moment + std::chrono::microseconds(statistics.nominal_time_per_frame);
-                        
-                        if( next_screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
-                        
-                        std::this_thread::sleep_until(screen_update_moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
-                        screen_update_moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
                     }
                     
                     host_video.update_screen();

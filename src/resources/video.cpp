@@ -50,7 +50,7 @@ E64::video::video()
     
     printf("[SDL Display]: refresh rate of current display is %iHz\n",current_mode.refresh_rate);
     
-    if( current_mode.refresh_rate != FPS )
+    if( current_mode.refresh_rate == FPS )
     {
         printf("[SDL Display]: this is equal to the FPS of E64-II, trying for vsync\n");
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
