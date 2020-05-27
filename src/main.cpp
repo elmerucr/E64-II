@@ -19,15 +19,10 @@
 #include <chrono>
 #include <thread>
 
-// global component host video
+// global components
 E64::video host_video;
-
-// global component the machine
 E64::machine computer;
-
-// global component stats (keeps track of system performance parameters)
 E64::stats  statistics;
-
 
 int main(int argc, char **argv)
 {
@@ -118,7 +113,6 @@ int main(int argc, char **argv)
                          */
 
                         if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
-                        
                         
                         std::this_thread::sleep_until(screen_update_moment);
                         
