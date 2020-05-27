@@ -17,7 +17,7 @@ class stats
 private:
     std::chrono::time_point<std::chrono::steady_clock> now, then, done;
     int64_t total_time;
-    int64_t idle_time;
+    int64_t total_idle_time;
 
     uint8_t framecounter;               // keeps track of no of frames since last evaluation
     uint8_t framecounter_interval;      // amount of frames between two evaluations
@@ -49,9 +49,13 @@ public:
     // process calculations on parameters (fps/mhz/buffersize)
     void process_parameters();
 
-    // for time measurement during the main cycle
+    // for time measurement within a frame
     void start_idle();
     void done_idle();
+    
+    // debug related
+    void start_debug_time();
+    void end_debug_time();
 
     // getters
     inline double get_current_framerate() { return framerate; }

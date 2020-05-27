@@ -16,7 +16,7 @@
 void E64::stats::reset_measurement()
 {
     total_time = 0;
-    idle_time = 0;
+    total_idle_time = 0;
     
     framecounter = 0;
     framecounter_interval = 8;
@@ -56,10 +56,10 @@ void E64::stats::process_parameters()
         mhz = (double)(framerate * (CPU_CLOCK_SPEED / FPS) )/1000000;
         smoothed_mhz = (alpha * smoothed_mhz) + ((1.0 - alpha) * mhz);
         
-        idle_per_frame = idle_time / (framecounter_interval);
+        idle_per_frame = total_idle_time / (framecounter_interval);
         smoothed_idle_per_frame = (alpha * smoothed_idle_per_frame) + ((1.0 - alpha) * idle_per_frame);
         
-        total_time = idle_time = 0;
+        total_time = total_idle_time = 0;
     }
 
     status_bar_framecounter++;
@@ -79,7 +79,7 @@ void E64::stats::start_idle()
 void E64::stats::done_idle()
 {
     now = std::chrono::steady_clock::now();
-    idle_time += std::chrono::duration_cast<std::chrono::microseconds>(now - done).count();
+    total_idle_time += std::chrono::duration_cast<std::chrono::microseconds>(now - done).count();
     total_time += std::chrono::duration_cast<std::chrono::microseconds>(now - then).count();
     then = now;
 }

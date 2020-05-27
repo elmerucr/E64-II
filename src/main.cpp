@@ -59,7 +59,9 @@ int main(int argc, char **argv)
     computer.running = true;
     
     // temporary place to hold this variable, needs work!
-    std::chrono::time_point<std::chrono::steady_clock> moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+    std::chrono::time_point<std::chrono::steady_clock> screen_update_moment, next_screen_update_moment;
+    
+    screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
     
     statistics.reset_measurement();
     
@@ -112,8 +114,18 @@ int main(int argc, char **argv)
                          *  see: https://gist.github.com/ngryman/6482577
                          *  and: https://en.cppreference.com/w/cpp/chrono
                          */
-                        std::this_thread::sleep_until(moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
-                        moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        
+                        /*  The next statement checks if the next timepoint
+                         *  is in the past (that can be a result of a debug
+                         *  session). If so,
+                         */
+                        
+                        next_screen_update_moment = screen_update_moment + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        
+                        if( next_screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        
+                        std::this_thread::sleep_until(screen_update_moment + std::chrono::microseconds(statistics.nominal_time_per_frame));
+                        screen_update_moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
                     }
                     
                     host_video.update_screen();
