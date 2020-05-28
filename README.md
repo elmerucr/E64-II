@@ -11,7 +11,8 @@ The E64-II (Enhanced 64-II) is a virtual computer system (under construction) th
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running in normal mode:
-### Debugger:
+![E64-II running](./docs/E64-II_normal_2020-05-28.png)
+### In debug mode:
 ![E64-II debugger](./docs/E64-II_debug_2020-04-25.png)
 ## Compiling
 ### Core application

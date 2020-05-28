@@ -100,11 +100,11 @@ void E64::blitter::run(int no_of_cycles)
                             horizontal_flip  = (operations[tail].this_blit.flags_1 & 0b00000100) ? true : false;
                             vertical_flip    = (operations[tail].this_blit.flags_1 & 0b00001000) ? true : false;
                             
-                            char_width  = operations[tail].this_blit.width  & 0b00000111;
-                            char_height = operations[tail].this_blit.height & 0b00000111;
+                            char_width_log2  = operations[tail].this_blit.width  & 0b00000111;
+                            char_height_log2 = operations[tail].this_blit.height & 0b00000111;
                             
-                            width_log2  = 3 + char_width + is_double_width;
-                            height_log2 = 3 + char_height + is_double_height;
+                            width_log2  = 3 + char_width_log2 + is_double_width;
+                            height_log2 = 3 + char_height_log2 + is_double_height;
                             
                             width  = 1 << width_log2;
                             height = 1 << height_log2;
@@ -134,7 +134,7 @@ void E64::blitter::run(int no_of_cycles)
                 }
                 else
                 {
-                    // do something to take cpu time
+                    // do something to take cpu time?
                 }
                 break;
             case CLEARING_FRAMEBUFFER:
@@ -151,32 +151,34 @@ void E64::blitter::run(int no_of_cycles)
             case BLITTING:
                 if( counter < max_count )
                 {
-                    //scr_x = x + (counter & width_mask);
                     scr_x = x + (horizontal_flip ? (width - (counter & width_mask)) : (counter & width_mask) );
                     
                     if( !(scr_x & 0b1111111000000000) )
                     {
-                        //scr_y = y + ( counter >> width_power_of_2 );
                         scr_y = y + (vertical_flip ? (height - (counter >> width_log2)) : (counter >> width_log2) );
                         
-                        if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )
+                        if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check
                         {
-                            computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ] = alpha_blend
-                            (
-                                computer.vicv_ic->backbuffer[ scr_x | (scr_y << 9) ],
-                                computer.mmu_ic->ram_as_words
-                                [
-                                    (
-                                    (pixel_data >> 1) +
-                                    // Rather complex piece of bitwise logic to pick the right pixels
-                                    // from the source material, depending on double width and height
-                                    // settings.
-                                    // First, it shifts all ...
-                                    ( (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width )
-                                    ) & 0x007fffff
-                                 ]
-                            );
+                            // Transformation of counter to take into account double height or width.
+                            normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
                             
+                            uint16_t temp_x = (normalized_counter & width_mask) >> 3;
+                            uint16_t temp_y = normalized_counter >> (width_log2 + 3);
+                            char_number = (temp_y << width_log2) + temp_x;
+                            //char_number = (normalized_counter >> (char_height_log2 + 3)) * (normalized_counter & (char_width_log2 + 3));
+                            current_char = computer.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
+                            pixel_in_char = (normalized_counter & 0b111) | (((normalized_counter >> (char_width_log2 + 3)) & 0b111) << 3);
+                            
+                            source_color = bitmap_mode ?
+                                computer.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_counter) & 0x007fffff]
+                                :
+                                computer.mmu_ic->ram_as_words[((pixel_data >> 1) + (current_char << 6) + pixel_in_char) & 0x007fffff];
+                            
+                            computer.vicv_ic->backbuffer[scr_x | (scr_y << 9)] = alpha_blend
+                            (
+                                computer.vicv_ic->backbuffer[scr_x | (scr_y << 9)],
+                                source_color
+                            );
                         }
                     }
                     counter++;

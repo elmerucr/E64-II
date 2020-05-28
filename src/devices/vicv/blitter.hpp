@@ -151,6 +151,7 @@ private:
     uint16_t width;
     uint16_t height;
     uint32_t counter;
+    uint32_t normalized_counter;
     uint32_t max_count;
     
     // finite state clearing framebuffer
@@ -163,8 +164,14 @@ private:
     uint16_t scr_x;             // final screen x
     uint16_t scr_y;             // final screen y
     
-    uint16_t char_width;        // width of blit measured in chars
-    uint16_t char_height;       // height of blit measured in chars
+    uint16_t char_width_log2;        // width of blit measured in chars
+    uint16_t char_height_log2;       // height of blit measured in chars
+    
+    uint16_t char_number;
+    uint8_t current_char;
+    uint8_t pixel_in_char;
+    
+    uint16_t source_color;
     
     uint16_t width_mask;
     

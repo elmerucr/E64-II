@@ -884,20 +884,20 @@ F00:0456       	align	5
 F00:0457       screen_blit_structure
 F00:0458       	DC.B	%00000010	; flags 0 - multicolor and character mode
                S01:00FF0460:  02
-F00:0459       	DC.B	%00000001	; empty
-               S01:00FF0461:  01
-F00:0460       	DC.B	%00000100	; width 2^6 = 64 chars  = 512 pixels
+F00:0459       	DC.B	%00000011	; flags 1
+               S01:00FF0461:  03
+F00:0460       	DC.B	%00000100	; width 2^4 = 16 chars  = 128 pixels
                S01:00FF0462:  04
-F00:0461       	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
-               S01:00FF0463:  05
+F00:0461       	DC.B	%00000100	; height 2^4 = 16 chars = 128 pixels
+               S01:00FF0463:  04
 F00:0462       	DC.W	$0		; x_pos (0)
                S01:00FF0464:  00 00
 F00:0463       	DC.W	$20		; y_pos (32)
                S01:00FF0466:  00 20
 F00:0464       	DC.L	CHAR_RAM	; pixel_data
                S01:00FF0468:  00 E5 00 00
-F00:0465       	DC.L	$0		; character_data
-               S01:00FF046C:  00 00 00 00
+F00:0465       	DC.L	$00FF0000	; character_data
+               S01:00FF046C:  00 FF 00 00
 F00:0466       
 F00:0467       ; logo blit description
 F00:0468       
