@@ -884,8 +884,8 @@ F00:0456       	align	5
 F00:0457       screen_blit_structure
 F00:0458       	DC.B	%00000010	; flags 0 - multicolor and character mode
                S01:00FF0460:  02
-F00:0459       	DC.B	%00000011	; flags 1
-               S01:00FF0461:  03
+F00:0459       	DC.B	%00000010	; flags 1
+               S01:00FF0461:  02
 F00:0460       	DC.B	%00000100	; width 2^4 = 16 chars  = 128 pixels
                S01:00FF0462:  04
 F00:0461       	DC.B	%00000100	; height 2^4 = 16 chars = 128 pixels

@@ -108,6 +108,7 @@ void E64::blitter::run(int no_of_cycles)
                             
                             width  = 1 << width_log2;
                             height = 1 << height_log2;
+                            
                             width_mask = width - 1;
                             counter = 0;
                             max_count = width * height;
@@ -153,21 +154,27 @@ void E64::blitter::run(int no_of_cycles)
                 {
                     scr_x = x + (horizontal_flip ? (width - (counter & width_mask)) : (counter & width_mask) );
                     
-                    if( !(scr_x & 0b1111111000000000) )
+                    if( !(scr_x & 0b1111111000000000) )     // clipping check horizontally
                     {
                         scr_y = y + (vertical_flip ? (height - (counter >> width_log2)) : (counter >> width_log2) );
                         
-                        if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check
+                        if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check vertically
                         {
                             // Transformation of counter to take into account double width and/or height.
                             normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
+                            //normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
+
+                            uint16_t pos_x = normalized_counter & (width_mask >> is_double_width);
+                            uint16_t pos_y = normalized_counter >> (width_log2 + is_double_height);
                             
-                            uint16_t temp_x = (normalized_counter & width_mask) >> 3;
-                            uint16_t temp_y = normalized_counter >> (width_log2 + 3);
-                            char_number = (temp_y << char_width_log2) + temp_x;
+                            uint16_t char_x = pos_x >> 3;
+                            uint16_t char_y = pos_y >> 3;
+                            
+                            char_number = char_x + (char_y << char_width_log2);
                             
                             current_char = computer.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
-                            pixel_in_char = (normalized_counter & 0b111) | (((normalized_counter >> (char_width_log2 + 3)) & 0b111) << 3);
+                            
+                            pixel_in_char = (pos_x & 0b111) + ((pos_y & 0b111) << 3);
                             
                             source_color = bitmap_mode ?
                                 computer.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_counter) & 0x007fffff]

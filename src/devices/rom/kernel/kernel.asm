@@ -456,7 +456,7 @@ play_song_frame
 	align	5
 screen_blit_structure
 	DC.B	%00000010	; flags 0 - multicolor and character mode
-	DC.B	%00000011	; flags 1
+	DC.B	%00000010	; flags 1
 	DC.B	%00000100	; width 2^4 = 16 chars  = 128 pixels
 	DC.B	%00000100	; height 2^4 = 16 chars = 128 pixels
 	DC.W	$0		; x_pos (0)
