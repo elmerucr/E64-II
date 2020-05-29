@@ -148,8 +148,12 @@ private:
     // finite state machine general
     uint16_t width_log2;
     uint16_t height_log2;
+    uint16_t screen_width_log2;
+    uint16_t screen_height_log2;
     uint16_t width;
     uint16_t height;
+    uint16_t screen_width;
+    uint16_t screen_height;
     uint32_t counter;
     uint32_t normalized_counter;
     uint32_t max_count;
@@ -174,6 +178,7 @@ private:
     uint16_t source_color;
     
     uint16_t width_mask;
+    uint16_t screen_width_mask;
     
     int16_t x;
     int16_t y;

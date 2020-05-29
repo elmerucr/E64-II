@@ -79,9 +79,9 @@ void E64::blitter::run(int no_of_cycles)
                     {
                         case CLEAR_FRAMEBUFFER:
                             current_state = CLEARING_FRAMEBUFFER;
-                            width = VICV_PIXELS_PER_SCANLINE;
-                            height = VICV_SCANLINES;
-                            max_count = (width * height);
+                            screen_width = VICV_PIXELS_PER_SCANLINE;
+                            screen_height = VICV_SCANLINES;
+                            max_count = (screen_width * screen_height);
                             counter = 0;
                             clear_color = ((operations[tail].data_element) & 0x0000ff0f) | 0x00f0;
                             tail++;
@@ -103,15 +103,23 @@ void E64::blitter::run(int no_of_cycles)
                             char_width_log2  = operations[tail].this_blit.width  & 0b00000111;
                             char_height_log2 = operations[tail].this_blit.height & 0b00000111;
                             
-                            width_log2  = 3 + char_width_log2 + is_double_width;
-                            height_log2 = 3 + char_height_log2 + is_double_height;
+                            width_log2 = 3 + char_width_log2;
+                            height_log2 = 3 + char_height_log2;
                             
-                            width  = 1 << width_log2;
+                            screen_width_log2  = width_log2 + is_double_width;
+                            screen_height_log2 = height_log2 + is_double_height;
+                            
+                            width = 1 << width_log2;
                             height = 1 << height_log2;
                             
+                            screen_width  = 1 << screen_width_log2;
+                            screen_height = 1 << screen_height_log2;
+                            
                             width_mask = width - 1;
+                            screen_width_mask = screen_width - 1;
+                            
                             counter = 0;
-                            max_count = width * height;
+                            max_count = screen_width * screen_height;
                             
                             x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
@@ -152,20 +160,19 @@ void E64::blitter::run(int no_of_cycles)
             case BLITTING:
                 if( counter < max_count )
                 {
-                    scr_x = x + (horizontal_flip ? (width - (counter & width_mask)) : (counter & width_mask) );
+                    scr_x = x + (horizontal_flip ? (screen_width - (counter & screen_width_mask)) : (counter & screen_width_mask) );
                     
-                    if( !(scr_x & 0b1111111000000000) )     // clipping check horizontally
+                    if( !(scr_x & 0b1111111000000000) )                     // clipping check horizontally
                     {
-                        scr_y = y + (vertical_flip ? (height - (counter >> width_log2)) : (counter >> width_log2) );
+                        scr_y = y + (vertical_flip ? (screen_height - (counter >> screen_width_log2) - 1) : (counter >> screen_width_log2) );
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check vertically
                         {
                             // Transformation of counter to take into account double width and/or height.
-                            normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
-                            //normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
+                            normalized_counter = (((counter >> is_double_height) & ~screen_width_mask) | (counter & screen_width_mask)) >> is_double_width;
 
-                            uint16_t pos_x = normalized_counter & (width_mask >> is_double_width);
-                            uint16_t pos_y = normalized_counter >> (width_log2 + is_double_height);
+                            uint16_t pos_x = normalized_counter & width_mask;
+                            uint16_t pos_y = normalized_counter >> width_log2;
                             
                             uint16_t char_x = pos_x >> 3;
                             uint16_t char_y = pos_y >> 3;

@@ -180,6 +180,7 @@ mainloop
 
 
 clear_screen
+
 	MOVEM.L	D0-D1/A0-A2,-(SP)
 	MOVEA.L	(VICV_TXT),A0
 	MOVEA.L	(VICV_COL),A1
@@ -207,6 +208,7 @@ clear_screen
 put_char
 
 	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
+	ANDI.W	#$FF,D0			; clear bits 8-15 from D0
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
 	MOVE.B	CURR_TEXT_COLOR,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
@@ -232,14 +234,14 @@ put_char
 put_string
 
 	;
-	; put_string expects a pointer to a string in a0
+	; put_string expects a pointer to a string in A0
 	;
 
 	MOVE.L	A0,-(SP)
 .1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
 	CMP.B	#ASCII_NULL,D0	; did we reach the end of the string?
 	BEQ	.2		; yes, go to end of function
-	BSR	put_char	; no, print char
+	BSR	put_char	; no, put char
 	BRA	.1
 .2	MOVE.L	(SP)+,A0
 	RTS
@@ -365,7 +367,6 @@ timer3_handler
 
 	MOVE.W	X_VALUE,logo_blit_structure+4
 	MOVE.W	Y_VALUE,logo_blit_structure+6
-	MOVE.W	X_VALUE,screen_blit_structure+4
 
 	MOVE.W	DX,D0
 	ADD.W	D0,X_VALUE
@@ -456,13 +457,14 @@ play_song_frame
 	align	5
 screen_blit_structure
 	DC.B	%00000010	; flags 0 - multicolor and character mode
-	DC.B	%00000010	; flags 1
-	DC.B	%00000100	; width 2^4 = 16 chars  = 128 pixels
-	DC.B	%00000100	; height 2^4 = 16 chars = 128 pixels
+	DC.B	%00000000	; flags 1
+	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
+	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
 	DC.W	$0		; x_pos (0)
 	DC.W	$20		; y_pos (32)
 	DC.L	CHAR_RAM	; pixel_data
-	DC.L	test_table	; character_data
+	;DC.L	test_table	; character_data
+	DC.L	$f00000
 
 ; logo blit description
 
@@ -557,7 +559,7 @@ logo_bitmap
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200501",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200529",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
