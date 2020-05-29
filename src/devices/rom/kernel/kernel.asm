@@ -462,7 +462,7 @@ screen_blit_structure
 	DC.W	$0		; x_pos (0)
 	DC.W	$20		; y_pos (32)
 	DC.L	CHAR_RAM	; pixel_data
-	DC.L	$00FF0000	; character_data
+	DC.L	test_table	; character_data
 
 ; logo blit description
 

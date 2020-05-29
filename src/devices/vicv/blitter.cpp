@@ -159,13 +159,13 @@ void E64::blitter::run(int no_of_cycles)
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check
                         {
-                            // Transformation of counter to take into account double height or width.
+                            // Transformation of counter to take into account double width and/or height.
                             normalized_counter = (((counter >> is_double_height) & ~width_mask) | (counter & width_mask)) >> is_double_width;
                             
                             uint16_t temp_x = (normalized_counter & width_mask) >> 3;
                             uint16_t temp_y = normalized_counter >> (width_log2 + 3);
-                            char_number = (temp_y << width_log2) + temp_x;
-                            //char_number = (normalized_counter >> (char_height_log2 + 3)) * (normalized_counter & (char_width_log2 + 3));
+                            char_number = (temp_y << char_width_log2) + temp_x;
+                            
                             current_char = computer.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
                             pixel_in_char = (normalized_counter & 0b111) | (((normalized_counter >> (char_width_log2 + 3)) & 0b111) << 3);
                             
