@@ -595,12 +595,12 @@ F00:0266       	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data 
                S01:00FF0298:  33 FC F3 39 00 FE 07 04
 F00:0267       	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
                S01:00FF02A0:  13 FC 00 01 00 FE 07 00
-F00:0268       	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
-               S01:00FF02A8:  23 FC 00 FF 04 60 00 FE 07 02
+F00:0268       	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
+               S01:00FF02A8:  23 FC 00 FF 04 80 00 FE 07 02
 F00:0269       	MOVE.B	#%00000010,BLITTER_CONTROL
                S01:00FF02B2:  13 FC 00 02 00 FE 07 00
-F00:0270       	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
-               S01:00FF02BA:  23 FC 00 FF 04 80 00 FE 07 02
+F00:0270       	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
+               S01:00FF02BA:  23 FC 00 FF 04 60 00 FE 07 02
 F00:0271       	MOVE.B	#%00000010,BLITTER_CONTROL
                S01:00FF02C4:  13 FC 00 02 00 FE 07 00
 F00:0272       	RTE
@@ -2218,8 +2218,8 @@ timer3_check EXPR(16712478=0xff031e) ABS
 timer2_check EXPR(16712452=0xff0304) ABS 
 timer1_check EXPR(16712426=0xff02ea) ABS 
 timer0_check EXPR(16712400=0xff02d0) UNUSED ABS 
-logo_blit_structure EXPR(16712832=0xff0480) ABS 
 screen_blit_structure EXPR(16712800=0xff0460) ABS 
+logo_blit_structure EXPR(16712832=0xff0480) ABS 
  put_string .2 EXPR(16712312=0xff0278) ABS 
  put_string .1 EXPR(16712302=0xff026e) ABS 
  put_char .1 EXPR(16712280=0xff0258) ABS 

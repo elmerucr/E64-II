@@ -61,6 +61,9 @@ void E64::blitter::reset()
     
     head = 0;
     tail = 0;
+    
+    cycles_busy = 0;
+    cycles_idle = 0;
 }
 
 void E64::blitter::run(int no_of_cycles)
@@ -72,6 +75,7 @@ void E64::blitter::run(int no_of_cycles)
         switch( current_state )
         {
             case IDLE:
+                cycles_idle++;
                 // check for a new operation in FIFO list
                 if( head != tail)
                 {
@@ -147,6 +151,7 @@ void E64::blitter::run(int no_of_cycles)
                 }
                 break;
             case CLEARING_FRAMEBUFFER:
+                cycles_busy++;
                 if( counter < max_count )
                 {
                     computer.vicv_ic->backbuffer[counter] = clear_color;
@@ -158,6 +163,7 @@ void E64::blitter::run(int no_of_cycles)
                 }
                 break;
             case BLITTING:
+                cycles_busy++;
                 if( counter < max_count )
                 {
                     scr_x = x + (horizontal_flip ? (screen_width - (counter & screen_width_mask)) : (counter & screen_width_mask) );
@@ -262,4 +268,11 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
             registers[address] = byte;
             break;
     }
+}
+
+double E64::blitter::percentage_busy()
+{
+    double percentage = (double)cycles_busy / (double)(cycles_busy + cycles_idle);
+    cycles_busy = cycles_idle = 0.0;
+    return percentage;
 }

@@ -265,9 +265,9 @@ interrupt_2_autovector
 	MOVE.B	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
 	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data register of blitter
 	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
-	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
-	MOVE.B	#%00000010,BLITTER_CONTROL
 	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.B	#%00000010,BLITTER_CONTROL
+	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
 

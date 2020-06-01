@@ -131,9 +131,12 @@ class blitter
     
 private:
     uint8_t registers[256];
+    uint64_t cycles_busy;
+    uint64_t cycles_idle;
 public:
     uint8_t read_byte(uint8_t address);
     void    write_byte(uint8_t address, uint8_t byte);
+    double  percentage_busy();
 
 private:
     // circular buffer containing operations
