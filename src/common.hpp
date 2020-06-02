@@ -19,11 +19,11 @@
 #define E64_YEAR                2020
 
 // some global objects
-extern E64::video host_video;
-extern E64::machine computer;
-extern E64::stats  statistics;
-extern const uint8_t ascii_to_screencode[];
-extern const char screencode_to_ascii[];
+extern E64::video       host_video;
+extern E64::machine     pc;
+extern E64::stats       statistics;
+extern const uint8_t    ascii_to_screencode[];
+extern const char       screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, don't change this number
 

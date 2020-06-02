@@ -595,12 +595,12 @@ F00:0266       	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data 
                S01:00FF0298:  33 FC F3 39 00 FE 07 04
 F00:0267       	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
                S01:00FF02A0:  13 FC 00 01 00 FE 07 00
-F00:0268       	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
-               S01:00FF02A8:  23 FC 00 FF 04 80 00 FE 07 02
+F00:0268       	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
+               S01:00FF02A8:  23 FC 00 FF 04 60 00 FE 07 02
 F00:0269       	MOVE.B	#%00000010,BLITTER_CONTROL
                S01:00FF02B2:  13 FC 00 02 00 FE 07 00
-F00:0270       	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
-               S01:00FF02BA:  23 FC 00 FF 04 60 00 FE 07 02
+F00:0270       	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
+               S01:00FF02BA:  23 FC 00 FF 04 80 00 FE 07 02
 F00:0271       	MOVE.B	#%00000010,BLITTER_CONTROL
                S01:00FF02C4:  13 FC 00 02 00 FE 07 00
 F00:0272       	RTE
@@ -883,8 +883,8 @@ F00:0455       ; screen blit desciption
 F00:0456       
 F00:0457       	align	5
 F00:0458       screen_blit_structure
-F00:0459       	DC.B	%00000100	; flags 0 - multicolor and character mode
-               S01:00FF0460:  04
+F00:0459       	DC.B	%00001000	; flags 0 - multicolor and character mode
+               S01:00FF0460:  08
 F00:0460       	DC.B	%00000000	; flags 1
                S01:00FF0461:  00
 F00:0461       	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
@@ -895,16 +895,16 @@ F00:0463       	DC.W	$0		; x_pos (0)
                S01:00FF0464:  00 00
 F00:0464       	DC.W	$20		; y_pos (32)
                S01:00FF0466:  00 20
-F00:0465       	DC.W	$0		; foreground color
-               S01:00FF0468:  00 00
+F00:0465       	DC.W	$F0F0		; foreground color
+               S01:00FF0468:  F0 F0
 F00:0466       	DC.W	$0		; background color
                S01:00FF046A:  00 00
 F00:0467       	DC.L	CHAR_RAM	; pixel_data
                S01:00FF046C:  00 E5 00 00
-F00:0468       	DC.L	$f00000		; character_data
+F00:0468       	DC.L	$F00000		; character_data
                S01:00FF0470:  00 F0 00 00
-F00:0469       	DC.L	$0		; character_color_data
-               S01:00FF0474:  00 00 00 00
+F00:0469       	DC.L	$FF0000		; character_color_data
+               S01:00FF0474:  00 FF 00 00
 F00:0470       	DC.L	$0		; background_color_data
                S01:00FF0478:  00 00 00 00
 F00:0471       	DC.L	$0		; user_data
@@ -927,8 +927,8 @@ F00:0482       	DC.W	$00E0		; x_pos (224)
                S01:00FF0484:  00 E0
 F00:0483       	DC.W	$0021		; y_pos (33)
                S01:00FF0486:  00 21
-F00:0484       	DC.W	$0		; foreground color
-               S01:00FF0488:  00 00
+F00:0484       	DC.W	$8F00		; foreground color
+               S01:00FF0488:  8F 00
 F00:0485       	DC.W	$0		; background color
                S01:00FF048A:  00 00
 F00:0486       	DC.L	logo_bitmap	; pixel_data
@@ -2238,8 +2238,8 @@ timer3_check EXPR(16712478=0xff031e) ABS
 timer2_check EXPR(16712452=0xff0304) ABS 
 timer1_check EXPR(16712426=0xff02ea) ABS 
 timer0_check EXPR(16712400=0xff02d0) UNUSED ABS 
-screen_blit_structure EXPR(16712800=0xff0460) ABS 
 logo_blit_structure EXPR(16712832=0xff0480) ABS 
+screen_blit_structure EXPR(16712800=0xff0460) ABS 
  put_string .2 EXPR(16712312=0xff0278) ABS 
  put_string .1 EXPR(16712302=0xff026e) ABS 
  put_char .1 EXPR(16712280=0xff0258) ABS 

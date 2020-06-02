@@ -33,23 +33,23 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     uint32_t page = address >> 8;
     if( page == IO_VICV_PAGE )
     {
-        return computer.vicv_ic->read_byte(address & 0x000000ff);
+        return pc.vicv_ic->read_byte(address & 0x000000ff);
     }
     else if( page == IO_SND_PAGE )
     {
-        return computer.sids_ic->read_byte(address & 0x000000ff);
+        return pc.sids_ic->read_byte(address & 0x000000ff);
     }
     else if( page == IO_BLITTER_PAGE )
     {
-        return computer.blitter_ic->read_byte(address & 0x000000ff);
+        return pc.blitter_ic->read_byte(address & 0x000000ff);
     }
     else if( page == IO_TIMER_PAGE )
     {
-        return computer.timer_ic->read_byte(address & 0x000000ff);
+        return pc.timer_ic->read_byte(address & 0x000000ff);
     }
     else if( page == IO_CIA_PAGE )
     {
-        return computer.cia_ic->read_byte(address & 0x000000ff);
+        return pc.cia_ic->read_byte(address & 0x000000ff);
     }
     else if( (address >> 16) == IO_KERNEL_MASK )
     {
@@ -95,23 +95,23 @@ void E64::mmu::write_memory_8(unsigned int address, unsigned int value)
     uint32_t page = address >> 8;
     if( page == IO_VICV_PAGE )
     {
-        computer.vicv_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.vicv_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_SND_PAGE )
     {
-        computer.sids_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.sids_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_BLITTER_PAGE )
     {
-        computer.blitter_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.blitter_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_TIMER_PAGE )
     {
-        computer.timer_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.timer_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_CIA_PAGE )
     {
-        computer.cia_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.cia_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else
     {

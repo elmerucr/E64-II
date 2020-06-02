@@ -12,8 +12,8 @@ E64::vicv::vicv()
 {
     stats_overlay_present = true;
 
-    framebuffer0 = (uint16_t *)&computer.mmu_ic->ram[0x00e00000];
-    framebuffer1 = (uint16_t *)&computer.mmu_ic->ram[0x00e80000];
+    framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[0x00e00000];
+    framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[0x00e80000];
     
     breakpoint_reached = false;
     clear_scanline_breakpoints();
@@ -29,7 +29,7 @@ E64::vicv::~vicv()
 
 void E64::vicv::reset()
 {
-    computer.TTL74LS148_ic->release_line(interrupt_device_no_vblank);
+    pc.TTL74LS148_ic->release_line(interrupt_device_no_vblank);
 
     frame_done = false;
 
@@ -89,7 +89,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
         {
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
                 // start of vblank
-                computer.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
+                pc.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
@@ -174,14 +174,14 @@ void E64::vicv::write_byte(uint8_t address, uint8_t byte)
     switch( address )
     {
         case VICV_REG_ISR:
-            if( byte & 0b00000001 ) computer.TTL74LS148_ic->release_line(interrupt_device_no_vblank);  // acknowledge pending irq
+            if( byte & 0b00000001 ) pc.TTL74LS148_ic->release_line(interrupt_device_no_vblank);  // acknowledge pending irq
             break;
         case VICV_REG_BUFFERSWAP:
             if( byte & 0b00000001 )
             {
-                if( computer.blitter_ic->current_state != IDLE )
+                if( pc.blitter_ic->current_state != IDLE )
                 {
-                    computer.blitter_ic->current_state = IDLE;
+                    pc.blitter_ic->current_state = IDLE;
                     printf("[VICV] warning: blitter was not finished when swapping buffers\n");
                 }
                 uint16_t *tempbuffer = frontbuffer;

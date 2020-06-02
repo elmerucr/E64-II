@@ -132,6 +132,14 @@ void E64::blitter::run(int no_of_cycles)
                             x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
                             
+                            foreground_color =
+                                operations[tail].this_blit.foreground_color__0__7       |
+                                operations[tail].this_blit.foreground_color__8_15 <<  8;
+                            
+                            background_color =
+                                operations[tail].this_blit.background_color__0__7       |
+                                operations[tail].this_blit.background_color__8_15 <<  8;
+                            
                             pixel_data =
                                 operations[tail].this_blit.pixel_data__0__7       |
                                 operations[tail].this_blit.pixel_data__8_15 <<  8 |
@@ -176,7 +184,7 @@ void E64::blitter::run(int no_of_cycles)
                 cycles_busy++;
                 if( counter < max_count )
                 {
-                    computer.vicv_ic->backbuffer[counter] = clear_color;
+                    pc.vicv_ic->backbuffer[counter] = clear_color;
                     counter++;
                 }
                 else
@@ -207,19 +215,35 @@ void E64::blitter::run(int no_of_cycles)
                             
                             char_number = char_x + (char_y << char_width_log2);
                             
-                            current_char = computer.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
-                            //current_char_color = color_per_char ? computer.mmu_ic->ram[()]
+                            current_char = pc.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
+                            
+                            if( color_per_char )
+                                foreground_color = pc.mmu_ic->ram_as_words[((character_color_data >> 1) + char_number) & 0x007fffff];
+
+                            current_background_color = color_per_char ?
+                                pc.mmu_ic->ram_as_words[ ((background_color_data >> 1) + char_number) & 0x007fffff ]
+                                :
+                                background_color;
                             
                             pixel_in_char = (pos_x & 0b111) + ((pos_y & 0b111) << 3);
                             
+                            /*  Pick the right pixel depending on bitmap mode or not.
+                             */
                             source_color = bitmap_mode ?
-                                computer.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_counter) & 0x007fffff]
+                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_counter) & 0x007fffff]
                                 :
-                                computer.mmu_ic->ram_as_words[((pixel_data >> 1) + (current_char << 6) + pixel_in_char) & 0x007fffff];
+                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + (current_char << 6) + pixel_in_char) & 0x007fffff];
                             
-                            computer.vicv_ic->backbuffer[scr_x | (scr_y << 9)] = alpha_blend
+                            /*  If we're not in multicolor mode and the source color
+                             *  has an alpha value, override the chosen color with
+                             *  the foreground color.
+                             */
+                            if( !multicolor_mode && (source_color & 0x00f0) )
+                                source_color = foreground_color;
+                            
+                            pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)] = alpha_blend
                             (
-                                computer.vicv_ic->backbuffer[scr_x | (scr_y << 9)],
+                                pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)],
                                 source_color
                             );
                         }
@@ -247,7 +271,7 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
         case BLIT:
             data_element &= 0x00ffffe0;
             
-            struct surface_blit *temp_blit = (struct surface_blit *)&computer.mmu_ic->ram[data_element & 0x00ffffff];
+            struct surface_blit *temp_blit = (struct surface_blit *)&pc.mmu_ic->ram[data_element & 0x00ffffff];
             
             operations[head].type = BLIT;
             operations[head].data_element = data_element;

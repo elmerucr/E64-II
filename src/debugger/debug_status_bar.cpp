@@ -34,28 +34,28 @@ void debug_status_bar_refresh()
     debug_status_bar_clear();
     
     // registers
-    computer.m68k_ic->dump_registers(help_string);
+    pc.m68k_ic->dump_registers(help_string);
     debug_status_bar_set_cursor_pos( 1*64 +  0);
     debug_status_bar_print(help_string);
     
     // disassembly
     debug_status_bar_set_cursor_pos(10*64 + 0);
-    uint32_t temp_pc = computer.m68k_ic->getPC();
+    uint32_t temp_pc = pc.m68k_ic->getPC();
     for(int i=0; i<6; i++ )
     {
-        if(computer.m68k_ic->debugger.breakpoints.isSetAt(temp_pc))
+        if(pc.m68k_ic->debugger.breakpoints.isSetAt(temp_pc))
         {
             debug_console.status_bar_foreground_color = AMBER_06; // bright amber
         }
         snprintf(help_string, 256, "%06x  ", temp_pc );
         debug_status_bar_print(help_string);
-        int no_of_bytes = computer.m68k_ic->disassemble(temp_pc, help_string);
+        int no_of_bytes = pc.m68k_ic->disassemble(temp_pc, help_string);
         
         if( debug_console.status_bar_hex_view == true )
         {
             for(int i = 0; i< (no_of_bytes/2); i++)
             {
-                snprintf(help_string_2, 256, "%04x ", computer.mmu_ic->read_memory_16(temp_pc + (2*i) ) );
+                snprintf(help_string_2, 256, "%04x ", pc.mmu_ic->read_memory_16(temp_pc + (2*i) ) );
                 debug_status_bar_print(help_string_2);
             }
         }
@@ -77,7 +77,7 @@ void debug_status_bar_refresh()
     }
     
     // vicv
-    snprintf(help_string, 256, "    pixel: %3u\n scanline: %3u\n   hblank: %3u\n   vblank: %3u", computer.vicv_ic->get_current_pixel(), computer.vicv_ic->get_current_scanline(), computer.vicv_ic->is_hblank() ? 1 : 0, computer.vicv_ic->is_vblank() ? 1 : 0 );
+    snprintf(help_string, 256, "    pixel: %3u\n scanline: %3u\n   hblank: %3u\n   vblank: %3u", pc.vicv_ic->get_current_pixel(), pc.vicv_ic->get_current_scanline(), pc.vicv_ic->is_hblank() ? 1 : 0, pc.vicv_ic->is_vblank() ? 1 : 0 );
     debug_status_bar_set_cursor_pos(1*64 + 44);
     debug_status_bar_print(help_string);
 

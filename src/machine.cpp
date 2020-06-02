@@ -93,7 +93,7 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
     uint8_t output_state = NO_BREAKPOINT;
     
     // run cycles on the cpu and check for breakpoints
-    unsigned int processed_cycles = (unsigned int)computer.m68k_ic->run(no_of_cycles);
+    unsigned int processed_cycles = (unsigned int)pc.m68k_ic->run(no_of_cycles);
     if( m68k_ic->breakpoint_reached )
     {
         // cpu breakpoint encountered

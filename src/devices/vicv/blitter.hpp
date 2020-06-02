@@ -56,7 +56,7 @@ struct surface_blit
      *          | +------ Simple Color (0) / Multi Color (1)
      *          +-------- Color per char (0 = off, 1 = on)
      *
-     *  bit 2-7  : Reserved
+     *  bits 4-7: Reserved
      */
     uint8_t     flags_0;
 
@@ -69,7 +69,7 @@ struct surface_blit
      *      | +---------- Horizontal flip (1 = on)
      *      +------------ Vertical flip (1 = on)
      *
-     *  bit 4-7  : Reserved
+     *  bits 1, 3, 6 and 7: Reserved
      */
     uint8_t     flags_1;
     
@@ -98,19 +98,19 @@ struct surface_blit
     uint8_t     y_high_byte;
     uint8_t     y_low_byte;
     
-    /*  16 unsigned big endian number
+    /*  16 unsigned little endian number
      *  containing the foreground color
      *  if single color.
      */
-    uint8_t     foreground_color__8_15;
     uint8_t     foreground_color__0__7;
+    uint8_t     foreground_color__8_15;
     
-    /*  16 unsigned big endian number
+    /*  16 unsigned little endian number
      *  containing the background color
      *  if single color.
      */
-    uint8_t     background_color__8_15;
     uint8_t     background_color__0__7;
+    uint8_t     background_color__8_15;
     
     /*  32 bit pointer to pixels (can be character pixels or bitmap pixels */
     uint8_t     pixel_data_24_31;
@@ -222,7 +222,7 @@ private:
     
     uint16_t char_number;
     uint8_t current_char;
-    uint16_t current_char_color;
+    //uint16_t current_char_color;
     uint16_t current_background_color;
     uint8_t pixel_in_char;
     
@@ -233,6 +233,9 @@ private:
     
     int16_t x;
     int16_t y;
+    
+    uint16_t foreground_color;
+    uint16_t background_color;
     
     uint16_t is_double_width;
     uint16_t is_double_height;

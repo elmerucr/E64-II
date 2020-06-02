@@ -265,9 +265,9 @@ interrupt_2_autovector
 	MOVE.B	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
 	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data register of blitter
 	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
-	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
-	MOVE.B	#%00000010,BLITTER_CONTROL
 	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.B	#%00000010,BLITTER_CONTROL
+	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
 
@@ -456,17 +456,17 @@ play_song_frame
 
 	align	5
 screen_blit_structure
-	DC.B	%00000100	; flags 0 - multicolor and character mode
+	DC.B	%00001000	; flags 0 - multicolor and character mode
 	DC.B	%00000000	; flags 1
 	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
 	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
 	DC.W	$0		; x_pos (0)
 	DC.W	$20		; y_pos (32)
-	DC.W	$0		; foreground color
+	DC.W	$F0F0		; foreground color
 	DC.W	$0		; background color
 	DC.L	CHAR_RAM	; pixel_data
-	DC.L	$f00000		; character_data
-	DC.L	$0		; character_color_data
+	DC.L	$F00000		; character_data
+	DC.L	$FF0000		; character_color_data
 	DC.L	$0		; background_color_data
 	DC.L	$0		; user_data
 
@@ -481,7 +481,7 @@ logo_blit_structure
 	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
 	DC.W	$00E0		; x_pos (224)
 	DC.W	$0021		; y_pos (33)
-	DC.W	$0		; foreground color
+	DC.W	$8F00		; foreground color
 	DC.W	$0		; background color
 	DC.L	logo_bitmap	; pixel_data
 	DC.L	$0		; character_data

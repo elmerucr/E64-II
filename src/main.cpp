@@ -20,9 +20,9 @@
 #include <thread>
 
 // global components
-E64::video host_video;
-E64::machine computer;
-E64::stats  statistics;
+E64::video      host_video;
+E64::machine    pc;
+E64::stats      statistics;
 
 int main(int argc, char **argv)
 {
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_YEAR, E64_MAJOR_VERSION, E64_MINOR_VERSION, E64_BUILD);
 
     // place this call into machine class?
-    computer.vicv_ic->set_stats( statistics.stats_info() );
+    pc.vicv_ic->set_stats( statistics.stats_info() );
     
     // set up window management, audio and some other stuff
     E64::sdl2_init();
@@ -45,21 +45,21 @@ int main(int argc, char **argv)
     debug_console_init();
 
     // Select starting mode of E64-II
-    computer.switch_to_running();
+    pc.switch_to_running();
     //computer.switch_to_debug();
     
-    computer.reset();
+    pc.reset();
 
     // start of main loop
-    computer.running = true;
+    pc.running = true;
     
     std::chrono::time_point<std::chrono::steady_clock> screen_update_moment = std::chrono::steady_clock::now();
     
     statistics.reset_measurement();
     
-    while(computer.running)
+    while(pc.running)
     {
-        switch(computer.current_mode)
+        switch(pc.current_mode)
         {
             case E64::NORMAL_MODE:
                 
@@ -74,17 +74,17 @@ int main(int argc, char **argv)
                  *  test drive!
                  */
                 
-                if( computer.run(63) != 0 ) computer.switch_to_debug();
+                if( pc.run(63) != 0 ) pc.switch_to_debug();
                 
                 // if a full frame is done, call other update functions:
-                if( computer.vicv_ic->frame_done )
+                if( pc.vicv_ic->frame_done )
                 {
-                    computer.vicv_ic->frame_done = false;
+                    pc.vicv_ic->frame_done = false;
                     
                     // process events and check for possible exit signal
-                    if(E64::sdl2_process_events() == E64::QUIT_EVENT) computer.running = false;
+                    if(E64::sdl2_process_events() == E64::QUIT_EVENT) pc.running = false;
                     
-                    computer.cia_ic->run();
+                    pc.cia_ic->run();
                     
                     statistics.process_parameters();
                     
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
                 switch( E64::sdl2_process_events() )
                 {
                     case E64::QUIT_EVENT:
-                        computer.running = false;
+                        pc.running = false;
                         break;
                     case E64::NO_EVENT:
                         // nothing happened, so do nothing
