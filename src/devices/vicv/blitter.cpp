@@ -96,13 +96,17 @@ void E64::blitter::run(int no_of_cycles)
                             
                             // set up the blitting finite state machine
                             
-                            // check flags
+                            // check flags 0
                             bitmap_mode      = (operations[tail].this_blit.flags_0 & 0b00000001) ? true : false;
-                            multicolor_mode  = (operations[tail].this_blit.flags_0 & 0b00000010) ? true : false;
+                            background       = (operations[tail].this_blit.flags_0 & 0b00000010) ? true : false;
+                            multicolor_mode  = (operations[tail].this_blit.flags_0 & 0b00000100) ? true : false;
+                            color_per_char   = (operations[tail].this_blit.flags_0 & 0b00001000) ? true : false;
+                            
+                            // check flags 1
                             is_double_width  = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
-                            is_double_height = (operations[tail].this_blit.flags_1 & 0b00000010) ? 1 : 0;
-                            horizontal_flip  = (operations[tail].this_blit.flags_1 & 0b00000100) ? true : false;
-                            vertical_flip    = (operations[tail].this_blit.flags_1 & 0b00001000) ? true : false;
+                            is_double_height = (operations[tail].this_blit.flags_1 & 0b00000100) ? 1 : 0;
+                            horizontal_flip  = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
+                            vertical_flip    = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
                             
                             char_width_log2  = operations[tail].this_blit.width  & 0b00000111;
                             char_height_log2 = operations[tail].this_blit.height & 0b00000111;
@@ -140,6 +144,24 @@ void E64::blitter::run(int no_of_cycles)
                                 operations[tail].this_blit.character_data_16_23 << 16 |
                                 operations[tail].this_blit.character_data_24_31 << 24;
                             
+                            character_color_data =
+                                operations[tail].this_blit.character_color_data__0__7       |
+                                operations[tail].this_blit.character_color_data__8_15 <<  8 |
+                                operations[tail].this_blit.character_color_data_16_23 << 16 |
+                                operations[tail].this_blit.character_color_data_24_31 << 24;
+                            
+                            background_color_data =
+                                operations[tail].this_blit.background_color_data__0__7       |
+                                operations[tail].this_blit.background_color_data__8_15 <<  8 |
+                                operations[tail].this_blit.background_color_data_16_23 << 16 |
+                                operations[tail].this_blit.background_color_data_24_31 << 24;
+                            
+                            user_data =
+                                operations[tail].this_blit.user_data__0__7       |
+                                operations[tail].this_blit.user_data__8_15 <<  8 |
+                                operations[tail].this_blit.user_data_16_23 << 16 |
+                                operations[tail].this_blit.user_data_24_31 << 24;
+                            
                             tail++;
                             
                             break;
@@ -166,7 +188,7 @@ void E64::blitter::run(int no_of_cycles)
                 cycles_busy++;
                 if( counter < max_count )
                 {
-                    scr_x = x + (horizontal_flip ? (screen_width - (counter & screen_width_mask)) : (counter & screen_width_mask) );
+                    scr_x = x + (horizontal_flip ? (screen_width - (counter & screen_width_mask) - 1) : (counter & screen_width_mask) );
                     
                     if( !(scr_x & 0b1111111000000000) )                     // clipping check horizontally
                     {
@@ -186,6 +208,7 @@ void E64::blitter::run(int no_of_cycles)
                             char_number = char_x + (char_y << char_width_log2);
                             
                             current_char = computer.mmu_ic->ram[(character_data + char_number) & 0x00ffffff];
+                            //current_char_color = color_per_char ? computer.mmu_ic->ram[()]
                             
                             pixel_in_char = (pos_x & 0b111) + ((pos_y & 0b111) << 3);
                             

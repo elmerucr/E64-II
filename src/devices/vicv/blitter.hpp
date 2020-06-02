@@ -43,27 +43,39 @@ enum operation_type
 
 struct surface_blit
 {
-    /*  The size of this structure is max 32 bytes. Inside the machine,
+    /*  The size of this structure is 32 bytes. Inside the machine,
      *  alignment at 2^5 = 32 bytes must be arranged.
      */
     
-    /*  bit 0    : Character mode (0) or bitmap mode (1)
-     *  bit 1    : Single color (0), or multi color mode (1)
+    /*  Flags 0
+     *
+     *  7 6 5 4 3 2 1 0
+     *          | | | |
+     *          | | | +-- Character Mode (0) / Bitmap Mode (1)
+     *          | | +---- Background (0 = off, 1 = on)
+     *          | +------ Simple Color (0) / Multi Color (1)
+     *          +-------- Color per char (0 = off, 1 = on)
+     *
      *  bit 2-7  : Reserved
      */
     uint8_t     flags_0;
-    
-    /*  bit 0    : Horizontal single pixel (0) or double pixel (1) size
-     *  bit 1    : Vertical single pixel (0) or double pixel (1) size
-     *  bit 2    : Horizontal flip on (1)
-     *  bit 3    : Vertical flip on (1)
+
+    /*  Flags 1
+     *
+     *  7 6 5 4 3 2 1 0
+     *      | |   |   |
+     *      | |   |   +-- Horizontal double pixel size (1 = on)
+     *      | |   +------ Vertical double pixel size (1 = on)
+     *      | +---------- Horizontal flip (1 = on)
+     *      +------------ Vertical flip (1 = on)
+     *
      *  bit 4-7  : Reserved
      */
     uint8_t     flags_1;
     
     /*  Width and height of blit, 8 bit unsigned.
      *
-     *  The 5 most significant bits are unused. Then, the 3 least significant
+     *  The 5 most significant bits are unused. Then the 3 least significant
      *  bits indicate a number of 0 - 7 (n). Finally, a bit shift occurs:
      *      0b00000001 << n
      *  Resulting in the final width/height in 'chars' (8 pixels / char)
@@ -86,6 +98,20 @@ struct surface_blit
     uint8_t     y_high_byte;
     uint8_t     y_low_byte;
     
+    /*  16 unsigned big endian number
+     *  containing the foreground color
+     *  if single color.
+     */
+    uint8_t     foreground_color__8_15;
+    uint8_t     foreground_color__0__7;
+    
+    /*  16 unsigned big endian number
+     *  containing the background color
+     *  if single color.
+     */
+    uint8_t     background_color__8_15;
+    uint8_t     background_color__0__7;
+    
     /*  32 bit pointer to pixels (can be character pixels or bitmap pixels */
     uint8_t     pixel_data_24_31;
     uint8_t     pixel_data_16_23;
@@ -97,6 +123,24 @@ struct surface_blit
     uint8_t     character_data_16_23;
     uint8_t     character_data__8_15;
     uint8_t     character_data__0__7;
+    
+    /*  32 bit pointer to start of character color */
+    uint8_t     character_color_data_24_31;
+    uint8_t     character_color_data_16_23;
+    uint8_t     character_color_data__8_15;
+    uint8_t     character_color_data__0__7;
+    
+    /*  32 bit pointer to start of background color */
+    uint8_t     background_color_data_24_31;
+    uint8_t     background_color_data_16_23;
+    uint8_t     background_color_data__8_15;
+    uint8_t     background_color_data__0__7;
+    
+    /*  user data */
+    uint8_t     user_data_24_31;
+    uint8_t     user_data_16_23;
+    uint8_t     user_data__8_15;
+    uint8_t     user_data__0__7;
 };
 
 struct operation
@@ -166,7 +210,9 @@ private:
     
     // finite state blitting
     bool bitmap_mode;
+    bool background;
     bool multicolor_mode;
+    bool color_per_char;
     
     uint16_t scr_x;             // final screen x
     uint16_t scr_y;             // final screen y
@@ -176,6 +222,8 @@ private:
     
     uint16_t char_number;
     uint8_t current_char;
+    uint16_t current_char_color;
+    uint16_t current_background_color;
     uint8_t pixel_in_char;
     
     uint16_t source_color;
@@ -194,6 +242,9 @@ private:
     
     uint32_t pixel_data;
     uint32_t character_data;
+    uint32_t character_color_data;
+    uint32_t background_color_data;
+    uint32_t user_data;
     
 public:
     
