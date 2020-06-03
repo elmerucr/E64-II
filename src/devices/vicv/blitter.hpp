@@ -51,10 +51,10 @@ struct surface_blit
      *
      *  7 6 5 4 3 2 1 0
      *          | | | |
-     *          | | | +-- Character Mode (0) / Bitmap Mode (1)
+     *          | | | +-- Tile Mode (0) / Bitmap Mode (1)
      *          | | +---- Background (0 = off, 1 = on)
      *          | +------ Simple Color (0) / Multi Color (1)
-     *          +-------- Color per char (0 = off, 1 = on)
+     *          +-------- Color per tile (0 = off, 1 = on)
      *
      *  bits 4-7: Reserved
      */
@@ -78,11 +78,11 @@ struct surface_blit
      *  The 5 most significant bits are unused. Then the 3 least significant
      *  bits indicate a number of 0 - 7 (n). Finally, a bit shift occurs:
      *      0b00000001 << n
-     *  Resulting in the final width/height in 'chars' (8 pixels / char)
+     *  Resulting in the final width/height in 'tiles' (8 pixels per tile)
      *  { 1, 2, 4, 8, 16, 32, 64, 128 }
      */
-    uint8_t     width;
-    uint8_t     height;
+    uint8_t     width_in_tiles_log2;
+    uint8_t     height_in_tiles_log2;
     
     /*  16 bit signed big endian number
      *  with the x position of the
@@ -112,29 +112,29 @@ struct surface_blit
     uint8_t     background_color__0__7;
     uint8_t     background_color__8_15;
     
-    /*  32 bit pointer to pixels (can be character pixels or bitmap pixels */
+    /*  32 bit pointer to pixels (can be tile pixels or bitmap pixels */
     uint8_t     pixel_data_24_31;
     uint8_t     pixel_data_16_23;
     uint8_t     pixel_data__8_15;
     uint8_t     pixel_data__0__7;
     
-    /*  32 bit pointer to start of characters */
-    uint8_t     character_data_24_31;
-    uint8_t     character_data_16_23;
-    uint8_t     character_data__8_15;
-    uint8_t     character_data__0__7;
+    /*  32 bit pointer to start of tiles */
+    uint8_t     tile_data_24_31;
+    uint8_t     tile_data_16_23;
+    uint8_t     tile_data__8_15;
+    uint8_t     tile_data__0__7;
     
-    /*  32 bit pointer to start of character color */
-    uint8_t     character_color_data_24_31;
-    uint8_t     character_color_data_16_23;
-    uint8_t     character_color_data__8_15;
-    uint8_t     character_color_data__0__7;
+    /*  32 bit pointer to start of tile color */
+    uint8_t     tile_color_data_24_31;
+    uint8_t     tile_color_data_16_23;
+    uint8_t     tile_color_data__8_15;
+    uint8_t     tile_color_data__0__7;
     
-    /*  32 bit pointer to start of background color */
-    uint8_t     background_color_data_24_31;
-    uint8_t     background_color_data_16_23;
-    uint8_t     background_color_data__8_15;
-    uint8_t     background_color_data__0__7;
+    /*  32 bit pointer to start of tile background color */
+    uint8_t     tile_background_color_data_24_31;
+    uint8_t     tile_background_color_data_16_23;
+    uint8_t     tile_background_color_data__8_15;
+    uint8_t     tile_background_color_data__0__7;
     
     /*  user data */
     uint8_t     user_data_24_31;
@@ -174,79 +174,93 @@ class blitter
      */
     
 private:
-    uint8_t registers[256];
+    uint8_t  registers[256];
+    
+    /*  Keeping track of busy and idle cycles. This way, it is possible
+     *  to estimate the % of usage of the blitter chip. It is best to
+     *  calculate this only once per frame.
+     */
     uint64_t cycles_busy;
     uint64_t cycles_idle;
+    
 public:
-    uint8_t read_byte(uint8_t address);
-    void    write_byte(uint8_t address, uint8_t byte);
-    double  percentage_busy();
+    uint8_t  read_byte(uint8_t address);
+    void     write_byte(uint8_t address, uint8_t byte);
+    
+    /*  Returns the fraction of time the blitter was NOT idle.
+     */
+    double   fraction_busy();
 
 private:
-    // circular buffer containing operations
-    // if more than 256 operation would be written (unlikely) and not
-    // finished, something will be overwritten
+    /*  Circular buffer containing operations. If more than 256 operations
+     *  would be written (unlikely) and not finished, something will be
+     *  overwritten.
+     */
     struct operation operations[256];
     uint8_t head;
     uint8_t tail;
     void add_operation(enum operation_type type, uint32_t data_element);
     
     
-    // finite state machine general
+    // finite state machine
+    bool        bitmap_mode;
+    bool        background;
+    bool        multicolor_mode;
+    bool        color_per_tile;
+    bool        horizontal_flip;
+    bool        vertical_flip;
+    uint16_t    double_width;
+    uint16_t    double_height;
+    
+    uint16_t width_in_tiles_log2;
     uint16_t width_log2;
-    uint16_t height_log2;
-    uint16_t screen_width_log2;
-    uint16_t screen_height_log2;
+    uint16_t width_on_screen_log2;
     uint16_t width;
+    uint16_t width_on_screen;
+    
+    uint16_t height_in_tiles_log2;
+    uint16_t height_log2;
+    uint16_t height_on_screen_log2;
     uint16_t height;
-    uint16_t screen_width;
-    uint16_t screen_height;
+    uint16_t height_on_screen;
+    
     uint32_t counter;
     uint32_t normalized_counter;
     uint32_t max_count;
     
-    // finite state clearing framebuffer
+    // specific for clearing framebuffer
     uint16_t clear_color;
-    
-    // finite state blitting
-    bool bitmap_mode;
-    bool background;
-    bool multicolor_mode;
-    bool color_per_char;
+
+    int16_t x;
+    int16_t y;
     
     uint16_t scr_x;             // final screen x
     uint16_t scr_y;             // final screen y
     
-    uint16_t char_width_log2;        // width of blit measured in chars
-    uint16_t char_height_log2;       // height of blit measured in chars
+    uint16_t x_in_blit;
+    uint16_t y_in_blit;
     
-    uint16_t char_number;
-    uint8_t current_char;
-    //uint16_t current_char_color;
-    uint16_t current_background_color;
-    uint8_t pixel_in_char;
+    uint16_t tile_x;
+    uint16_t tile_y;
+    
+    
+    uint16_t    tile_number;
+    uint8_t     tile_index;
+    uint16_t    current_background_color;
+    uint8_t     pixel_in_tile;
     
     uint16_t source_color;
     
     uint16_t width_mask;
-    uint16_t screen_width_mask;
-    
-    int16_t x;
-    int16_t y;
+    uint16_t width_on_screen_mask;
     
     uint16_t foreground_color;
     uint16_t background_color;
     
-    uint16_t is_double_width;
-    uint16_t is_double_height;
-    
-    bool horizontal_flip;
-    bool vertical_flip;
-    
     uint32_t pixel_data;
-    uint32_t character_data;
-    uint32_t character_color_data;
-    uint32_t background_color_data;
+    uint32_t tile_data;
+    uint32_t tile_color_data;
+    uint32_t tile_background_color_data;
     uint32_t user_data;
     
 public:

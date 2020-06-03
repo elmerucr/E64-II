@@ -897,16 +897,16 @@ F00:0464       	DC.W	$20		; y_pos (32)
                S01:00FF0466:  00 20
 F00:0465       	DC.W	$F0F0		; foreground color
                S01:00FF0468:  F0 F0
-F00:0466       	DC.W	$0		; background color
-               S01:00FF046A:  00 00
+F00:0466       	DC.W	$5000		; background color
+               S01:00FF046A:  50 00
 F00:0467       	DC.L	CHAR_RAM	; pixel_data
                S01:00FF046C:  00 E5 00 00
 F00:0468       	DC.L	$F00000		; character_data
                S01:00FF0470:  00 F0 00 00
 F00:0469       	DC.L	$FF0000		; character_color_data
                S01:00FF0474:  00 FF 00 00
-F00:0470       	DC.L	$0		; background_color_data
-               S01:00FF0478:  00 00 00 00
+F00:0470       	DC.L	$FF0000		; background_color_data
+               S01:00FF0478:  00 FF 00 00
 F00:0471       	DC.L	$0		; user_data
                S01:00FF047C:  00 00 00 00
 F00:0472       
@@ -927,18 +927,18 @@ F00:0482       	DC.W	$00E0		; x_pos (224)
                S01:00FF0484:  00 E0
 F00:0483       	DC.W	$0021		; y_pos (33)
                S01:00FF0486:  00 21
-F00:0484       	DC.W	$8F00		; foreground color
-               S01:00FF0488:  8F 00
-F00:0485       	DC.W	$0		; background color
-               S01:00FF048A:  00 00
+F00:0484       	DC.W	$40F0		; foreground color
+               S01:00FF0488:  40 F0
+F00:0485       	DC.W	$A0F0		; background color
+               S01:00FF048A:  A0 F0
 F00:0486       	DC.L	logo_bitmap	; pixel_data
                S01:00FF048C:  00 FF 04 A0
 F00:0487       	DC.L	$0		; character_data
                S01:00FF0490:  00 00 00 00
 F00:0488       	DC.L	$0		; character_color_data
                S01:00FF0494:  00 00 00 00
-F00:0489       	DC.L	$0		; background_color_data
-               S01:00FF0498:  00 00 00 00
+F00:0489       	DC.L	$ff0000		; background_color_data
+               S01:00FF0498:  00 FF 00 00
 F00:0490       	DC.L	$0		; user_data
                S01:00FF049C:  00 00 00 00
 F00:0491       

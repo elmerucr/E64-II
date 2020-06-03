@@ -463,11 +463,11 @@ screen_blit_structure
 	DC.W	$0		; x_pos (0)
 	DC.W	$20		; y_pos (32)
 	DC.W	$F0F0		; foreground color
-	DC.W	$0		; background color
+	DC.W	$5000		; background color
 	DC.L	CHAR_RAM	; pixel_data
 	DC.L	$F00000		; character_data
 	DC.L	$FF0000		; character_color_data
-	DC.L	$0		; background_color_data
+	DC.L	$FF0000		; background_color_data
 	DC.L	$0		; user_data
 
 
@@ -481,12 +481,12 @@ logo_blit_structure
 	DC.B	%00000000	; height 2^0 = 1 char =  8 pixels
 	DC.W	$00E0		; x_pos (224)
 	DC.W	$0021		; y_pos (33)
-	DC.W	$8F00		; foreground color
-	DC.W	$0		; background color
+	DC.W	$40F0		; foreground color
+	DC.W	$A0F0		; background color
 	DC.L	logo_bitmap	; pixel_data
 	DC.L	$0		; character_data
 	DC.L	$0		; character_color_data
-	DC.L	$0		; background_color_data
+	DC.L	$ff0000		; background_color_data
 	DC.L	$0		; user_data
 
 
