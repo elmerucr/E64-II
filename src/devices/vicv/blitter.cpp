@@ -29,32 +29,33 @@
  *
  */
 
-inline uint16_t alpha_blend(uint16_t destination, uint16_t source)
+inline void alpha_blend(uint16_t *destination, uint16_t *source)
 {
     uint16_t r_dest, g_dest, b_dest;
     uint16_t a_src, r_src, g_src, b_src;
     
-    r_dest = (destination & 0x000f);
-    g_dest = (destination & 0xf000) >> 12;
-    b_dest = (destination & 0x0f00) >> 8;
+    r_dest = (*destination & 0x000f);
+    g_dest = (*destination & 0xf000) >> 12;
+    b_dest = (*destination & 0x0f00) >> 8;
 
-    a_src = (source & 0x00f0) >> 4;
-    r_src = (source & 0x000f);
-    g_src = (source & 0xf000) >> 12;
-    b_src = (source & 0x0f00) >> 8;
+    a_src = (*source & 0x00f0) >> 4;
+    r_src = (*source & 0x000f);
+    g_src = (*source & 0xf000) >> 12;
+    b_src = (*source & 0x0f00) >> 8;
     
     //brute force divide by 15
-//    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
-//    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
-//    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
+    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
+    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
+    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
     
     // a different way to divide by 15:  * 68 then >> 10
-    r_dest = r_dest + (((( (r_src) - r_dest) * a_src) * 68) >> 10);
-    g_dest = g_dest + (((( (g_src) - g_dest) * a_src) * 68) >> 10);
-    b_dest = b_dest + (((( (b_src) - b_dest) * a_src) * 68) >> 10);
+    // slightly faster, but NOT idiot proof at full alpha (some transparency remains!)
+//    r_dest = r_dest + (((( (r_src) - r_dest) * a_src) * 68) >> 10);
+//    g_dest = g_dest + (((( (g_src) - g_dest) * a_src) * 68) >> 10);
+//    b_dest = b_dest + (((( (b_src) - b_dest) * a_src) * 68) >> 10);
     
     // anything return has an alpha value of 0xf
-    return (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
+    *destination = (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 
 void E64::blitter::reset()
@@ -88,8 +89,8 @@ void E64::blitter::run(int no_of_cycles)
                             current_state = CLEARING_FRAMEBUFFER;
                             width_on_screen = VICV_PIXELS_PER_SCANLINE;
                             height_on_screen = VICV_SCANLINES;
-                            max_count = (width_on_screen * height_on_screen);
-                            counter = 0;
+                            total_pixel_no = (width_on_screen * height_on_screen);
+                            pixel_no = 0;
                             clear_color = ((operations[tail].data_element) & 0x0000ff0f) | 0x00f0;
                             tail++;
                             break;
@@ -107,8 +108,8 @@ void E64::blitter::run(int no_of_cycles)
                             // check flags 1
                             double_width    = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
                             double_height   = (operations[tail].this_blit.flags_1 & 0b00000100) ? 1 : 0;
-                            horizontal_flip = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
-                            vertical_flip   = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
+                            hrz_flip = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
+                            vrt_flip   = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
                             
                             width_in_tiles_log2  = operations[tail].this_blit.width_in_tiles_log2  & 0b00000111;
                             height_in_tiles_log2 = operations[tail].this_blit.height_in_tiles_log2 & 0b00000111;
@@ -128,8 +129,8 @@ void E64::blitter::run(int no_of_cycles)
                             width_mask = width - 1;
                             width_on_screen_mask = width_on_screen - 1;
                             
-                            counter = 0;
-                            max_count = width_on_screen * height_on_screen;
+                            pixel_no = 0;
+                            total_pixel_no = width_on_screen * height_on_screen;
                             
                             x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
@@ -185,10 +186,10 @@ void E64::blitter::run(int no_of_cycles)
             case CLEARING_FRAMEBUFFER:
                 cycles_busy++;
                 
-                if( counter < max_count )
+                if( !(pixel_no == total_pixel_no) )
                 {
-                    pc.vicv_ic->backbuffer[counter] = clear_color;
-                    counter++;
+                    pc.vicv_ic->backbuffer[pixel_no] = clear_color;
+                    pixel_no++;
                 }
                 else
                 {
@@ -198,29 +199,27 @@ void E64::blitter::run(int no_of_cycles)
             case BLITTING:
                 cycles_busy++;
                 
-                if( counter < max_count )
+                if( !(pixel_no == total_pixel_no) )
                 {
-                    scr_x = x + (horizontal_flip ? (width_on_screen - (counter & width_on_screen_mask) - 1) : (counter & width_on_screen_mask) );
+                    scr_x = x + (hrz_flip ? (width_on_screen - (pixel_no & width_on_screen_mask) - 1) : (pixel_no & width_on_screen_mask) );
                     
                     if( !(scr_x & 0b1111111000000000) )                     // clipping check horizontally
                     {
-                        scr_y = y + (vertical_flip ?
-                            (height_on_screen - (counter >> width_on_screen_log2) - 1) : (counter >> width_on_screen_log2) );
+                        scr_y = y + (vrt_flip ?
+                            (height_on_screen - (pixel_no >> width_on_screen_log2) - 1) : (pixel_no >> width_on_screen_log2) );
                         
                         if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check vertically
                         {
-                            /*  Transformation of counter to take into account double width and/or height. After
-                             *  this <complex> transformation, the normalized counter points to a position in the
-                             *  source.
-                             *  NEEDS WORK: document this transformation?
+                            /*  Transformation of pixel_no to take into account double width and/or height. After
+                             *  this <complex> transformation, the normalized pixel_no points to a position in the
+                             *  source material.
+                             *  NEEDS WORK: document this transformation
                              */
-                            normalized_counter = (((counter >> double_height) & ~width_on_screen_mask) | (counter & width_on_screen_mask)) >> double_width;
+                            normalized_pixel_no = (((pixel_no >> double_height) & ~width_on_screen_mask) | (pixel_no & width_on_screen_mask)) >> double_width;
                             
-                            /*  Calculate the current x and y positions within
-                             *  the current blit source pixeldata.
-                             */
-                            x_in_blit = normalized_counter & width_mask;
-                            y_in_blit = normalized_counter >> width_log2;
+                            /*  Calculate the current x and y positions within the current blit source pixeldata */
+                            x_in_blit = normalized_pixel_no & width_mask;
+                            y_in_blit = normalized_pixel_no >> width_log2;
                             
                             tile_x = x_in_blit >> 3;
                             tile_y = y_in_blit >> 3;
@@ -241,7 +240,7 @@ void E64::blitter::run(int no_of_cycles)
                             
                             /*  Pick the right pixel depending on bitmap mode or tile mode */
                             source_color = bitmap_mode ?
-                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_counter) & 0x007fffff]
+                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_pixel_no) & 0x007fffff]
                                 :
                                 pc.mmu_ic->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
                             
@@ -265,14 +264,10 @@ void E64::blitter::run(int no_of_cycles)
                             }
                             
                             /*  Finally, call the alpha blend function */
-                            pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)] = alpha_blend
-                            (
-                                pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)],
-                                source_color
-                            );
+                            alpha_blend( &pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)], &source_color );
                         }
                     }
-                    counter++;
+                    pixel_no++;
                 }
                 else
                 {

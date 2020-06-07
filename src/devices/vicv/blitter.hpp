@@ -207,8 +207,8 @@ private:
     bool        background;
     bool        multicolor_mode;
     bool        color_per_tile;
-    bool        horizontal_flip;
-    bool        vertical_flip;
+    bool        hrz_flip;
+    bool        vrt_flip;
     uint16_t    double_width;
     uint16_t    double_height;
     
@@ -224,9 +224,9 @@ private:
     uint16_t height;
     uint16_t height_on_screen;
     
-    uint32_t counter;
-    uint32_t normalized_counter;
-    uint32_t max_count;
+    uint32_t pixel_no;
+    uint32_t normalized_pixel_no;
+    uint32_t total_pixel_no;
     
     // specific for clearing framebuffer
     uint16_t clear_color;
