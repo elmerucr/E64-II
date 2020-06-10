@@ -29,24 +29,40 @@
  *
  */
 
+/*  Update 2020-06-10, check:
+ *  https://stackoverflow.com/questions/12011081/alpha-blending-2-rgba-colors-in-c
+ *
+ *  Calculate inv_alpha, then makes use of a bit shift, no division anymore.
+ *  Speeds up a little.
+ */
+
+/*  Optimization possible by transferring 64 integers at once?
+ */
+
 inline void alpha_blend(uint16_t *destination, uint16_t *source)
 {
     uint16_t r_dest, g_dest, b_dest;
-    uint16_t a_src, r_src, g_src, b_src;
+    uint16_t a_src, a_src_inv, r_src, g_src, b_src;
     
     r_dest = (*destination & 0x000f);
     g_dest = (*destination & 0xf000) >> 12;
     b_dest = (*destination & 0x0f00) >> 8;
 
-    a_src = (*source & 0x00f0) >> 4;
+    a_src = ((*source & 0x00f0) >> 4) + 1;
+    a_src_inv = 17 - a_src;
     r_src = (*source & 0x000f);
     g_src = (*source & 0xf000) >> 12;
     b_src = (*source & 0x0f00) >> 8;
     
+    r_dest = ((a_src*r_src) + (a_src_inv*r_dest)) >> 4;
+    g_dest = ((a_src*g_src) + (a_src_inv*g_dest)) >> 4;
+    b_dest = ((a_src*b_src) + (a_src_inv*b_dest)) >> 4;
+    
+    
     //brute force divide by 15
-    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
-    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
-    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
+//    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
+//    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
+//    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
     
     // a different way to divide by 15:  * 68 then >> 10
     // slightly faster, but NOT idiot proof at full alpha (some transparency remains!)
