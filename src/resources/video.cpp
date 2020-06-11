@@ -22,6 +22,10 @@ E64::video::video()
     printf("[SDL] base path is: %s\n", base_path);
     SDL_free(base_path);
     
+    char *pref_path = SDL_GetPrefPath("elmerucr", "E64-II");
+    printf("[SDL] pref path is: %s\n", pref_path);
+    SDL_free(pref_path);
+    
     SDL_Init(SDL_INIT_VIDEO);
     
     // print the list of video backends

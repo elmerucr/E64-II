@@ -39,38 +39,33 @@
 /*  Optimization possible by transferring 64 integers at once?
  */
 
+
+
 inline void alpha_blend(uint16_t *destination, uint16_t *source)
 {
     uint16_t r_dest, g_dest, b_dest;
     uint16_t a_src, a_src_inv, r_src, g_src, b_src;
     
     r_dest = (*destination & 0x000f);
-    g_dest = (*destination & 0xf000) >> 12;
-    b_dest = (*destination & 0x0f00) >> 8;
+    g_dest = (*destination & 0xf000); // >> 12;
+    b_dest = (*destination & 0x0f00); // >> 8;
 
     a_src = ((*source & 0x00f0) >> 4) + 1;
     a_src_inv = 17 - a_src;
     r_src = (*source & 0x000f);
-    g_src = (*source & 0xf000) >> 12;
-    b_src = (*source & 0x0f00) >> 8;
+    g_src = (*source & 0xf000); // >> 12;
+    b_src = (*source & 0x0f00); // >> 8;
     
-    r_dest = ((a_src*r_src) + (a_src_inv*r_dest)) >> 4;
-    g_dest = ((a_src*g_src) + (a_src_inv*g_dest)) >> 4;
-    b_dest = ((a_src*b_src) + (a_src_inv*b_dest)) >> 4;
+    r_dest = ((a_src * r_src) + (a_src_inv * r_dest)) >> 4;
+    g_dest = ((a_src * g_src) + (a_src_inv * g_dest)) >> (4 + 12);
+    b_dest = ((a_src * b_src) + (a_src_inv * b_dest)) >> (4 + 8);
     
-    
-    //brute force divide by 15
+    // brute force divide by 15, works but bit shifts are faster
 //    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
 //    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
 //    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
     
-    // a different way to divide by 15:  * 68 then >> 10
-    // slightly faster, but NOT idiot proof at full alpha (some transparency remains!)
-//    r_dest = r_dest + (((( (r_src) - r_dest) * a_src) * 68) >> 10);
-//    g_dest = g_dest + (((( (g_src) - g_dest) * a_src) * 68) >> 10);
-//    b_dest = b_dest + (((( (b_src) - b_dest) * a_src) * 68) >> 10);
-    
-    // anything return has an alpha value of 0xf
+    // anything returned always has an alpha value of 0xf
     *destination = (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 

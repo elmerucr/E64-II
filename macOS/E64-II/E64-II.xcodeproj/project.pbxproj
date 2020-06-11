@@ -674,6 +674,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_OPTIMIZATION_LEVEL = 2;
 				INFOPLIST_FILE = "E64-II/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
