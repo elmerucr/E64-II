@@ -7,7 +7,7 @@
 #include "common.hpp"
 
 /*
- *  blend_color function takes the current color (destination, which is
+ *  alpha_blend function takes the current color (destination, which is
  *  also the destination) and the color that must be blended (source). It
  *  returns the value of the blend which, normally, will be written to the
  *  destination.
@@ -26,20 +26,24 @@
  *  (1) ((source * a) + (destination * (COLOR_MAX - a))) / COLOR_MAX
  *  (2) ((source * a) - (destination * a) + (destination * COLOR_MAX)) / COLOR_MAX
  *  (3) destination + (((source - destination) * a) / COLOR_MAX)
- *
  */
 
-/*  Update 2020-06-10, check:
+/*
+ *  Update 2020-06-10, check:
  *  https://stackoverflow.com/questions/12011081/alpha-blending-2-rgba-colors-in-c
  *
- *  Calculate inv_alpha, then makes use of a bit shift, no division anymore.
+ *  Calculate inv_alpha, then makes use of a bit shift, no divisions anymore. Also
+ *  bit shifts are not performed immediately after assigning the initial values,
+ *  only during the last step.
+ *
+ *  (1) isolate alpha value (0 - max) and add 1
+ *  (2) calculate inverse alpha by taking (max+1) - alpha
+ *  (3) calculate the new individual channels:
+ *       new = (alpha * source) + (inv_alpha * dest)
+ *  (4) bitshift the result to the right (normalize)
+ *
  *  Speeds up a little.
  */
-
-/*  Optimization possible by transferring 64 integers at once?
- */
-
-
 
 inline void alpha_blend(uint16_t *destination, uint16_t *source)
 {
@@ -47,25 +51,21 @@ inline void alpha_blend(uint16_t *destination, uint16_t *source)
     uint16_t a_src, a_src_inv, r_src, g_src, b_src;
     
     r_dest = (*destination & 0x000f);
-    g_dest = (*destination & 0xf000); // >> 12;
-    b_dest = (*destination & 0x0f00); // >> 8;
+    g_dest = (*destination & 0xf000);   // bitshift of >>12 is done in final step
+    b_dest = (*destination & 0x0f00);   // bitshift of >> 8 is done in final step
 
     a_src = ((*source & 0x00f0) >> 4) + 1;
     a_src_inv = 17 - a_src;
     r_src = (*source & 0x000f);
-    g_src = (*source & 0xf000); // >> 12;
-    b_src = (*source & 0x0f00); // >> 8;
+    g_src = (*source & 0xf000); // bitshift of >>12 is done in final step
+    b_src = (*source & 0x0f00); // bitshift of >> 8 is done in final step
     
     r_dest = ((a_src * r_src) + (a_src_inv * r_dest)) >> 4;
     g_dest = ((a_src * g_src) + (a_src_inv * g_dest)) >> (4 + 12);
     b_dest = ((a_src * b_src) + (a_src_inv * b_dest)) >> (4 + 8);
     
-    // brute force divide by 15, works but bit shifts are faster
-//    r_dest = r_dest + (((r_src - r_dest) * a_src) / 15);
-//    g_dest = g_dest + (((g_src - g_dest) * a_src) / 15);
-//    b_dest = b_dest + (((b_src - b_dest) * a_src) / 15);
-    
-    // anything returned always has an alpha value of 0xf
+    //  anything returned has always an alpha value of 0xf
+    //  note the format: gbar4444
     *destination = (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 

@@ -136,7 +136,12 @@ struct surface_blit
     uint8_t     tile_background_color_data__8_15;
     uint8_t     tile_background_color_data__0__7;
     
-    /*  user data */
+    /*  And 4 bytes of user data. When this surface blit structure is
+     *  used as the data source for the current text screen, this user
+     *  data may contain:
+     *  - current cursor position (16 bit unsigned): first 2 bytes
+     *  - current text color for new chars (16 bit unsigned): last 2 bytes
+     */
     uint8_t     user_data_24_31;
     uint8_t     user_data_16_23;
     uint8_t     user_data__8_15;

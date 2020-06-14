@@ -47,7 +47,8 @@ kernel_main
 	LEA	timer3_handler,A0
 	MOVE.L	A0,TIMER3_VECTOR
 
-	; temp hack
+	; temp hack for flying logo
+
 	MOVE.W	#0,X_VALUE
 	MOVE.W	#$20,Y_VALUE
 	MOVE.W	#1,DX
@@ -62,7 +63,10 @@ kernel_main
 	MOVE.B	#$0F,$18(A0)
 
 
-	; copy char rom to ram (go from 2k to 32k)
+	; Copy char rom to ram (go from 2k to 32k)
+	; Note: this is a very special copy routine
+	; that expands a charset in 1 bit into 16 bit
+	; format.
 
 	BSR	copy_charrom_to_charram
 
@@ -102,28 +106,31 @@ kernel_main
 	MOVE.W	D0,SR
 
 
-	; set screen colors
-
+	; set color and size of border
 	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
-	MOVE.W	#C64_BLUE,VICV_BACKGROUND_COLOR
-
-
-	; set border size
-
 	MOVE.B	#$20,VICV_BORDER_SIZE
 
+	; copy the screen blit struct from rom to appropriate ram area
+	LEA	screen_blit_structure,a0
+	LEA	KERNEL_TEXT_SCR,a1
+	MOVE.L	#$20,D0
+	JSR	memcopy
 
-	; set text color / NEEDS WORK!
+	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
 
-	MOVE.B	#$0C,CURR_TEXT_COLOR	; c64 grey
+	; copy the screen blit struct from rom to appropriate ram area
+	LEA	logo_blit_structure,a0
+	LEA	LOGO_BLIT,a1
+	MOVE.L	#$20,D0
+	JSR	memcopy
 
 
-	; set txt pointer
+	; set txt pointer  -  deprecated
 	MOVE.L	#$00F00000,VICV_TXT
 	MOVE.L	#$00F00800,VICV_COL
 
 
-	; reset cursor position
+	; reset cursor position  -  deprecated
 	MOVE.W	#$0,CURSOR_POS
 
 
@@ -261,13 +268,13 @@ exception_handler
 
 interrupt_2_autovector
 
-	MOVE.B	#%00000001,VICV_ISR			; acknowledge VBLANK interrupt
-	MOVE.B	#%00000001,VICV_BUFFERSWAP		; switch front- and backbuffer
-	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT		; load color blue in data register of blitter
-	MOVE.B	#%00000001,BLITTER_CONTROL		; clear the backbuffer
-	MOVE.L	#screen_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.B	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
+	MOVE.B	#%00000001,VICV_BUFFERSWAP			; switch front- and backbuffer
+	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT			; load color blue in data register of blitter
+	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
+	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
-	MOVE.L	#logo_blit_structure,BLITTER_DATA_32_BIT
+	MOVE.L	#LOGO_BLIT,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
 
@@ -365,8 +372,8 @@ timer3_handler
 	;
 	MOVE.L	D0,-(SP)
 
-	MOVE.W	X_VALUE,logo_blit_structure+4
-	MOVE.W	Y_VALUE,logo_blit_structure+6
+	MOVE.W	X_VALUE,LOGO_BLIT+4
+	MOVE.W	Y_VALUE,LOGO_BLIT+6
 
 	MOVE.W	DX,D0
 	ADD.W	D0,X_VALUE
@@ -452,9 +459,9 @@ init_song
 play_song_frame
 
 
-; screen blit desciption
+; screen blit desciption (rom description, copied to kernel ram are (also 32 byte aligned) )
 
-	align	5
+	ALIGN	5
 screen_blit_structure
 	DC.B	%00000100	; flags 0 - multicolor and character mode
 	DC.B	%00000000	; flags 1

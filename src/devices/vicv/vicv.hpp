@@ -12,13 +12,13 @@
 
 // reg 00-01 combined are a 16 bit color value for the border color
 #define VICV_REG_BOR            0x00
-// reg 02-03 combined are a 16 bit color value for the background color  NEEDS WORK (KEEP THIS?)
-#define VICV_REG_BKG            0x02
+// reg 02-03 currently unused
+
 // reg 04-07 combined are a 32 bit pointer for the location of the default text screen (2k), big endian
 #define VICV_REG_TXT            0x04
 // reg 08-0b combined are a 32 bit pointer for the location of the default color screen (2k), big endian
 #define VICV_REG_COL            0x08
-// reg 0c is a byte telling the size of the horizontal border
+// reg 0c is a byte telling the size of the top and bottom borders
 #define VICV_REG_BORDER_SIZE    0x0c
 // reg 0e interrupt status register
 // write to bit 0 = acknowledge VBLANK interrupt

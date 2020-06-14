@@ -28,8 +28,8 @@ TIMER_BASE	equ	$FE0600
 
 ; vicv
 VICV_BASE		equ	$FE0400 	; vicv base register
-VICV_BORDER_COLOR	equ	VICV_BASE
-VICV_BACKGROUND_COLOR	equ	VICV_BASE+$02
+VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
+
 VICV_TXT		equ	VICV_BASE+$04
 VICV_COL		equ	VICV_BASE+$08
 VICV_BORDER_SIZE	equ	VICV_BASE+$0C
@@ -63,7 +63,6 @@ C64_LIGHTGREY	equ	$FAAA
 SOUND_BASE	equ	$FE0500			; base register
 SID0_BASE	equ	SOUND_BASE
 SID1_BASE	equ	SOUND_BASE+$20
-SID2_BASE	equ	SOUND_BASE+$40
 ; sound index
 SID0_LEFT	equ	$80
 SID0_RGHT	equ	$81
@@ -173,6 +172,9 @@ N_G7S	equ	92*2
 N_A7_	equ	93*2
 N_A7S	equ	94*2
 
+
+; ram locations
+
 CURR_TEXT_COLOR	equ	$008000	; byte
 CURSOR_POS	equ	$008002	; word
 
@@ -185,3 +187,8 @@ X_VALUE		equ	$008014	; word
 Y_VALUE		equ	$008016	; word
 DX		equ	$008018	; word
 DY		equ	$008020	; word
+
+CURRENT_TXT_SCR	equ	$008022	; long
+
+KERNEL_TEXT_SCR	equ	$008040 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
+LOGO_BLIT	equ	$008060 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
