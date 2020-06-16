@@ -183,10 +183,6 @@ TIMER1_VECTOR	equ	$008008	; long
 TIMER2_VECTOR	equ	$00800C	; long
 TIMER3_VECTOR	equ	$008010	; long
 
-X_VALUE		equ	$008014	; word
-Y_VALUE		equ	$008016	; word
-DX		equ	$008018	; word
-DY		equ	$008020	; word
 
 CURRENT_TXT_SCR	equ	$008022	; long
 

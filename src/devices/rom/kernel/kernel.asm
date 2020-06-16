@@ -1,11 +1,11 @@
-; elmerucr - 01/05/2020
+; elmerucr - 16/06/2020
 ; compiles with vasmm68k_mot
 
 	INCLUDE 'kernel_definitions.asm'
 
 	ORG	KERNEL_LOC
 
-	DC.L	$00D00000		; vector 0 - supervisor stackpointer
+	DC.L	$00E00000		; vector 0 - supervisor stackpointer
 	DC.L	kernel_main		; vector 1 - reset vector
 
 
@@ -47,13 +47,6 @@ kernel_main
 	LEA	timer3_handler,A0
 	MOVE.L	A0,TIMER3_VECTOR
 
-	; temp hack for flying logo
-
-	MOVE.W	#0,X_VALUE
-	MOVE.W	#$20,Y_VALUE
-	MOVE.W	#1,DX
-	MOVE.W	#1,DY
-
 
 	; max volume for both sids
 
@@ -65,18 +58,10 @@ kernel_main
 
 	; Copy char rom to ram (go from 2k to 32k)
 	; Note: this is a very special copy routine
-	; that expands a charset in 1 bit into 16 bit
+	; that expands a charset from 1 bit into 16 bit
 	; format.
 
 	BSR	copy_charrom_to_charram
-
-
-	; copy kernel into ram to make it visible for VICV
-
-	MOVEA.L	#KERNEL_LOC,A0
-	MOVEA.L	A0,A1
-	MOVE.L	#$10000,D0
-	BSR	memcopy
 
 
 	; set up timer0 interrupts
@@ -93,9 +78,8 @@ kernel_main
 
 	; set up timer3 interrupts at 50.125Hz for music / sid tunes
 
-	MOVE.W	#$E10,TIMER_BASE+2		; 3600bpm (=60Hz)
 	;MOVE.W	#$BC0,TIMER_BASE+2		; 3008bpm (=50.125Hz)
-	ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
+	;ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
 
 
 	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
@@ -117,12 +101,6 @@ kernel_main
 	JSR	memcopy
 
 	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
-
-	; copy the screen blit struct from rom to appropriate ram area
-	LEA	logo_blit_structure,a0
-	LEA	LOGO_BLIT,a1
-	MOVE.L	#$20,D0
-	JSR	memcopy
 
 
 	; set txt pointer  -  deprecated
@@ -274,8 +252,6 @@ interrupt_2_autovector
 	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
 	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
-	MOVE.L	#LOGO_BLIT,BLITTER_DATA_32_BIT
-	MOVE.B	#%00000010,BLITTER_CONTROL
 	RTE
 
 
@@ -370,37 +346,13 @@ timer2_handler
 timer3_handler
 
 	;
-	MOVE.L	D0,-(SP)
-
-	MOVE.W	X_VALUE,LOGO_BLIT+4
-	MOVE.W	Y_VALUE,LOGO_BLIT+6
-
-	MOVE.W	DX,D0
-	ADD.W	D0,X_VALUE
-	CMP.W	#464,X_VALUE
-	BNE	.1
-	NEG.W	DX
-.1	CMP.W	#0,X_VALUE
-	BNE	.2
-	NEG.W	DX
-
-.2	MOVE.W	DY,D0
-	ADD.W	D0,Y_VALUE
-	CMP.W	#281,Y_VALUE
-	BNE	.3
-	NEG.W	DY
-.3	CMP.W	#32,Y_VALUE
-	BNE	.4
-	NEG.W	DY
-
-.4	MOVE.L	(SP)+,D0
 	BRA	timer_finish
 
 
 memcopy
 
 	;
-	;	bytewise memory copy - probably very slow...
+	;	bytewise memory copy - probably slow?
 	;
 	;	Arguments
 	;
@@ -454,12 +406,8 @@ copy_charrom_to_charram
 .5	MOVEM.L	(SP)+,D0-D1/A0-A1
 	RTS
 
-init_song
 
-play_song_frame
-
-
-; screen blit desciption (rom description, copied to kernel ram are (also 32 byte aligned) )
+; screen blit desciption (rom description, copied to kernel ram area (also 32 byte aligned) )
 
 	ALIGN	5
 screen_blit_structure
@@ -478,63 +426,10 @@ screen_blit_structure
 	DC.L	$0		; user_data
 
 
-; logo blit description
-	ALIGN	5		; blit data must be 32 bytes (2^5) aligned
-logo_blit_structure
-	DC.B	%00000101	; flags 0 - multicolor and bitmap mode
-	DC.B	%00000000	; flags 1 - empty
-	DC.B	%00000011	; width 2^3 = 8 tile(s) = 64 pixels
-	DC.B	%00000000	; height 2^0 = 1 tile(s) = 8 pixels
-	DC.W	$0000		; x
-	DC.W	$0000		; y
-	DC.W	$0000		; foreground color
-	DC.W	$0000		; background color
-	DC.L	logo_data	; pixel_data
-	DC.L	$0		; character_data
-	DC.L	$0		; character_color_data
-	DC.L	$0		; background_color_data
-	DC.L	$0		; user_data
-
-	ALIGN	1
-logo_data
-	DC.W	$0000,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333
-	DC.W	$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333
-	DC.W	$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$F333,$F333,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$FEEE,$FEEE,$FEEE,$FEEE
-	DC.W	$F555,$F555,$FEEE,$FEEE,$FEEE,$F555,$F555,$F555,$F555,$FEEE,$FEEE,$F555,$F555,$F555,$F555,$FEEE
-	DC.W	$FEEE,$FEEE,$FEEE,$FEEE,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F333,$F333
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$F333,$F555,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$FEEE,$F777,$F777,$F777
-	DC.W	$F777,$FEEE,$F777,$F777,$F777,$F777,$F777,$F777,$FEEE,$F777,$FEEE,$F777,$F777,$F777,$F777,$F777
-	DC.W	$FEEE,$F777,$FEEE,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F555,$F333
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$F333,$F555,$F777,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$FEEE,$FEEE,$FEEE,$F999
-	DC.W	$F999,$FEEE,$FEEE,$FEEE,$FEEE,$F999,$F999,$FEEE,$F999,$F999,$FEEE,$F999,$FEEE,$FEEE,$FEEE,$F999
-	DC.W	$FEEE,$F999,$FEEE,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F999,$F777,$F555,$F333
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$F333,$F555,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$FEEE,$F777,$F777,$F777
-	DC.W	$F777,$FEEE,$F777,$F777,$F777,$FEEE,$F777,$FEEE,$FEEE,$FEEE,$FEEE,$F777,$F777,$F777,$F777,$F777
-	DC.W	$FEEE,$F777,$FEEE,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F777,$F555,$F333
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$F333,$F333,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$FEEE,$FEEE,$FEEE,$FEEE
-	DC.W	$F555,$F555,$FEEE,$FEEE,$FEEE,$F555,$F555,$F555,$F555,$F555,$FEEE,$F555,$F555,$F555,$F555,$FEEE
-	DC.W	$FEEE,$FEEE,$FEEE,$FEEE,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F555,$F333,$F333
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$0000,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333
-	DC.W	$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333
-	DC.W	$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$F333,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-	DC.W	$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000,$0000
-
-
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200607",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200616",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
