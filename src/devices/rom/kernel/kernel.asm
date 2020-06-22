@@ -407,18 +407,18 @@ copy_charrom_to_charram
 	RTS
 
 
-; screen blit desciption (rom description, copied to kernel ram area (also 32 byte aligned) )
+; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
 
 	ALIGN	5
 screen_blit_structure
-	DC.B	%00000100	; flags 0 - multicolor and character mode
+	DC.B	%00000100	; flags 0 - tile mode, multicolor
 	DC.B	%00000000	; flags 1
-	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
-	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
-	DC.W	$0		; x_pos (0)
-	DC.W	$20		; y_pos (32)
-	DC.W	$F0F0		; foreground color
-	DC.W	$5000		; background color
+	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
+	DC.B	%00000000	; currently unused.... :-)
+	DC.W	$0		; x (0)
+	DC.W	$20		; y (32)
+	DC.W	$F0A0		; foreground color
+	DC.W	$F222		; background color
 	DC.L	CHAR_RAM	; pixel_data
 	DC.L	$F00000		; character_data
 	DC.L	$FF0000		; character_color_data

@@ -808,26 +808,26 @@ F00:0407       	RTS
                S01:00FF038A:  4E 75
 F00:0408       
 F00:0409       
-F00:0410       ; screen blit desciption (rom description, copied to kernel ram area (also 32 byte aligned) )
+F00:0410       ; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
 F00:0411       
 F00:0412       	ALIGN	5
 F00:0413       screen_blit_structure
-F00:0414       	DC.B	%00000100	; flags 0 - multicolor and character mode
+F00:0414       	DC.B	%00000100	; flags 0 - tile mode, multicolor
                S01:00FF03A0:  04
 F00:0415       	DC.B	%00000000	; flags 1
                S01:00FF03A1:  00
-F00:0416       	DC.B	%00000110	; width 2^6 = 64 chars  = 512 pixels
-               S01:00FF03A2:  06
-F00:0417       	DC.B	%00000101	; height 2^5 = 32 chars = 256 pixels
-               S01:00FF03A3:  05
-F00:0418       	DC.W	$0		; x_pos (0)
+F00:0416       	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
+               S01:00FF03A2:  56
+F00:0417       	DC.B	%00000000	; currently unused.... :-)
+               S01:00FF03A3:  00
+F00:0418       	DC.W	$0		; x (0)
                S01:00FF03A4:  00 00
-F00:0419       	DC.W	$20		; y_pos (32)
+F00:0419       	DC.W	$20		; y (32)
                S01:00FF03A6:  00 20
-F00:0420       	DC.W	$F0F0		; foreground color
-               S01:00FF03A8:  F0 F0
-F00:0421       	DC.W	$5000		; background color
-               S01:00FF03AA:  50 00
+F00:0420       	DC.W	$F0A0		; foreground color
+               S01:00FF03A8:  F0 A0
+F00:0421       	DC.W	$F222		; background color
+               S01:00FF03AA:  F2 22
 F00:0422       	DC.L	CHAR_RAM	; pixel_data
                S01:00FF03AC:  00 E5 00 00
 F00:0423       	DC.L	$F00000		; character_data

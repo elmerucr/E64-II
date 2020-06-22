@@ -37,8 +37,6 @@ enum operation_type
  *  the blitter (addition of an operation), the structure is read and converted
  *  into finite state machine data of the blitter.
  *
- *  Size of this structure:
- *  -
  */
 
 struct surface_blit
@@ -60,7 +58,7 @@ struct surface_blit
      */
     uint8_t     flags_0;
 
-    /*  Flags 1
+    /*  Flags 1 - Sizes & Flips
      *
      *  7 6 5 4 3 2 1 0
      *      | |   |   |
@@ -73,16 +71,27 @@ struct surface_blit
      */
     uint8_t     flags_1;
     
-    /*  Width and height of blit, 8 bit unsigned.
+    /*  Size of blit in tiles log2, 8 bit unsigned number.
      *
-     *  The 5 most significant bits are unused. Then the 3 least significant
-     *  bits indicate a number of 0 - 7 (n). Finally, a bit shift occurs:
-     *      0b00000001 << n
+     *  7 6 5 4 3 2 1 0
+     *    | | |   | | |
+     *    | | |   +-+-+-- Low nibble  (just 3 of 4 bits)
+     *    | | |
+     *    +-+-+---------- High nibble (just 3 of 4 bits)
+     *
+     *  Low nibble codes for the width (in tiles log2) of the blit.
+     *  High nibble codes for the height. Bits 3 and 7 are actually unused.
+     *
+     *  The 3 least significant bits of a nibble indicate a number of
+     *  0 - 7 (n). Finally, a bit shift occurs: 0b00000001 << n
      *  Resulting in the final width/height in 'tiles' (8 pixels per tile)
      *  { 1, 2, 4, 8, 16, 32, 64, 128 }
      */
-    uint8_t     width_in_tiles_log2;
-    uint8_t     height_in_tiles_log2;
+    uint8_t     size_in_tiles_log2;
+    
+    /*  Reserved byte for future purposes related to e.g. wrapping
+     */
+    uint8_t     currently_unused;
     
     /*  16 bit signed big endian number
      *  with the x position of the
@@ -112,7 +121,7 @@ struct surface_blit
     uint8_t     background_color__0__7;
     uint8_t     background_color__8_15;
     
-    /*  32 bit pointer to pixels (can be tile pixels or bitmap pixels */
+    /*  32 bit pointer to pixels (can be tile pixels or bitmap pixels) */
     uint8_t     pixel_data_24_31;
     uint8_t     pixel_data_16_23;
     uint8_t     pixel_data__8_15;
@@ -137,7 +146,7 @@ struct surface_blit
     uint8_t     tile_background_color_data__0__7;
     
     /*  And 4 bytes of user data. When this surface blit structure is
-     *  used as the data source for the current text screen, this user
+     *  used as a data structure for the current text screen, this user
      *  data may contain:
      *  - current cursor position (16 bit unsigned): first 2 bytes
      *  - current text color for new chars (16 bit unsigned): last 2 bytes
@@ -212,26 +221,26 @@ private:
     bool        background;
     bool        multicolor_mode;
     bool        color_per_tile;
-    bool        hrz_flip;
-    bool        vrt_flip;
+    bool        hor_flip;
+    bool        ver_flip;
     uint16_t    double_width;
     uint16_t    double_height;
     
-    uint16_t width_in_tiles_log2;
-    uint16_t width_log2;
-    uint16_t width_on_screen_log2;
-    uint16_t width;
-    uint16_t width_on_screen;
+    uint16_t width_in_tiles_log2;   // width of the blit source in multiples of 8 pixels and log2
+    uint16_t width_log2;            // width of the blit source in pixels and log2
+    uint16_t width_on_screen_log2;  // width of the final bit on screen in pixels (might be doubled) and log2
+    uint16_t width;                 // width of the blit source in pixels
+    uint16_t width_on_screen;       // width of the final bit on screen in pixels (might be doubled)
     
-    uint16_t height_in_tiles_log2;
-    uint16_t height_log2;
-    uint16_t height_on_screen_log2;
-    uint16_t height;
-    uint16_t height_on_screen;
+    uint16_t height_in_tiles_log2;  // height of the blit source in multiples of 8 pixels and log2
+    uint16_t height_log2;           // height of the blit source in pixels and log2
+    uint16_t height_on_screen_log2; // height of the final bit on screen in pixels (might be doubled) and log2
+    uint16_t height;                // height of the blit source in pixels
+    uint16_t height_on_screen;      // height of the final bit on screen in pixels (might be doubled)
     
-    uint32_t pixel_no;
-    uint32_t normalized_pixel_no;
-    uint32_t total_pixel_no;
+    uint32_t total_no_of_pix;       // total number of pixels to blit onto framebuffer for this blit
+    uint32_t pixel_no;              // current pixel of the total that is being processed
+    uint32_t normalized_pixel_no;   // normalized to the dimensions of source
     
     // specific for clearing framebuffer
     uint16_t clear_color;
@@ -239,8 +248,8 @@ private:
     int16_t x;
     int16_t y;
     
-    uint16_t scr_x;             // final screen x
-    uint16_t scr_y;             // final screen y
+    uint16_t scrn_x;            // final screen x for the current pixel
+    uint16_t scrn_y;            // final screen y for the current pixel
     
     uint16_t x_in_blit;
     uint16_t y_in_blit;

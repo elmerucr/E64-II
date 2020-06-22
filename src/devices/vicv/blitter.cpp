@@ -17,7 +17,7 @@
  *  emulation speed. But, with optimizations (minimum -O2) turned on, it
  *  is ok.
  *
- *  The idea to use a function (and not a lookup table comes from this website:
+ *  The idea to use a function (and not a lookup table) comes from this website:
  *  https://stackoverflow.com/questions/30849261/alpha-blending-using-table-lookup-is-not-as-fast-as-expected
  *  Generally, lookup tables mess around with the cpu cache and don't speed up.
  *
@@ -64,8 +64,8 @@ inline void alpha_blend(uint16_t *destination, uint16_t *source)
     g_dest = ((a_src * g_src) + (a_src_inv * g_dest)) >> (4 + 12);
     b_dest = ((a_src * b_src) + (a_src_inv * b_dest)) >> (4 + 8);
     
-    //  anything returned has always an alpha value of 0xf
-    //  note the format: gbar4444
+    //  Anything being returned has always an alpha value of 0xf
+    //  Note the format: gbar4444
     *destination = (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 
@@ -100,7 +100,7 @@ void E64::blitter::run(int no_of_cycles)
                             current_state = CLEARING_FRAMEBUFFER;
                             width_on_screen = VICV_PIXELS_PER_SCANLINE;
                             height_on_screen = VICV_SCANLINES;
-                            total_pixel_no = (width_on_screen * height_on_screen);
+                            total_no_of_pix = (width_on_screen * height_on_screen);
                             pixel_no = 0;
                             clear_color = ((operations[tail].data_element) & 0x0000ff0f) | 0x00f0;
                             tail++;
@@ -119,11 +119,11 @@ void E64::blitter::run(int no_of_cycles)
                             // check flags 1
                             double_width    = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
                             double_height   = (operations[tail].this_blit.flags_1 & 0b00000100) ? 1 : 0;
-                            hrz_flip = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
-                            vrt_flip   = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
+                            hor_flip = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
+                            ver_flip   = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
                             
-                            width_in_tiles_log2  = operations[tail].this_blit.width_in_tiles_log2  & 0b00000111;
-                            height_in_tiles_log2 = operations[tail].this_blit.height_in_tiles_log2 & 0b00000111;
+                            width_in_tiles_log2  = operations[tail].this_blit.size_in_tiles_log2  & 0b00000111;
+                            height_in_tiles_log2 = (operations[tail].this_blit.size_in_tiles_log2 & 0b01110000) >> 4;
                             
                             width_log2 = width_in_tiles_log2 + 3;
                             height_log2 = height_in_tiles_log2 + 3;
@@ -141,7 +141,7 @@ void E64::blitter::run(int no_of_cycles)
                             width_on_screen_mask = width_on_screen - 1;
                             
                             pixel_no = 0;
-                            total_pixel_no = width_on_screen * height_on_screen;
+                            total_no_of_pix = width_on_screen * height_on_screen;
                             
                             x = operations[tail].this_blit.x_low_byte | operations[tail].this_blit.x_high_byte << 8;
                             y = operations[tail].this_blit.y_low_byte | operations[tail].this_blit.y_high_byte << 8;
@@ -197,7 +197,7 @@ void E64::blitter::run(int no_of_cycles)
             case CLEARING_FRAMEBUFFER:
                 cycles_busy++;
                 
-                if( !(pixel_no == total_pixel_no) )
+                if( !(pixel_no == total_no_of_pix) )
                 {
                     pc.vicv_ic->backbuffer[pixel_no] = clear_color;
                     pixel_no++;
@@ -210,16 +210,16 @@ void E64::blitter::run(int no_of_cycles)
             case BLITTING:
                 cycles_busy++;
                 
-                if( !(pixel_no == total_pixel_no) )
+                if( !(pixel_no == total_no_of_pix) )
                 {
-                    scr_x = x + (hrz_flip ? (width_on_screen - (pixel_no & width_on_screen_mask) - 1) : (pixel_no & width_on_screen_mask) );
+                    scrn_x = x + (hor_flip ? (width_on_screen - (pixel_no & width_on_screen_mask) - 1) : (pixel_no & width_on_screen_mask) );
                     
-                    if( !(scr_x & 0b1111111000000000) )                     // clipping check horizontally
+                    if( !(scrn_x & 0b1111111000000000) )                     // clipping check horizontally
                     {
-                        scr_y = y + (vrt_flip ?
+                        scrn_y = y + (ver_flip ?
                             (height_on_screen - (pixel_no >> width_on_screen_log2) - 1) : (pixel_no >> width_on_screen_log2) );
                         
-                        if( (scr_y >= 0) && (scr_y < VICV_SCANLINES) )      // clipping check vertically
+                        if( (scrn_y >= 0) && (scrn_y < VICV_SCANLINES) )      // clipping check vertically
                         {
                             /*  Transformation of pixel_no to take into account double width and/or height. After
                              *  this <complex> transformation, the normalized pixel_no points to a position in the
@@ -275,7 +275,7 @@ void E64::blitter::run(int no_of_cycles)
                             }
                             
                             /*  Finally, call the alpha blend function */
-                            alpha_blend( &pc.vicv_ic->backbuffer[scr_x | (scr_y << 9)], &source_color );
+                            alpha_blend( &pc.vicv_ic->backbuffer[scrn_x | (scrn_y << 9)], &source_color );
                         }
                     }
                     pixel_no++;
@@ -299,7 +299,7 @@ void E64::blitter::add_operation(enum operation_type type, uint32_t data_element
             head++;
             break;
         case BLIT:
-            data_element &= 0x00ffffe0;
+            data_element &= 0x00ffffe0;     // make sure it is 32 byte aligned
             
             struct surface_blit *temp_blit = (struct surface_blit *)&pc.mmu_ic->ram[data_element & 0x00ffffff];
             
