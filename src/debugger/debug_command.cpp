@@ -352,9 +352,11 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         for(int i=0; i<16; i++)
         {
             if( (i & 1) == 0 ) debug_console_put_char(' ');
-            snprintf(command_help_string, 256, "%02x", pc.mmu_ic->read_memory_8(temp_address));
+            //snprintf(command_help_string, 256, "%02x", pc.mmu_ic->read_memory_8(temp_address));
+            // important: vicv and blitter are not able to see roms and i/o adresses, so don't use read_memory_8
+            snprintf(command_help_string, 256, "%02x", pc.mmu_ic->ram[temp_address]);
             debug_console_print(command_help_string);
-            temp_address ++;
+            temp_address++;
             temp_address &= RAM_SIZE - 1;
         }
         

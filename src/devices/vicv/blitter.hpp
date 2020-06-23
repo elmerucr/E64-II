@@ -26,17 +26,11 @@ enum blitter_state
     BLITTING
 };
 
-enum operation_type
-{
-    CLEAR_FRAMEBUFFER,
-    BLIT
-};
 
 /*  The next structure is a description of the surface blit how it appears
  *  in the memory of E64-II. Once a pointer to this structure is passed to
  *  the blitter (addition of an operation), the structure is read and converted
  *  into finite state machine data of the blitter.
- *
  */
 
 struct surface_blit
@@ -157,21 +151,21 @@ struct surface_blit
     uint8_t     user_data__0__7;
 };
 
+
+enum operation_type
+{
+    CLEAR_FRAMEBUFFER,
+    BLIT
+};
+
+
 struct operation
 {
     enum operation_type type;
     
-    /*
-     *  In the case of a CLEAR_FRAMEBUFFER, this data_element contains
-     *  the color in gbar4444 format (lower 16 bits). In the case of a
-     *  BLIT operation, this data_element contains the address of the
-     *  surface_blit descriptor (see other structure).
-     *
-     */
-    uint32_t data_element;
-    
     struct surface_blit this_blit;
 };
+
 
 class blitter
 {
@@ -188,6 +182,22 @@ class blitter
      */
     
 private:
+    /*  reg 0:
+     *  blitter control register
+     *  - write 1 to bit 0: add a clear framebuffer operation
+     *  - write 1 to bit 1: add a blitting operation
+     *  - on read: returns 0 if blitter is idle, returns 1 if blitter is busy
+     *
+     *  reg 1:
+     *  unused
+     *
+     *  reg 2-5 combined (32 bits):
+     *  contains a 32 bit pointer to a blit structure for adding blit operations
+     *
+     *  reg 6-7 combined (16 bits):
+     *  contains CLEAR_COLOR for clear framebuffer operations
+     *  
+     */
     uint8_t  registers[256];
     
     /*  Keeping track of busy and idle cycles. This way, it is possible
@@ -207,13 +217,12 @@ public:
 
 private:
     /*  Circular buffer containing operations. If more than 256 operations
-     *  would be written (unlikely) and not finished, something will be
+     *  would be written (unlikely) and unfinished, something will be
      *  overwritten.
      */
     struct operation operations[256];
     uint8_t head;
     uint8_t tail;
-    void add_operation(enum operation_type type, uint32_t data_element);
     
     
     // finite state machine

@@ -102,7 +102,7 @@ void E64::blitter::run(int no_of_cycles)
                             height_on_screen = VICV_SCANLINES;
                             total_no_of_pix = (width_on_screen * height_on_screen);
                             pixel_no = 0;
-                            clear_color = ((operations[tail].data_element) & 0x0000ff0f) | 0x00f0;
+                            clear_color = (registers[6] | registers[7] << 8) | 0x00f0;
                             tail++;
                             break;
                         case BLIT:
@@ -289,29 +289,6 @@ void E64::blitter::run(int no_of_cycles)
     }
 }
 
-void E64::blitter::add_operation(enum operation_type type, uint32_t data_element)
-{
-    switch( type )
-    {
-        case CLEAR_FRAMEBUFFER:
-            operations[head].type = CLEAR_FRAMEBUFFER;
-            operations[head].data_element = data_element;
-            head++;
-            break;
-        case BLIT:
-            data_element &= 0x00ffffe0;     // make sure it is 32 byte aligned
-            
-            struct surface_blit *temp_blit = (struct surface_blit *)&pc.mmu_ic->ram[data_element & 0x00ffffff];
-            
-            operations[head].type = BLIT;
-            operations[head].data_element = data_element;
-            operations[head].this_blit = *temp_blit;
-            
-            head++;
-            
-            break;
-    }
-}
 
 uint8_t E64::blitter::read_byte(uint8_t address)
 {
@@ -338,8 +315,26 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     switch( address )
     {
         case 0x00:
-            if( byte & 0b00000001 ) add_operation(CLEAR_FRAMEBUFFER, (registers[0x05] << 8) | registers[0x04]);
-            if( byte & 0b00000010 ) add_operation(BLIT, (registers[0x02] << 24) | (registers[0x03] << 16) | (registers[0x04] << 8) | registers[0x05]);
+            if( byte & 0b00000001 ) // add a clear framebuffer operation
+            {
+                operations[head].type = CLEAR_FRAMEBUFFER;
+                
+                head++;
+            }
+            if( byte & 0b00000010 ) // add a blit operation
+            {
+                operations[head].type = BLIT;
+                
+                uint32_t ptr_to_blit_struct = (registers[2]<<24) | (registers[3]<<16) | (registers[4]<<8) | registers[5];
+                
+                // make sure it is 32 byte aligned, and below 0x1000000
+                ptr_to_blit_struct &= 0x00ffffe0;
+                
+                // copy the structure into the operations list
+                operations[head].this_blit = *(struct surface_blit *)&pc.mmu_ic->ram[ptr_to_blit_struct];
+                
+                head++;
+            }
             break;
         default:
             registers[address] = byte;
@@ -350,6 +345,6 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
 double E64::blitter::fraction_busy()
 {
     double percentage = (double)cycles_busy / (double)(cycles_busy + cycles_idle);
-    cycles_busy = cycles_idle = 0.0;
+    cycles_busy = cycles_idle = 0;
     return percentage;
 }

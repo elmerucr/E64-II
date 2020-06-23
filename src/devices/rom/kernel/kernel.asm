@@ -94,6 +94,9 @@ kernel_main
 	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
 	MOVE.B	#$20,VICV_BORDER_SIZE
 
+	; set clear color ('background')
+	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
+
 	; copy the screen blit struct from rom to appropriate ram area
 	LEA	screen_blit_structure,a0
 	LEA	KERNEL_TEXT_SCR,a1
@@ -247,11 +250,15 @@ exception_handler
 interrupt_2_autovector
 
 	MOVE.B	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
+
 	MOVE.B	#%00000001,VICV_BUFFERSWAP			; switch front- and backbuffer
-	MOVE.W	#C64_BLUE,BLITTER_DATA_16_BIT			; load color blue in data register of blitter
+
 	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
+
+	; add the blits (to be replaced by a kernel linked list)
 	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
+
 	RTE
 
 
