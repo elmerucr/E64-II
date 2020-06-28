@@ -100,8 +100,7 @@ void debug_status_bar_set_cursor_pos(uint16_t pos)
 {
     // confine cursor
     debug_console.status_bar_cursor_pos = pos % debug_console.status_bar_total_chars;
-    debug_console.status_bar_base_pos %= VICV_CHAR_COLUMNS;
-    //debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos & (64 - 1);
+    debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos % VICV_CHAR_COLUMNS;
 }
 
 void debug_status_bar_putchar(char character)
@@ -112,8 +111,7 @@ void debug_status_bar_putchar(char character)
         case ASCII_LF:
             debug_console.status_bar_cursor_pos += VICV_CHAR_COLUMNS;
             debug_console.status_bar_cursor_pos -= (debug_console.status_bar_cursor_pos % VICV_CHAR_COLUMNS);
-            //debug_console.status_bar_cursor_pos &= 0xffc0;
-            //debug_console.status_bar_cursor_pos += debug_console.status_bar_base_pos;
+            debug_console.status_bar_cursor_pos += debug_console.status_bar_base_pos;
             //debug_console.status_bar_cursor_pos &= debug_console.status_bar_total_chars - 1;
             break;
         default:
