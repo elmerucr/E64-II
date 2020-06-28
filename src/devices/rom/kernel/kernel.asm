@@ -92,7 +92,7 @@ kernel_main
 
 	; set color and size of border
 	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
-	MOVE.B	#$20,VICV_BORDER_SIZE
+	MOVE.B	#$14,VICV_BORDER_SIZE
 
 	; set clear color ('background')
 	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
@@ -423,7 +423,7 @@ screen_blit_structure
 	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
 	DC.B	%00000000	; currently unused.... :-)
 	DC.W	$0		; x (0)
-	DC.W	$20		; y (32)
+	DC.W	$14		; y (32)
 	DC.W	$F0A0		; foreground color
 	DC.W	$F222		; background color
 	DC.L	CHAR_RAM	; pixel_data

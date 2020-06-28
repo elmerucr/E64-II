@@ -41,9 +41,10 @@ E64::video::video()
     
     // create window - title will be set later by function E64::sdl2_update_title()
     
-    window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+    window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     
     SDL_GetWindowSize(window, &window_width, &window_height);
+    printf("[SDL Display]: window dimensions are %u x %u pixels\n", window_width, window_height);
     
     
     // create renderer and link it to window
@@ -64,6 +65,8 @@ E64::video::video()
         printf("[SDL Display]: this differs from the FPS of E64-II, going for software FPS\n");
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     }
+    
+    //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
     SDL_RendererInfo current_renderer;
     SDL_GetRendererInfo(renderer, &current_renderer);

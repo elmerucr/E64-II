@@ -42,7 +42,7 @@ The sourcecode comes with a working version of the kernel ````kernel.cpp````. If
 * [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others.
 * [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time.
 * [CCS64](http://www.ccs64.com) - A Commodore 64 Emulator by Per Håkan Sundell.
-* [Commander X16](https://github.com/commanderx16) - The Commander X16 is a modern 8-bit computer currently in active development. It is the brainchild of David "the 8 Bit Guy" Murray.
+* [Commander X16](https://www.commanderx16.com) - The Commander X16 is a modern 8-bit computer currently in active development. It is the brainchild of David "the 8 Bit Guy" Murray.
 * [Hatari](https://hatari.tuxfamily.org) - Hatari is an Atari ST/STE/TT/Falcon emulator.
 * [lib65ce02](https://github.com/elmerucr/lib65ce02) - CSG65CE02 emulator written in C.
 * [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage.

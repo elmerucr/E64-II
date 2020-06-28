@@ -4,6 +4,7 @@
 //  Copyright © 2018 elmerucr. All rights reserved.
 
 #include <cstdint>
+#include "common.hpp"
 
 #ifndef debug_console_hpp
 #define debug_console_hpp
@@ -16,9 +17,9 @@ enum monitor_type {
 
 typedef struct
 {
-    uint8_t console_character_buffer[2048];
-    uint16_t console_foreground_color_buffer[2048];
-    uint16_t console_background_color_buffer[2048];
+    uint8_t console_character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+    uint16_t console_foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+    uint16_t console_background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
 
     // cursor related vars
     int16_t     cursor_pos;

@@ -18,7 +18,7 @@ ASCII_LF	equ	$0A
 
 ; char rom
 CHAR_ROM	equ	$FD0000
-CHAR_RAM	equ	$E50000
+CHAR_RAM	equ	$F10000
 
 ; cia
 CIA_BASE	equ	$FE0300

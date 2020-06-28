@@ -1,7 +1,7 @@
 //  debug_status_bar.hpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
 

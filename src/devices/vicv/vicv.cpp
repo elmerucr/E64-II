@@ -46,10 +46,11 @@ void E64::vicv::reset()
 //#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
 
 //#define HBLANK          (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
-#define HBLANK          (X_POS & 0xfffffe00)
+//#define HBLANK          (X_POS & 0xfffffe00)
+#define HBLANK          (X_POS >= VICV_PIXELS_PER_SCANLINE)
 #define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 #define BLANK           (HBLANK || VBLANK)
-#define HBORDER         (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > (319-registers[VICV_REG_BORDER_SIZE]))
+#define HBORDER         (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]))
 
 void E64::vicv::run(uint32_t number_of_cycles)
 {
@@ -70,20 +71,6 @@ void E64::vicv::run(uint32_t number_of_cycles)
         }
 
         cycle_clock++;
-
-//        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES) )
-//        {
-//            // start of vblank
-//            computer.TTL74LS148_ic->pull_line(interrupt_device_no_vblank);
-//        }
-//        if(cycle_clock == ((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)) )
-//        {
-//            // finished vblank, do other necessary stuff
-//            if(overlay_present) render_overlay(117, 300, frame_delay.stats());
-//            host_video.swap_buffers();
-//            cycle_clock = dot_clock = 0;
-//            frame_done = true;
-//        }
         
         switch(cycle_clock)
         {
@@ -93,7 +80,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
-                if(stats_overlay_present) render_stats(44, 300);
+                if(stats_overlay_present) render_stats(108, 346);
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;

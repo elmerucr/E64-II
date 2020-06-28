@@ -22,7 +22,7 @@ F01:0017       ASCII_LF	equ	$0A
 F01:0018       
 F01:0019       ; char rom
 F01:0020       CHAR_ROM	equ	$FD0000
-F01:0021       CHAR_RAM	equ	$E50000
+F01:0021       CHAR_RAM	equ	$F10000
 F01:0022       
 F01:0023       ; cia
 F01:0024       CIA_BASE	equ	$FE0300
@@ -320,8 +320,8 @@ F00:0092
 F00:0093       	; set color and size of border
 F00:0094       	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
                S01:00FF00B0:  33 FC F0 00 00 FE 04 00
-F00:0095       	MOVE.B	#$20,VICV_BORDER_SIZE
-               S01:00FF00B8:  13 FC 00 20 00 FE 04 0C
+F00:0095       	MOVE.B	#$14,VICV_BORDER_SIZE
+               S01:00FF00B8:  13 FC 00 14 00 FE 04 0C
 F00:0096       
 F00:0097       	; set clear color ('background')
 F00:0098       	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
@@ -777,7 +777,7 @@ F00:0393
 F00:0394       	MOVEQ	#0,D0			;    current_byte = 0;
                S01:00FF0354:  70 00
 F00:0395       	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
-               S01:00FF0356:  41 F9 00 E5 00 00
+               S01:00FF0356:  41 F9 00 F1 00 00
 F00:0396       	LEA	CHAR_ROM,A1		;    char_rom = CHAR_ROM;
                S01:00FF035C:  43 F9 00 FD 00 00
 F00:0397       
@@ -829,14 +829,14 @@ F00:0424       	DC.B	%00000000	; currently unused.... :-)
                S01:00FF03A3:  00
 F00:0425       	DC.W	$0		; x (0)
                S01:00FF03A4:  00 00
-F00:0426       	DC.W	$20		; y (32)
-               S01:00FF03A6:  00 20
+F00:0426       	DC.W	$14		; y (32)
+               S01:00FF03A6:  00 14
 F00:0427       	DC.W	$F0A0		; foreground color
                S01:00FF03A8:  F0 A0
 F00:0428       	DC.W	$F222		; background color
                S01:00FF03AA:  F2 22
 F00:0429       	DC.L	CHAR_RAM	; pixel_data
-               S01:00FF03AC:  00 E5 00 00
+               S01:00FF03AC:  00 F1 00 00
 F00:0430       	DC.L	$F00000		; character_data
                S01:00FF03B0:  00 F0 00 00
 F00:0431       	DC.L	$FF0000		; character_color_data
@@ -1714,7 +1714,7 @@ VICV_BORDER_COLOR EXPR(16647168=0xfe0400) EQU
 VICV_BASE EXPR(16647168=0xfe0400) EQU 
 TIMER_BASE EXPR(16647680=0xfe0600) EQU 
 CIA_BASE EXPR(16646912=0xfe0300) EQU 
-CHAR_RAM EXPR(15007744=0xe50000) EQU 
+CHAR_RAM EXPR(15794176=0xf10000) EQU 
 CHAR_ROM EXPR(16580608=0xfd0000) EQU 
 ASCII_LF EXPR(10=0xa) EQU 
 ASCII_NULL EXPR(0=0x0) EQU 

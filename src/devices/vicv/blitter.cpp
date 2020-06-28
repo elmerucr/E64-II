@@ -214,7 +214,8 @@ void E64::blitter::run(int no_of_cycles)
                 {
                     scrn_x = x + (hor_flip ? (width_on_screen - (pixel_no & width_on_screen_mask) - 1) : (pixel_no & width_on_screen_mask) );
                     
-                    if( !(scrn_x & 0b1111111000000000) )                     // clipping check horizontally
+                    //if( !(scrn_x & 0b1111111000000000) )                     // clipping check horizontally
+                    if( scrn_x < VICV_PIXELS_PER_SCANLINE )                     // clipping check horizontally
                     {
                         scrn_y = y + (ver_flip ?
                             (height_on_screen - (pixel_no >> width_on_screen_log2) - 1) : (pixel_no >> width_on_screen_log2) );
@@ -275,7 +276,8 @@ void E64::blitter::run(int no_of_cycles)
                             }
                             
                             /*  Finally, call the alpha blend function */
-                            alpha_blend( &pc.vicv_ic->backbuffer[scrn_x | (scrn_y << 9)], &source_color );
+                            alpha_blend( &pc.vicv_ic->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
+                            //alpha_blend( &pc.vicv_ic->backbuffer[scrn_x | (scrn_y << 9)], &source_color );
                         }
                     }
                     pixel_no++;
