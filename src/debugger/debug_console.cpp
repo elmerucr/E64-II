@@ -59,7 +59,7 @@ void debug_console_add_bottom_row()
 {
     debug_console.cursor_pos -= VICV_CHAR_COLUMNS;
     // move all text one line up
-    for(int i=0; i<((VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8))-64); i++)
+    for(int i=0; i<((VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8))-VICV_CHAR_COLUMNS); i++)
     {
         debug_console.console_character_buffer[i] = debug_console.console_character_buffer[i+VICV_CHAR_COLUMNS];
         debug_console.console_foreground_color_buffer[i] = debug_console.console_foreground_color_buffer[i+VICV_CHAR_COLUMNS];

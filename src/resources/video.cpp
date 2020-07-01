@@ -66,6 +66,8 @@ E64::video::video()
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     }
     
+    SDL_RenderSetLogicalSize(renderer, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
+    
     //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
     SDL_RendererInfo current_renderer;
