@@ -39,7 +39,9 @@ E64::video::video()
     fullscreen = false;
     
     
-    // create window - title will be set later by function E64::sdl2_update_title()
+    //  create window - title will be set later by function E64::sdl2_update_title()
+    //  note: usage of SDL_WINDOW_ALLOW_HIGHDPI actually helps: interpolation of pixels at unlogical
+    //  window sizes looks a lot better!
     
     window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     
@@ -66,7 +68,8 @@ E64::video::video()
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     }
     
-    SDL_RenderSetLogicalSize(renderer, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
+    //  setting the logical size fixes aspect ratio
+    //SDL_RenderSetLogicalSize(renderer, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);
     
     //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
