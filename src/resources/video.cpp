@@ -163,7 +163,7 @@ void E64::video::reset_window_size()
 
 void E64::video::increase_window_size()
 {
-    if(current_window_size < 3)
+    if(current_window_size < 4)
     {
         current_window_size++;
         SDL_SetWindowSize(window, window_sizes[current_window_size].x, window_sizes[current_window_size].y);
