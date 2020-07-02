@@ -35,7 +35,7 @@ E64::video::video()
     printf("\n");
     printf("[SDL Video] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
     
-    current_window_size = 2;
+    current_window_size = 3;
     fullscreen = false;
     
     
@@ -46,8 +46,7 @@ E64::video::video()
     window = SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_sizes[current_window_size].x, window_sizes[current_window_size].y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     
     SDL_GetWindowSize(window, &window_width, &window_height);
-    printf("[SDL Display]: window dimensions are %u x %u pixels\n", window_width, window_height);
-    
+    printf("[SDL Display] window dimensions are %u x %u pixels\n", window_width, window_height);
     
     // create renderer and link it to window
     
@@ -55,16 +54,18 @@ E64::video::video()
     
     SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(window), &current_mode);
     
-    printf("[SDL Display]: refresh rate of current display is %iHz\n",current_mode.refresh_rate);
+    printf("[SDL Display] current desktop dimensions: %i x %i\n", current_mode.w, current_mode.h);
+    
+    printf("[SDL Display] refresh rate of current display is %iHz\n",current_mode.refresh_rate);
     
     if( current_mode.refresh_rate == FPS )
     {
-        printf("[SDL Display]: this is equal to the FPS of E64-II, trying for vsync\n");
+        printf("[SDL Display] this is equal to the FPS of E64-II, trying for vsync\n");
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
     else
     {
-        printf("[SDL Display]: this differs from the FPS of E64-II, going for software FPS\n");
+        printf("[SDL Display] this differs from the FPS of E64-II, going for software FPS\n");
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     }
     
@@ -77,9 +78,9 @@ E64::video::video()
     SDL_GetRendererInfo(renderer, &current_renderer);
     vsync = (current_renderer.flags & SDL_RENDERER_PRESENTVSYNC) ? true : false;
     
-    printf("[SDL Renderer Name]: %s\n", current_renderer.name);
-    printf("[SDL Renderer]: %saccelerated\n", (current_renderer.flags & SDL_RENDERER_ACCELERATED) ? "" : "not ");
-    printf("[SDL Renderer]: vsync is %s\n", vsync ? "enabled" : "disabled");
+    printf("[SDL Renderer Name] %s\n", current_renderer.name);
+    printf("[SDL Renderer] %saccelerated\n", (current_renderer.flags & SDL_RENDERER_ACCELERATED) ? "" : "not ");
+    printf("[SDL Renderer] vsync is %s\n", vsync ? "enabled" : "disabled");
     
     // create a texture that is able to refresh very frequently
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, VICV_PIXELS_PER_SCANLINE, VICV_SCANLINES);

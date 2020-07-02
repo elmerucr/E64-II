@@ -269,14 +269,20 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         if(token1 == NULL)
         {
             host_video.reset_window_size();
+            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
+            debug_console_print(command_help_string);
         }
         else if( strcmp(token1, "+") == 0 )
         {
             host_video.increase_window_size();
+            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
+            debug_console_print(command_help_string);
         }
         else if( strcmp(token1, "-") == 0 )
         {
             host_video.decrease_window_size();
+            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
+            debug_console_print(command_help_string);
         }
         else
         {

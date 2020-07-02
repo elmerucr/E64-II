@@ -21,16 +21,17 @@ E64::machine::machine()
     TTL74LS148_ic = new TTL74LS148();
     
     timer_ic = new timer();
-    timer_ic->interrupt_device_no = TTL74LS148_ic->connect_device(4);
+    timer_ic->interrupt_device_number = TTL74LS148_ic->connect_device(4);
     
     vicv_ic = new vicv();
-    vicv_ic->interrupt_device_no_vblank = TTL74LS148_ic->connect_device(2);
+    vicv_ic->vblank_interrupt_device_number = TTL74LS148_ic->connect_device(2);
     
     blitter_ic = new blitter();
     
     sids_ic = new sids(true);
     
     cia_ic = new cia();
+    cia_ic->interrupt_device_number = TTL74LS148_ic->connect_device(3);
     
     // init frequency dividers (make sure the right amount of cycles will run on different ic's)
     m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);

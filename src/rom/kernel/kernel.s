@@ -1,7 +1,7 @@
 ; elmerucr - 16/06/2020
 ; compiles with vasmm68k_mot
 
-	INCLUDE 'kernel_definitions.asm'
+	INCLUDE "kernel_definitions.s"
 
 	ORG	KERNEL_LOC
 
@@ -156,8 +156,7 @@ mainloop
 .1	MOVEQ	#$0,D0
 	MOVEA.L	VICV_TXT,A0
 	LEA	($400,A0),A0
-	LEA	CIA_BASE,A1
-	LEA	($80,A1),A1
+	LEA	CIA_KEYBOARD,A1
 .2	MOVE.B	(A1,D0),(A0,D0)
 	ADDQ	#$1,D0
 	CMP.B	#$49,D0
@@ -436,11 +435,11 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200616",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200702",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
-	INCLUDE	"kernel_tables.asm"
+	INCLUDE	"kernel_tables.s"
 
 	ORG	KERNEL_LOC+$FFFC
 	DC.L	$DEADBEEF

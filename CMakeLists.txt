@@ -14,16 +14,15 @@ include_directories(
     src/devices/cpu/
     src/devices/cpu/Moira
     src/devices/mmu/
-    src/devices/rom/
     src/devices/kernel/
     src/devices/cia/
-    src/devices/char_rom/
     src/devices/sids/
     src/devices/sids/resid-0.16/
     src/devices/timer/
     src/devices/TTL74LS148/
     src/devices/vicv/
     src/resources/
+    src/rom/
     src/sdl2/
 )
 

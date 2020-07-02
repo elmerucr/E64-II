@@ -69,7 +69,7 @@ public:
     uint16_t *backbuffer;
 
     // interrupt device no for vblanc irq
-    uint8_t interrupt_device_no_vblank;
+    uint8_t vblank_interrupt_device_number;
     
 
 

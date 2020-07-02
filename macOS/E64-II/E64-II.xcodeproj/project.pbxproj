@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */; };
+		4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4626D91D24AE78350089B4C3 /* kernel.cpp */; };
 		4633A79823FD565800AFD176 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4633A79723FD565800AFD176 /* video.cpp */; };
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
 		4691C77C23D7B23C00E9E78D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */; };
@@ -29,8 +31,6 @@
 		4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7D423D7B5BF00E9E78D /* mmu.cpp */; };
 		4691C80723D7B62400E9E78D /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C80523D7B62400E9E78D /* timer.cpp */; };
 		4691C80B23D7B64800E9E78D /* TTL74LS148.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C80923D7B64800E9E78D /* TTL74LS148.cpp */; };
-		4691C80F23D7B70500E9E78D /* kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C80E23D7B70500E9E78D /* kernel.cpp */; };
-		4691C81223D7B74300E9E78D /* patched_char_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C81123D7B74300E9E78D /* patched_char_rom.cpp */; };
 		4691C81423D7B80B00E9E78D /* log.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4691C81323D7B80B00E9E78D /* log.txt */; };
 		4697AE1C24756DB100F498CE /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4697AE1A24756DB100F498CE /* stats.cpp */; };
 		46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46B4480A23EF3AB30000DAB1 /* blitter.cpp */; };
@@ -68,6 +68,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = patched_char_rom.cpp; path = ../../../src/rom/char_rom/patched_char_rom.cpp; sourceTree = "<group>"; };
+		4626D91D24AE78350089B4C3 /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kernel.cpp; path = ../../../src/rom/kernel/kernel.cpp; sourceTree = "<group>"; };
 		4633A79623FD565800AFD176 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/resources/video.hpp; sourceTree = "<group>"; };
 		4633A79723FD565800AFD176 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/resources/video.cpp; sourceTree = "<group>"; };
 		4691C77123D7B23A00E9E78D /* E64-II.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "E64-II.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,8 +125,6 @@
 		4691C80623D7B62400E9E78D /* timer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = timer.hpp; path = ../../../src/devices/timer/timer.hpp; sourceTree = "<group>"; };
 		4691C80923D7B64800E9E78D /* TTL74LS148.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TTL74LS148.cpp; path = ../../../src/devices/TTL74LS148/TTL74LS148.cpp; sourceTree = "<group>"; };
 		4691C80A23D7B64800E9E78D /* TTL74LS148.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TTL74LS148.hpp; path = ../../../src/devices/TTL74LS148/TTL74LS148.hpp; sourceTree = "<group>"; };
-		4691C80E23D7B70500E9E78D /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kernel.cpp; path = ../../../src/devices/rom/kernel/kernel.cpp; sourceTree = "<group>"; };
-		4691C81123D7B74300E9E78D /* patched_char_rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = patched_char_rom.cpp; path = ../../../src/devices/rom/char_rom/patched_char_rom.cpp; sourceTree = "<group>"; };
 		4691C81323D7B80B00E9E78D /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = log.txt; path = ../../../log.txt; sourceTree = "<group>"; };
 		4697AE1A24756DB100F498CE /* stats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stats.cpp; path = ../../../src/stats.cpp; sourceTree = "<group>"; };
 		4697AE1B24756DB100F498CE /* stats.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = stats.hpp; path = ../../../src/stats.hpp; sourceTree = "<group>"; };
@@ -171,6 +171,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		461CAD9C24AE765A001A3313 /* rom */ = {
+			isa = PBXGroup;
+			children = (
+				461CAD9E24AE76C6001A3313 /* char_rom */,
+				461CAD9D24AE768A001A3313 /* kernel */,
+			);
+			name = rom;
+			sourceTree = "<group>";
+		};
+		461CAD9D24AE768A001A3313 /* kernel */ = {
+			isa = PBXGroup;
+			children = (
+				4626D91D24AE78350089B4C3 /* kernel.cpp */,
+			);
+			name = kernel;
+			sourceTree = "<group>";
+		};
+		461CAD9E24AE76C6001A3313 /* char_rom */ = {
+			isa = PBXGroup;
+			children = (
+				4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */,
+			);
+			name = char_rom;
+			sourceTree = "<group>";
+		};
 		4633A79523FD560600AFD176 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +228,7 @@
 				4691C79723D7B35500E9E78D /* debugger */,
 				4691C79223D7B32300E9E78D /* devices */,
 				4633A79523FD560600AFD176 /* resources */,
+				461CAD9C24AE765A001A3313 /* rom */,
 				4691C78E23D7B30400E9E78D /* sdl2 */,
 				4691C7AF23D7B40600E9E78D /* common.hpp */,
 				4691C7AB23D7B40600E9E78D /* common.cpp */,
@@ -245,7 +271,6 @@
 				4691C7B523D7B4BF00E9E78D /* cia */,
 				4691C7B923D7B4EC00E9E78D /* cpu */,
 				4691C7D223D7B5A700E9E78D /* mmu */,
-				4691C80C23D7B6CA00E9E78D /* rom */,
 				4691C7D623D7B5CB00E9E78D /* sids */,
 				4691C80423D7B60F00E9E78D /* timer */,
 				4691C80823D7B62E00E9E78D /* TTL74LS148 */,
@@ -401,31 +426,6 @@
 			name = TTL74LS148;
 			sourceTree = "<group>";
 		};
-		4691C80C23D7B6CA00E9E78D /* rom */ = {
-			isa = PBXGroup;
-			children = (
-				4691C81023D7B72A00E9E78D /* char_rom */,
-				4691C80D23D7B6E400E9E78D /* kernel */,
-			);
-			name = rom;
-			sourceTree = "<group>";
-		};
-		4691C80D23D7B6E400E9E78D /* kernel */ = {
-			isa = PBXGroup;
-			children = (
-				4691C80E23D7B70500E9E78D /* kernel.cpp */,
-			);
-			name = kernel;
-			sourceTree = "<group>";
-		};
-		4691C81023D7B72A00E9E78D /* char_rom */ = {
-			isa = PBXGroup;
-			children = (
-				4691C81123D7B74300E9E78D /* patched_char_rom.cpp */,
-			);
-			name = char_rom;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -510,6 +510,7 @@
 				46C4CC2124388CBC002BD371 /* wave.cc in Sources */,
 				4691C7B323D7B40600E9E78D /* common.cpp in Sources */,
 				46C4CC1824388CBC002BD371 /* wave8580_P_T.cc in Sources */,
+				4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */,
 				46C4CBF824388BD2002BD371 /* sids.cpp in Sources */,
 				4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,
@@ -522,18 +523,17 @@
 				46C4CC1424388CBC002BD371 /* pot.cc in Sources */,
 				4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */,
 				4691C7A223D7B36C00E9E78D /* debug_status_bar.cpp in Sources */,
+				4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */,
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,
 				46C4CC2024388CBC002BD371 /* version.cc in Sources */,
 				46C4CC1524388CBC002BD371 /* envelope.cc in Sources */,
-				4691C80F23D7B70500E9E78D /* kernel.cpp in Sources */,
 				46C4CC1D24388CBC002BD371 /* sid.cc in Sources */,
 				4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */,
 				46C4CC1B24388CBC002BD371 /* wave8580_PST.cc in Sources */,
 				46C4CC1E24388CBC002BD371 /* wave6581_P_T.cc in Sources */,
 				4691C80723D7B62400E9E78D /* timer.cpp in Sources */,
 				46C4CC1224388CBC002BD371 /* wave6581_PS_.cc in Sources */,
-				4691C81223D7B74300E9E78D /* patched_char_rom.cpp in Sources */,
 				4691C7D023D7B59900E9E78D /* Moira.cpp in Sources */,
 				4691C80B23D7B64800E9E78D /* TTL74LS148.cpp in Sources */,
 				46C4CC1624388CBC002BD371 /* extfilt.cc in Sources */,

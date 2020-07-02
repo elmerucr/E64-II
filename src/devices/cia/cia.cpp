@@ -1,9 +1,10 @@
 //  cia.cpp
 //  E64
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "cia.hpp"
+#include "common.hpp"
 
 E64::cia::cia()
 {
@@ -17,9 +18,10 @@ void E64::cia::reset()
     for(int i=0; i<256; i++) event_queue[i] = 0x00;
     event_stack_pointer_head = 0;
     event_stack_pointer_tail = 0;
-    // on reset of cia, line is "high" = 1
+    // on reset of cia, interrupt line is released
+    pc.TTL74LS148_ic->release_line(interrupt_device_number);
+    
     // please note that registers 0 and 1 start empty
-    irq_pin = true;
 }
 
 void E64::cia::push_event(uint8_t event)
@@ -52,7 +54,7 @@ uint8_t E64::cia::pop_event()
 
 void E64::cia::run()
 {
-    // register 128 to 255 reflect the current keyboard state
+    // registers 128 to 255 reflect the current keyboard state
     // shift each register one bit to the left, bit 0 is only set if key is pressed
     // if one of the keys changed its state, push an event
     for(int i=0x00; i<0x80; i++)
@@ -66,7 +68,7 @@ void E64::cia::run()
                 push_event(i);
                 if(registers[0x01] & 0x01)
                 {
-                    irq_pin = false;
+                    pc.TTL74LS148_ic->pull_line(interrupt_device_number);
                     registers[0x00] |= 0x80;
                 }
                 break;
@@ -75,7 +77,7 @@ void E64::cia::run()
                 push_event(0x80 | i);
                 if(registers[0x01] & 0x01)
                 {
-                    irq_pin = false;
+                    pc.TTL74LS148_ic->pull_line(interrupt_device_number);
                     registers[0x00] |= 0x80;
                 }
                 break;
@@ -107,7 +109,7 @@ void E64::cia::write_byte(uint8_t address, uint8_t byte)
             if(byte & 0x01)
             {
                 // a write to bit 0, means acknowledge the interrupt
-                irq_pin = true;
+                pc.TTL74LS148_ic->release_line(interrupt_device_number);
                 // clear bit 7
                 registers[0x00] &= 0x7f;
             }

@@ -69,7 +69,7 @@ namespace E64
         // reset, called by constructor
         void reset(void);
         
-        uint8_t interrupt_device_no;
+        uint8_t interrupt_device_number;
 
         // register access functions
         uint8_t read_byte(uint8_t address);

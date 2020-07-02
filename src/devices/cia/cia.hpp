@@ -1,7 +1,7 @@
 //  cia.hpp
 //  E64
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 //
 //  register 0 is Interrupt Status Register
 //  READ
@@ -125,10 +125,11 @@ namespace E64
     public:
         // constructor
         cia();
+        
         // reset, also called by constructor
         void reset();
-        // irq pin is owned by the timer
-        bool irq_pin;
+        
+        uint8_t interrupt_device_number;
         
         // THESE NEXT ONES SHOULD BE PRIVATE IN THE FUTURE!
         uint8_t scancodes_last_known_state[128];
