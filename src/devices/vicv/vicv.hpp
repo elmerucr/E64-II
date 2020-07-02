@@ -62,7 +62,6 @@ public:
     
 public:
     vicv(void);
-    ~vicv(void);
     
     // framebuffer pointers inside the virtual machine
     uint16_t *frontbuffer;

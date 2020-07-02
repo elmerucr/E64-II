@@ -8,9 +8,10 @@
 #include "vicv.hpp"
 #include "common.hpp"
 
+
 E64::vicv::vicv()
 {
-    stats_overlay_present = true;
+    stats_overlay_present = false;
 
     framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[0x00e00000];
     framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[0x00e80000];
@@ -22,10 +23,6 @@ E64::vicv::vicv()
     stats_text = nullptr;
 }
 
-E64::vicv::~vicv()
-{
-    //
-}
 
 void E64::vicv::reset()
 {
@@ -41,6 +38,7 @@ void E64::vicv::reset()
     backbuffer  = framebuffer1;
 }
 
+
 #define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
 #define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
 //#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
@@ -51,6 +49,7 @@ void E64::vicv::reset()
 #define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 #define BLANK           (HBLANK || VBLANK)
 #define HBORDER         (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]))
+
 
 void E64::vicv::run(uint32_t number_of_cycles)
 {
@@ -94,8 +93,10 @@ void E64::vicv::run(uint32_t number_of_cycles)
     old_y_pos = Y_POS;
 }
 
+
 bool E64::vicv::is_hblank() { return HBLANK; }
 bool E64::vicv::is_vblank() { return VBLANK; }
+
 
 inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
 {
@@ -127,6 +128,7 @@ inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
     }
 }
 
+
 uint16_t E64::vicv::get_current_scanline() { return Y_POS; }
 uint16_t E64::vicv::get_current_pixel() { return X_POS; }
 
@@ -135,26 +137,31 @@ void E64::vicv::clear_scanline_breakpoints()
 {
     for(int i=0; i<1024; i++) scanline_breakpoints[i] = false;
 }
-    
+
+
 void E64::vicv::add_scanline_breakpoint(uint16_t scanline)
 {
     scanline_breakpoints[scanline & 1023] = true;
 }
+
 
 void E64::vicv::remove_scanline_breakpoint(uint16_t scanline)
 {
     scanline_breakpoints[scanline & 1023] = false;
 }
 
+
 bool E64::vicv::is_scanline_breakpoint(uint16_t scanline)
 {
     return scanline_breakpoints[scanline & 1023];
 }
 
+
 uint8_t E64::vicv::read_byte(uint8_t address)
 {
     return registers[address];
 }
+
 
 void E64::vicv::write_byte(uint8_t address, uint8_t byte)
 {

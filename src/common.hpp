@@ -13,12 +13,12 @@
 #include "machine.hpp"
 #include "stats.hpp"
 
-#define E64_MAJOR_VERSION       0
-#define E64_MINOR_VERSION       5
-#define E64_BUILD               20200702
-#define E64_YEAR                2020
+#define E64_II_MAJOR_VERSION    0
+#define E64_II_MINOR_VERSION    5
+#define E64_II_BUILD            20200702
+#define E64_II_YEAR             2020
 
-// some global objects
+//  Some global objects
 extern E64::video       host_video;
 extern E64::machine     pc;
 extern E64::stats       statistics;
@@ -27,13 +27,22 @@ extern const char       screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, don't change this number
 
-#define FPS                         60
+/*  System mimics standard 720p60 HDMI output @ half the dimensions.
+ *  In a distant future, this will come in handy with real hardware.
+ *  See also:
+ *  https://timetoexplore.net/blog/video-timings-vga-720p-1080p
+ */
 #define VICV_PIXELS_PER_SCANLINE    640
 #define VICV_PIXELS_HBLANK          185
 #define VICV_SCANLINES              360
 #define VICV_SCANLINES_VBLANK       15
+
+//  These two macros are defined for use within the debugger.
 #define VICV_CHAR_COLUMNS           (VICV_PIXELS_PER_SCANLINE / 8)
 #define VICV_CHAR_ROWS              (VICV_SCANLINES / 8)
+
+
+#define FPS                         60
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
 #define BLITTER_DOT_CLOCK_SPEED     (4*VICV_DOT_CLOCK_SPEED)
@@ -43,7 +52,7 @@ extern const char       screencode_to_ascii[];
 #define SAMPLE_RATE                 44100
 #define AUDIO_BUFFER_SIZE           8192.0
 
-// c64 (VirtualC64)
+//  C64 (VirtualC64)
 #define C64_BLACK       0x00f0
 #define C64_WHITE       0xffff
 #define C64_RED         0x33f7
@@ -61,7 +70,7 @@ extern const char       screencode_to_ascii[];
 #define C64_LIGHTBLUE   0x7df6
 #define C64_LIGHTGREY   0xaafa
 
-// grey
+//  Grey
 #define GREY_00 0x00f0
 #define GREY_01 0x11f1
 #define GREY_02 0x22f2
@@ -79,7 +88,7 @@ extern const char       screencode_to_ascii[];
 #define GREY_14 0xeefe
 #define GREY_15 0xffff
 
-// green
+//  Green
 #define GREEN_00  0x00f0
 #define GREEN_01  0x21f1
 #define GREEN_02  0x42f2
@@ -89,7 +98,7 @@ extern const char       screencode_to_ascii[];
 #define GREEN_06  0xc6f6
 #define GREEN_07  0xe7f7
 
-// cobalt
+//  Cobalt
 #define COBALT_00   0x00f0
 #define COBALT_01   0x12f1
 #define COBALT_02   0x24f2
@@ -99,7 +108,7 @@ extern const char       screencode_to_ascii[];
 #define COBALT_06   0x6cf6
 #define COBALT_07   0x7ef7
 
-// amber
+//  Amber
 #define AMBER_00   0x00f0
 #define AMBER_01   0x11f2
 #define AMBER_02   0x22f4
@@ -109,6 +118,7 @@ extern const char       screencode_to_ascii[];
 #define AMBER_06   0x66fc
 #define AMBER_07   0x77fe
 
+//  Ascii values
 #define ASCII_NULL          0x00    // null
 #define ASCII_CR            0x0d    // carriage return
 #define ASCII_LF            0x0a    // linefeed

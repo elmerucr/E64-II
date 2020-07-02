@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     //    }
     //    std::cout << std::endl;
     
-    printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_YEAR, E64_MAJOR_VERSION, E64_MINOR_VERSION, E64_BUILD);
+    printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
 
     // place this call into machine class?
     pc.vicv_ic->set_stats( statistics.stats_info() );

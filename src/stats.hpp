@@ -1,5 +1,5 @@
 //  stats.hpp
-//  E64
+//  E64-II
 //
 //  Copyright © 2020 elmerucr. All rights reserved.
 

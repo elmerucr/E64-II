@@ -76,6 +76,8 @@ public:
     void increase_window_size();
     void decrease_window_size();
     void toggle_fullscreen();
+    
+    // getters
     uint16_t current_window_width() { return window_sizes[current_window_size].x; }
     uint16_t current_window_height() { return window_sizes[current_window_size].y; }
     inline bool vsync_enabled() { return vsync; }

@@ -46,7 +46,7 @@ void debug_console_init()
 
 void debug_console_version()
 {
-    snprintf(console_help_string,256,"E64-II (C)%i - version %i.%i.%i\n", E64_YEAR, E64_MAJOR_VERSION, E64_MINOR_VERSION, E64_BUILD);
+    snprintf(console_help_string,256,"E64-II (C)%i - version %i.%i.%i\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
     debug_console_print(console_help_string);
 }
 

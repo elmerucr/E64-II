@@ -23,7 +23,6 @@
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C7B123D7B40600E9E78D /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7A923D7B40600E9E78D /* machine.cpp */; };
 		4691C7B323D7B40600E9E78D /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AB23D7B40600E9E78D /* common.cpp */; };
-		4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */; };
 		4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7B723D7B4DC00E9E78D /* cia.cpp */; };
 		4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7BC23D7B57100E9E78D /* cpu_moira.cpp */; };
 		4691C7D023D7B59900E9E78D /* Moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7C523D7B59800E9E78D /* Moira.cpp */; };
@@ -94,7 +93,6 @@
 		4691C7A923D7B40600E9E78D /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine.cpp; sourceTree = "<group>"; };
 		4691C7AB23D7B40600E9E78D /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = common.cpp; path = ../../../src/common.cpp; sourceTree = "<group>"; };
 		4691C7AC23D7B40600E9E78D /* machine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = machine.hpp; path = ../../../src/machine.hpp; sourceTree = "<group>"; };
-		4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frequency_divider.cpp; path = ../../../src/frequency_divider.cpp; sourceTree = "<group>"; };
 		4691C7AF23D7B40600E9E78D /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common.hpp; path = ../../../src/common.hpp; sourceTree = "<group>"; };
 		4691C7B023D7B40600E9E78D /* frequency_divider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = frequency_divider.hpp; path = ../../../src/frequency_divider.hpp; sourceTree = "<group>"; };
 		4691C7B623D7B4DC00E9E78D /* cia.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cia.hpp; path = ../../../src/devices/cia/cia.hpp; sourceTree = "<group>"; };
@@ -233,7 +231,6 @@
 				4691C7AF23D7B40600E9E78D /* common.hpp */,
 				4691C7AB23D7B40600E9E78D /* common.cpp */,
 				4691C7B023D7B40600E9E78D /* frequency_divider.hpp */,
-				4691C7AE23D7B40600E9E78D /* frequency_divider.cpp */,
 				4691C7AC23D7B40600E9E78D /* machine.hpp */,
 				4691C7A923D7B40600E9E78D /* machine.cpp */,
 				4691C78723D7B28600E9E78D /* main.cpp */,
@@ -512,7 +509,6 @@
 				46C4CC1824388CBC002BD371 /* wave8580_P_T.cc in Sources */,
 				4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */,
 				46C4CBF824388BD2002BD371 /* sids.cpp in Sources */,
-				4691C7B423D7B40600E9E78D /* frequency_divider.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,
 				4691C79623D7B34700E9E78D /* vicv.cpp in Sources */,
 				4633A79823FD565800AFD176 /* video.cpp in Sources */,
