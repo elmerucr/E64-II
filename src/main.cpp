@@ -112,7 +112,8 @@ int main(int argc, char **argv)
                          *  avoid "playing catch-up" by the virtual machine.
                          */
 
-                        if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        //if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        if( (std::chrono::steady_clock::now() - screen_update_moment) > std::chrono::microseconds(250000) ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
                         
                         std::this_thread::sleep_until(screen_update_moment);
                         
