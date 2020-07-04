@@ -31,7 +31,6 @@ E64::machine::machine()
     sids_ic = new sids(true);
     
     cia_ic = new cia();
-    cia_ic->interrupt_device_number = TTL74LS148_ic->connect_device(3);
     
     // init frequency dividers (make sure the right amount of cycles will run on different ic's)
     m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
@@ -152,5 +151,6 @@ void E64::machine::reset()
     vicv_ic->reset();
     blitter_ic->reset();
     timer_ic->reset();
+    cia_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
 }

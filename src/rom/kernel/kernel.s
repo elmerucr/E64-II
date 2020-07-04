@@ -13,7 +13,7 @@
 
 kernel_main
 
-	; populate vector table
+	; setup vector table
 
 	LEA	exception_handler,A0
 	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
@@ -89,6 +89,9 @@ kernel_main
 	ORI.W	#%0000000100000000,D0
 	MOVE.W	D0,SR
 
+	; CIA start generating keyboard events
+	MOVE.B	#%00000001,CIA_CONTROL
+
 
 	; set color and size of border
 	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
@@ -106,7 +109,7 @@ kernel_main
 	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
 
 
-	; set txt pointer  -  deprecated
+	; set txt pointer  -  deprecated!
 	MOVE.L	#$00F00000,VICV_TXT
 	MOVE.L	#$00F00800,VICV_COL
 

@@ -1,10 +1,10 @@
 //  cia.cpp
-//  E64
+//  E64-II
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "cia.hpp"
-#include "common.hpp"
+#include <cstdio>
 
 E64::cia::cia()
 {
@@ -14,41 +14,36 @@ E64::cia::cia()
 void E64::cia::reset()
 {
     for(int i=0; i<256; i++) registers[i] = 0x00;
-    for(int i=0; i<128; i++) scancodes_last_known_state[i] = 0x00;
-    for(int i=0; i<256; i++) event_queue[i] = 0x00;
-    event_stack_pointer_head = 0;
-    event_stack_pointer_tail = 0;
-    // on reset of cia, interrupt line is released
-    pc.TTL74LS148_ic->release_line(interrupt_device_number);
+    for(int i=0; i<128; i++) keys_last_known_state[i] = 0x00;
+    for(int i=0; i<256; i++) event_list[i] = 0x00;
+    head = tail = 0;
     
-    // please note that registers 0 and 1 start empty
+    generate_key_events = false;
 }
 
 void E64::cia::push_event(uint8_t event)
 {
-    event_queue[event_stack_pointer_head] = event;
-    event_stack_pointer_head++;
-    // set bit 0 of register 0 => keyboard event is waiting
-    registers[0x00] |= 0x01;
+    event_list[head] = event;
+    head++;
+    if( head == tail) { tail++; printf("too many items in list\n"); }
+    printf("head: %u tail: %u %u items in list\n", head, tail, (uint8_t)(head - tail) );
 }
 
 uint8_t E64::cia::pop_event()
 {
     uint8_t result;
-    uint8_t no_of_items = event_stack_pointer_head - event_stack_pointer_tail;
-    if(no_of_items == 0x00)
+    
+    if( head == tail )
     {
         // no events in queue / stack return empty scancode
         result = E64::SCANCODE_EMPTY;
     }
     else
     {
-        result = event_queue[event_stack_pointer_tail];
-        event_stack_pointer_tail++;
-        no_of_items = event_stack_pointer_head - event_stack_pointer_tail;
-        // clear the keyboard event bit 0 if there's no value anymore
-        if(no_of_items == 0) registers[0x00] &= 0xfe;
+        result = event_list[tail];
+        tail++;
     }
+    
     return result;
 }
 
@@ -59,26 +54,24 @@ void E64::cia::run()
     // if one of the keys changed its state, push an event
     for(int i=0x00; i<0x80; i++)
     {
-        registers[0x80+i] = (registers[0x80+i] << 1) | scancodes_last_known_state[i];
+        registers[0x80|i] = (registers[0x80|i] << 1) | keys_last_known_state[i];
 
-        switch(registers[0x80+i] & 0x03)
+        switch(registers[0x80|i] & 0b00000011)
         {
-            case 0x01:
+            case 0b01:
                 // Event: key pressed
-                push_event(i);
-                if(registers[0x01] & 0x01)
+                if(generate_key_events)
                 {
-                    pc.TTL74LS148_ic->pull_line(interrupt_device_number);
-                    registers[0x00] |= 0x80;
+                    push_event(i);
+                    printf("[CIA] generated key press event: %02x\n", i);
                 }
                 break;
-            case 0x02:
+            case 0b10:
                 // Event: key released
-                push_event(0x80 | i);
-                if(registers[0x01] & 0x01)
+                if(generate_key_events)
                 {
-                    pc.TTL74LS148_ic->pull_line(interrupt_device_number);
-                    registers[0x00] |= 0x80;
+                    push_event(0x80 | i);
+                    printf("[CIA] generated key release event: %02x\n", i);
                 }
                 break;
             default:
@@ -90,14 +83,24 @@ void E64::cia::run()
 
 uint8_t E64::cia::read_byte(uint8_t address)
 {
-    if(address == 0x02)
-    {   // special case is register 0x02 (contains the popped scancode for the last event)
-        return pop_event();
-    }
-    else
+    uint8_t return_value = 0x00;
+    
+    switch( address )
     {
-        return registers[address];
+        case 0x00:
+            return_value = events_waiting() ? 0x01 : 0x00;
+        case 0x01:
+            return_value = (generate_key_events ? 0x01 : 0x00);
+            break;
+        case 0x02:
+            return_value = pop_event();
+            break;
+        default:
+            return_value = registers[address];
+            break;
     }
+    
+    return return_value;
 }
 
 
@@ -105,17 +108,14 @@ void E64::cia::write_byte(uint8_t address, uint8_t byte)
 {
     switch(address)
     {
-        case 0x00:
-            if(byte & 0x01)
-            {
-                // a write to bit 0, means acknowledge the interrupt
-                pc.TTL74LS148_ic->release_line(interrupt_device_number);
-                // clear bit 7
-                registers[0x00] &= 0x7f;
-            }
-            break;
         case 0x01:
-            registers[0x01] = byte;
+            generate_key_events = ( byte & 0b00000001 ) ? true : false;
+            
+            if( byte & 0b10000000 )
+            {
+                // a write to bit 7 clears the event list
+                tail = head;
+            }
             break;
         default:
             // all other addresses are not written to
