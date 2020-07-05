@@ -118,8 +118,13 @@ enum scancodes
 class cia
 {
 private:
+    uint32_t    cycle_counter;
+    uint32_t    cycles_per_interval;
+    
     void    push_event(uint8_t event);
     uint8_t pop_event();
+    
+    bool    generate_key_events;
     
     // implement a fifo event list, important for key presses, you don't want them in the wrong order
     uint8_t event_list[256];
@@ -129,7 +134,11 @@ private:
     uint8_t head;
     uint8_t tail;
     
-    bool    generate_key_events;
+    bool    key_down;
+    uint8_t last_key;
+    uint8_t keyboard_repeat_delay;      // multiples of 5ms before keyboard starts repeating (120x = 0.6s)
+    uint8_t keyboard_repeat_speed;      // multiples of 5ms between repeats (10x = 50ms -> 20Hz, or 4s to fill up screenline @ 80 columns)
+    uint8_t keyboard_countdown;         //
     
     inline bool events_waiting()
     {
@@ -147,12 +156,8 @@ public:
     uint8_t registers[256];
     //
     
-    /*  Unlike other components, the CIA doesn't need a specified number
-     *  of cycles as an argument. It is simple run once per frame refresh
-     *  which is frequently enough (user input is way slower than most
-     *  other things.
-     */
-    void run();
+    /*  Run a number of cycles */
+    void run(int no_of_cycles);
     
     // register access functions
     

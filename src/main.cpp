@@ -20,8 +20,8 @@
 #include <thread>
 
 // global components
-E64::video      host_video;
 E64::machine    pc;
+E64::video      host_video;
 E64::stats      statistics;
 
 int main(int argc, char **argv)
@@ -84,8 +84,6 @@ int main(int argc, char **argv)
                     // process events and check for possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) pc.running = false;
                     
-                    pc.cia_ic->run();
-                    
                     statistics.process_parameters();
                     
                     /*  If vsync is enabled, the update screen function
@@ -112,8 +110,8 @@ int main(int argc, char **argv)
                          *  avoid "playing catch-up" by the virtual machine.
                          */
 
-                        //if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
-                        if( (std::chrono::steady_clock::now() - screen_update_moment) > std::chrono::microseconds(250000) ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
+                        //if( (std::chrono::steady_clock::now() - screen_update_moment) > std::chrono::microseconds(250000) ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
                         
                         std::this_thread::sleep_until(screen_update_moment);
                         

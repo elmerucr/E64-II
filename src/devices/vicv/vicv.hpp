@@ -69,8 +69,6 @@ public:
 
     // interrupt device no for vblanc irq
     uint8_t vblank_interrupt_device_number;
-    
-
 
     // this will be flagged if a frame is completely done
     bool frame_done;
@@ -78,8 +76,6 @@ public:
     void reset();
 
     // run cycles on this chip
-    void run_old(uint32_t number_of_cycles);
-    // experimental version
     void run(uint32_t number_of_dots);
 
     uint16_t        get_current_scanline();

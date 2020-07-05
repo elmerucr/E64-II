@@ -4,21 +4,30 @@
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "cia.hpp"
+#include "common.hpp"
 #include <cstdio>
 
 E64::cia::cia()
 {
+    cycles_per_interval = CPU_CLOCK_SPEED / 200; // no of cycles @ CPU clockspeed for a total of 5 ms
     reset();
 }
 
 void E64::cia::reset()
 {
+    cycle_counter = 0;
+    
     for(int i=0; i<256; i++) registers[i] = 0x00;
     for(int i=0; i<128; i++) keys_last_known_state[i] = 0x00;
     for(int i=0; i<256; i++) event_list[i] = 0x00;
     head = tail = 0;
     
     generate_key_events = false;
+    
+    key_down = false;
+    keyboard_repeat_delay = 120;
+    keyboard_repeat_speed = 10;
+    keyboard_countdown = 0;
 }
 
 void E64::cia::push_event(uint8_t event)
@@ -47,36 +56,46 @@ uint8_t E64::cia::pop_event()
     return result;
 }
 
-void E64::cia::run()
+void E64::cia::run(int no_of_cycles)
 {
-    // registers 128 to 255 reflect the current keyboard state
-    // shift each register one bit to the left, bit 0 is only set if key is pressed
-    // if one of the keys changed its state, push an event
-    for(int i=0x00; i<0x80; i++)
+    cycle_counter += no_of_cycles;
+    
+    if( cycle_counter >= cycles_per_interval )
     {
-        registers[0x80|i] = (registers[0x80|i] << 1) | keys_last_known_state[i];
-
-        switch(registers[0x80|i] & 0b00000011)
+        cycle_counter -= cycles_per_interval;
+        
+        // registers 128 to 255 reflect the current keyboard state
+        // shift each register one bit to the left, bit 0 is only set if key is pressed
+        // if one of the keys changed its state, push an event
+        for(int i=0x00; i<0x80; i++)
         {
-            case 0b01:
-                // Event: key pressed
-                if(generate_key_events)
-                {
-                    push_event(i);
-                    printf("[CIA] generated key press event: %02x\n", i);
-                }
-                break;
-            case 0b10:
-                // Event: key released
-                if(generate_key_events)
-                {
-                    push_event(0x80 | i);
-                    printf("[CIA] generated key release event: %02x\n", i);
-                }
-                break;
-            default:
-                // do nothing
-                break;
+            registers[0x80|i] = (registers[0x80|i] << 1) | keys_last_known_state[i];
+
+            switch(registers[0x80|i] & 0b00000011)
+            {
+                case 0b01:
+                    // Event: key pressed
+                    if(generate_key_events)
+                    {
+                        key_down = true;
+                        last_key = i;
+                        push_event(i);
+                        printf("[CIA] generated key press event: %02x\n", i);
+                    }
+                    break;
+                case 0b10:
+                    // Event: key released
+                    if(generate_key_events)
+                    {
+                        key_down = false;
+                        push_event(0x80 | i);
+                        printf("[CIA] generated key release event: %02x\n", i);
+                    }
+                    break;
+                default:
+                    // do nothing
+                    break;
+            }
         }
     }
 }

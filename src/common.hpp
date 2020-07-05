@@ -15,7 +15,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20200704
+#define E64_II_BUILD            20200705
 #define E64_II_YEAR             2020
 
 //  Some global objects
@@ -27,10 +27,52 @@ extern const char       screencode_to_ascii[];
 
 #define RAM_SIZE                    0x1000000   // 16mb system, don't change this number
 
-/*  System mimics standard 720p60 HDMI output @ half the dimensions.
- *  In a distant future, this will come in handy with real hardware.
+/*  System uses standard 720p60 HDMI output @ half the dimensions.
+ *  In a 'distant' future, this will come in handy with real hardware.
  *  See also:
  *  https://timetoexplore.net/blog/video-timings-vga-720p-1080p
+ *
+ *  Name         1280x720p60
+ *  Standard       CTA-770.3
+ *  VIC                    4
+ *  Short Name          720p
+ *  Aspect Ratio        16:9
+ *
+ *  Pixel Clock       74.250 MHz
+ *  TMDS Clock       742.500 MHz
+ *  Pixel Time          13.5 ns ±0.5%
+ *  Horizontal Freq.  45.000 kHz
+ *  Line Time           22.2 μs
+ *  Vertical Freq.    60.000 Hz
+ *  Frame Time          16.7 ms
+ *
+ *  Horizontal Timings
+ *  Active Pixels       1280
+ *  Front Porch          110
+ *  Sync Width            40
+ *  Back Porch           220
+ *  Blanking Total       370
+ *  Total Pixels        1650
+ *  Sync Polarity        pos
+ *
+ *  Vertical Timings
+ *  Active Lines         720
+ *  Front Porch            5
+ *  Sync Width             5
+ *  Back Porch            20
+ *  Blanking Total        30
+ *  Total Lines          750
+ *  Sync Polarity        pos
+ *
+ *  Active Pixels    921,600
+ *  Data Rate           1.78 Gbps
+ *
+ *  Frame Memory (Kbits)
+ *   8-bit Memory      7,200
+ *  12-bit Memory     10,800
+ *  24-bit Memory     21,600
+ *  32-bit Memory     28,800
+ *
  */
 #define VICV_PIXELS_PER_SCANLINE    640
 #define VICV_PIXELS_HBLANK          185

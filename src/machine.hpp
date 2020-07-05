@@ -37,6 +37,7 @@ private:
     frequency_divider *m68k_to_blitter;
     frequency_divider *m68k_to_sid;
     frequency_divider *m68k_to_timer;
+    frequency_divider *m68k_to_cia;
     char machine_help_string[2048];
 public:
     enum machine_mode   current_mode;

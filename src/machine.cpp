@@ -37,12 +37,14 @@ E64::machine::machine()
     m68k_to_blitter = new frequency_divider(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
     m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
     m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
+    m68k_to_cia = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
     
     m68k_ic->configDasm(true, false);   // output numbers in hex, use small case for mnemonics
 }
 
 E64::machine::~machine()
 {
+    delete m68k_to_cia;
     delete m68k_to_timer;
     delete m68k_to_sid;
     delete m68k_to_blitter;
@@ -118,6 +120,9 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
     
     // run cycles on timer
     timer_ic->run(m68k_to_timer->clock(processed_cycles));
+    
+    // run cycles on cia
+    cia_ic->run(m68k_to_cia->clock(processed_cycles));
     
     // run cycles on sound device & start audio if buffer is large enough
     // some cheating by adjustment of cycles to run depending on current
