@@ -115,6 +115,7 @@ enum scancodes
     SCANCODE_RIGHT             // 0x48
 };
 
+
 class cia
 {
 private:
@@ -136,9 +137,10 @@ private:
     
     bool    key_down;
     uint8_t last_key;
-    uint8_t keyboard_repeat_delay;      // multiples of 5ms before keyboard starts repeating (120x = 0.6s)
-    uint8_t keyboard_repeat_speed;      // multiples of 5ms between repeats (10x = 50ms -> 20Hz, or 4s to fill up screenline @ 80 columns)
-    uint8_t keyboard_countdown;         //
+    uint8_t keyboard_repeat_delay;      // multiples of 10ms before keyboard starts repeating (60x = 0.6s)
+    uint8_t keyboard_repeat_speed;      // multiples of 10ms between repeats (5x = 50ms -> 20Hz, or 4s to fill up screenline @ 80 columns)
+    uint8_t keyboard_repeat_counter;    //
+    uint8_t keyboard_repeat_current_max;
     
     inline bool events_waiting()
     {

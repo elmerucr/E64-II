@@ -9,7 +9,7 @@
 
 E64::cia::cia()
 {
-    cycles_per_interval = CPU_CLOCK_SPEED / 200; // no of cycles @ CPU clockspeed for a total of 5 ms
+    cycles_per_interval = CPU_CLOCK_SPEED / 100; // no of cycles @ CPU clockspeed for a total of 10 ms
     reset();
 }
 
@@ -25,9 +25,9 @@ void E64::cia::reset()
     generate_key_events = false;
     
     key_down = false;
-    keyboard_repeat_delay = 120;
-    keyboard_repeat_speed = 10;
-    keyboard_countdown = 0;
+    keyboard_repeat_delay = 60;
+    keyboard_repeat_speed = 5;
+    keyboard_repeat_counter = 0;
 }
 
 void E64::cia::push_event(uint8_t event)
@@ -79,22 +79,31 @@ void E64::cia::run(int no_of_cycles)
                     {
                         key_down = true;
                         last_key = i;
-                        push_event(i);
-                        printf("[CIA] generated key press event: %02x\n", i);
+                        keyboard_repeat_current_max = keyboard_repeat_delay;
+                        keyboard_repeat_counter = 0;
                     }
                     break;
                 case 0b10:
                     // Event: key released
                     if(generate_key_events)
                     {
-                        key_down = false;
-                        push_event(0x80 | i);
-                        printf("[CIA] generated key release event: %02x\n", i);
+                        if( i == last_key ) key_down = false;
                     }
                     break;
                 default:
                     // do nothing
                     break;
+            }
+        }
+        
+        if(key_down)
+        {
+            if( keyboard_repeat_counter == 0 ) push_event( last_key );
+            keyboard_repeat_counter++;
+            if(keyboard_repeat_counter == keyboard_repeat_current_max)
+            {
+                keyboard_repeat_counter = 0;
+                keyboard_repeat_current_max = keyboard_repeat_speed;
             }
         }
     }
