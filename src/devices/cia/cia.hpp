@@ -24,7 +24,11 @@
  *  bits 1-7: Reserved
  *
  *
- *  Register 2 - Contains last key event code (READ)
+ *  Register 2 - Keyboard Repeat Delay, 1 byte, in multiples of 10ms (READ/WRITE)
+ *
+ *  Register 3 - Keyboard Repeat Speed, 1 byte, in multiples of 10ms (READ/WRITE)
+ *
+ *  Register 4 - Contains last key ascii code (READ), returns 0 on nothing
  *
  *  Returns 0 when no events are available.
  *
@@ -114,7 +118,6 @@ enum scancodes
     SCANCODE_DOWN,
     SCANCODE_RIGHT             // 0x48
 };
-
 
 class cia
 {

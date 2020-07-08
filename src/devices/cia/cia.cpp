@@ -7,6 +7,156 @@
 #include "common.hpp"
 #include <cstdio>
 
+bool scancode_not_modifier[] =
+{
+    true,                       // 0x00
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x08
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x10
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x18
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x20
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x28
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x30
+    true,
+    false,                      // left shift
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,                       // 0x38
+    true,
+    true,
+    true,
+    true,
+    false,                      // right shift
+    false,                      // left control
+    false,                      // left alt
+    false,                      // left gui
+    true,
+    false,                      // right gui
+    false,                      // right alt
+    false,                      // right control
+    true,
+    true,
+    true
+};
+
+#define SHIFT_PRESSED   0b00000001
+#define CTRL_PRESSED    0b00000010
+#define ALT_PRESSED     0b00000100
+
+inline char event_to_ascii(uint8_t scancode, uint8_t modifiers)
+{
+    switch (scancode)
+    {
+        case E64::SCANCODE_ESCAPE:
+            return ASCII_ESCAPE;
+        case E64::SCANCODE_F1:
+            return ASCII_F1;
+        case E64::SCANCODE_F2:
+            return ASCII_F2;
+        case E64::SCANCODE_F3:
+            return ASCII_F3;
+        case E64::SCANCODE_F4:
+            return ASCII_F4;
+        case E64::SCANCODE_F5:
+            return ASCII_F5;
+        case E64::SCANCODE_F6:
+            return ASCII_F6;
+        case E64::SCANCODE_F7:
+            return ASCII_F7;
+        case E64::SCANCODE_F8:
+            return ASCII_F8;
+        case E64::SCANCODE_GRAVE:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_TILDE : ASCII_GRAVE;
+        case E64::SCANCODE_1:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_EXCL_MARK : ASCII_1;
+        case E64::SCANCODE_2:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_AT : ASCII_2;
+        case E64::SCANCODE_3:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_NUMBER : ASCII_3;
+        case E64::SCANCODE_4:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_DOLLAR : ASCII_4;
+        case E64::SCANCODE_5:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_PERCENT : ASCII_5;
+        case E64::SCANCODE_6:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_CARET : ASCII_6;
+        case E64::SCANCODE_7:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_AMPERSAND : ASCII_7;
+        case E64::SCANCODE_8:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_ASTERISK : ASCII_8;
+        case E64::SCANCODE_9:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_OPEN_PAR : ASCII_9;
+        case E64::SCANCODE_0:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_CLOSE_PAR : ASCII_0;
+        case E64::SCANCODE_MINUS:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_UNDERSCORE : ASCII_HYPHEN;
+        case E64::SCANCODE_EQUALS:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_PLUS : ASCII_EQUALS;
+        case E64::SCANCODE_BACKSPACE:
+            return ASCII_BACKSPACE;
+        case E64::SCANCODE_TAB:
+            return ASCII_HOR_TAB;
+        case E64::SCANCODE_Q:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_Q : ASCII_q;
+        case E64::SCANCODE_W:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_W : ASCII_w;
+        case E64::SCANCODE_E:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_E : ASCII_e;
+        case E64::SCANCODE_R:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_R : ASCII_r;
+        case E64::SCANCODE_T:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_T : ASCII_t;
+        case E64::SCANCODE_Y:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_Y : ASCII_y;
+        default:
+            break;
+    }
+    return 0;
+}
+
 E64::cia::cia()
 {
     cycles_per_interval = CPU_CLOCK_SPEED / 100; // no of cycles @ CPU clockspeed for a total of 10 ms
@@ -35,7 +185,7 @@ void E64::cia::push_event(uint8_t event)
     event_list[head] = event;
     head++;
     if( head == tail) { tail++; printf("too many items in list\n"); }
-    printf("head: %u tail: %u %u items in list\n", head, tail, (uint8_t)(head - tail) );
+    printf("head: %u tail: %u %u items in list event: %02x\n", head, tail, (uint8_t)(head - tail), event );
 }
 
 uint8_t E64::cia::pop_event()
@@ -64,6 +214,9 @@ void E64::cia::run(int no_of_cycles)
     {
         cycle_counter -= cycles_per_interval;
         
+        // check modifier keys
+        uint8_t modifier_keys_status = (keys_last_known_state[SCANCODE_LSHIFT] ? SHIFT_PRESSED : 0) | (keys_last_known_state[SCANCODE_RSHIFT] ? SHIFT_PRESSED : 0);
+        
         // registers 128 to 255 reflect the current keyboard state
         // shift each register one bit to the left, bit 0 is only set if key is pressed
         // if one of the keys changed its state, push an event
@@ -75,7 +228,7 @@ void E64::cia::run(int no_of_cycles)
             {
                 case 0b01:
                     // Event: key pressed
-                    if(generate_key_events)
+                    if(generate_key_events && scancode_not_modifier[i] )
                     {
                         key_down = true;
                         last_key = i;
@@ -98,7 +251,7 @@ void E64::cia::run(int no_of_cycles)
         
         if(key_down)
         {
-            if( keyboard_repeat_counter == 0 ) push_event( last_key );
+            if( keyboard_repeat_counter == 0 ) push_event( event_to_ascii(last_key, modifier_keys_status) );
             keyboard_repeat_counter++;
             if(keyboard_repeat_counter == keyboard_repeat_current_max)
             {
@@ -119,8 +272,13 @@ uint8_t E64::cia::read_byte(uint8_t address)
             return_value = events_waiting() ? 0x01 : 0x00;
         case 0x01:
             return_value = (generate_key_events ? 0x01 : 0x00);
-            break;
         case 0x02:
+            return_value = keyboard_repeat_delay;
+            break;
+        case 0x03:
+            return_value = keyboard_repeat_speed;
+            break;
+        case 0x04:
             return_value = pop_event();
             break;
         default:
@@ -143,7 +301,14 @@ void E64::cia::write_byte(uint8_t address, uint8_t byte)
             {
                 // a write to bit 7 clears the event list
                 tail = head;
+                key_down = false;
             }
+            break;
+        case 0x02:
+            keyboard_repeat_delay = byte;
+            break;
+        case 0x03:
+            keyboard_repeat_speed = byte;
             break;
         default:
             // all other addresses are not written to

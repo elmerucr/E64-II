@@ -165,7 +165,10 @@ mainloop
 	CMP.B	#$49,D0
 	BNE	.2
 
-	ADDQ.B	#$1,$00F00080
+	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
+	BEQ.S	.1			; if 0 (nothing), jump to .1
+	JSR	put_char		; print character
+
 	BRA.S	.1
 
 
