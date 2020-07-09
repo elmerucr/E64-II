@@ -151,8 +151,74 @@ inline char event_to_ascii(uint8_t scancode, uint8_t modifiers)
             return (modifiers & SHIFT_PRESSED) ? ASCII_T : ASCII_t;
         case E64::SCANCODE_Y:
             return (modifiers & SHIFT_PRESSED) ? ASCII_Y : ASCII_y;
-        default:
-            break;
+        case E64::SCANCODE_U:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_U : ASCII_u;
+        case E64::SCANCODE_I:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_I : ASCII_i;
+        case E64::SCANCODE_O:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_O : ASCII_o;
+        case E64::SCANCODE_P:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_P : ASCII_p;
+        case E64::SCANCODE_LEFTBRACKET:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_OPEN_BRACE : ASCII_OPEN_BRACK;
+        case E64::SCANCODE_RIGHTBRACKET:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_CLOSE_BRACE : ASCII_CLOSE_BRACK;
+        case E64::SCANCODE_RETURN:
+            return ASCII_LF;
+        case E64::SCANCODE_A:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_A : ASCII_a;
+        case E64::SCANCODE_S:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_S : ASCII_s;
+        case E64::SCANCODE_D:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_D : ASCII_d;
+        case E64::SCANCODE_F:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_F : ASCII_f;
+        case E64::SCANCODE_G:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_G : ASCII_g;
+        case E64::SCANCODE_H:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_H : ASCII_h;
+        case E64::SCANCODE_J:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_J : ASCII_j;
+        case E64::SCANCODE_K:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_K : ASCII_k;
+        case E64::SCANCODE_L:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_L : ASCII_l;
+        case E64::SCANCODE_SEMICOLON:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_COLON : ASCII_SEMI_COLON;
+        case E64::SCANCODE_APOSTROPHE:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_DOUBLE_QUOTES : ASCII_SINGLE_QUOTE;
+        case E64::SCANCODE_BACKSLASH:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_VERT_BAR : ASCII_BACKSLASH;
+        case E64::SCANCODE_Z:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_Z : ASCII_z;
+        case E64::SCANCODE_X:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_X : ASCII_x;
+        case E64::SCANCODE_C:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_C : ASCII_c;
+        case E64::SCANCODE_V:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_V : ASCII_v;
+        case E64::SCANCODE_B:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_B : ASCII_b;
+        case E64::SCANCODE_N:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_N : ASCII_n;
+        case E64::SCANCODE_M:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_M : ASCII_m;
+        case E64::SCANCODE_COMMA:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_LESS : ASCII_COMMA;
+        case E64::SCANCODE_PERIOD:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_GREATER : ASCII_PERIOD;
+        case E64::SCANCODE_SLASH:
+            return (modifiers & SHIFT_PRESSED) ? ASCII_QUESTION_M : ASCII_SLASH;
+        case E64::SCANCODE_SPACE:
+            return ASCII_SPACE;
+        case E64::SCANCODE_LEFT:
+            return ASCII_CURSOR_LEFT;
+        case E64::SCANCODE_UP:
+            return ASCII_CURSOR_UP;
+        case E64::SCANCODE_DOWN:
+            return ASCII_CURSOR_DOWN;
+        case E64::SCANCODE_RIGHT:
+            return ASCII_CURSOR_RIGHT;
     }
     return 0;
 }
@@ -175,7 +241,7 @@ void E64::cia::reset()
     generate_key_events = false;
     
     key_down = false;
-    keyboard_repeat_delay = 60;
+    keyboard_repeat_delay = 50;
     keyboard_repeat_speed = 5;
     keyboard_repeat_counter = 0;
 }
@@ -184,8 +250,7 @@ void E64::cia::push_event(uint8_t event)
 {
     event_list[head] = event;
     head++;
-    if( head == tail) { tail++; printf("too many items in list\n"); }
-    printf("head: %u tail: %u %u items in list event: %02x\n", head, tail, (uint8_t)(head - tail), event );
+    if( head == tail) tail++;
 }
 
 uint8_t E64::cia::pop_event()

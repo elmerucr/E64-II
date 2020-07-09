@@ -15,7 +15,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20200708
+#define E64_II_BUILD            20200709
 #define E64_II_YEAR             2020
 
 //  Some global objects
@@ -160,13 +160,15 @@ extern const char       screencode_to_ascii[];
 #define AMBER_06   0x66fc
 #define AMBER_07   0x77fe
 
-//  Ascii values
+//  Ascii values (some of them are petscii)
 #define ASCII_NULL          0x00    // null
 #define ASCII_BACKSPACE     0x08
 #define ASCII_HOR_TAB       0x09
 #define ASCII_CR            0x0d    // carriage return
 #define ASCII_LF            0x0a    // linefeed
+#define ASCII_CURSOR_DOWN   0x11    // petscii cursor down
 #define ASCII_ESCAPE        0x1b
+#define ASCII_CURSOR_RIGHT  0x1d    // petscii cursor right
 #define ASCII_SPACE         0x20    // space
 #define ASCII_EXCL_MARK     0x21    // !
 #define ASCII_DOUBLE_QUOTES 0x22    // "
@@ -264,16 +266,16 @@ extern const char       screencode_to_ascii[];
 #define ASCII_TILDE         0x7e    // ~
 #define ASCII_DELETE        0x7f
 
+#define ASCII_F1            0x85    // taken from cbm petscii
+#define ASCII_F2            0x86    // taken from cbm petscii
+#define ASCII_F3            0x87    // taken from cbm petscii
+#define ASCII_F4            0x88    // taken from cbm petscii
+#define ASCII_F5            0x89    // taken from cbm petscii
+#define ASCII_F6            0x8a    // taken from cbm petscii
+#define ASCII_F7            0x8b    // taken from cbm petscii
+#define ASCII_F8            0x8c    // taken from cbm petscii
 
-//  Some petscii values taken from CBM
-#define ASCII_F1            0x85    // taken from cbm
-#define ASCII_F2            0x86    // taken from cbm
-#define ASCII_F3            0x87    // taken from cbm
-#define ASCII_F4            0x88    // taken from cbm
-#define ASCII_F5            0x89    // taken from cbm
-#define ASCII_F6            0x8a    // taken from cbm
-#define ASCII_F7            0x8b    // taken from cbm
-#define ASCII_F8            0x8c    // taken from cbm
-
+#define ASCII_CURSOR_UP     0x91    // petscii cursor up
+#define ASCII_CURSOR_LEFT   0x9d    // petscii cursor left
 
 #endif
