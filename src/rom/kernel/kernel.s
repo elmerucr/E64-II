@@ -13,67 +13,21 @@
 
 kernel_main
 
-	; setup vector table
-
-	LEA	exception_handler,A0
-	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
-	MOVE.L	A0,VEC_10_UNIMPL_INSTRUCTION
-	MOVE.L	A0,VEC_11_UNIMPL_INSTRUCTION
-
-	LEA	interrupt_2_autovector,A0
-	MOVE.L	A0,VEC_26_LEVEL2_IRQ_AUTOVECT
-
-	LEA	interrupt_4_autovector,A0
-	MOVE.L	A0,VEC_28_LEVEL4_IRQ_AUTOVECT
-
-	LEA	interrupt_5_autovector,A0
-	MOVE.L	A0,VEC_29_LEVEL5_IRQ_AUTOVECT
-
-	LEA	interrupt_6_autovector,A0
-	MOVE.L	A0,VEC_30_LEVEL6_IRQ_AUTOVECT
-
-	LEA	interrupt_7_autovector,A0
-	MOVE.L	A0,VEC_31_LEVEL7_IRQ_AUTOVECT
-
-	LEA	timer0_handler,A0
-	MOVE.L	A0,TIMER0_VECTOR
-
-	LEA	timer1_handler,A0
-	MOVE.L	A0,TIMER1_VECTOR
-
-	LEA	timer2_handler,A0
-	MOVE.L	A0,TIMER2_VECTOR
-
-	LEA	timer3_handler,A0
-	MOVE.L	A0,TIMER3_VECTOR
-
-
-	; max volume for both sids
-
-	LEA	SID0_BASE,A0
-	MOVE.B	#$0F,$18(A0)
-	LEA	SID1_BASE,A0
-	MOVE.B	#$0F,$18(A0)
-
-
-	; Copy char rom to ram (go from 2k to 32k)
-	; Note: this is a very special copy routine
-	; that expands a charset from 1 bit into 16 bit
-	; format.
-
+	BSR	setup_vector_table
+	BSR	reset_sids
 	BSR	copy_charrom_to_charram
 
 
-	; set up timer0 interrupts
+	; set up timer0 interrupts (cursor flashing)
 
-	MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
+	MOVE.W	#$E10,TIMER_BASE+2	; load value 3600 ($E10 = 3600bpm = 60Hz)
 	ORI.B	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
 
 
-	; set up timer1 interrupts
+	; set up timer1 interrupts (ting sound)
 
-	MOVE.W	#$708,TIMER_BASE+2	; load value
-	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock1
+	MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
+	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock0
 
 
 	; set up timer3 interrupts at 50.125Hz for music / sid tunes
@@ -82,7 +36,7 @@ kernel_main
 	;ORI.B	#%00001000,TIMER_BASE+1	; turn on interrupt generation by clock3
 
 
-	; set ipl to level 1 (all interrupts of >=2 level will be acknowledged)
+	; set ipl to level 1 (all interrupts levels of >= 2 will be acknowledged)
 
 	MOVE.W	SR,D0
 	ANDI.W	#%1111100011111111,D0
@@ -326,26 +280,19 @@ interrupt_7_autovector
 
 timer0_handler
 
-	MOVE.L	A0,-(SP)
-	MOVEA.L	VICV_COL,A0
-	ADDQ.B	#$1,(A0)
-	ANDI.B	#%00001111,(A0)
-	MOVEA.L	(SP)+,A0
-
-	LEA	SID0_BASE,A0
-	MOVE.B	#%00100000,$4(A0)
-	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+	;
+	MOVEA.L	VICV_TXT,A0
+	ADDQ.B	#1,(A0)
 
 	BRA	timer1_check
 
 
 timer1_handler
 
-	MOVE.L	A0,-(SP)
-	MOVEA.L	VICV_COL,A0
-	ADDQ.B	#$1,(1,A0)
-	ANDI.B	#%00001111,(1,A0)
-	MOVEA.L	(SP)+,A0
+	LEA	SID0_BASE,A0
+	MOVE.B	#%00100000,$4(A0)
+	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+
 	BRA	timer2_check
 
 
@@ -386,6 +333,10 @@ memcopy
 
 copy_charrom_to_charram
 
+	; Copy char rom to ram (go from 2k to 32k)
+	; Note: this is a very special copy routine
+	; that expands a charset from 1 bit into 16 bit
+	; format.
 	;
 	;	Register Usage
 	;
@@ -416,6 +367,52 @@ copy_charrom_to_charram
 	BRA	.2
 					;    }
 .5	MOVEM.L	(SP)+,D0-D1/A0-A1
+	RTS
+
+
+setup_vector_table
+
+	LEA	exception_handler,A0
+	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
+	MOVE.L	A0,VEC_10_UNIMPL_INSTRUCTION
+	MOVE.L	A0,VEC_11_UNIMPL_INSTRUCTION
+
+	LEA	interrupt_2_autovector,A0
+	MOVE.L	A0,VEC_26_LEVEL2_IRQ_AUTOVECT
+
+	LEA	interrupt_4_autovector,A0
+	MOVE.L	A0,VEC_28_LEVEL4_IRQ_AUTOVECT
+
+	LEA	interrupt_5_autovector,A0
+	MOVE.L	A0,VEC_29_LEVEL5_IRQ_AUTOVECT
+
+	LEA	interrupt_6_autovector,A0
+	MOVE.L	A0,VEC_30_LEVEL6_IRQ_AUTOVECT
+
+	LEA	interrupt_7_autovector,A0
+	MOVE.L	A0,VEC_31_LEVEL7_IRQ_AUTOVECT
+
+	LEA	timer0_handler,A0
+	MOVE.L	A0,TIMER0_VECTOR
+
+	LEA	timer1_handler,A0
+	MOVE.L	A0,TIMER1_VECTOR
+
+	LEA	timer2_handler,A0
+	MOVE.L	A0,TIMER2_VECTOR
+
+	LEA	timer3_handler,A0
+	MOVE.L	A0,TIMER3_VECTOR
+
+	RTS
+
+reset_sids
+	; very basic, needs work
+	; max volume for both sids
+	LEA	SID0_BASE,A0
+	MOVE.B	#$0F,$18(A0)
+	LEA	SID1_BASE,A0
+	MOVE.B	#$0F,$18(A0)
 	RTS
 
 

@@ -182,7 +182,7 @@ N_A7S	equ	94*2
 
 ; ram locations
 
-CURR_TEXT_COLOR	equ	$008000	; byte
+CURR_TEXT_COLOR	equ	$008000	; word
 CURSOR_POS	equ	$008002	; word
 
 TIMER0_VECTOR	equ	$008004	; long
