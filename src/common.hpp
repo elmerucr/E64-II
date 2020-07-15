@@ -25,7 +25,7 @@ extern E64::stats       statistics;
 extern const uint8_t    ascii_to_screencode[];
 extern const char       screencode_to_ascii[];
 
-#define RAM_SIZE                    0x1000000   // 16mb system, don't change this number
+#define RAM_SIZE                0x1000000   // 16mb system, don't change this number
 
 /*  System uses standard 720p60 HDMI output @ half the dimensions.
  *  In a 'distant' future, this will come in handy with real hardware.

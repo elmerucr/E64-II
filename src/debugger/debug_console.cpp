@@ -407,7 +407,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 {
     enum monitor_type output_type = NOTHING;
     
-    uint16_t start_pos = debug_console.status_bar_active ? (16*VICV_CHAR_COLUMNS) : 0;
+    uint16_t start_pos = debug_console.status_bar_active ? (debug_console.status_bar_rows * VICV_CHAR_COLUMNS) : 0;
     
     for(int i = start_pos; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i += VICV_CHAR_COLUMNS)
     {

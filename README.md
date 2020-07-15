@@ -3,17 +3,17 @@
 ## Description
 The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and the Amiga 500.
 ## Technical specifications:
-* Motorola 68000 CPU running at 9.28MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
+* Motorola 68000 CPU running at 11.88MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
-* A custom Video Interface Chip (VICV) with a resolution of 640x360 pixels and a palette of 4096 colors (12bit).
+* A custom Video Interface Chip (VICV) with a resolution of 512x288 pixels and a palette of 4096 colors (12bit).
 * A custom Blitter Chip with alpha blending capabilities.
 * Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for the same pitch as the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to big endian format for interoperability with the Motorola 68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running (2020-05-28):
 ![E64-II running](./docs/E64-II_normal_2020-05-28.png)
-### Debug mode (2020-07-01):
-![E64-II debugger](./docs/E64-II_debug_2020-07-01.png)
+### Debugger (2020-07-15):
+![E64-II debugger](./docs/E64-II_debug_2020-07-15.png)
 ## Compiling
 ### Core application
 #### macOS

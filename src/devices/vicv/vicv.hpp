@@ -38,8 +38,8 @@ private:
     uint16_t *framebuffer0;
     uint16_t *framebuffer1;
 
-    uint32_t cycle_clock;
-    uint32_t dot_clock;
+    uint32_t cycle_clock;       // measures all cycles
+    uint32_t dot_clock;         // measures only cycles that have written a pixel
 
     
     // breakpoint related
@@ -80,8 +80,8 @@ public:
 
     uint16_t        get_current_scanline();
     uint16_t        get_current_pixel();
-    inline uint32_t get_cycle_clock() { return cycle_clock; }
-    inline uint32_t get_dot_clock() { return dot_clock; }
+    //inline uint32_t get_cycle_clock() { return cycle_clock; }
+    //inline uint32_t get_dot_clock() { return dot_clock; }
     bool            is_hblank();
     bool            is_vblank();
     
