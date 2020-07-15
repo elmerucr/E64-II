@@ -49,7 +49,7 @@ kernel_main
 
 	; set color and size of border
 	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
-	MOVE.B	#$14,VICV_BORDER_SIZE
+	MOVE.B	#$10,VICV_BORDER_SIZE
 
 	; set clear color ('background')
 	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
@@ -421,11 +421,11 @@ reset_sids
 	ALIGN	5
 screen_blit_structure
 	DC.B	%00000100	; flags 0 - tile mode, multicolor
-	DC.B	%00000000	; flags 1
+	DC.B	%00000000	; flags 1 - no stretching, mirroring etc
 	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
 	DC.B	%00000000	; currently unused.... :-)
 	DC.W	$0		; x (0)
-	DC.W	$14		; y (32)
+	DC.W	$10		; y (16)
 	DC.W	$F0A0		; foreground color
 	DC.W	$F222		; background color
 	DC.L	CHAR_RAM	; pixel_data
@@ -438,7 +438,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200702",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200715",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 

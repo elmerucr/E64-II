@@ -74,7 +74,7 @@ int main(int argc, char **argv)
                  *  test this.
                  */
                 
-                if( pc.run(255) != 0 ) pc.switch_to_debug();
+                if( pc.run(511) != 0 ) pc.switch_to_debug();
                 
                 // if a full frame is done, call other update functions:
                 if( pc.vicv_ic->frame_done )

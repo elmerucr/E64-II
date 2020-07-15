@@ -55,10 +55,11 @@ inline void alpha_blend(uint16_t *destination, uint16_t *source)
     b_dest = (*destination & 0x0f00);   // bitshift of >> 8 is done in final step
 
     a_src = ((*source & 0x00f0) >> 4) + 1;
-    a_src_inv = 17 - a_src;
     r_src = (*source & 0x000f);
     g_src = (*source & 0xf000); // bitshift of >>12 is done in final step
     b_src = (*source & 0x0f00); // bitshift of >> 8 is done in final step
+    
+    a_src_inv = 17 - a_src;
     
     r_dest = ((a_src * r_src) + (a_src_inv * r_dest)) >> 4;
     g_dest = ((a_src * g_src) + (a_src_inv * g_dest)) >> (4 + 12);
@@ -214,13 +215,13 @@ void E64::blitter::run(int no_of_cycles)
                 {
                     scrn_x = x + (hor_flip ? (width_on_screen - (pixel_no & width_on_screen_mask) - 1) : (pixel_no & width_on_screen_mask) );
                     
-                    //if( !(scrn_x & 0b1111111000000000) )                     // clipping check horizontally
                     if( scrn_x < VICV_PIXELS_PER_SCANLINE )                     // clipping check horizontally
                     {
                         scrn_y = y + (ver_flip ?
                             (height_on_screen - (pixel_no >> width_on_screen_log2) - 1) : (pixel_no >> width_on_screen_log2) );
                         
-                        if( (scrn_y >= 0) && (scrn_y < VICV_SCANLINES) )      // clipping check vertically
+                        //if( (scrn_y >= 0) && (scrn_y < VICV_SCANLINES) )      // clipping check vertically
+                        if( scrn_y < VICV_SCANLINES )      // clipping check vertically
                         {
                             /*  Transformation of pixel_no to take into account double width and/or height. After
                              *  this <complex> transformation, the normalized pixel_no points to a position in the

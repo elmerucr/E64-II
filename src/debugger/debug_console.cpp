@@ -32,7 +32,7 @@ void debug_console_init()
 
     // status bar stuff
     debug_console.status_bar_active = true;
-    debug_console.status_bar_rows = 16;
+    debug_console.status_bar_rows = 14;
     debug_console.status_bar_total_chars = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
     debug_console.status_bar_cursor_pos = 0;
     debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos & (64-1);
@@ -85,7 +85,6 @@ void debug_console_add_top_row()
         debug_console.console_foreground_color_buffer[i] = debug_console.console_foreground_color_buffer[i-VICV_CHAR_COLUMNS];
         debug_console.console_background_color_buffer[i] = debug_console.console_background_color_buffer[i-VICV_CHAR_COLUMNS];
     }
-    //uint16_t start_pos = debug_console.cursor_pos & 0xffc0;
     uint16_t start_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
     for(int i=0; i<VICV_CHAR_COLUMNS; i++)
     {
@@ -107,7 +106,6 @@ void debug_console_put_char(char character)
             debug_console.cursor_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
             break;
         case ASCII_CR:
-            //debug_console.cursor_pos = debug_console.cursor_pos & 0xffc0;
             debug_console.cursor_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
             break;
         default:

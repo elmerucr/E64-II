@@ -15,7 +15,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20200712
+#define E64_II_BUILD            20200715
 #define E64_II_YEAR             2020
 
 //  Some global objects
@@ -74,10 +74,14 @@ extern const char       screencode_to_ascii[];
  *  32-bit Memory     28,800
  *
  */
-#define VICV_PIXELS_PER_SCANLINE    640
-#define VICV_PIXELS_HBLANK          185
-#define VICV_SCANLINES              360
-#define VICV_SCANLINES_VBLANK       15
+//#define VICV_PIXELS_PER_SCANLINE    640
+//#define VICV_PIXELS_HBLANK          185
+//#define VICV_SCANLINES              360
+//#define VICV_SCANLINES_VBLANK       15
+#define VICV_PIXELS_PER_SCANLINE    512
+#define VICV_PIXELS_HBLANK          148
+#define VICV_SCANLINES              288
+#define VICV_SCANLINES_VBLANK       12
 
 //  These two macros are defined for use within the debugger.
 #define VICV_CHAR_COLUMNS           (VICV_PIXELS_PER_SCANLINE / 8)
@@ -88,7 +92,7 @@ extern const char       screencode_to_ascii[];
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
 #define BLITTER_DOT_CLOCK_SPEED     (4*VICV_DOT_CLOCK_SPEED)
-#define CPU_CLOCK_SPEED             (VICV_DOT_CLOCK_SPEED/2)
+#define CPU_CLOCK_SPEED             (VICV_DOT_CLOCK_SPEED)
 
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100

@@ -21,11 +21,11 @@ class video
 private:
     const struct window_size window_sizes[5] =
     {
-        {  320, 180 },
+        {  512, 288 },
         {  640, 360 },
         {  960, 540 },
-        { 1280, 720 },
-        { 1920, 1080}
+        { 1024, 576 },
+        { 1280, 720 }
     };
     SDL_Window *window;
     SDL_Renderer *renderer;

@@ -39,25 +39,22 @@ void E64::vicv::reset()
 }
 
 
-#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
-#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
-//#define X_POS           (cycle_clock % (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
-
-//#define HBLANK          (X_POS > (VICV_PIXELS_PER_SCANLINE-1))
-//#define HBLANK          (X_POS & 0xfffffe00)
-#define HBLANK          (X_POS >= VICV_PIXELS_PER_SCANLINE)
-#define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
-#define BLANK           (HBLANK || VBLANK)
-#define HBORDER         (Y_POS < registers[VICV_REG_BORDER_SIZE]) || (Y_POS > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]))
-
-
 void E64::vicv::run(uint32_t number_of_cycles)
 {
+    uint32_t y_pos;
+    
     while(number_of_cycles > 0)
     {
-        if(!BLANK)
+        y_pos = (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK));
+        uint32_t x_pos = (cycle_clock - (y_pos * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)));
+        bool hblank = (x_pos >= VICV_PIXELS_PER_SCANLINE);
+        bool vblank = (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES));
+        bool blank = hblank || vblank;
+        bool hborder = (y_pos < registers[VICV_REG_BORDER_SIZE]) || (y_pos > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]));
+        
+        if(!blank)
         {
-            if(HBORDER)
+            if(hborder)
             {
                 host_video.backbuffer[dot_clock] = host_video.palette[*((uint16_t *)(&registers[VICV_REG_BOR]))];
             }
@@ -79,7 +76,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
                 break;
             case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
                 // finished vblank, do other necessary stuff
-                if(stats_overlay_present) render_stats(108, 346);
+                if(stats_overlay_present) render_stats(44, 276);
                 host_video.swap_buffers();
                 cycle_clock = dot_clock = 0;
                 frame_done = true;
@@ -89,9 +86,15 @@ void E64::vicv::run(uint32_t number_of_cycles)
         number_of_cycles--;
     }
     
-    if( (Y_POS != old_y_pos) && scanline_breakpoints[Y_POS] == true) breakpoint_reached = true;
-    old_y_pos = Y_POS;
+    if( (y_pos != old_y_pos) && scanline_breakpoints[y_pos] == true) breakpoint_reached = true;
+    old_y_pos = y_pos;
 }
+
+
+#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
+#define HBLANK          (X_POS >= VICV_PIXELS_PER_SCANLINE)
+#define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 
 
 bool E64::vicv::is_hblank() { return HBLANK; }

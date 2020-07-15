@@ -261,8 +261,8 @@ F00:0049
 F00:0050       	; set color and size of border
 F00:0051       	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
                S01:00FF0048:  33 FC F0 00 00 FE 04 00
-F00:0052       	MOVE.B	#$14,VICV_BORDER_SIZE
-               S01:00FF0050:  13 FC 00 14 00 FE 04 0C
+F00:0052       	MOVE.B	#$10,VICV_BORDER_SIZE
+               S01:00FF0050:  13 FC 00 10 00 FE 04 0C
 F00:0053       
 F00:0054       	; set clear color ('background')
 F00:0055       	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
@@ -828,7 +828,7 @@ F00:0421       	ALIGN	5
 F00:0422       screen_blit_structure
 F00:0423       	DC.B	%00000100	; flags 0 - tile mode, multicolor
                S01:00FF03A0:  04
-F00:0424       	DC.B	%00000000	; flags 1
+F00:0424       	DC.B	%00000000	; flags 1 - no stretching, mirroring etc
                S01:00FF03A1:  00
 F00:0425       	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
                S01:00FF03A2:  56
@@ -836,8 +836,8 @@ F00:0426       	DC.B	%00000000	; currently unused.... :-)
                S01:00FF03A3:  00
 F00:0427       	DC.W	$0		; x (0)
                S01:00FF03A4:  00 00
-F00:0428       	DC.W	$14		; y (32)
-               S01:00FF03A6:  00 14
+F00:0428       	DC.W	$10		; y (16)
+               S01:00FF03A6:  00 10
 F00:0429       	DC.W	$F0A0		; foreground color
                S01:00FF03A8:  F0 A0
 F00:0430       	DC.W	$F222		; background color
@@ -857,7 +857,7 @@ F00:0437
 F00:0438       ; string data
 F00:0439       
 F00:0440       welcome
-F00:0441       	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200702",ASCII_LF,ASCII_NULL
+F00:0441       	DC.B	"E64-II (C)2019-2020 kernel version 0.1.20200715",ASCII_LF,ASCII_NULL
                S01:00FF03C0:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
                S01:00FF03D0:  30 32 30 20 6B 65 72 6E 65 6C 20 76 65 72 73 69
                S01:00FF03E0:  0A

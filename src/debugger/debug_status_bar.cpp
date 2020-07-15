@@ -41,7 +41,7 @@ void debug_status_bar_refresh()
     // disassembly
     debug_status_bar_set_cursor_pos(10*VICV_CHAR_COLUMNS + 0);
     uint32_t temp_pc = pc.m68k_ic->getPC();
-    for(int i=0; i<6; i++ )
+    for(int i=0; i<(debug_console.status_bar_rows - 10); i++ )
     {
         if(pc.m68k_ic->debugger.breakpoints.isSetAt(temp_pc))
         {
@@ -88,7 +88,7 @@ void debug_status_bar_refresh()
     snprintf(help_string, 256, " CPU Status                              ");
     debug_status_bar_set_cursor_pos(0);
     debug_status_bar_print(help_string);
-    snprintf(help_string, 256, " Disassembly                                                                    ");
+    snprintf(help_string, 256, " Disassembly                                                    ");
     debug_status_bar_set_cursor_pos(9*VICV_CHAR_COLUMNS + 0);
     debug_status_bar_print(help_string);
     snprintf(help_string, 256, "     vic v      ");
