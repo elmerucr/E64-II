@@ -190,8 +190,12 @@ TIMER1_VECTOR	equ	$008008	; long
 TIMER2_VECTOR	equ	$00800C	; long
 TIMER3_VECTOR	equ	$008010	; long
 
+CURRENT_TXT_SCR	equ	$008014	; long
 
-CURRENT_TXT_SCR	equ	$008022	; long
+KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
+LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
 
-KERNEL_TEXT_SCR	equ	$008040 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
-LOGO_BLIT	equ	$008060 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
+; screen editor variables
+SE_CRS_BLINK	equ	$008060	; byte value (actually least significant bit), 0=off, 1=currently blinking
+SE_CRS_CNTDWN	equ	$008061	; byte value, counter for blinking interval
+SE_CRS_INTRVL	equ	$008062	; byte value, interval (duration) of blinking. e.g. @60Hz a value of 20 means 0.33s on, 0.33s off, etc...

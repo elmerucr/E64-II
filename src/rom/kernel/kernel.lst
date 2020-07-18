@@ -194,11 +194,15 @@ F01:0189       TIMER1_VECTOR	equ	$008008	; long
 F01:0190       TIMER2_VECTOR	equ	$00800C	; long
 F01:0191       TIMER3_VECTOR	equ	$008010	; long
 F01:0192       
-F01:0193       
-F01:0194       CURRENT_TXT_SCR	equ	$008022	; long
-F01:0195       
-F01:0196       KERNEL_TEXT_SCR	equ	$008040 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
-F01:0197       LOGO_BLIT	equ	$008060 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
+F01:0193       CURRENT_TXT_SCR	equ	$008014	; long
+F01:0194       
+F01:0195       KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
+F01:0196       LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
+F01:0197       
+F01:0198       ; screen editor variables
+F01:0199       SE_CRS_BLINK	equ	$008060	; byte value (actually least significant bit), 0=off, 1=currently blinking
+F01:0200       SE_CRS_CNTDWN	equ	$008061	; byte value, counter for blinking interval
+F01:0201       SE_CRS_INTRVL	equ	$008062	; byte value, interval (duration) of blinking. e.g. @60Hz a value of 20 means 0.33s on, 0.33s 
 F00:0005       
 F00:0006       	ORG	KERNEL_LOC
 F00:0007       
@@ -272,14 +276,14 @@ F00:0057       	; copy the screen blit struct from rom to appropriate ram area
 F00:0058       	LEA	screen_blit_structure,a0
                S01:00FF0060:  41 FA 03 3E
 F00:0059       	LEA	KERNEL_TEXT_SCR,a1
-               S01:00FF0064:  43 F9 00 00 80 40
+               S01:00FF0064:  43 F9 00 00 80 20
 F00:0060       	MOVE.L	#$20,D0
                S01:00FF006A:  70 20
 F00:0061       	JSR	memcopy
                S01:00FF006C:  61 00 02 4A
 F00:0062       
 F00:0063       	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
-               S01:00FF0070:  23 FC 00 00 80 40 00 00 80 22
+               S01:00FF0070:  23 FC 00 00 80 20 00 00 80 14
 F00:0064       
 F00:0065       
 F00:0066       	; set txt pointer  -  deprecated!
@@ -527,7 +531,7 @@ F00:0215       	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
 F00:0216       
 F00:0217       	; add the blits (to be replaced by a kernel linked list)
 F00:0218       	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
-               S01:00FF020A:  23 FC 00 00 80 40 00 FE 07 02
+               S01:00FF020A:  23 FC 00 00 80 20 00 FE 07 02
 F00:0219       	MOVE.B	#%00000010,BLITTER_CONTROL
                S01:00FF0214:  13 FC 00 02 00 FE 07 00
 F00:0220       
@@ -1583,9 +1587,12 @@ copy_charrom_to_charram EXPR(16712396=0xff02cc) ABS
 reset_sids EXPR(16712554=0xff036a) ABS 
 setup_vector_table EXPR(16712456=0xff0308) ABS 
 kernel_main EXPR(16711688=0xff0008) ABS 
-LOGO_BLIT EXPR(32864=0x8060) UNUSED EQU 
-KERNEL_TEXT_SCR EXPR(32832=0x8040) EQU 
-CURRENT_TXT_SCR EXPR(32802=0x8022) EQU 
+SE_CRS_INTRVL EXPR(32866=0x8062) UNUSED EQU 
+SE_CRS_CNTDWN EXPR(32865=0x8061) UNUSED EQU 
+SE_CRS_BLINK EXPR(32864=0x8060) UNUSED EQU 
+LOGO_BLIT EXPR(32832=0x8040) UNUSED EQU 
+KERNEL_TEXT_SCR EXPR(32800=0x8020) EQU 
+CURRENT_TXT_SCR EXPR(32788=0x8014) EQU 
 TIMER3_VECTOR EXPR(32784=0x8010) EQU 
 TIMER2_VECTOR EXPR(32780=0x800c) EQU 
 TIMER1_VECTOR EXPR(32776=0x8008) EQU 
