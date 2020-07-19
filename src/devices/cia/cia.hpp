@@ -108,15 +108,13 @@ enum scancodes
     SCANCODE_RSHIFT,
     SCANCODE_LCTRL,
     SCANCODE_LALT,
-    SCANCODE_LGUI,              // 0x40
-    SCANCODE_SPACE,
-    SCANCODE_RGUI,
+    SCANCODE_SPACE,              // 0x40
     SCANCODE_RALT,
     SCANCODE_RCTRL,
     SCANCODE_LEFT,
     SCANCODE_UP,
     SCANCODE_DOWN,
-    SCANCODE_RIGHT             // 0x48
+    SCANCODE_RIGHT
 };
 
 class cia

@@ -73,9 +73,7 @@ bool scancode_not_modifier[] =
     false,                      // right shift
     false,                      // left control
     false,                      // left alt
-    false,                      // left gui
     true,
-    false,                      // right gui
     false,                      // right alt
     false,                      // right control
     true,

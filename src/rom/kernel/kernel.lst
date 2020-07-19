@@ -200,9 +200,9 @@ F01:0195       KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), 
 F01:0196       LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
 F01:0197       
 F01:0198       ; screen editor variables
-F01:0199       SE_CRS_BLINK	equ	$008060	; byte value (actually least significant bit), 0=off, 1=currently blinking
-F01:0200       SE_CRS_CNTDWN	equ	$008061	; byte value, counter for blinking interval
-F01:0201       SE_CRS_INTRVL	equ	$008062	; byte value, interval (duration) of blinking. e.g. @60Hz a value of 20 means 0.33s on, 0.33s 
+F01:0199       SE_CRS_BLINK	equ	$008060	; byte (actually least significant bit), 0=off, 1=currently blinking
+F01:0200       SE_CRS_CNTDWN	equ	$008061	; byte, counter for blinking interval
+F01:0201       SE_CRS_INTERVAL	equ	$008062	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
 F00:0005       
 F00:0006       	ORG	KERNEL_LOC
 F00:0007       
@@ -356,7 +356,7 @@ F00:0109       	LEA	$C00000,A0
 F00:0110       	MOVE	A0,USP
                S01:00FF0100:  4E 60
 F00:0111       
-F00:0112       	; copy keyboard state in to screen
+F00:0112       	; copy keyboard state onto screen
 F00:0113       .1	MOVEQ	#$0,D0
                S01:00FF0102:  70 00
 F00:0114       	MOVEA.L	VICV_TXT,A0
@@ -369,8 +369,8 @@ F00:0117       .2	MOVE.B	(A1,D0),(A0,D0)
                S01:00FF0114:  11 B1 00 00 00 00
 F00:0118       	ADDQ	#$1,D0
                S01:00FF011A:  52 40
-F00:0119       	CMP.B	#$49,D0
-               S01:00FF011C:  B0 3C 00 49
+F00:0119       	CMP.B	#$47,D0
+               S01:00FF011C:  B0 3C 00 47
 F00:0120       	BNE	.2
                S01:00FF0120:  66 F2
 F00:0121       
@@ -1587,7 +1587,7 @@ copy_charrom_to_charram EXPR(16712396=0xff02cc) ABS
 reset_sids EXPR(16712554=0xff036a) ABS 
 setup_vector_table EXPR(16712456=0xff0308) ABS 
 kernel_main EXPR(16711688=0xff0008) ABS 
-SE_CRS_INTRVL EXPR(32866=0x8062) UNUSED EQU 
+SE_CRS_INTERVAL EXPR(32866=0x8062) UNUSED EQU 
 SE_CRS_CNTDWN EXPR(32865=0x8061) UNUSED EQU 
 SE_CRS_BLINK EXPR(32864=0x8060) UNUSED EQU 
 LOGO_BLIT EXPR(32832=0x8040) UNUSED EQU 

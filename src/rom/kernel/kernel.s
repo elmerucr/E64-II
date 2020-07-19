@@ -109,14 +109,14 @@ mainloop
 	LEA	$C00000,A0
 	MOVE	A0,USP
 
-	; copy keyboard state in to screen
+	; copy keyboard state onto screen
 .1	MOVEQ	#$0,D0
 	MOVEA.L	VICV_TXT,A0
 	LEA	($400,A0),A0
 	LEA	CIA_KEYBOARD,A1
 .2	MOVE.B	(A1,D0),(A0,D0)
 	ADDQ	#$1,D0
-	CMP.B	#$49,D0
+	CMP.B	#$47,D0
 	BNE	.2
 
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
