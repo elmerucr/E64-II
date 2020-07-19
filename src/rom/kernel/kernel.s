@@ -109,6 +109,8 @@ mainloop
 	LEA	$C00000,A0
 	MOVE	A0,USP
 
+	JSR	se_activate_cursor
+
 	; copy keyboard state onto screen
 .1	MOVEQ	#$0,D0
 	MOVEA.L	VICV_TXT,A0
@@ -121,7 +123,9 @@ mainloop
 
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
 	BEQ.S	.1			; if 0 (nothing), jump to .1
-	JSR	put_char		; print character
+	JSR	se_deactivate_cursor
+	JSR	put_char		; process input
+	JSR	se_activate_cursor
 
 	BRA.S	.1
 
@@ -155,7 +159,7 @@ clear_screen
 put_char
 
 	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
-	ANDI.W	#$FF,D0			; clear bits 8-15 from D0
+	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
 	MOVE.B	CURR_TEXT_COLOR,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
@@ -163,19 +167,41 @@ put_char
 	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
 	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
 	BEQ	.1
+	CMP.B	#ASCII_CURSOR_DOWN,D0
+	BEQ	.2
+	CMP.B	#ASCII_CURSOR_RIGHT,D0
+	BEQ	.3
+	CMP.B	#ASCII_CURSOR_UP,D0
+	BEQ	.4
+	CMP.B	#ASCII_CURSOR_LEFT,D0
+	BEQ	.5
 	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
 	MOVE.B	D0,(A0,D1)
 	MOVE.B	D2,(A1,D1)
 	ADDQ	#$1,CURSOR_POS
 	ANDI.W	#$7FF,CURSOR_POS
-	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
-	RTS
-.1	ADDI.W	#$40,D1			; add 64 positions to current cursor pos
-	ANDI.W	#%1111111111000000,D1	; move cursor pos to beginning of line
+	BRA	.end
+.1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
+	ANDI.W	#%0111111111000000,D1	; move cursor pos to beginning of line (and confine to screen)
 	MOVE.W	D1,CURSOR_POS		; store new value
-	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
+	BRA	.end
+.2	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
+	ANDI.W	#$7FF,D1		; confine cursor to screen
+	MOVE.W	D1,CURSOR_POS		; store new value
+	BRA	.end
+.3	ADDI.W	#$1,D1			; cursor right
+	ANDI.W	#$7FF,D1
+	MOVE.W	D1,CURSOR_POS
+	BRA	.end
+.4	SUBI.W	#$40,D1			; cursor up
+	ANDI.W	#$7FF,D1
+	MOVE.W	D1,CURSOR_POS
+	BRA	.end
+.5	SUBI.W	#$1,D1			; cursor left
+	ANDI.W	#$7FF,D1
+	MOVE.W	D1,CURSOR_POS
+.end	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
 	RTS
-
 
 
 put_string
@@ -282,7 +308,7 @@ timer0_handler
 
 	;
 	MOVEA.L	VICV_TXT,A0
-	ADDQ.B	#1,(A0)
+	ADDQ.B	#1,$7FF(A0)
 
 	BRA	timer1_check
 
@@ -416,6 +442,22 @@ reset_sids
 	RTS
 
 
+se_activate_cursor
+	MOVEM.L	D0/A0,-(SP)
+	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+	MOVE.W	CURSOR_POS,D0
+	EORI.B	#%10000000,(A0,D0)
+	MOVEM.L	(SP)+,D0/A0
+	RTS
+
+se_deactivate_cursor
+	MOVEM.L	D0/A0,-(SP)
+	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+	MOVE.W	CURSOR_POS,D0
+	EORI.B	#%10000000,(A0,D0)
+	MOVEM.L	(SP)+,D0/A0
+	RTS
+
 ; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
 
 	ALIGN	5
@@ -438,7 +480,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200715",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200719",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 

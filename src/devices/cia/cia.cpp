@@ -78,6 +78,7 @@ bool scancode_not_modifier[] =
     false,                      // right control
     true,
     true,
+    true,
     true
 };
 
