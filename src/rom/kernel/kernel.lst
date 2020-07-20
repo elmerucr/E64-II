@@ -368,7 +368,7 @@ F00:0115       .1	MOVEQ	#$0,D0
                S01:00FF0106:  70 00
 F00:0116       	MOVEA.L	VICV_TXT,A0
                S01:00FF0108:  20 79 00 FE 04 04
-F00:0117       	LEA	($400,A0),A0
+F00:0117       	LEA	$400(A0),A0
                S01:00FF010E:  41 E8 04 00
 F00:0118       	LEA	CIA_KEYBOARD,A1
                S01:00FF0112:  43 F9 00 FE 03 80
@@ -492,8 +492,8 @@ F00:0183       	BRA	.end
                S01:00FF01E0:  60 4A
 F00:0184       .1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
                S01:00FF01E2:  06 41 00 40
-F00:0185       	ANDI.W	#%0111111111000000,D1	; move cursor pos to beginning of line (and confine to screen)
-               S01:00FF01E6:  02 41 7F C0
+F00:0185       	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
+               S01:00FF01E6:  02 41 07 C0
 F00:0186       	MOVE.W	D1,CURSOR_POS		; store new value
                S01:00FF01EA:  33 C1 00 00 80 02
 F00:0187       	BRA	.end

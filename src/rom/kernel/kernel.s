@@ -114,7 +114,7 @@ mainloop
 	; copy keyboard state onto screen
 .1	MOVEQ	#$0,D0
 	MOVEA.L	VICV_TXT,A0
-	LEA	($400,A0),A0
+	LEA	$400(A0),A0
 	LEA	CIA_KEYBOARD,A1
 .2	MOVE.B	(A1,D0),(A0,D0)
 	ADDQ	#$1,D0
@@ -182,7 +182,7 @@ put_char
 	ANDI.W	#$7FF,CURSOR_POS
 	BRA	.end
 .1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
-	ANDI.W	#%0111111111000000,D1	; move cursor pos to beginning of line (and confine to screen)
+	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
 	MOVE.W	D1,CURSOR_POS		; store new value
 	BRA	.end
 .2	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
