@@ -57,7 +57,7 @@ kernel_main
 	; copy the screen blit struct from rom to appropriate ram area
 	LEA	screen_blit_structure,a0
 	LEA	KERNEL_TEXT_SCR,a1
-	MOVE.L	#$20,D0
+	MOVE.L	#$20,D0			; 32 bytes
 	JSR	memcopy
 
 	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
@@ -66,6 +66,8 @@ kernel_main
 	; set txt pointer  -  deprecated!
 	MOVE.L	#$00F00000,VICV_TXT
 	MOVE.L	#$00F00800,VICV_COL
+
+	MOVE.W	#C64_LIGHTBLUE,CURR_TEXT_COLOR
 
 
 	; reset cursor position  -  deprecated
@@ -133,19 +135,19 @@ mainloop
 clear_screen
 
 	MOVEM.L	D0-D1/A0-A2,-(SP)
-	MOVEA.L	(VICV_TXT),A0
-	MOVEA.L	(VICV_COL),A1
+	MOVEA.L	(VICV_TXT),A0		; A0 points to text screen
+	MOVEA.L	(VICV_COL),A1		; A1 points to tile colors
 	MOVEA.L	A0,A2
-	LEA	($800,A2),A2
+	LEA	$800(A2),A2		; A2 now contains end address of text memory
 	MOVE.L	#$20202020,D0
 	MOVEQ	#$00,D1
-	MOVE.B	CURR_TEXT_COLOR,D1
+	MOVE.W	CURR_TEXT_COLOR,D1
 	LSL.L	#$8,D1
-	MOVE.B	CURR_TEXT_COLOR,D1
+	MOVE.W	CURR_TEXT_COLOR,D1
 	LSL.L	#$8,D1
-	MOVE.B	CURR_TEXT_COLOR,D1
+	MOVE.W	CURR_TEXT_COLOR,D1
 	LSL.L	#$8,D1
-	MOVE.B	CURR_TEXT_COLOR,D1
+	MOVE.W	CURR_TEXT_COLOR,D1
 .1	MOVE.L	D0,(A0)+
 	MOVE.L	D1,(A1)+
 	CMP.L	A0,A2
@@ -161,7 +163,7 @@ put_char
 	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
 	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
-	MOVE.B	CURR_TEXT_COLOR,D2	; load current text colour into D2
+	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
 	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
@@ -177,7 +179,8 @@ put_char
 	BEQ	.5
 	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
 	MOVE.B	D0,(A0,D1)
-	MOVE.B	D2,(A1,D1)
+	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
+	MOVE.W	D2,(A1,D1)
 	ADDQ	#$1,CURSOR_POS
 	ANDI.W	#$7FF,CURSOR_POS
 	BRA	.end
@@ -462,7 +465,7 @@ se_deactivate_cursor
 
 	ALIGN	5
 screen_blit_structure
-	DC.B	%00000100	; flags 0 - tile mode, multicolor
+	DC.B	%00001000	; flags 0 - tile mode, simple color, color per tile
 	DC.B	%00000000	; flags 1 - no stretching, mirroring etc
 	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
 	DC.B	%00000000	; currently unused.... :-)
@@ -472,7 +475,7 @@ screen_blit_structure
 	DC.W	$F222		; background color
 	DC.L	CHAR_RAM	; pixel_data
 	DC.L	$F00000		; character_data
-	DC.L	$FF0000		; character_color_data
+	DC.L	$F00800		; character_color_data
 	DC.L	$FF0000		; background_color_data
 	DC.L	$0		; user_data
 
