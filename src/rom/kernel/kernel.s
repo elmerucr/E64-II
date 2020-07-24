@@ -120,7 +120,7 @@ mainloop
 	LEA	CIA_KEYBOARD,A1
 .2	MOVE.B	(A1,D0),(A0,D0)
 	ADDQ	#$1,D0
-	CMP.B	#$47,D0
+	CMP.B	#$45,D0
 	BNE	.2
 
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii

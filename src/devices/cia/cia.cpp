@@ -72,9 +72,9 @@ bool scancode_not_modifier[] =
     true,
     false,                      // right shift
     false,                      // left control
-    false,                      // left alt
+    //false,                      // left alt
     true,
-    false,                      // right alt
+    //false,                      // right alt
     false,                      // right control
     true,
     true,

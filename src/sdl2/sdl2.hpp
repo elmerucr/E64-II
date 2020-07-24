@@ -21,9 +21,10 @@ namespace E64
 
     // event related
     int sdl2_process_events();
+    void sdl2_wait_until_enter_released();
     void sdl2_wait_until_f_released();
     void sdl2_wait_until_f9_released();
-    void sdl2_wait_until_enter_released();
+    void sdl2_wait_until_r_released();
 
     // audio related
     void sdl2_start_audio();
