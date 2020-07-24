@@ -20,6 +20,9 @@ ASCII_CURSOR_RIGHT	equ	$1D
 ASCII_CURSOR_UP		equ	$91
 ASCII_CURSOR_LEFT	equ	$9D
 
+; scrn_codes
+SCRN_SPACE		equ	$20
+
 ; char rom
 CHAR_ROM		equ	$FD0000
 CHAR_RAM		equ	$F10000

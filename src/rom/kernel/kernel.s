@@ -134,25 +134,16 @@ mainloop
 
 clear_screen
 
-	MOVEM.L	D0-D1/A0-A2,-(SP)
-	MOVEA.L	(VICV_TXT),A0		; A0 points to text screen
-	MOVEA.L	(VICV_COL),A1		; A1 points to tile colors
-	MOVEA.L	A0,A2
-	LEA	$800(A2),A2		; A2 now contains end address of text memory
-	MOVE.L	#$20202020,D0
-	MOVEQ	#$00,D1
-	MOVE.W	CURR_TEXT_COLOR,D1
-	LSL.L	#$8,D1
-	MOVE.W	CURR_TEXT_COLOR,D1
-	LSL.L	#$8,D1
-	MOVE.W	CURR_TEXT_COLOR,D1
-	LSL.L	#$8,D1
-	MOVE.W	CURR_TEXT_COLOR,D1
-.1	MOVE.L	D0,(A0)+
-	MOVE.L	D1,(A1)+
-	CMP.L	A0,A2
-	BNE	.1
-	MOVEM.L	(SP)+,D0-D1/A0-A2
+	MOVEA.L	(VICV_TXT),A0
+	MOVE.L	#$800,D0
+	MOVE.B	#SCRN_SPACE,D1			; space screencode
+	JSR	blockfill_bytes
+
+	MOVEA.L	(VICV_COL),A0
+	MOVE.L	#$800,D0
+	MOVE.W	#C64_LIGHTBLUE,D1
+	JSR	blockfill_words
+
 	RTS
 
 
@@ -336,6 +327,51 @@ timer3_handler
 	;
 	BRA	timer_finish
 
+
+blockfill_bytes
+
+	;
+	;	Arguments
+	;
+	;	A0	start addres
+	;	D0	number of bytes
+	;	D1	byte value
+	;
+
+	MOVE.L	D2,-(SP)	; save D0
+
+	MOVEQ	#$0,D2
+
+.1	MOVE.B	D1,(A0,D2.L)
+	ADDQ	#$1,D2
+	CMP.L	D2,D0
+	BNE	.1
+
+	MOVE.L	(SP)+,D2
+	RTS
+
+blockfill_words
+
+	;
+	;	Arguments
+	;
+	;	A0	start addres
+	;	D0	number of words
+	;	D1	word value
+	;
+
+	MOVEM.L	D0/D2,-(SP)
+
+	MOVEQ	#$0,D2
+	LSL.L	#$1,D0
+
+.1	MOVE.W	D1,(A0,D2.L)
+	ADDQ.L	#$2,D2
+	CMP.L	D2,D0
+	BNE	.1
+
+	MOVEM.L	(SP)+,D0/D2
+	RTS
 
 memcopy
 

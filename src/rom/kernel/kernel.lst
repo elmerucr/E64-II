@@ -24,189 +24,192 @@ F01:0019       ASCII_CURSOR_RIGHT	equ	$1D
 F01:0020       ASCII_CURSOR_UP		equ	$91
 F01:0021       ASCII_CURSOR_LEFT	equ	$9D
 F01:0022       
-F01:0023       ; char rom
-F01:0024       CHAR_ROM		equ	$FD0000
-F01:0025       CHAR_RAM		equ	$F10000
-F01:0026       
-F01:0027       ; cia
-F01:0028       CIA_BASE		equ	$FE0300
-F01:0029       CIA_STATUS		equ	CIA_BASE
-F01:0030       CIA_CONTROL		equ	CIA_BASE+$01
-F01:0031       CIA_DELAY		equ	CIA_BASE+$02
-F01:0032       CIA_REPEAT		equ	CIA_BASE+$03
-F01:0033       CIA_ASCII		equ	CIA_BASE+$04
-F01:0034       CIA_KEYBOARD		equ	CIA_BASE+$80
-F01:0035       
-F01:0036       ; vicv
-F01:0037       VICV_BASE		equ	$FE0400 	; vicv base register
-F01:0038       VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
-F01:0039       
-F01:0040       VICV_TXT		equ	VICV_BASE+$04
-F01:0041       VICV_COL		equ	VICV_BASE+$08
-F01:0042       VICV_BORDER_SIZE	equ	VICV_BASE+$0C
-F01:0043       VICV_ISR		equ	VICV_BASE+$0E
-F01:0044       VICV_BUFFERSWAP		equ	VICV_BASE+$10
-F01:0045       
-F01:0046       ; timer
-F01:0047       TIMER_BASE		equ	$FE0600
+F01:0023       ; scrn_codes
+F01:0024       SCRN_SPACE		equ	$20
+F01:0025       
+F01:0026       ; char rom
+F01:0027       CHAR_ROM		equ	$FD0000
+F01:0028       CHAR_RAM		equ	$F10000
+F01:0029       
+F01:0030       ; cia
+F01:0031       CIA_BASE		equ	$FE0300
+F01:0032       CIA_STATUS		equ	CIA_BASE
+F01:0033       CIA_CONTROL		equ	CIA_BASE+$01
+F01:0034       CIA_DELAY		equ	CIA_BASE+$02
+F01:0035       CIA_REPEAT		equ	CIA_BASE+$03
+F01:0036       CIA_ASCII		equ	CIA_BASE+$04
+F01:0037       CIA_KEYBOARD		equ	CIA_BASE+$80
+F01:0038       
+F01:0039       ; vicv
+F01:0040       VICV_BASE		equ	$FE0400 	; vicv base register
+F01:0041       VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
+F01:0042       
+F01:0043       VICV_TXT		equ	VICV_BASE+$04
+F01:0044       VICV_COL		equ	VICV_BASE+$08
+F01:0045       VICV_BORDER_SIZE	equ	VICV_BASE+$0C
+F01:0046       VICV_ISR		equ	VICV_BASE+$0E
+F01:0047       VICV_BUFFERSWAP		equ	VICV_BASE+$10
 F01:0048       
-F01:0049       ; blitter
-F01:0050       BLITTER_BASE		equ	$FE0700
-F01:0051       BLITTER_CONTROL		equ	BLITTER_BASE
-F01:0052       BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
-F01:0053       BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
-F01:0054       
-F01:0055       ; color palette
-F01:0056       C64_BLACK	equ	$F000
-F01:0057       C64_WHITE	equ	$FFFF
-F01:0058       C64_RED		equ	$F733
-F01:0059       C64_CYAN	equ	$F8CC
-F01:0060       C64_PURPLE	equ	$F849
-F01:0061       C64_GREEN	equ	$F6A5
-F01:0062       C64_BLUE	equ	$F339
-F01:0063       C64_YELLOW	equ	$FEE8
-F01:0064       C64_ORANGE	equ	$F853
-F01:0065       C64_BROWN	equ	$F531
-F01:0066       C64_LIGHTRED	equ	$FB77
-F01:0067       C64_DARKGREY	equ	$F444
-F01:0068       C64_GREY	equ	$F777
-F01:0069       C64_LIGHTGREEN	equ	$FBFA
-F01:0070       C64_LIGHTBLUE	equ	$F67D
-F01:0071       C64_LIGHTGREY	equ	$FAAA
-F01:0072       
-F01:0073       ; SIDS
-F01:0074       SOUND_BASE	equ	$FE0500			; base register
-F01:0075       SID0_BASE	equ	SOUND_BASE
-F01:0076       SID1_BASE	equ	SOUND_BASE+$20
-F01:0077       ; sound index
-F01:0078       SID0_LEFT	equ	$80
-F01:0079       SID0_RGHT	equ	$81
-F01:0080       SID1_LEFT	equ	$82
-F01:0081       SID1_RGHT	equ	$83
-F01:0082       
-F01:0083       N_C0_	equ	00*2
-F01:0084       N_C0S	equ	01*2
-F01:0085       N_D0_	equ	02*2
-F01:0086       N_D0S	equ	03*2
-F01:0087       N_E0_	equ	04*2
-F01:0088       N_F0_	equ	05*2
-F01:0089       N_F0S	equ	06*2
-F01:0090       N_G0_	equ	07*2
-F01:0091       N_G0S	equ	08*2
-F01:0092       N_A0_	equ	09*2
-F01:0093       N_A0S	equ	10*2
-F01:0094       N_B0_	equ	11*2
-F01:0095       
-F01:0096       N_C1_	equ	12*2
-F01:0097       N_C1S	equ	13*2
-F01:0098       N_D1_	equ	14*2
-F01:0099       N_D1S	equ	15*2
-F01:0100       N_E1_	equ	16*2
-F01:0101       N_F1_	equ	17*2
-F01:0102       N_F1S	equ	18*2
-F01:0103       N_G1_	equ	19*2
-F01:0104       N_G1S	equ	20*2
-F01:0105       N_A1_	equ	21*2
-F01:0106       N_A1S	equ	22*2
-F01:0107       N_B1_	equ	23*2
-F01:0108       
-F01:0109       N_C2_	equ	24*2
-F01:0110       N_C2S	equ	25*2
-F01:0111       N_D2_	equ	26*2
-F01:0112       N_D2S	equ	27*2
-F01:0113       N_E2_	equ	28*2
-F01:0114       N_F2_	equ	29*2
-F01:0115       N_F2S	equ	30*2
-F01:0116       N_G2_	equ	31*2
-F01:0117       N_G2S	equ	32*2
-F01:0118       N_A2_	equ	33*2
-F01:0119       N_A2S	equ	34*2
-F01:0120       N_B2_	equ	35*2
-F01:0121       
-F01:0122       N_C3_	equ	36*2
-F01:0123       N_C3S	equ	37*2
-F01:0124       N_D3_	equ	38*2
-F01:0125       N_D3S	equ	39*2
-F01:0126       N_E3_	equ	40*2
-F01:0127       N_F3_	equ	41*2
-F01:0128       N_F3S	equ	42*2
-F01:0129       N_G3_	equ	43*2
-F01:0130       N_G3S	equ	44*2
-F01:0131       N_A3_	equ	45*2
-F01:0132       N_A3S	equ	46*2
-F01:0133       N_B3_	equ	47*2
-F01:0134       
-F01:0135       N_C4_	equ	48*2
-F01:0136       N_C4S	equ	49*2
-F01:0137       N_D4_	equ	50*2
-F01:0138       N_D4S	equ	51*2
-F01:0139       N_E4_	equ	52*2
-F01:0140       N_F4_	equ	53*2
-F01:0141       N_F4S	equ	54*2
-F01:0142       N_G4_	equ	55*2
-F01:0143       N_G4S	equ	56*2
-F01:0144       N_A4_	equ	57*2
-F01:0145       N_A4S	equ	58*2
-F01:0146       N_B4_	equ	59*2
-F01:0147       
-F01:0148       N_C5_	equ	60*2
-F01:0149       N_C5S	equ	61*2
-F01:0150       N_D5_	equ	62*2
-F01:0151       N_D5S	equ	63*2
-F01:0152       N_E5_	equ	64*2
-F01:0153       N_F5_	equ	65*2
-F01:0154       N_F5S	equ	66*2
-F01:0155       N_G5_	equ	67*2
-F01:0156       N_G5S	equ	68*2
-F01:0157       N_A5_	equ	69*2
-F01:0158       N_A5S	equ	70*2
-F01:0159       N_B5_	equ	71*2
-F01:0160       
-F01:0161       N_C6_	equ	72*2
-F01:0162       N_C6S	equ	73*2
-F01:0163       N_D6_	equ	74*2
-F01:0164       N_D6S	equ	75*2
-F01:0165       N_E6_	equ	76*2
-F01:0166       N_F6_	equ	77*2
-F01:0167       N_F6S	equ	78*2
-F01:0168       N_G6_	equ	79*2
-F01:0169       N_G6S	equ	80*2
-F01:0170       N_A6_	equ	81*2
-F01:0171       N_A6S	equ	82*2
-F01:0172       N_B6_	equ	83*2
-F01:0173       
-F01:0174       N_C7_	equ	84*2
-F01:0175       N_C7S	equ	85*2
-F01:0176       N_D7_	equ	86*2
-F01:0177       N_D7S	equ	87*2
-F01:0178       N_E7_	equ	88*2
-F01:0179       N_F7_	equ	89*2
-F01:0180       N_F7S	equ	90*2
-F01:0181       N_G7_	equ	91*2
-F01:0182       N_G7S	equ	92*2
-F01:0183       N_A7_	equ	93*2
-F01:0184       N_A7S	equ	94*2
-F01:0185       
-F01:0186       
-F01:0187       ; ram locations
+F01:0049       ; timer
+F01:0050       TIMER_BASE		equ	$FE0600
+F01:0051       
+F01:0052       ; blitter
+F01:0053       BLITTER_BASE		equ	$FE0700
+F01:0054       BLITTER_CONTROL		equ	BLITTER_BASE
+F01:0055       BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
+F01:0056       BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
+F01:0057       
+F01:0058       ; color palette
+F01:0059       C64_BLACK	equ	$F000
+F01:0060       C64_WHITE	equ	$FFFF
+F01:0061       C64_RED		equ	$F733
+F01:0062       C64_CYAN	equ	$F8CC
+F01:0063       C64_PURPLE	equ	$F849
+F01:0064       C64_GREEN	equ	$F6A5
+F01:0065       C64_BLUE	equ	$F339
+F01:0066       C64_YELLOW	equ	$FEE8
+F01:0067       C64_ORANGE	equ	$F853
+F01:0068       C64_BROWN	equ	$F531
+F01:0069       C64_LIGHTRED	equ	$FB77
+F01:0070       C64_DARKGREY	equ	$F444
+F01:0071       C64_GREY	equ	$F777
+F01:0072       C64_LIGHTGREEN	equ	$FBFA
+F01:0073       C64_LIGHTBLUE	equ	$F67D
+F01:0074       C64_LIGHTGREY	equ	$FAAA
+F01:0075       
+F01:0076       ; SIDS
+F01:0077       SOUND_BASE	equ	$FE0500			; base register
+F01:0078       SID0_BASE	equ	SOUND_BASE
+F01:0079       SID1_BASE	equ	SOUND_BASE+$20
+F01:0080       ; sound index
+F01:0081       SID0_LEFT	equ	$80
+F01:0082       SID0_RGHT	equ	$81
+F01:0083       SID1_LEFT	equ	$82
+F01:0084       SID1_RGHT	equ	$83
+F01:0085       
+F01:0086       N_C0_	equ	00*2
+F01:0087       N_C0S	equ	01*2
+F01:0088       N_D0_	equ	02*2
+F01:0089       N_D0S	equ	03*2
+F01:0090       N_E0_	equ	04*2
+F01:0091       N_F0_	equ	05*2
+F01:0092       N_F0S	equ	06*2
+F01:0093       N_G0_	equ	07*2
+F01:0094       N_G0S	equ	08*2
+F01:0095       N_A0_	equ	09*2
+F01:0096       N_A0S	equ	10*2
+F01:0097       N_B0_	equ	11*2
+F01:0098       
+F01:0099       N_C1_	equ	12*2
+F01:0100       N_C1S	equ	13*2
+F01:0101       N_D1_	equ	14*2
+F01:0102       N_D1S	equ	15*2
+F01:0103       N_E1_	equ	16*2
+F01:0104       N_F1_	equ	17*2
+F01:0105       N_F1S	equ	18*2
+F01:0106       N_G1_	equ	19*2
+F01:0107       N_G1S	equ	20*2
+F01:0108       N_A1_	equ	21*2
+F01:0109       N_A1S	equ	22*2
+F01:0110       N_B1_	equ	23*2
+F01:0111       
+F01:0112       N_C2_	equ	24*2
+F01:0113       N_C2S	equ	25*2
+F01:0114       N_D2_	equ	26*2
+F01:0115       N_D2S	equ	27*2
+F01:0116       N_E2_	equ	28*2
+F01:0117       N_F2_	equ	29*2
+F01:0118       N_F2S	equ	30*2
+F01:0119       N_G2_	equ	31*2
+F01:0120       N_G2S	equ	32*2
+F01:0121       N_A2_	equ	33*2
+F01:0122       N_A2S	equ	34*2
+F01:0123       N_B2_	equ	35*2
+F01:0124       
+F01:0125       N_C3_	equ	36*2
+F01:0126       N_C3S	equ	37*2
+F01:0127       N_D3_	equ	38*2
+F01:0128       N_D3S	equ	39*2
+F01:0129       N_E3_	equ	40*2
+F01:0130       N_F3_	equ	41*2
+F01:0131       N_F3S	equ	42*2
+F01:0132       N_G3_	equ	43*2
+F01:0133       N_G3S	equ	44*2
+F01:0134       N_A3_	equ	45*2
+F01:0135       N_A3S	equ	46*2
+F01:0136       N_B3_	equ	47*2
+F01:0137       
+F01:0138       N_C4_	equ	48*2
+F01:0139       N_C4S	equ	49*2
+F01:0140       N_D4_	equ	50*2
+F01:0141       N_D4S	equ	51*2
+F01:0142       N_E4_	equ	52*2
+F01:0143       N_F4_	equ	53*2
+F01:0144       N_F4S	equ	54*2
+F01:0145       N_G4_	equ	55*2
+F01:0146       N_G4S	equ	56*2
+F01:0147       N_A4_	equ	57*2
+F01:0148       N_A4S	equ	58*2
+F01:0149       N_B4_	equ	59*2
+F01:0150       
+F01:0151       N_C5_	equ	60*2
+F01:0152       N_C5S	equ	61*2
+F01:0153       N_D5_	equ	62*2
+F01:0154       N_D5S	equ	63*2
+F01:0155       N_E5_	equ	64*2
+F01:0156       N_F5_	equ	65*2
+F01:0157       N_F5S	equ	66*2
+F01:0158       N_G5_	equ	67*2
+F01:0159       N_G5S	equ	68*2
+F01:0160       N_A5_	equ	69*2
+F01:0161       N_A5S	equ	70*2
+F01:0162       N_B5_	equ	71*2
+F01:0163       
+F01:0164       N_C6_	equ	72*2
+F01:0165       N_C6S	equ	73*2
+F01:0166       N_D6_	equ	74*2
+F01:0167       N_D6S	equ	75*2
+F01:0168       N_E6_	equ	76*2
+F01:0169       N_F6_	equ	77*2
+F01:0170       N_F6S	equ	78*2
+F01:0171       N_G6_	equ	79*2
+F01:0172       N_G6S	equ	80*2
+F01:0173       N_A6_	equ	81*2
+F01:0174       N_A6S	equ	82*2
+F01:0175       N_B6_	equ	83*2
+F01:0176       
+F01:0177       N_C7_	equ	84*2
+F01:0178       N_C7S	equ	85*2
+F01:0179       N_D7_	equ	86*2
+F01:0180       N_D7S	equ	87*2
+F01:0181       N_E7_	equ	88*2
+F01:0182       N_F7_	equ	89*2
+F01:0183       N_F7S	equ	90*2
+F01:0184       N_G7_	equ	91*2
+F01:0185       N_G7S	equ	92*2
+F01:0186       N_A7_	equ	93*2
+F01:0187       N_A7S	equ	94*2
 F01:0188       
-F01:0189       CURR_TEXT_COLOR	equ	$008000	; word
-F01:0190       CURSOR_POS	equ	$008002	; word
+F01:0189       
+F01:0190       ; ram locations
 F01:0191       
-F01:0192       TIMER0_VECTOR	equ	$008004	; long
-F01:0193       TIMER1_VECTOR	equ	$008008	; long
-F01:0194       TIMER2_VECTOR	equ	$00800C	; long
-F01:0195       TIMER3_VECTOR	equ	$008010	; long
-F01:0196       
-F01:0197       CURRENT_TXT_SCR	equ	$008014	; long
-F01:0198       
-F01:0199       KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
-F01:0200       LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
+F01:0192       CURR_TEXT_COLOR	equ	$008000	; word
+F01:0193       CURSOR_POS	equ	$008002	; word
+F01:0194       
+F01:0195       TIMER0_VECTOR	equ	$008004	; long
+F01:0196       TIMER1_VECTOR	equ	$008008	; long
+F01:0197       TIMER2_VECTOR	equ	$00800C	; long
+F01:0198       TIMER3_VECTOR	equ	$008010	; long
+F01:0199       
+F01:0200       CURRENT_TXT_SCR	equ	$008014	; long
 F01:0201       
-F01:0202       ; screen editor variables
-F01:0203       SE_CRS_BLINK	equ	$008060	; byte (actually least significant bit), 0=off, 1=currently blinking
-F01:0204       SE_CRS_CNTDWN	equ	$008061	; byte, counter for blinking interval
-F01:0205       SE_CRS_INTERVAL	equ	$008062	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
+F01:0202       KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
+F01:0203       LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
+F01:0204       
+F01:0205       ; screen editor variables
+F01:0206       SE_CRS_BLINK	equ	$008060	; byte (actually least significant bit), 0=off, 1=currently blinking
+F01:0207       SE_CRS_CNTDWN	equ	$008061	; byte, counter for blinking interval
+F01:0208       SE_CRS_INTERVAL	equ	$008062	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
 F00:0005       
 F00:0006       	ORG	KERNEL_LOC
 F00:0007       
@@ -221,11 +224,11 @@ F00:0013
 F00:0014       kernel_main
 F00:0015       
 F00:0016       	BSR	setup_vector_table
-               S01:00FF0008:  61 00 03 68
+               S01:00FF0008:  61 00 03 72
 F00:0017       	BSR	reset_sids
-               S01:00FF000C:  61 00 03 C6
+               S01:00FF000C:  61 00 03 D0
 F00:0018       	BSR	copy_charrom_to_charram
-               S01:00FF0010:  61 00 03 24
+               S01:00FF0010:  61 00 03 2E
 F00:0019       
 F00:0020       
 F00:0021       	; set up timer0 interrupts (cursor flashing)
@@ -284,7 +287,7 @@ F00:0059       	LEA	KERNEL_TEXT_SCR,a1
 F00:0060       	MOVE.L	#$20,D0			; 32 bytes
                S01:00FF006A:  70 20
 F00:0061       	JSR	memcopy
-               S01:00FF006C:  61 00 02 B4
+               S01:00FF006C:  61 00 02 BE
 F00:0062       
 F00:0063       	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
                S01:00FF0070:  23 FC 00 00 80 20 00 00 80 14
@@ -312,7 +315,7 @@ F00:0079       	BSR	clear_screen
 F00:0080       	LEA	welcome,A0
                S01:00FF00A2:  41 FA 03 BC
 F00:0081       	BSR	put_string
-               S01:00FF00A6:  61 00 01 94
+               S01:00FF00A6:  61 00 01 74
 F00:0082       
 F00:0083       
 F00:0084       	; play a welcome sound on SID0
@@ -364,7 +367,7 @@ F00:0112       	MOVE	A0,USP
                S01:00FF0108:  4E 60
 F00:0113       
 F00:0114       	JSR	se_activate_cursor
-               S01:00FF010A:  61 00 02 E2
+               S01:00FF010A:  61 00 02 EC
 F00:0115       
 F00:0116       	; copy keyboard state onto screen
 F00:0117       .1	MOVEQ	#$0,D0
@@ -389,11 +392,11 @@ F00:0126       	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
 F00:0127       	BEQ.S	.1			; if 0 (nothing), jump to .1
                S01:00FF0134:  67 D8
 F00:0128       	JSR	se_deactivate_cursor
-               S01:00FF0136:  61 00 02 D2
+               S01:00FF0136:  61 00 02 DC
 F00:0129       	JSR	put_char		; process input
-               S01:00FF013A:  61 50
+               S01:00FF013A:  61 30
 F00:0130       	JSR	se_activate_cursor
-               S01:00FF013C:  61 00 02 B0
+               S01:00FF013C:  61 00 02 BA
 F00:0131       
 F00:0132       	BRA.S	.1
                S01:00FF0140:  60 CC
@@ -401,564 +404,606 @@ F00:0133
 F00:0134       
 F00:0135       clear_screen
 F00:0136       
-F00:0137       	MOVEM.L	D0-D1/A0-A2,-(SP)
-               S01:00FF0142:  48 E7 C0 E0
-F00:0138       	MOVEA.L	(VICV_TXT),A0		; A0 points to text screen
-               S01:00FF0146:  20 79 00 FE 04 04
-F00:0139       	MOVEA.L	(VICV_COL),A1		; A1 points to tile colors
-               S01:00FF014C:  22 79 00 FE 04 08
-F00:0140       	MOVEA.L	A0,A2
-               S01:00FF0152:  24 48
-F00:0141       	LEA	$800(A2),A2		; A2 now contains end address of text memory
-               S01:00FF0154:  45 EA 08 00
-F00:0142       	MOVE.L	#$20202020,D0
-               S01:00FF0158:  20 3C 20 20 20 20
-F00:0143       	MOVEQ	#$00,D1
-               S01:00FF015E:  72 00
-F00:0144       	MOVE.W	CURR_TEXT_COLOR,D1
-               S01:00FF0160:  32 39 00 00 80 00
-F00:0145       	LSL.L	#$8,D1
-               S01:00FF0166:  E1 89
-F00:0146       	MOVE.W	CURR_TEXT_COLOR,D1
-               S01:00FF0168:  32 39 00 00 80 00
-F00:0147       	LSL.L	#$8,D1
-               S01:00FF016E:  E1 89
-F00:0148       	MOVE.W	CURR_TEXT_COLOR,D1
-               S01:00FF0170:  32 39 00 00 80 00
-F00:0149       	LSL.L	#$8,D1
-               S01:00FF0176:  E1 89
-F00:0150       	MOVE.W	CURR_TEXT_COLOR,D1
-               S01:00FF0178:  32 39 00 00 80 00
-F00:0151       .1	MOVE.L	D0,(A0)+
-               S01:00FF017E:  20 C0
-F00:0152       	MOVE.L	D1,(A1)+
-               S01:00FF0180:  22 C1
-F00:0153       	CMP.L	A0,A2
-               S01:00FF0182:  B5 C8
-F00:0154       	BNE	.1
-               S01:00FF0184:  66 F8
-F00:0155       	MOVEM.L	(SP)+,D0-D1/A0-A2
-               S01:00FF0186:  4C DF 07 03
-F00:0156       	RTS
-               S01:00FF018A:  4E 75
-F00:0157       
-F00:0158       
-F00:0159       ; put_char expects an ascii value in register D0
-F00:0160       
-F00:0161       put_char
-F00:0162       
-F00:0163       	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
-               S01:00FF018C:  48 E7 60 E0
-F00:0164       	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
-               S01:00FF0190:  02 40 00 FF
-F00:0165       	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
-               S01:00FF0194:  32 39 00 00 80 02
-F00:0166       	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
-               S01:00FF019A:  34 39 00 00 80 00
-F00:0167       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S01:00FF01A0:  20 79 00 FE 04 04
-F00:0168       	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
-               S01:00FF01A6:  22 79 00 FE 04 08
-F00:0169       	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
-               S01:00FF01AC:  45 FA 02 DC
-F00:0170       	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
-               S01:00FF01B0:  B0 3C 00 0A
-F00:0171       	BEQ	.1
-               S01:00FF01B4:  67 36
-F00:0172       	CMP.B	#ASCII_CURSOR_DOWN,D0
-               S01:00FF01B6:  B0 3C 00 11
-F00:0173       	BEQ	.2
-               S01:00FF01BA:  67 40
-F00:0174       	CMP.B	#ASCII_CURSOR_RIGHT,D0
-               S01:00FF01BC:  B0 3C 00 1D
-F00:0175       	BEQ	.3
-               S01:00FF01C0:  67 4A
-F00:0176       	CMP.B	#ASCII_CURSOR_UP,D0
-               S01:00FF01C2:  B0 3C 00 91
-F00:0177       	BEQ	.4
-               S01:00FF01C6:  67 52
-F00:0178       	CMP.B	#ASCII_CURSOR_LEFT,D0
-               S01:00FF01C8:  B0 3C 00 9D
-F00:0179       	BEQ	.5
-               S01:00FF01CC:  67 5C
-F00:0180       	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
-               S01:00FF01CE:  10 32 00 00
-F00:0181       	MOVE.B	D0,(A0,D1)
-               S01:00FF01D2:  11 80 10 00
-F00:0182       	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
-               S01:00FF01D6:  E3 49
-F00:0183       	MOVE.W	D2,(A1,D1)
-               S01:00FF01D8:  33 82 10 00
-F00:0184       	ADDQ	#$1,CURSOR_POS
-               S01:00FF01DC:  52 79 00 00 80 02
-F00:0185       	ANDI.W	#$7FF,CURSOR_POS
-               S01:00FF01E2:  02 79 07 FF 00 00 80 02
-F00:0186       	BRA	.end
-               S01:00FF01EA:  60 4A
-F00:0187       .1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
-               S01:00FF01EC:  06 41 00 40
-F00:0188       	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
-               S01:00FF01F0:  02 41 07 C0
-F00:0189       	MOVE.W	D1,CURSOR_POS		; store new value
-               S01:00FF01F4:  33 C1 00 00 80 02
-F00:0190       	BRA	.end
-               S01:00FF01FA:  60 3A
-F00:0191       .2	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
-               S01:00FF01FC:  06 41 00 40
-F00:0192       	ANDI.W	#$7FF,D1		; confine cursor to screen
-               S01:00FF0200:  02 41 07 FF
-F00:0193       	MOVE.W	D1,CURSOR_POS		; store new value
-               S01:00FF0204:  33 C1 00 00 80 02
-F00:0194       	BRA	.end
-               S01:00FF020A:  60 2A
-F00:0195       .3	ADDI.W	#$1,D1			; cursor right
-               S01:00FF020C:  52 41
-F00:0196       	ANDI.W	#$7FF,D1
-               S01:00FF020E:  02 41 07 FF
-F00:0197       	MOVE.W	D1,CURSOR_POS
-               S01:00FF0212:  33 C1 00 00 80 02
-F00:0198       	BRA	.end
-               S01:00FF0218:  60 1C
-F00:0199       .4	SUBI.W	#$40,D1			; cursor up
-               S01:00FF021A:  04 41 00 40
-F00:0200       	ANDI.W	#$7FF,D1
-               S01:00FF021E:  02 41 07 FF
-F00:0201       	MOVE.W	D1,CURSOR_POS
-               S01:00FF0222:  33 C1 00 00 80 02
-F00:0202       	BRA	.end
-               S01:00FF0228:  60 0C
-F00:0203       .5	SUBI.W	#$1,D1			; cursor left
-               S01:00FF022A:  53 41
-F00:0204       	ANDI.W	#$7FF,D1
-               S01:00FF022C:  02 41 07 FF
-F00:0205       	MOVE.W	D1,CURSOR_POS
-               S01:00FF0230:  33 C1 00 00 80 02
-F00:0206       .end	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
-               S01:00FF0236:  4C DF 07 06
-F00:0207       	RTS
-               S01:00FF023A:  4E 75
-F00:0208       
-F00:0209       
-F00:0210       put_string
-F00:0211       
-F00:0212       	;
-F00:0213       	; put_string expects a pointer to a string in A0
-F00:0214       	;
+F00:0137       	MOVEA.L	(VICV_TXT),A0
+               S01:00FF0142:  20 79 00 FE 04 04
+F00:0138       	MOVE.L	#$800,D0
+               S01:00FF0148:  20 3C 00 00 08 00
+F00:0139       	MOVE.B	#SCRN_SPACE,D1			; space screencode
+               S01:00FF014E:  12 3C 00 20
+F00:0140       	JSR	blockfill_bytes
+               S01:00FF0152:  61 00 01 AE
+F00:0141       
+F00:0142       	MOVEA.L	(VICV_COL),A0
+               S01:00FF0156:  20 79 00 FE 04 08
+F00:0143       	MOVE.L	#$800,D0
+               S01:00FF015C:  20 3C 00 00 08 00
+F00:0144       	MOVE.W	#C64_LIGHTBLUE,D1
+               S01:00FF0162:  32 3C F6 7D
+F00:0145       	JSR	blockfill_words
+               S01:00FF0166:  61 00 01 AC
+F00:0146       
+F00:0147       	RTS
+               S01:00FF016A:  4E 75
+F00:0148       
+F00:0149       
+F00:0150       ; put_char expects an ascii value in register D0
+F00:0151       
+F00:0152       put_char
+F00:0153       
+F00:0154       	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
+               S01:00FF016C:  48 E7 60 E0
+F00:0155       	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
+               S01:00FF0170:  02 40 00 FF
+F00:0156       	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
+               S01:00FF0174:  32 39 00 00 80 02
+F00:0157       	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
+               S01:00FF017A:  34 39 00 00 80 00
+F00:0158       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+               S01:00FF0180:  20 79 00 FE 04 04
+F00:0159       	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
+               S01:00FF0186:  22 79 00 FE 04 08
+F00:0160       	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
+               S01:00FF018C:  45 FA 02 FC
+F00:0161       	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
+               S01:00FF0190:  B0 3C 00 0A
+F00:0162       	BEQ	.1
+               S01:00FF0194:  67 36
+F00:0163       	CMP.B	#ASCII_CURSOR_DOWN,D0
+               S01:00FF0196:  B0 3C 00 11
+F00:0164       	BEQ	.2
+               S01:00FF019A:  67 40
+F00:0165       	CMP.B	#ASCII_CURSOR_RIGHT,D0
+               S01:00FF019C:  B0 3C 00 1D
+F00:0166       	BEQ	.3
+               S01:00FF01A0:  67 4A
+F00:0167       	CMP.B	#ASCII_CURSOR_UP,D0
+               S01:00FF01A2:  B0 3C 00 91
+F00:0168       	BEQ	.4
+               S01:00FF01A6:  67 52
+F00:0169       	CMP.B	#ASCII_CURSOR_LEFT,D0
+               S01:00FF01A8:  B0 3C 00 9D
+F00:0170       	BEQ	.5
+               S01:00FF01AC:  67 5C
+F00:0171       	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
+               S01:00FF01AE:  10 32 00 00
+F00:0172       	MOVE.B	D0,(A0,D1)
+               S01:00FF01B2:  11 80 10 00
+F00:0173       	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
+               S01:00FF01B6:  E3 49
+F00:0174       	MOVE.W	D2,(A1,D1)
+               S01:00FF01B8:  33 82 10 00
+F00:0175       	ADDQ	#$1,CURSOR_POS
+               S01:00FF01BC:  52 79 00 00 80 02
+F00:0176       	ANDI.W	#$7FF,CURSOR_POS
+               S01:00FF01C2:  02 79 07 FF 00 00 80 02
+F00:0177       	BRA	.end
+               S01:00FF01CA:  60 4A
+F00:0178       .1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
+               S01:00FF01CC:  06 41 00 40
+F00:0179       	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
+               S01:00FF01D0:  02 41 07 C0
+F00:0180       	MOVE.W	D1,CURSOR_POS		; store new value
+               S01:00FF01D4:  33 C1 00 00 80 02
+F00:0181       	BRA	.end
+               S01:00FF01DA:  60 3A
+F00:0182       .2	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
+               S01:00FF01DC:  06 41 00 40
+F00:0183       	ANDI.W	#$7FF,D1		; confine cursor to screen
+               S01:00FF01E0:  02 41 07 FF
+F00:0184       	MOVE.W	D1,CURSOR_POS		; store new value
+               S01:00FF01E4:  33 C1 00 00 80 02
+F00:0185       	BRA	.end
+               S01:00FF01EA:  60 2A
+F00:0186       .3	ADDI.W	#$1,D1			; cursor right
+               S01:00FF01EC:  52 41
+F00:0187       	ANDI.W	#$7FF,D1
+               S01:00FF01EE:  02 41 07 FF
+F00:0188       	MOVE.W	D1,CURSOR_POS
+               S01:00FF01F2:  33 C1 00 00 80 02
+F00:0189       	BRA	.end
+               S01:00FF01F8:  60 1C
+F00:0190       .4	SUBI.W	#$40,D1			; cursor up
+               S01:00FF01FA:  04 41 00 40
+F00:0191       	ANDI.W	#$7FF,D1
+               S01:00FF01FE:  02 41 07 FF
+F00:0192       	MOVE.W	D1,CURSOR_POS
+               S01:00FF0202:  33 C1 00 00 80 02
+F00:0193       	BRA	.end
+               S01:00FF0208:  60 0C
+F00:0194       .5	SUBI.W	#$1,D1			; cursor left
+               S01:00FF020A:  53 41
+F00:0195       	ANDI.W	#$7FF,D1
+               S01:00FF020C:  02 41 07 FF
+F00:0196       	MOVE.W	D1,CURSOR_POS
+               S01:00FF0210:  33 C1 00 00 80 02
+F00:0197       .end	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
+               S01:00FF0216:  4C DF 07 06
+F00:0198       	RTS
+               S01:00FF021A:  4E 75
+F00:0199       
+F00:0200       
+F00:0201       put_string
+F00:0202       
+F00:0203       	;
+F00:0204       	; put_string expects a pointer to a string in A0
+F00:0205       	;
+F00:0206       
+F00:0207       	MOVE.L	A0,-(SP)
+               S01:00FF021C:  2F 08
+F00:0208       .1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
+               S01:00FF021E:  10 18
+F00:0209       	CMP.B	#ASCII_NULL,D0	; did we reach the end of the string?
+               S01:00FF0220:  4A 00
+F00:0210       	BEQ	.2		; yes, go to end of function
+               S01:00FF0222:  67 06
+F00:0211       	BSR	put_char	; no, put char
+               S01:00FF0224:  61 00 FF 46
+F00:0212       	BRA	.1
+               S01:00FF0228:  60 F4
+F00:0213       .2	MOVE.L	(SP)+,A0
+               S01:00FF022A:  20 5F
+F00:0214       	RTS
+               S01:00FF022C:  4E 75
 F00:0215       
-F00:0216       	MOVE.L	A0,-(SP)
-               S01:00FF023C:  2F 08
-F00:0217       .1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
-               S01:00FF023E:  10 18
-F00:0218       	CMP.B	#ASCII_NULL,D0	; did we reach the end of the string?
-               S01:00FF0240:  4A 00
-F00:0219       	BEQ	.2		; yes, go to end of function
-               S01:00FF0242:  67 06
-F00:0220       	BSR	put_char	; no, put char
-               S01:00FF0244:  61 00 FF 46
-F00:0221       	BRA	.1
-               S01:00FF0248:  60 F4
-F00:0222       .2	MOVE.L	(SP)+,A0
-               S01:00FF024A:  20 5F
-F00:0223       	RTS
-               S01:00FF024C:  4E 75
-F00:0224       
+F00:0216       
+F00:0217       ; fake exception handler
+F00:0218       
+F00:0219       exception_handler
+F00:0220       
+F00:0221       	MOVE.L	D0,-(SP)
+               S01:00FF022E:  2F 00
+F00:0222       	MOVE.L	#$DEADBEEF,D0
+               S01:00FF0230:  20 3C DE AD BE EF
+F00:0223       	MOVE.L	(SP)+,D0
+               S01:00FF0236:  20 1F
+F00:0224       	RTE
+               S01:00FF0238:  4E 73
 F00:0225       
-F00:0226       ; fake exception handler
-F00:0227       
-F00:0228       exception_handler
-F00:0229       
-F00:0230       	MOVE.L	D0,-(SP)
-               S01:00FF024E:  2F 00
-F00:0231       	MOVE.L	#$DEADBEEF,D0
-               S01:00FF0250:  20 3C DE AD BE EF
-F00:0232       	MOVE.L	(SP)+,D0
-               S01:00FF0256:  20 1F
-F00:0233       	RTE
-               S01:00FF0258:  4E 73
+F00:0226       
+F00:0227       ; level 2 interrupt autovector (vicv start of vblank)
+F00:0228       
+F00:0229       interrupt_2_autovector
+F00:0230       
+F00:0231       	MOVE.B	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
+               S01:00FF023A:  13 FC 00 01 00 FE 04 0E
+F00:0232       
+F00:0233       	MOVE.B	#%00000001,VICV_BUFFERSWAP			; switch front- and backbuffer
+               S01:00FF0242:  13 FC 00 01 00 FE 04 10
 F00:0234       
-F00:0235       
-F00:0236       ; level 2 interrupt autovector (vicv start of vblank)
-F00:0237       
-F00:0238       interrupt_2_autovector
-F00:0239       
-F00:0240       	MOVE.B	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
-               S01:00FF025A:  13 FC 00 01 00 FE 04 0E
-F00:0241       
-F00:0242       	MOVE.B	#%00000001,VICV_BUFFERSWAP			; switch front- and backbuffer
-               S01:00FF0262:  13 FC 00 01 00 FE 04 10
+F00:0235       	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
+               S01:00FF024A:  13 FC 00 01 00 FE 07 00
+F00:0236       
+F00:0237       	; add the blits (to be replaced by a kernel linked list)
+F00:0238       	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
+               S01:00FF0252:  23 FC 00 00 80 20 00 FE 07 02
+F00:0239       	MOVE.B	#%00000010,BLITTER_CONTROL
+               S01:00FF025C:  13 FC 00 02 00 FE 07 00
+F00:0240       
+F00:0241       	RTE
+               S01:00FF0264:  4E 73
+F00:0242       
 F00:0243       
-F00:0244       	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
-               S01:00FF026A:  13 FC 00 01 00 FE 07 00
+F00:0244       ; level 4 interrupt autovector (timer)
 F00:0245       
-F00:0246       	; add the blits (to be replaced by a kernel linked list)
-F00:0247       	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
-               S01:00FF0272:  23 FC 00 00 80 20 00 FE 07 02
-F00:0248       	MOVE.B	#%00000010,BLITTER_CONTROL
-               S01:00FF027C:  13 FC 00 02 00 FE 07 00
-F00:0249       
-F00:0250       	RTE
-               S01:00FF0284:  4E 73
-F00:0251       
-F00:0252       
-F00:0253       ; level 4 interrupt autovector (timer)
-F00:0254       
-F00:0255       interrupt_4_autovector
-F00:0256       
-F00:0257       	MOVE.L	A0,-(SP)		; save a0
-               S01:00FF0286:  2F 08
-F00:0258       timer0_check
-F00:0259       	BTST	#0,TIMER_BASE		; did timer 0 cause the interrupt?
-               S01:00FF0288:  08 39 00 00 00 FE 06 00
-F00:0260       	BEQ	timer1_check		; no, go to next timer
-               S01:00FF0290:  67 10
-F00:0261       	MOVE.B	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
-               S01:00FF0292:  13 FC 00 01 00 FE 06 00
-F00:0262       	MOVEA.L	TIMER0_VECTOR,A0
-               S01:00FF029A:  20 79 00 00 80 04
-F00:0263       	JMP	(A0)
-               S01:00FF02A0:  4E D0
-F00:0264       timer1_check
-F00:0265       	BTST	#1,TIMER_BASE
-               S01:00FF02A2:  08 39 00 01 00 FE 06 00
-F00:0266       	BEQ	timer2_check
-               S01:00FF02AA:  67 10
-F00:0267       	MOVE.B	#%00000010,TIMER_BASE
-               S01:00FF02AC:  13 FC 00 02 00 FE 06 00
-F00:0268       	MOVEA.L	TIMER1_VECTOR,A0
-               S01:00FF02B4:  20 79 00 00 80 08
-F00:0269       	JMP	(A0)
-               S01:00FF02BA:  4E D0
-F00:0270       timer2_check
-F00:0271       	BTST	#2,TIMER_BASE		; did timer 2 cause the interrupt?
-               S01:00FF02BC:  08 39 00 02 00 FE 06 00
-F00:0272       	BEQ	timer3_check		; no, go to next timer
-               S01:00FF02C4:  67 10
-F00:0273       	MOVE.B	#%00000100,TIMER_BASE	; yes, acknowledge interrupt
-               S01:00FF02C6:  13 FC 00 04 00 FE 06 00
-F00:0274       	MOVEA.L	TIMER2_VECTOR,A0
-               S01:00FF02CE:  20 79 00 00 80 0C
-F00:0275       	JMP	(A0)
-               S01:00FF02D4:  4E D0
-F00:0276       timer3_check
-F00:0277       	BTST	#3,TIMER_BASE
-               S01:00FF02D6:  08 39 00 03 00 FE 06 00
-F00:0278       	BEQ	timer_finish		; no, go to timer finish
-               S01:00FF02DE:  67 10
-F00:0279       	MOVE.B	#%00001000,TIMER_BASE	; yes, acknowledge
-               S01:00FF02E0:  13 FC 00 08 00 FE 06 00
-F00:0280       	MOVEA.L	TIMER3_VECTOR,A0
-               S01:00FF02E8:  20 79 00 00 80 10
-F00:0281       	JMP	(A0)
-               S01:00FF02EE:  4E D0
-F00:0282       timer_finish
-F00:0283       	MOVE.L	(SP)+,A0		; restore a0
-               S01:00FF02F0:  20 5F
+F00:0246       interrupt_4_autovector
+F00:0247       
+F00:0248       	MOVE.L	A0,-(SP)		; save a0
+               S01:00FF0266:  2F 08
+F00:0249       timer0_check
+F00:0250       	BTST	#0,TIMER_BASE		; did timer 0 cause the interrupt?
+               S01:00FF0268:  08 39 00 00 00 FE 06 00
+F00:0251       	BEQ	timer1_check		; no, go to next timer
+               S01:00FF0270:  67 10
+F00:0252       	MOVE.B	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
+               S01:00FF0272:  13 FC 00 01 00 FE 06 00
+F00:0253       	MOVEA.L	TIMER0_VECTOR,A0
+               S01:00FF027A:  20 79 00 00 80 04
+F00:0254       	JMP	(A0)
+               S01:00FF0280:  4E D0
+F00:0255       timer1_check
+F00:0256       	BTST	#1,TIMER_BASE
+               S01:00FF0282:  08 39 00 01 00 FE 06 00
+F00:0257       	BEQ	timer2_check
+               S01:00FF028A:  67 10
+F00:0258       	MOVE.B	#%00000010,TIMER_BASE
+               S01:00FF028C:  13 FC 00 02 00 FE 06 00
+F00:0259       	MOVEA.L	TIMER1_VECTOR,A0
+               S01:00FF0294:  20 79 00 00 80 08
+F00:0260       	JMP	(A0)
+               S01:00FF029A:  4E D0
+F00:0261       timer2_check
+F00:0262       	BTST	#2,TIMER_BASE		; did timer 2 cause the interrupt?
+               S01:00FF029C:  08 39 00 02 00 FE 06 00
+F00:0263       	BEQ	timer3_check		; no, go to next timer
+               S01:00FF02A4:  67 10
+F00:0264       	MOVE.B	#%00000100,TIMER_BASE	; yes, acknowledge interrupt
+               S01:00FF02A6:  13 FC 00 04 00 FE 06 00
+F00:0265       	MOVEA.L	TIMER2_VECTOR,A0
+               S01:00FF02AE:  20 79 00 00 80 0C
+F00:0266       	JMP	(A0)
+               S01:00FF02B4:  4E D0
+F00:0267       timer3_check
+F00:0268       	BTST	#3,TIMER_BASE
+               S01:00FF02B6:  08 39 00 03 00 FE 06 00
+F00:0269       	BEQ	timer_finish		; no, go to timer finish
+               S01:00FF02BE:  67 10
+F00:0270       	MOVE.B	#%00001000,TIMER_BASE	; yes, acknowledge
+               S01:00FF02C0:  13 FC 00 08 00 FE 06 00
+F00:0271       	MOVEA.L	TIMER3_VECTOR,A0
+               S01:00FF02C8:  20 79 00 00 80 10
+F00:0272       	JMP	(A0)
+               S01:00FF02CE:  4E D0
+F00:0273       timer_finish
+F00:0274       	MOVE.L	(SP)+,A0		; restore a0
+               S01:00FF02D0:  20 5F
+F00:0275       	RTE
+               S01:00FF02D2:  4E 73
+F00:0276       
+F00:0277       
+F00:0278       ; level 5 interrupt autovector
+F00:0279       
+F00:0280       interrupt_5_autovector
+F00:0281       
+F00:0282       	MOVE.L	A0,-(SP)
+               S01:00FF02D4:  2F 08
+F00:0283       	MOVE.L	(SP)+,A0
+               S01:00FF02D6:  20 5F
 F00:0284       	RTE
-               S01:00FF02F2:  4E 73
+               S01:00FF02D8:  4E 73
 F00:0285       
 F00:0286       
-F00:0287       ; level 5 interrupt autovector
+F00:0287       ; level 6 interrupt autovector
 F00:0288       
-F00:0289       interrupt_5_autovector
+F00:0289       interrupt_6_autovector
 F00:0290       
-F00:0291       	MOVE.L	A0,-(SP)
-               S01:00FF02F4:  2F 08
-F00:0292       	MOVE.L	(SP)+,A0
-               S01:00FF02F6:  20 5F
-F00:0293       	RTE
-               S01:00FF02F8:  4E 73
-F00:0294       
+F00:0291       	RTE
+               S01:00FF02DA:  4E 73
+F00:0292       
+F00:0293       
+F00:0294       ; level 7 interrupt autovector
 F00:0295       
-F00:0296       ; level 6 interrupt autovector
+F00:0296       interrupt_7_autovector
 F00:0297       
-F00:0298       interrupt_6_autovector
+F00:0298       	RTE
+               S01:00FF02DC:  4E 73
 F00:0299       
-F00:0300       	RTE
-               S01:00FF02FA:  4E 73
-F00:0301       
+F00:0300       
+F00:0301       timer0_handler
 F00:0302       
-F00:0303       ; level 7 interrupt autovector
-F00:0304       
-F00:0305       interrupt_7_autovector
+F00:0303       	;
+F00:0304       	MOVEA.L	VICV_TXT,A0
+               S01:00FF02DE:  20 79 00 FE 04 04
+F00:0305       	ADDQ.B	#1,$7FF(A0)
+               S01:00FF02E4:  52 28 07 FF
 F00:0306       
-F00:0307       	RTE
-               S01:00FF02FC:  4E 73
+F00:0307       	BRA	timer1_check
+               S01:00FF02E8:  60 98
 F00:0308       
 F00:0309       
-F00:0310       timer0_handler
+F00:0310       timer1_handler
 F00:0311       
-F00:0312       	;
-F00:0313       	MOVEA.L	VICV_TXT,A0
-               S01:00FF02FE:  20 79 00 FE 04 04
-F00:0314       	ADDQ.B	#1,$7FF(A0)
-               S01:00FF0304:  52 28 07 FF
+F00:0312       	LEA	SID0_BASE,A0
+               S01:00FF02EA:  41 F9 00 FE 05 00
+F00:0313       	MOVE.B	#%00100000,$4(A0)
+               S01:00FF02F0:  11 7C 00 20 00 04
+F00:0314       	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
+               S01:00FF02F6:  00 28 00 21 00 04
 F00:0315       
-F00:0316       	BRA	timer1_check
-               S01:00FF0308:  60 98
+F00:0316       	BRA	timer2_check
+               S01:00FF02FC:  60 9E
 F00:0317       
 F00:0318       
-F00:0319       timer1_handler
+F00:0319       timer2_handler
 F00:0320       
-F00:0321       	LEA	SID0_BASE,A0
-               S01:00FF030A:  41 F9 00 FE 05 00
-F00:0322       	MOVE.B	#%00100000,$4(A0)
-               S01:00FF0310:  11 7C 00 20 00 04
-F00:0323       	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
-               S01:00FF0316:  00 28 00 21 00 04
+F00:0321       	;
+F00:0322       	BRA	timer3_check
+               S01:00FF02FE:  60 B6
+F00:0323       
 F00:0324       
-F00:0325       	BRA	timer2_check
-               S01:00FF031C:  60 9E
+F00:0325       timer3_handler
 F00:0326       
-F00:0327       
-F00:0328       timer2_handler
+F00:0327       	;
+F00:0328       	BRA	timer_finish
+               S01:00FF0300:  60 CE
 F00:0329       
-F00:0330       	;
-F00:0331       	BRA	timer3_check
-               S01:00FF031E:  60 B6
+F00:0330       
+F00:0331       blockfill_bytes
 F00:0332       
-F00:0333       
-F00:0334       timer3_handler
-F00:0335       
-F00:0336       	;
-F00:0337       	BRA	timer_finish
-               S01:00FF0320:  60 CE
-F00:0338       
-F00:0339       
-F00:0340       memcopy
-F00:0341       
-F00:0342       	;
-F00:0343       	;	bytewise memory copy - probably slow?
-F00:0344       	;
-F00:0345       	;	Arguments
-F00:0346       	;
-F00:0347       	;	A0	source_start_address
-F00:0348       	;	D0	no_of_bytes
-F00:0349       	;	A1	destination_start_address
-F00:0350       	;
-F00:0351       
-F00:0352       	MOVE.L	D1,-(SP)
-               S01:00FF0322:  2F 01
-F00:0353       	MOVEQ	#$0,D1
-               S01:00FF0324:  72 00
-F00:0354       .1	MOVE.B	(A0,D1.L),(A1,D1.L)
-               S01:00FF0326:  13 B0 18 00 18 00
-F00:0355       	ADDQ.L	#$1,D1
-               S01:00FF032C:  52 81
-F00:0356       	CMP.L	D1,D0
-               S01:00FF032E:  B0 81
-F00:0357       	BNE	.1
-               S01:00FF0330:  66 F4
-F00:0358       
-F00:0359       	MOVE.L	(SP)+,D1
-               S01:00FF0332:  22 1F
-F00:0360       	RTS
-               S01:00FF0334:  4E 75
-F00:0361       
+F00:0333       	;
+F00:0334       	;	Arguments
+F00:0335       	;
+F00:0336       	;	A0	start addres
+F00:0337       	;	D0	number of bytes
+F00:0338       	;	D1	byte value
+F00:0339       	;
+F00:0340       
+F00:0341       	MOVE.L	D2,-(SP)	; save D0
+               S01:00FF0302:  2F 02
+F00:0342       
+F00:0343       	MOVEQ	#$0,D2
+               S01:00FF0304:  74 00
+F00:0344       
+F00:0345       .1	MOVE.B	D1,(A0,D2.L)
+               S01:00FF0306:  11 81 28 00
+F00:0346       	ADDQ	#$1,D2
+               S01:00FF030A:  52 42
+F00:0347       	CMP.L	D2,D0
+               S01:00FF030C:  B0 82
+F00:0348       	BNE	.1
+               S01:00FF030E:  66 F6
+F00:0349       
+F00:0350       	MOVE.L	(SP)+,D2
+               S01:00FF0310:  24 1F
+F00:0351       	RTS
+               S01:00FF0312:  4E 75
+F00:0352       
+F00:0353       blockfill_words
+F00:0354       
+F00:0355       	;
+F00:0356       	;	Arguments
+F00:0357       	;
+F00:0358       	;	A0	start addres
+F00:0359       	;	D0	number of words
+F00:0360       	;	D1	word value
+F00:0361       	;
 F00:0362       
-F00:0363       copy_charrom_to_charram
+F00:0363       	MOVEM.L	D0/D2,-(SP)
+               S01:00FF0314:  48 E7 A0 00
 F00:0364       
-F00:0365       	; Copy char rom to ram (go from 2k to 32k)
-F00:0366       	; Note: this is a very special copy routine
-F00:0367       	; that expands a charset from 1 bit into 16 bit
-F00:0368       	; format.
-F00:0369       	;
-F00:0370       	;	Register Usage
-F00:0371       	;
-F00:0372       	;	D0	current_byte, holds a byte from the original rom charset
-F00:0373       	;	D1	i, counter from 7 to 0 (8 bits per byte have to be processed)
-F00:0374       	;	A0	*char_ram, pointer
-F00:0375       	;	A1	*char_rom, pointer
-F00:0376       	;
-F00:0377       	MOVEM.L	D0-D1/A0-A1,-(SP)
-               S01:00FF0336:  48 E7 C0 C0
-F00:0378       
-F00:0379       	MOVEQ	#0,D0			;    current_byte = 0;
-               S01:00FF033A:  70 00
-F00:0380       	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
-               S01:00FF033C:  41 F9 00 F1 00 00
-F00:0381       	LEA	CHAR_ROM,A1		;    char_rom = CHAR_ROM;
-               S01:00FF0342:  43 F9 00 FD 00 00
-F00:0382       
-F00:0383       .1	CMPA.L	#CHAR_ROM+$800,A1	;    while(char_ram != CHAR_ROM+$800)
-               S01:00FF0348:  B3 FC 00 FD 08 00
-F00:0384       	BEQ	.5			;    {   //	branch to end of compound statement
-               S01:00FF034E:  67 1C
-F00:0385       					;        // load a byte from charset and incr pntr
-F00:0386       	MOVE.B	(A1)+,D0		;        current_byte = char_rom++;
-               S01:00FF0350:  10 19
-F00:0387       	MOVEQ	#8,D1			;        i = 8;
-               S01:00FF0352:  72 08
-F00:0388       .2	BTST	#$7,D0
-               S01:00FF0354:  08 00 00 07
-F00:0389       	BEQ	.3			;    bit 7 not set
-               S01:00FF0358:  67 06
-F00:0390       	MOVE.W	#C64_GREY,(A0)+		;    bit 7 is set, so set color
-               S01:00FF035A:  30 FC F7 77
-F00:0391       	BRA	.4
-               S01:00FF035E:  60 04
-F00:0392       .3	MOVE.W	#$0000,(A0)+		;    bit 7 not set, make empty
-               S01:00FF0360:  30 FC 00 00
-F00:0393       .4	LSL.B	#$01,D0			;    move all the bits one place to the left
-               S01:00FF0364:  E3 08
-F00:0394       	SUBQ	#$01,D1			;    i = i - 1;
-               S01:00FF0366:  53 41
-F00:0395       	BEQ	.1			;    did i reach zero? goto .1
-               S01:00FF0368:  67 DE
-F00:0396       	BRA	.2
-               S01:00FF036A:  60 E8
-F00:0397       					;    }
-F00:0398       .5	MOVEM.L	(SP)+,D0-D1/A0-A1
-               S01:00FF036C:  4C DF 03 03
-F00:0399       	RTS
-               S01:00FF0370:  4E 75
+F00:0365       	MOVEQ	#$0,D2
+               S01:00FF0318:  74 00
+F00:0366       	LSL.L	#$1,D0
+               S01:00FF031A:  E3 88
+F00:0367       
+F00:0368       .1	MOVE.W	D1,(A0,D2.L)
+               S01:00FF031C:  31 81 28 00
+F00:0369       	ADDQ.L	#$2,D2
+               S01:00FF0320:  54 82
+F00:0370       	CMP.L	D2,D0
+               S01:00FF0322:  B0 82
+F00:0371       	BNE	.1
+               S01:00FF0324:  66 F6
+F00:0372       
+F00:0373       	MOVEM.L	(SP)+,D0/D2
+               S01:00FF0326:  4C DF 00 05
+F00:0374       	RTS
+               S01:00FF032A:  4E 75
+F00:0375       
+F00:0376       memcopy
+F00:0377       
+F00:0378       	;
+F00:0379       	;	bytewise memory copy - probably slow?
+F00:0380       	;
+F00:0381       	;	Arguments
+F00:0382       	;
+F00:0383       	;	A0	source_start_address
+F00:0384       	;	D0	no_of_bytes
+F00:0385       	;	A1	destination_start_address
+F00:0386       	;
+F00:0387       
+F00:0388       	MOVE.L	D1,-(SP)
+               S01:00FF032C:  2F 01
+F00:0389       	MOVEQ	#$0,D1
+               S01:00FF032E:  72 00
+F00:0390       .1	MOVE.B	(A0,D1.L),(A1,D1.L)
+               S01:00FF0330:  13 B0 18 00 18 00
+F00:0391       	ADDQ.L	#$1,D1
+               S01:00FF0336:  52 81
+F00:0392       	CMP.L	D1,D0
+               S01:00FF0338:  B0 81
+F00:0393       	BNE	.1
+               S01:00FF033A:  66 F4
+F00:0394       
+F00:0395       	MOVE.L	(SP)+,D1
+               S01:00FF033C:  22 1F
+F00:0396       	RTS
+               S01:00FF033E:  4E 75
+F00:0397       
+F00:0398       
+F00:0399       copy_charrom_to_charram
 F00:0400       
-F00:0401       
-F00:0402       setup_vector_table
-F00:0403       
-F00:0404       	LEA	exception_handler,A0
-               S01:00FF0372:  41 FA FE DA
-F00:0405       	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
-               S01:00FF0376:  21 C8 00 10
-F00:0406       	MOVE.L	A0,VEC_10_UNIMPL_INSTRUCTION
-               S01:00FF037A:  21 C8 00 28
-F00:0407       	MOVE.L	A0,VEC_11_UNIMPL_INSTRUCTION
-               S01:00FF037E:  21 C8 00 2C
-F00:0408       
-F00:0409       	LEA	interrupt_2_autovector,A0
-               S01:00FF0382:  41 FA FE D6
-F00:0410       	MOVE.L	A0,VEC_26_LEVEL2_IRQ_AUTOVECT
-               S01:00FF0386:  21 C8 00 68
-F00:0411       
-F00:0412       	LEA	interrupt_4_autovector,A0
-               S01:00FF038A:  41 FA FE FA
-F00:0413       	MOVE.L	A0,VEC_28_LEVEL4_IRQ_AUTOVECT
-               S01:00FF038E:  21 C8 00 70
+F00:0401       	; Copy char rom to ram (go from 2k to 32k)
+F00:0402       	; Note: this is a very special copy routine
+F00:0403       	; that expands a charset from 1 bit into 16 bit
+F00:0404       	; format.
+F00:0405       	;
+F00:0406       	;	Register Usage
+F00:0407       	;
+F00:0408       	;	D0	current_byte, holds a byte from the original rom charset
+F00:0409       	;	D1	i, counter from 7 to 0 (8 bits per byte have to be processed)
+F00:0410       	;	A0	*char_ram, pointer
+F00:0411       	;	A1	*char_rom, pointer
+F00:0412       	;
+F00:0413       	MOVEM.L	D0-D1/A0-A1,-(SP)
+               S01:00FF0340:  48 E7 C0 C0
 F00:0414       
-F00:0415       	LEA	interrupt_5_autovector,A0
-               S01:00FF0392:  41 FA FF 60
-F00:0416       	MOVE.L	A0,VEC_29_LEVEL5_IRQ_AUTOVECT
-               S01:00FF0396:  21 C8 00 74
-F00:0417       
-F00:0418       	LEA	interrupt_6_autovector,A0
-               S01:00FF039A:  41 FA FF 5E
-F00:0419       	MOVE.L	A0,VEC_30_LEVEL6_IRQ_AUTOVECT
-               S01:00FF039E:  21 C8 00 78
-F00:0420       
-F00:0421       	LEA	interrupt_7_autovector,A0
-               S01:00FF03A2:  41 FA FF 58
-F00:0422       	MOVE.L	A0,VEC_31_LEVEL7_IRQ_AUTOVECT
-               S01:00FF03A6:  21 C8 00 7C
-F00:0423       
-F00:0424       	LEA	timer0_handler,A0
-               S01:00FF03AA:  41 FA FF 52
-F00:0425       	MOVE.L	A0,TIMER0_VECTOR
-               S01:00FF03AE:  23 C8 00 00 80 04
-F00:0426       
-F00:0427       	LEA	timer1_handler,A0
-               S01:00FF03B4:  41 FA FF 54
-F00:0428       	MOVE.L	A0,TIMER1_VECTOR
-               S01:00FF03B8:  23 C8 00 00 80 08
-F00:0429       
-F00:0430       	LEA	timer2_handler,A0
-               S01:00FF03BE:  41 FA FF 5E
-F00:0431       	MOVE.L	A0,TIMER2_VECTOR
-               S01:00FF03C2:  23 C8 00 00 80 0C
-F00:0432       
-F00:0433       	LEA	timer3_handler,A0
-               S01:00FF03C8:  41 FA FF 56
-F00:0434       	MOVE.L	A0,TIMER3_VECTOR
-               S01:00FF03CC:  23 C8 00 00 80 10
-F00:0435       
-F00:0436       	RTS
-               S01:00FF03D2:  4E 75
+F00:0415       	MOVEQ	#0,D0			;    current_byte = 0;
+               S01:00FF0344:  70 00
+F00:0416       	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
+               S01:00FF0346:  41 F9 00 F1 00 00
+F00:0417       	LEA	CHAR_ROM,A1		;    char_rom = CHAR_ROM;
+               S01:00FF034C:  43 F9 00 FD 00 00
+F00:0418       
+F00:0419       .1	CMPA.L	#CHAR_ROM+$800,A1	;    while(char_ram != CHAR_ROM+$800)
+               S01:00FF0352:  B3 FC 00 FD 08 00
+F00:0420       	BEQ	.5			;    {   //	branch to end of compound statement
+               S01:00FF0358:  67 1C
+F00:0421       					;        // load a byte from charset and incr pntr
+F00:0422       	MOVE.B	(A1)+,D0		;        current_byte = char_rom++;
+               S01:00FF035A:  10 19
+F00:0423       	MOVEQ	#8,D1			;        i = 8;
+               S01:00FF035C:  72 08
+F00:0424       .2	BTST	#$7,D0
+               S01:00FF035E:  08 00 00 07
+F00:0425       	BEQ	.3			;    bit 7 not set
+               S01:00FF0362:  67 06
+F00:0426       	MOVE.W	#C64_GREY,(A0)+		;    bit 7 is set, so set color
+               S01:00FF0364:  30 FC F7 77
+F00:0427       	BRA	.4
+               S01:00FF0368:  60 04
+F00:0428       .3	MOVE.W	#$0000,(A0)+		;    bit 7 not set, make empty
+               S01:00FF036A:  30 FC 00 00
+F00:0429       .4	LSL.B	#$01,D0			;    move all the bits one place to the left
+               S01:00FF036E:  E3 08
+F00:0430       	SUBQ	#$01,D1			;    i = i - 1;
+               S01:00FF0370:  53 41
+F00:0431       	BEQ	.1			;    did i reach zero? goto .1
+               S01:00FF0372:  67 DE
+F00:0432       	BRA	.2
+               S01:00FF0374:  60 E8
+F00:0433       					;    }
+F00:0434       .5	MOVEM.L	(SP)+,D0-D1/A0-A1
+               S01:00FF0376:  4C DF 03 03
+F00:0435       	RTS
+               S01:00FF037A:  4E 75
+F00:0436       
 F00:0437       
-F00:0438       reset_sids
-F00:0439       	; very basic, needs work
-F00:0440       	; max volume for both sids
-F00:0441       	LEA	SID0_BASE,A0
-               S01:00FF03D4:  41 F9 00 FE 05 00
-F00:0442       	MOVE.B	#$0F,$18(A0)
-               S01:00FF03DA:  11 7C 00 0F 00 18
-F00:0443       	LEA	SID1_BASE,A0
-               S01:00FF03E0:  41 F9 00 FE 05 20
-F00:0444       	MOVE.B	#$0F,$18(A0)
-               S01:00FF03E6:  11 7C 00 0F 00 18
-F00:0445       	RTS
-               S01:00FF03EC:  4E 75
-F00:0446       
+F00:0438       setup_vector_table
+F00:0439       
+F00:0440       	LEA	exception_handler,A0
+               S01:00FF037C:  41 FA FE B0
+F00:0441       	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
+               S01:00FF0380:  21 C8 00 10
+F00:0442       	MOVE.L	A0,VEC_10_UNIMPL_INSTRUCTION
+               S01:00FF0384:  21 C8 00 28
+F00:0443       	MOVE.L	A0,VEC_11_UNIMPL_INSTRUCTION
+               S01:00FF0388:  21 C8 00 2C
+F00:0444       
+F00:0445       	LEA	interrupt_2_autovector,A0
+               S01:00FF038C:  41 FA FE AC
+F00:0446       	MOVE.L	A0,VEC_26_LEVEL2_IRQ_AUTOVECT
+               S01:00FF0390:  21 C8 00 68
 F00:0447       
-F00:0448       se_activate_cursor
-F00:0449       	MOVEM.L	D0/A0,-(SP)
-               S01:00FF03EE:  48 E7 80 80
-F00:0450       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S01:00FF03F2:  20 79 00 FE 04 04
-F00:0451       	MOVE.W	CURSOR_POS,D0
-               S01:00FF03F8:  30 39 00 00 80 02
-F00:0452       	EORI.B	#%10000000,(A0,D0)
-               S01:00FF03FE:  0A 30 00 80 00 00
-F00:0453       	MOVEM.L	(SP)+,D0/A0
-               S01:00FF0404:  4C DF 01 01
-F00:0454       	RTS
-               S01:00FF0408:  4E 75
-F00:0455       
-F00:0456       se_deactivate_cursor
-F00:0457       	MOVEM.L	D0/A0,-(SP)
-               S01:00FF040A:  48 E7 80 80
-F00:0458       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S01:00FF040E:  20 79 00 FE 04 04
-F00:0459       	MOVE.W	CURSOR_POS,D0
-               S01:00FF0414:  30 39 00 00 80 02
-F00:0460       	EORI.B	#%10000000,(A0,D0)
-               S01:00FF041A:  0A 30 00 80 00 00
-F00:0461       	MOVEM.L	(SP)+,D0/A0
-               S01:00FF0420:  4C DF 01 01
-F00:0462       	RTS
-               S01:00FF0424:  4E 75
-F00:0463       
-F00:0464       ; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
+F00:0448       	LEA	interrupt_4_autovector,A0
+               S01:00FF0394:  41 FA FE D0
+F00:0449       	MOVE.L	A0,VEC_28_LEVEL4_IRQ_AUTOVECT
+               S01:00FF0398:  21 C8 00 70
+F00:0450       
+F00:0451       	LEA	interrupt_5_autovector,A0
+               S01:00FF039C:  41 FA FF 36
+F00:0452       	MOVE.L	A0,VEC_29_LEVEL5_IRQ_AUTOVECT
+               S01:00FF03A0:  21 C8 00 74
+F00:0453       
+F00:0454       	LEA	interrupt_6_autovector,A0
+               S01:00FF03A4:  41 FA FF 34
+F00:0455       	MOVE.L	A0,VEC_30_LEVEL6_IRQ_AUTOVECT
+               S01:00FF03A8:  21 C8 00 78
+F00:0456       
+F00:0457       	LEA	interrupt_7_autovector,A0
+               S01:00FF03AC:  41 FA FF 2E
+F00:0458       	MOVE.L	A0,VEC_31_LEVEL7_IRQ_AUTOVECT
+               S01:00FF03B0:  21 C8 00 7C
+F00:0459       
+F00:0460       	LEA	timer0_handler,A0
+               S01:00FF03B4:  41 FA FF 28
+F00:0461       	MOVE.L	A0,TIMER0_VECTOR
+               S01:00FF03B8:  23 C8 00 00 80 04
+F00:0462       
+F00:0463       	LEA	timer1_handler,A0
+               S01:00FF03BE:  41 FA FF 2A
+F00:0464       	MOVE.L	A0,TIMER1_VECTOR
+               S01:00FF03C2:  23 C8 00 00 80 08
 F00:0465       
-F00:0466       	ALIGN	5
-F00:0467       screen_blit_structure
-F00:0468       	DC.B	%00001000	; flags 0 - tile mode, simple color, color per tile
-               S01:00FF0440:  08
-F00:0469       	DC.B	%00000000	; flags 1 - no stretching, mirroring etc
-               S01:00FF0441:  00
-F00:0470       	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
-               S01:00FF0442:  56
-F00:0471       	DC.B	%00000000	; currently unused.... :-)
-               S01:00FF0443:  00
-F00:0472       	DC.W	$0		; x (0)
-               S01:00FF0444:  00 00
-F00:0473       	DC.W	$10		; y (16)
-               S01:00FF0446:  00 10
-F00:0474       	DC.W	$F0A0		; foreground color
-               S01:00FF0448:  F0 A0
-F00:0475       	DC.W	$F222		; background color
-               S01:00FF044A:  F2 22
-F00:0476       	DC.L	CHAR_RAM	; pixel_data
-               S01:00FF044C:  00 F1 00 00
-F00:0477       	DC.L	$F00000		; character_data
-               S01:00FF0450:  00 F0 00 00
-F00:0478       	DC.L	$F00800		; character_color_data
-               S01:00FF0454:  00 F0 08 00
-F00:0479       	DC.L	$FF0000		; background_color_data
-               S01:00FF0458:  00 FF 00 00
-F00:0480       	DC.L	$0		; user_data
-               S01:00FF045C:  00 00 00 00
-F00:0481       
+F00:0466       	LEA	timer2_handler,A0
+               S01:00FF03C8:  41 FA FF 34
+F00:0467       	MOVE.L	A0,TIMER2_VECTOR
+               S01:00FF03CC:  23 C8 00 00 80 0C
+F00:0468       
+F00:0469       	LEA	timer3_handler,A0
+               S01:00FF03D2:  41 FA FF 2C
+F00:0470       	MOVE.L	A0,TIMER3_VECTOR
+               S01:00FF03D6:  23 C8 00 00 80 10
+F00:0471       
+F00:0472       	RTS
+               S01:00FF03DC:  4E 75
+F00:0473       
+F00:0474       reset_sids
+F00:0475       	; very basic, needs work
+F00:0476       	; max volume for both sids
+F00:0477       	LEA	SID0_BASE,A0
+               S01:00FF03DE:  41 F9 00 FE 05 00
+F00:0478       	MOVE.B	#$0F,$18(A0)
+               S01:00FF03E4:  11 7C 00 0F 00 18
+F00:0479       	LEA	SID1_BASE,A0
+               S01:00FF03EA:  41 F9 00 FE 05 20
+F00:0480       	MOVE.B	#$0F,$18(A0)
+               S01:00FF03F0:  11 7C 00 0F 00 18
+F00:0481       	RTS
+               S01:00FF03F6:  4E 75
 F00:0482       
-F00:0483       ; string data
-F00:0484       
-F00:0485       welcome
-F00:0486       	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200719",ASCII_LF,ASCII_NULL
+F00:0483       
+F00:0484       se_activate_cursor
+F00:0485       	MOVEM.L	D0/A0,-(SP)
+               S01:00FF03F8:  48 E7 80 80
+F00:0486       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+               S01:00FF03FC:  20 79 00 FE 04 04
+F00:0487       	MOVE.W	CURSOR_POS,D0
+               S01:00FF0402:  30 39 00 00 80 02
+F00:0488       	EORI.B	#%10000000,(A0,D0)
+               S01:00FF0408:  0A 30 00 80 00 00
+F00:0489       	MOVEM.L	(SP)+,D0/A0
+               S01:00FF040E:  4C DF 01 01
+F00:0490       	RTS
+               S01:00FF0412:  4E 75
+F00:0491       
+F00:0492       se_deactivate_cursor
+F00:0493       	MOVEM.L	D0/A0,-(SP)
+               S01:00FF0414:  48 E7 80 80
+F00:0494       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+               S01:00FF0418:  20 79 00 FE 04 04
+F00:0495       	MOVE.W	CURSOR_POS,D0
+               S01:00FF041E:  30 39 00 00 80 02
+F00:0496       	EORI.B	#%10000000,(A0,D0)
+               S01:00FF0424:  0A 30 00 80 00 00
+F00:0497       	MOVEM.L	(SP)+,D0/A0
+               S01:00FF042A:  4C DF 01 01
+F00:0498       	RTS
+               S01:00FF042E:  4E 75
+F00:0499       
+F00:0500       ; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
+F00:0501       
+F00:0502       	ALIGN	5
+F00:0503       screen_blit_structure
+F00:0504       	DC.B	%00001000	; flags 0 - tile mode, simple color, color per tile
+               S01:00FF0440:  08
+F00:0505       	DC.B	%00000000	; flags 1 - no stretching, mirroring etc
+               S01:00FF0441:  00
+F00:0506       	DC.B	%01010110	; height 2^%101 = 32 chars = 256 pixels, width 2^%110 = 64 chars  = 512 pixels
+               S01:00FF0442:  56
+F00:0507       	DC.B	%00000000	; currently unused.... :-)
+               S01:00FF0443:  00
+F00:0508       	DC.W	$0		; x (0)
+               S01:00FF0444:  00 00
+F00:0509       	DC.W	$10		; y (16)
+               S01:00FF0446:  00 10
+F00:0510       	DC.W	$F0A0		; foreground color
+               S01:00FF0448:  F0 A0
+F00:0511       	DC.W	$F222		; background color
+               S01:00FF044A:  F2 22
+F00:0512       	DC.L	CHAR_RAM	; pixel_data
+               S01:00FF044C:  00 F1 00 00
+F00:0513       	DC.L	$F00000		; character_data
+               S01:00FF0450:  00 F0 00 00
+F00:0514       	DC.L	$F00800		; character_color_data
+               S01:00FF0454:  00 F0 08 00
+F00:0515       	DC.L	$FF0000		; background_color_data
+               S01:00FF0458:  00 FF 00 00
+F00:0516       	DC.L	$0		; user_data
+               S01:00FF045C:  00 00 00 00
+F00:0517       
+F00:0518       
+F00:0519       ; string data
+F00:0520       
+F00:0521       welcome
+F00:0522       	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200719",ASCII_LF,ASCII_NULL
                S01:00FF0460:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
                S01:00FF0470:  30 32 30 20 6B 65 72 6E 65 6C 20 30 2E 31 2E 32
                S01:00FF0480:  0A
                S01:00FF0481:  00
-F00:0487       
-F00:0488       	ALIGN	1
-F00:0489       
-F00:0490       	INCLUDE	"kernel_tables.s"
+F00:0523       
+F00:0524       	ALIGN	1
+F00:0525       
+F00:0526       	INCLUDE	"kernel_tables.s"
 F02:0001       ; rom tables
 F02:0002       
 F02:0003       ascii_to_screencode
@@ -1616,9 +1661,9 @@ F02:0177       	DC.B	$F0,$F1,$F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9,$FA,$FB,$FC,$FD,$FE
                S01:00FF06D5:  FD
                S01:00FF06D6:  FE
                S01:00FF06D7:  FF
-F00:0491       
-F00:0492       	ORG	KERNEL_LOC+$FFFC
-F00:0493       	DC.L	$DEADBEEF
+F00:0527       
+F00:0528       	ORG	KERNEL_LOC+$FFFC
+F00:0529       	DC.L	$DEADBEEF
                S02:00FFFFFC:  DE AD BE EF
 
 
@@ -1636,52 +1681,55 @@ F02  kernel_tables.s
 Symbols:
 test_table EXPR(16713176=0xff05d8) UNUSED ABS 
 hex_table EXPR(16712970=0xff050a) UNUSED ABS 
- copy_charrom_to_charram .4 EXPR(16712548=0xff0364) ABS 
- copy_charrom_to_charram .3 EXPR(16712544=0xff0360) ABS 
- copy_charrom_to_charram .2 EXPR(16712532=0xff0354) ABS 
- copy_charrom_to_charram .5 EXPR(16712556=0xff036c) ABS 
- copy_charrom_to_charram .1 EXPR(16712520=0xff0348) ABS 
- memcopy .1 EXPR(16712486=0xff0326) ABS 
-timer3_handler EXPR(16712480=0xff0320) ABS 
-timer2_handler EXPR(16712478=0xff031e) ABS 
-timer1_handler EXPR(16712458=0xff030a) ABS 
-timer0_handler EXPR(16712446=0xff02fe) ABS 
-interrupt_7_autovector EXPR(16712444=0xff02fc) ABS 
-interrupt_6_autovector EXPR(16712442=0xff02fa) ABS 
-interrupt_5_autovector EXPR(16712436=0xff02f4) ABS 
-timer_finish EXPR(16712432=0xff02f0) ABS 
-timer3_check EXPR(16712406=0xff02d6) ABS 
-timer2_check EXPR(16712380=0xff02bc) ABS 
-timer1_check EXPR(16712354=0xff02a2) ABS 
-timer0_check EXPR(16712328=0xff0288) UNUSED ABS 
-interrupt_4_autovector EXPR(16712326=0xff0286) ABS 
-interrupt_2_autovector EXPR(16712282=0xff025a) ABS 
-exception_handler EXPR(16712270=0xff024e) ABS 
- put_string .2 EXPR(16712266=0xff024a) ABS 
- put_string .1 EXPR(16712254=0xff023e) ABS 
- put_char .end EXPR(16712246=0xff0236) ABS 
- put_char .5 EXPR(16712234=0xff022a) ABS 
- put_char .4 EXPR(16712218=0xff021a) ABS 
- put_char .3 EXPR(16712204=0xff020c) ABS 
- put_char .2 EXPR(16712188=0xff01fc) ABS 
- put_char .1 EXPR(16712172=0xff01ec) ABS 
+ copy_charrom_to_charram .4 EXPR(16712558=0xff036e) ABS 
+ copy_charrom_to_charram .3 EXPR(16712554=0xff036a) ABS 
+ copy_charrom_to_charram .2 EXPR(16712542=0xff035e) ABS 
+ copy_charrom_to_charram .5 EXPR(16712566=0xff0376) ABS 
+ copy_charrom_to_charram .1 EXPR(16712530=0xff0352) ABS 
+ memcopy .1 EXPR(16712496=0xff0330) ABS 
+ blockfill_words .1 EXPR(16712476=0xff031c) ABS 
+ blockfill_bytes .1 EXPR(16712454=0xff0306) ABS 
+timer3_handler EXPR(16712448=0xff0300) ABS 
+timer2_handler EXPR(16712446=0xff02fe) ABS 
+timer1_handler EXPR(16712426=0xff02ea) ABS 
+timer0_handler EXPR(16712414=0xff02de) ABS 
+interrupt_7_autovector EXPR(16712412=0xff02dc) ABS 
+interrupt_6_autovector EXPR(16712410=0xff02da) ABS 
+interrupt_5_autovector EXPR(16712404=0xff02d4) ABS 
+timer_finish EXPR(16712400=0xff02d0) ABS 
+timer3_check EXPR(16712374=0xff02b6) ABS 
+timer2_check EXPR(16712348=0xff029c) ABS 
+timer1_check EXPR(16712322=0xff0282) ABS 
+timer0_check EXPR(16712296=0xff0268) UNUSED ABS 
+interrupt_4_autovector EXPR(16712294=0xff0266) ABS 
+interrupt_2_autovector EXPR(16712250=0xff023a) ABS 
+exception_handler EXPR(16712238=0xff022e) ABS 
+ put_string .2 EXPR(16712234=0xff022a) ABS 
+ put_string .1 EXPR(16712222=0xff021e) ABS 
+ put_char .end EXPR(16712214=0xff0216) ABS 
+ put_char .5 EXPR(16712202=0xff020a) ABS 
+ put_char .4 EXPR(16712186=0xff01fa) ABS 
+ put_char .3 EXPR(16712172=0xff01ec) ABS 
+ put_char .2 EXPR(16712156=0xff01dc) ABS 
+ put_char .1 EXPR(16712140=0xff01cc) ABS 
 ascii_to_screencode EXPR(16712842=0xff048a) ABS 
- clear_screen .1 EXPR(16712062=0xff017e) ABS 
-put_char EXPR(16712076=0xff018c) ABS 
-se_deactivate_cursor EXPR(16712714=0xff040a) ABS 
+blockfill_words EXPR(16712468=0xff0314) ABS 
+blockfill_bytes EXPR(16712450=0xff0302) ABS 
+put_char EXPR(16712044=0xff016c) ABS 
+se_deactivate_cursor EXPR(16712724=0xff0414) ABS 
  mainloop .2 EXPR(16711968=0xff0120) ABS 
  mainloop .1 EXPR(16711950=0xff010e) ABS 
-se_activate_cursor EXPR(16712686=0xff03ee) ABS 
+se_activate_cursor EXPR(16712696=0xff03f8) ABS 
 mainloop EXPR(16711938=0xff0102) UNUSED ABS 
 notes EXPR(16712986=0xff051a) ABS 
-put_string EXPR(16712252=0xff023c) ABS 
+put_string EXPR(16712220=0xff021c) ABS 
 welcome EXPR(16712800=0xff0460) ABS 
 clear_screen EXPR(16712002=0xff0142) ABS 
-memcopy EXPR(16712482=0xff0322) ABS 
+memcopy EXPR(16712492=0xff032c) ABS 
 screen_blit_structure EXPR(16712768=0xff0440) ABS 
-copy_charrom_to_charram EXPR(16712502=0xff0336) ABS 
-reset_sids EXPR(16712660=0xff03d4) ABS 
-setup_vector_table EXPR(16712562=0xff0372) ABS 
+copy_charrom_to_charram EXPR(16712512=0xff0340) ABS 
+reset_sids EXPR(16712670=0xff03de) ABS 
+setup_vector_table EXPR(16712572=0xff037c) ABS 
 kernel_main EXPR(16711688=0xff0008) ABS 
 SE_CRS_INTERVAL EXPR(32866=0x8062) UNUSED EQU 
 SE_CRS_CNTDWN EXPR(32865=0x8061) UNUSED EQU 
@@ -1834,6 +1882,7 @@ CIA_STATUS EXPR(16646912=0xfe0300) UNUSED EQU
 CIA_BASE EXPR(16646912=0xfe0300) EQU 
 CHAR_RAM EXPR(15794176=0xf10000) EQU 
 CHAR_ROM EXPR(16580608=0xfd0000) EQU 
+SCRN_SPACE EXPR(32=0x20) EQU 
 ASCII_CURSOR_LEFT EXPR(157=0x9d) EQU 
 ASCII_CURSOR_UP EXPR(145=0x91) EQU 
 ASCII_CURSOR_RIGHT EXPR(29=0x1d) EQU 
@@ -1853,7 +1902,7 @@ KERNEL_LOC EXPR(16711680=0xff0000) EQU
 _MOVEMBYTES EXPR(8=0x8) INTERNAL 
  MOVEMSIZE EXPR(4=0x4) INTERNAL 
 _MOVEMREGS EXPR(257=0x101) INTERNAL 
-__LINE__ EXPR(493=0x1ed) INTERNAL 
+__LINE__ EXPR(529=0x211) INTERNAL 
 __FO EXPR(0=0x0) INTERNAL 
 __RS EXPR(0=0x0) INTERNAL 
 REPTN EXPR(-1=0xffffffff) INTERNAL 
