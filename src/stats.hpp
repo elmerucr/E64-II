@@ -45,7 +45,7 @@ private:
     char statistics_string[256];
     
 public:
-    void reset_measurement();
+    void reset();
     
     uint32_t nominal_time_per_frame;      // in microseconds
     

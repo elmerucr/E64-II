@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     
     std::chrono::time_point<std::chrono::steady_clock> screen_update_moment = std::chrono::steady_clock::now();
     
-    statistics.reset_measurement();
+    statistics.reset();
     
     while(pc.running)
     {

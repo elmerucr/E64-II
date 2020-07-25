@@ -13,7 +13,7 @@
 #include "common.hpp"
 
 
-void E64::stats::reset_measurement()
+void E64::stats::reset()
 {
     total_time = 0;
     total_idle_time = 0;

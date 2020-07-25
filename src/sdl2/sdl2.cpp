@@ -76,7 +76,7 @@ int E64::sdl2_process_events()
 
     bool shift_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LSHIFT] | E64_sdl2_keyboard_state[SDL_SCANCODE_RSHIFT];
     bool alt_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LALT] | E64_sdl2_keyboard_state[SDL_SCANCODE_RALT];
-    bool gui_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LGUI] | E64_sdl2_keyboard_state[SDL_SCANCODE_RGUI];
+    //bool gui_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LGUI] | E64_sdl2_keyboard_state[SDL_SCANCODE_RGUI];
 
     while(SDL_PollEvent(&event))
     {
@@ -97,6 +97,7 @@ int E64::sdl2_process_events()
                 {
                     E64::sdl2_wait_until_r_released();
                     pc.reset();
+                    statistics.reset();
                 }
                 else if(pc.current_mode == NORMAL_MODE)
                 {

@@ -205,6 +205,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         debug_console_put_char('\n');
         pc.reset();
+        statistics.reset();
     }
     else if( strcmp(token0, "sb") == 0)
     {
