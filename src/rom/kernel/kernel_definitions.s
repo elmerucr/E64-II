@@ -206,3 +206,5 @@ LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
 SE_CRS_BLINK	equ	$008060	; byte (actually least significant bit), 0=off, 1=currently blinking
 SE_CRS_CNTDWN	equ	$008061	; byte, counter for blinking interval
 SE_CRS_INTERVAL	equ	$008062	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
+SE_ORIG_CHAR	equ	$008063	; byte, original value of the char behind the cursor
+SE_ORIG_COLOR	equ	$008084	; word, original value of the color value behind the cursor

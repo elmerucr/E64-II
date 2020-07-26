@@ -73,6 +73,8 @@ kernel_main
 	; reset cursor position  -  deprecated
 	MOVE.W	#$0,CURSOR_POS
 
+	MOVE.B	#$14,SE_CRS_INTERVAL	; blinking interval at 20 (0.33s)
+
 
 	; clear screen and print welcome
 
@@ -113,17 +115,17 @@ mainloop
 
 	JSR	se_activate_cursor
 
-	; copy keyboard state onto screen
-.1	MOVEQ	#$0,D0
-	MOVEA.L	VICV_TXT,A0
-	LEA	$400(A0),A0
-	LEA	CIA_KEYBOARD,A1
-.2	MOVE.B	(A1,D0),(A0,D0)
-	ADDQ	#$1,D0
-	CMP.B	#$45,D0
-	BNE	.2
+;	; copy keyboard state onto screen
+;.1	MOVEQ	#$0,D0
+;	MOVEA.L	VICV_TXT,A0
+;	LEA	$400(A0),A0
+;	LEA	CIA_KEYBOARD,A1
+;.2	MOVE.B	(A1,D0),(A0,D0)
+;	ADDQ	#$1,D0
+;	CMP.B	#$45,D0
+;	BNE	.2
 
-	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
+.1	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
 	BEQ.S	.1			; if 0 (nothing), jump to .1
 	JSR	se_deactivate_cursor
 	JSR	put_char		; process input
@@ -300,9 +302,15 @@ interrupt_7_autovector
 
 timer0_handler
 
-	;
-	MOVEA.L	VICV_TXT,A0
-	ADDQ.B	#1,$7FF(A0)
+	; cursor flash etc...
+	MOVEM.L	D0/A0,-(SP)
+	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+	MOVE.W	CURSOR_POS,D0
+	SUBQ.B	#$1,SE_CRS_CNTDWN
+	BNE	.1
+	EORI.B	#%10000000,(A0,D0)
+	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
+.1	MOVEM.L	(SP)+,D0/A0
 
 	BRA	timer1_check
 
@@ -482,19 +490,25 @@ reset_sids
 
 
 se_activate_cursor
-	MOVEM.L	D0/A0,-(SP)
+	MOVEM.L	D0/A0-A1,-(SP)
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+	MOVEA.L	VICV_COL,A1
 	MOVE.W	CURSOR_POS,D0
+	MOVE.B	(A0,D0),SE_ORIG_CHAR
 	EORI.B	#%10000000,(A0,D0)
-	MOVEM.L	(SP)+,D0/A0
+	MOVE.B	#$1,SE_CRS_BLINK
+	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
+	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
 
 se_deactivate_cursor
-	MOVEM.L	D0/A0,-(SP)
+	MOVEM.L	D0/A0-A1,-(SP)
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
+	MOVEA.L	VICV_COL,A1
 	MOVE.W	CURSOR_POS,D0
-	EORI.B	#%10000000,(A0,D0)
-	MOVEM.L	(SP)+,D0/A0
+	MOVE.B	SE_ORIG_CHAR,(A0,D0)
+	MOVE.B	#$0,SE_CRS_BLINK
+	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
 
 ; kernel text screen blit desciption (rom description, copied to kernel ram area, also 32 byte aligned)
@@ -519,7 +533,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200719",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200726",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
