@@ -26,8 +26,8 @@ kernel_main
 
 	; set up timer1 interrupts (ting sound)
 
-	MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
-	ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock0
+	;MOVE.W	#$3C,TIMER_BASE+2	; load value 60 ($3c = 60bpm = 1Hz)
+	;ORI.B	#%00000010,TIMER_BASE+1	; turn on interrupt generation by clock0
 
 
 	; set up timer3 interrupts at 50.125Hz for music / sid tunes
@@ -170,6 +170,8 @@ put_char
 	BEQ	.4
 	CMP.B	#ASCII_CURSOR_LEFT,D0
 	BEQ	.5
+	CMP.B	#ASCII_BACKSPACE,D0
+	BEQ	.6
 	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
 	MOVE.B	D0,(A0,D1)
 	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
@@ -196,6 +198,8 @@ put_char
 .5	SUBI.W	#$1,D1			; cursor left
 	ANDI.W	#$7FF,D1
 	MOVE.W	D1,CURSOR_POS
+	BRA	.end
+.6	; implement code for backspace
 .end	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
 	RTS
 
@@ -317,10 +321,7 @@ timer0_handler
 
 timer1_handler
 
-	LEA	SID0_BASE,A0
-	MOVE.B	#%00100000,$4(A0)
-	ORI.B	#%00100001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
-
+	;
 	BRA	timer2_check
 
 

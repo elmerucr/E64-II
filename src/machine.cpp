@@ -158,4 +158,5 @@ void E64::machine::reset()
     timer_ic->reset();
     cia_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
+    debug_console_print("system reset\n");
 }

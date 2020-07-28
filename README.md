@@ -36,7 +36,7 @@ $ ./E64-II
 ### Assembling the kernel ROM
 The sourcecode comes with a working version of the kernel ````kernel.cpp````. If you want to build it yourself however, you can do the following:
 * Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
-* In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.asm```` sourcefiles into a binary rom image. Furthermore, a small ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the larger E64-II project.
+* In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.s```` sourcefiles into a binary rom image. Furthermore, the ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the E64-II build.
 ## Other websites and projects of interest
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
 * [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others.

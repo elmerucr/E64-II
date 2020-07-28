@@ -72,17 +72,21 @@ void E64::sdl2_init()
 int E64::sdl2_process_events()
 {
     int return_value = NO_EVENT;
+    
     SDL_Event event;
 
     bool shift_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LSHIFT] | E64_sdl2_keyboard_state[SDL_SCANCODE_RSHIFT];
-    bool alt_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LALT] | E64_sdl2_keyboard_state[SDL_SCANCODE_RALT];
-    //bool gui_pressed = E64_sdl2_keyboard_state[SDL_SCANCODE_LGUI] | E64_sdl2_keyboard_state[SDL_SCANCODE_RGUI];
+    bool alt_pressed   = E64_sdl2_keyboard_state[SDL_SCANCODE_LALT]   | E64_sdl2_keyboard_state[SDL_SCANCODE_RALT];
+    //bool gui_pressed   = E64_sdl2_keyboard_state[SDL_SCANCODE_LGUI]   | E64_sdl2_keyboard_state[SDL_SCANCODE_RGUI];
 
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
         {
             case SDL_KEYDOWN:
+                
+                return_value = KEYPRESS_EVENT;          // default at keydown, may change to QUIT_EVENT
+                
                 if(event.key.keysym.sym == SDLK_F9)
                 {
                     E64::sdl2_wait_until_f9_released();
@@ -98,6 +102,11 @@ int E64::sdl2_process_events()
                     E64::sdl2_wait_until_r_released();
                     pc.reset();
                     statistics.reset();
+                }
+                else if( (event.key.keysym.sym == SDLK_q) && alt_pressed )
+                {
+                    E64::sdl2_wait_until_q_released();
+                    return_value = QUIT_EVENT;
                 }
                 else if(pc.current_mode == NORMAL_MODE)
                 {
@@ -292,7 +301,6 @@ int E64::sdl2_process_events()
                             break;
                     }
                 }
-                return_value = KEYPRESS_EVENT;
                 break;
             case SDL_WINDOWEVENT:
                 if(event.window.event == SDL_WINDOWEVENT_RESIZED)
@@ -371,9 +379,7 @@ int E64::sdl2_process_events()
         pc.cia_ic->keys_last_known_state[SCANCODE_SLASH] = E64_sdl2_keyboard_state[SDL_SCANCODE_SLASH] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_RSHIFT] = E64_sdl2_keyboard_state[SDL_SCANCODE_RSHIFT] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_LCTRL] = E64_sdl2_keyboard_state[SDL_SCANCODE_LCTRL] ? 0x01 : 0x00;
-        //pc.cia_ic->keys_last_known_state[SCANCODE_LALT] = E64_sdl2_keyboard_state[SDL_SCANCODE_LALT] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_SPACE] = E64_sdl2_keyboard_state[SDL_SCANCODE_SPACE] ? 0x01 : 0x00;
-        //pc.cia_ic->keys_last_known_state[SCANCODE_RALT] = E64_sdl2_keyboard_state[SDL_SCANCODE_RALT] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_RCTRL] = E64_sdl2_keyboard_state[SDL_SCANCODE_RCTRL] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_LEFT] = E64_sdl2_keyboard_state[SDL_SCANCODE_LEFT] ? 0x01 : 0x00;
         pc.cia_ic->keys_last_known_state[SCANCODE_UP] = E64_sdl2_keyboard_state[SDL_SCANCODE_UP] ? 0x01 : 0x00;
@@ -413,6 +419,18 @@ void E64::sdl2_wait_until_f_released()
     while(wait) {
         SDL_PollEvent(&event);
         if( (event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_f) ) wait = false;
+        std::this_thread::sleep_for(std::chrono::microseconds(40000));
+    }
+}
+
+
+void E64::sdl2_wait_until_q_released()
+{
+    SDL_Event event;
+    bool wait = true;
+    while(wait) {
+        SDL_PollEvent(&event);
+        if( (event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_q) ) wait = false;
         std::this_thread::sleep_for(std::chrono::microseconds(40000));
     }
 }
