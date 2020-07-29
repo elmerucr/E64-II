@@ -72,20 +72,6 @@ kernel_main
 
 	MOVE.W	#C64_LIGHTBLUE,CURR_TEXT_COLOR
 
-
-	; reset cursor position  -  deprecated
-	MOVE.W	#$0,CURSOR_POS
-
-	MOVE.B	#$14,SE_CRS_INTERVAL	; blinking interval at 20 (0.33s)
-
-
-	; clear screen and print welcome
-
-	BSR	se_clear_screen
-	LEA	welcome,A0
-	BSR	put_string
-
-
 	; play a welcome sound on SID0
 
 	LEA	SID0_BASE,A0
@@ -111,7 +97,11 @@ kernel_main
 
 
 mainloop
-
+	BSR	se_clear_screen
+	MOVE.W	#$0,CURSOR_POS		; reset cursor position
+	MOVE.B	#$14,SE_CRS_INTERVAL	; blinking interval at 20 (0.33s)
+	LEA	welcome,A0
+	BSR	put_string
 	JSR	se_activate_cursor
 
 .start	CLR.L	D0
@@ -194,17 +184,30 @@ put_char
 	BEQ	.bs
 
 	; it's not a control character so print it
-	MOVE.B	(A2,D0),D0		; change ascii value into screencode value
-	MOVE.B	D0,(A0,D1)
-	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
-	MOVE.W	D2,(A1,D1)
-	ADDQ	#$1,CURSOR_POS
-	ANDI.W	#$7FF,CURSOR_POS
+.char	MOVE.B	(A2,D0),D0		; change ascii value into screencode value
+	MOVE.B	D0,(A0,D1)		; copy the char into screen
+	MOVE.W	D1,D3			; copy cursor position into D3
+	LSL.W	#$1,D3			; multiply index by two (color values are words contrary to tiles)
+	MOVE.W	D2,(A1,D3)		; copy the color value
+	ADDQ	#$1,D1			; increase the cursor position by one
+
+	MOVE.W	D1,D3
+	ANDI.W	#$F800,D3		; are we outside screen memory?
+	BEQ	.char2			; no, go to .char2
+	JSR	se_scroll_up		; yes, scroll 1 row upwards
+	SUBI.W	#$40,D1			; subtract 64 positions from the cursor position
+.char2	MOVE.W	D1,CURSOR_POS
 	BRA	.end
 
 .lf	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
-	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
-	MOVE.W	D1,CURSOR_POS		; store new value
+	;ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
+	ANDI.W	#%1111111111000000,D1	; move cursor pos to beginning of line
+	MOVE.W	D1,D3
+	ANDI.W	#$F800,D3		; are we outside screen memory?
+	BEQ	.lf2			; no, go to .lf2
+	JSR	se_scroll_up		; yes, scroll 1 row upwards
+	SUBI.W	#$40,D1			; subtract 64 positions from the cursor position
+.lf2	MOVE.W	D1,CURSOR_POS		; store new value
 	BRA	.end
 
 .down	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
@@ -217,8 +220,13 @@ put_char
 	BRA	.end
 
 .right	ADDI.W	#$1,D1			; cursor right
-	ANDI.W	#$7FF,D1
-	MOVE.W	D1,CURSOR_POS
+	;ANDI.W	#$7FF,D1
+	MOVE.W	D1,D2
+	ANDI.W	#$F800,D2
+	BEQ	.right2
+	BSR	se_scroll_up
+	SUBI.W	#$40,D1
+.right2	MOVE.W	D1,CURSOR_POS
 	BRA	.end
 
 .up	SUBI.W	#$40,D1			; cursor up
@@ -357,8 +365,8 @@ timer0_handler
 	; cursor flash
 	MOVEM.L	D0/A0,-(SP)
 
-	BTST.B	#$1,SE_CRS_BLINK
-	BNE	.end
+	BTST.B	#$0,SE_CRS_BLINK
+	BEQ	.end
 
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVE.W	CURSOR_POS,D0
