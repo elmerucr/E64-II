@@ -17,6 +17,9 @@ kernel_main
 	BSR	reset_sids
 	BSR	copy_charrom_to_charram
 
+	; put something in the usp
+	LEA	$C00000,A0
+	MOVE.L	A0,USP
 
 	; set up timer0 interrupts (cursor flashing)
 
@@ -63,7 +66,7 @@ kernel_main
 	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
 
 
-	; set txt pointer  -  deprecated!
+	; set txt & color pointer  -  deprecated!
 	MOVE.L	#$00F00000,VICV_TXT
 	MOVE.L	#$00F00800,VICV_COL
 
@@ -78,7 +81,7 @@ kernel_main
 
 	; clear screen and print welcome
 
-	BSR	clear_screen
+	BSR	se_clear_screen
 	LEA	welcome,A0
 	BSR	put_string
 
@@ -87,54 +90,43 @@ kernel_main
 
 	LEA	SID0_BASE,A0
 	LEA	notes,A1
-	MOVE.W	(N_D3_,A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,($5,A0)	; attack and decay of voice 1
-	MOVE.W	#$F0F,($02,A0)		; pulse width of voice 1
-	MOVE.B	#$FF,(SID0_LEFT,A0)	; left channel mix
-	MOVE.B	#$10,(SID0_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,($4,A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.W	N_D3_(A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
+	MOVE.W	#$F0F,$02(A0)		; pulse width of voice 1
+	MOVE.B	#$FF,SID0_LEFT		; left channel mix
+	MOVE.B	#$10,SID0_RGHT		; right channel mix
+	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 	; play a welcome sound on SID1
 
 	LEA	SID1_BASE,A0
 	LEA	notes,A1
-	MOVE.W	(N_A3_,A1),(A0)		; set frequency of voice 1
-	MOVE.B	#%00001001,($5,A0)	; attack and decay of voice 1
-	MOVE.W	#$F0F,($2,A0)		; pulse width of voice 1
-	MOVE.B	#$10,(SID1_LEFT,A0)	; left channel mix
-	MOVE.B	#$FF,(SID1_RGHT,A0)	; right channel mix
-	MOVE.B	#%01000001,($4,A0)	; pulse (bit 6) and open gate (bit 0)
+	MOVE.W	N_A3_(A1),(A0)		; set frequency of voice 1
+	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
+	MOVE.W	#$F0F,$2(A0)		; pulse width of voice 1
+	MOVE.B	#$10,SID1_LEFT		; left channel mix
+	MOVE.B	#$FF,SID1_RGHT		; right channel mix
+	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
 
 
 mainloop
 
-	; put something in the usp
-	LEA	$C00000,A0
-	MOVE	A0,USP
-
 	JSR	se_activate_cursor
 
-;	; copy keyboard state onto screen
-;.1	MOVEQ	#$0,D0
-;	MOVEA.L	VICV_TXT,A0
-;	LEA	$400(A0),A0
-;	LEA	CIA_KEYBOARD,A1
-;.2	MOVE.B	(A1,D0),(A0,D0)
-;	ADDQ	#$1,D0
-;	CMP.B	#$45,D0
-;	BNE	.2
-
-.1	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii
-	BEQ.S	.1			; if 0 (nothing), jump to .1
+.start	CLR.L	D0
+	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii value
+	BEQ.S	.start			; if 0 (nothing), jump to .start
 	JSR	se_deactivate_cursor
 	JSR	put_char		; process input
 	JSR	se_activate_cursor
 
-	BRA.S	.1
+	BRA.S	.start
 
 
-clear_screen
+se_clear_screen
+
+	MOVEM.L	D0-D1/A0,-(SP)
 
 	MOVEA.L	(VICV_TXT),A0
 	MOVE.L	#$800,D0
@@ -146,14 +138,42 @@ clear_screen
 	MOVE.W	#C64_LIGHTBLUE,D1
 	JSR	blockfill_words
 
+	MOVEM.L	(SP)+,D0-D1/A0
 	RTS
 
+
+se_scroll_up
+
+	MOVEM.L	D0/A0-A1,-(SP)
+
+	MOVE.L	#$7C0,D0
+
+	MOVEA.L	(VICV_TXT),A0
+	MOVEA.L	(VICV_COL),A1
+
+.1	MOVE.B	$40(A0),(A0)
+	MOVE.W	$80(A1),(A1)
+	ADDA	#$1,A0
+	ADDA	#$2,A1
+	SUBQ	#$1,D0
+	BNE	.1
+
+.2	MOVE.B	#ASCII_SPACE,(A0)
+	MOVE.W	CURR_TEXT_COLOR,(A1)
+	ADDA	#$1,A0
+	ADDA	#$2,A1
+	ADDQ	#$1,D0
+	CMPI.W	#$40,D0
+	BNE	.2
+
+	MOVEM.L	(SP)+,D0/A0-A1
+	RTS
 
 ; put_char expects an ascii value in register D0
 
 put_char
 
-	MOVEM.L	D1-D2/A0-A2,-(SP)	; save registers
+	MOVEM.L	D1-D3/A0-A2,-(SP)	; save registers
 	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
 	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
@@ -161,46 +181,73 @@ put_char
 	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
 	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
 	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
-	BEQ	.1
+	BEQ	.lf
 	CMP.B	#ASCII_CURSOR_DOWN,D0
-	BEQ	.2
+	BEQ	.down
 	CMP.B	#ASCII_CURSOR_RIGHT,D0
-	BEQ	.3
+	BEQ	.right
 	CMP.B	#ASCII_CURSOR_UP,D0
-	BEQ	.4
+	BEQ	.up
 	CMP.B	#ASCII_CURSOR_LEFT,D0
-	BEQ	.5
+	BEQ	.left
 	CMP.B	#ASCII_BACKSPACE,D0
-	BEQ	.6
-	MOVE.B	(A2,D0),D0		; change the ascii value to a screencode value
+	BEQ	.bs
+
+	; it's not a control character so print it
+	MOVE.B	(A2,D0),D0		; change ascii value into screencode value
 	MOVE.B	D0,(A0,D1)
 	LSL.W	#$1,D1			; multiply index by two (color values are words contrary to tiles)
 	MOVE.W	D2,(A1,D1)
 	ADDQ	#$1,CURSOR_POS
 	ANDI.W	#$7FF,CURSOR_POS
 	BRA	.end
-.1	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
+
+.lf	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
 	ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
 	MOVE.W	D1,CURSOR_POS		; store new value
 	BRA	.end
-.2	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
-	ANDI.W	#$7FF,D1		; confine cursor to screen
-	MOVE.W	D1,CURSOR_POS		; store new value
+
+.down	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
+	MOVE.W	D1,D2
+	ANDI.W	#$F800,D2
+	BEQ	.down2
+	BSR	se_scroll_up
 	BRA	.end
-.3	ADDI.W	#$1,D1			; cursor right
+.down2	MOVE.W	D1,CURSOR_POS		; store new value
+	BRA	.end
+
+.right	ADDI.W	#$1,D1			; cursor right
 	ANDI.W	#$7FF,D1
 	MOVE.W	D1,CURSOR_POS
 	BRA	.end
-.4	SUBI.W	#$40,D1			; cursor up
+
+.up	SUBI.W	#$40,D1			; cursor up
+	BMI	.end			; stop if cursor out of screen, don't store position
 	ANDI.W	#$7FF,D1
 	MOVE.W	D1,CURSOR_POS
 	BRA	.end
-.5	SUBI.W	#$1,D1			; cursor left
+
+.left	SUBI.W	#$1,D1			; cursor left
+	BMI	.end			; stop if cursor out of screen, don't store position
 	ANDI.W	#$7FF,D1
 	MOVE.W	D1,CURSOR_POS
 	BRA	.end
-.6	; implement code for backspace
-.end	MOVEM.L	(SP)+,D1-D2/A0-A2	; restore registers
+
+.bs	SUBI.W	#$1,D1			; backspace
+	BMI	.end			; stop if cursor out of screen, don't store position
+	ANDI.W	#$7FF,D1
+	MOVE.W	D1,CURSOR_POS		; store the new cursor position
+.bs1	MOVE.W	D1,D3
+	ADDQ	#$1,D3
+	ANDI.W	#%0000000000111111,D3	; are we at positon $3f?
+	BNE	.bs2			; not yet
+	MOVE.B	#ASCII_SPACE,(A0,D1)	; yes, place a space character
+	BRA	.end
+.bs2	MOVE.B	$1(A0,D1),(A0,D1)
+	ADDQ	#$1,D1
+	BRA	.bs1
+
+.end	MOVEM.L	(SP)+,D1-D3/A0-A2	; restore registers
 	RTS
 
 
@@ -210,13 +257,14 @@ put_string
 	; put_string expects a pointer to a string in A0
 	;
 
-	MOVE.L	A0,-(SP)
-.1	MOVE.B	(A0)+,D0	; move the first ascii value of string into D0
-	CMP.B	#ASCII_NULL,D0	; did we reach the end of the string?
-	BEQ	.2		; yes, go to end of function
+	MOVEM.L	A0/D0,-(SP)
+
+.start	MOVE.B	(A0)+,D0	; move ascii value into D0, and move pointer to next char
+	BEQ	.end
 	BSR	put_char	; no, put char
-	BRA	.1
-.2	MOVE.L	(SP)+,A0
+	BRA	.start
+
+.end	MOVEM.L	(SP)+,A0/D0
 	RTS
 
 
@@ -306,16 +354,20 @@ interrupt_7_autovector
 
 timer0_handler
 
-	; cursor flash etc...
+	; cursor flash
 	MOVEM.L	D0/A0,-(SP)
+
+	BTST.B	#$1,SE_CRS_BLINK
+	BNE	.end
+
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVE.W	CURSOR_POS,D0
 	SUBQ.B	#$1,SE_CRS_CNTDWN
-	BNE	.1
+	BNE	.end
 	EORI.B	#%10000000,(A0,D0)
 	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
-.1	MOVEM.L	(SP)+,D0/A0
 
+.end	MOVEM.L	(SP)+,D0/A0
 	BRA	timer1_check
 
 
@@ -342,12 +394,12 @@ blockfill_bytes
 	;
 	;	Arguments
 	;
-	;	A0	start addres
+	;	A0	start address
 	;	D0	number of bytes
 	;	D1	byte value
 	;
 
-	MOVE.L	D2,-(SP)	; save D0
+	MOVE.L	D2,-(SP)	; save D2
 
 	MOVEQ	#$0,D2
 
@@ -364,7 +416,7 @@ blockfill_words
 	;
 	;	Arguments
 	;
-	;	A0	start addres
+	;	A0	start address
 	;	D0	number of words
 	;	D1	word value
 	;
@@ -480,35 +532,55 @@ setup_vector_table
 
 	RTS
 
+
 reset_sids
-	; very basic, needs work
+
+	MOVEM.L	D0-D1/A0,-(SP)
+
+	LEA	SOUND_BASE,A0
+	MOVE.L	#$100,D0
+	MOVE.B	#$00,D1
+	JSR	blockfill_bytes
+
 	; max volume for both sids
-	LEA	SID0_BASE,A0
-	MOVE.B	#$0F,$18(A0)
-	LEA	SID1_BASE,A0
-	MOVE.B	#$0F,$18(A0)
+	MOVE.B	#$0F,SID0_VOLUME
+	MOVE.B	#$0F,SID1_VOLUME
+
+	LEA	SOUND_BASE,A0
+	MOVE.B	#$FF,D0
+	MOVE.B	D0,SID0_LEFT		; left channel mix
+	MOVE.B	D0,SID0_RGHT		; right channel mix
+	MOVE.B	D0,SID1_LEFT		; left channel mix
+	MOVE.B	D0,SID1_RGHT		; right channel mix
+
+	MOVEM.L	(SP)+,D0-D1/A0
+
 	RTS
 
 
 se_activate_cursor
 	MOVEM.L	D0/A0-A1,-(SP)
+
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1
 	MOVE.W	CURSOR_POS,D0
 	MOVE.B	(A0,D0),SE_ORIG_CHAR
 	EORI.B	#%10000000,(A0,D0)
-	MOVE.B	#$1,SE_CRS_BLINK
 	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
+	MOVE.B	#$1,SE_CRS_BLINK	; turn on cursor flash
+
 	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
 
 se_deactivate_cursor
 	MOVEM.L	D0/A0-A1,-(SP)
+
+	MOVE.B	#$0,SE_CRS_BLINK	; turn off cursor flash
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1
 	MOVE.W	CURSOR_POS,D0
 	MOVE.B	SE_ORIG_CHAR,(A0,D0)
-	MOVE.B	#$0,SE_CRS_BLINK
+
 	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
 
@@ -534,7 +606,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.1.20200726",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200729",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 

@@ -1,7 +1,7 @@
 # E64-II
 ![E64](./docs/E64-II_icon.png)
 ## Description
-The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's inspired by the Commodore 64 and the Amiga 500.
+The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's mainly inspired by the Commodore 64 but implements a significant part of Amiga 500 technology as well.
 ## Technical specifications:
 * Motorola 68000 CPU running at 11.88MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.

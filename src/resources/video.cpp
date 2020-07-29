@@ -35,7 +35,7 @@ E64::video::video()
     printf("\n");
     printf("[SDL Video] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
     
-    current_window_size = 3;
+    current_window_size = 4;
     fullscreen = false;
     
     
