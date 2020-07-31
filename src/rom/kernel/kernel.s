@@ -5,7 +5,7 @@
 
 	ORG	KERNEL_LOC
 
-	DC.L	$00E00000		; vector 0 - supervisor stackpointer
+	DC.L	SUPERV_STACK		; vector 0 - supervisor stackpointer
 	DC.L	kernel_main		; vector 1 - reset vector
 
 
@@ -102,18 +102,35 @@ mainloop
 	MOVE.B	#$14,SE_CRS_INTERVAL	; blinking interval at 20 (0.33s)
 	LEA	welcome,A0
 	BSR	put_string
+	LEA	.mes1,A0
+	BSR	put_string
 	JSR	se_activate_cursor
 
-.start	CLR.L	D0
+.main1	CLR.L	D0
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii value
-	BEQ.S	.start			; if 0 (nothing), jump to .start
-	JSR	se_deactivate_cursor
-	JSR	put_char		; process input
-	JSR	se_activate_cursor
+	BEQ.S	.main1			; if 0 (nothing), jump to .start
 
-	BRA.S	.start
+	BSR	se_deactivate_cursor
+	BSR	put_char		; process input
+
+	CMP.B	#ASCII_LF,D0		; did we have a return as keypress?
+	BNE	.main2			; no
+
+	LEA	.mes2,A0		; yes, process command
+	; extract string here...
+	BSR	put_string
+	LEA	.mes1,A0
+	BSR	put_string
+
+.main2	BSR	se_activate_cursor
+
+	BRA.S	.main1
+
+.mes1	DC.B	".",ASCII_NULL
+.mes2	DC.B	"error: illegal command ",ASCII_LF,ASCII_NULL
 
 
+	ALIGN	1
 se_clear_screen
 
 	MOVEM.L	D0-D1/A0,-(SP)
@@ -163,7 +180,7 @@ se_scroll_up
 
 put_char
 
-	MOVEM.L	D1-D3/A0-A2,-(SP)	; save registers
+	MOVEM.L	D0-D3/A0-A2,-(SP)	; save registers
 	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
 	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
 	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
@@ -255,7 +272,7 @@ put_char
 	ADDQ	#$1,D1
 	BRA	.bs1
 
-.end	MOVEM.L	(SP)+,D1-D3/A0-A2	; restore registers
+.end	MOVEM.L	(SP)+,D0-D3/A0-A2	; restore registers, including original ascii in D0
 	RTS
 
 
