@@ -8,14 +8,14 @@
 
 #include <cstdint>
 
-#define IO_CIA_PAGE                 0xfe03
-#define IO_VICV_PAGE                0xfe04
-#define IO_SND_PAGE                 0xfe05
-#define IO_TIMER_PAGE               0xfe06
-#define IO_BLITTER_PAGE             0xfe07
+#define IO_CIA_PAGE                 0xff03
+#define IO_VICV_PAGE                0xff04
+#define IO_SND_PAGE                 0xff05
+#define IO_TIMER_PAGE               0xff06
+#define IO_BLITTER_PAGE             0xff07
 #define IO_RESET_VECTOR_MASK        0xfffff8
-#define IO_PATCHED_CHAR_ROM_MASK    0xfd
-#define IO_KERNEL_MASK              0xff
+#define IO_PATCHED_CHAR_ROM_MASK    0xfe
+#define IO_KERNEL_MASK              0x01
 
 extern uint8_t patched_char_rom[];
 
