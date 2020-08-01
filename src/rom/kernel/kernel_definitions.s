@@ -1,17 +1,10 @@
-; E64 definitions - 2019-11-21 elmerucr
+; E64-II definitions - 2020-08-01 elmerucr
 
+; general
+KERNEL_VARS	equ	$008000
 KERNEL_LOC	equ	$010000
 SUPERV_STACK	equ	$E00000
 
-VEC_04_ILLEGAL_INSTRUCTION		equ	$00000010
-VEC_10_UNIMPL_INSTRUCTION		equ	$00000028
-VEC_11_UNIMPL_INSTRUCTION		equ	$0000002C
-VEC_26_LEVEL2_IRQ_AUTOVECT		equ	$00000068
-VEC_27_LEVEL3_IRQ_AUTOVECT		equ	$0000006c
-VEC_28_LEVEL4_IRQ_AUTOVECT		equ	$00000070
-VEC_29_LEVEL5_IRQ_AUTOVECT		equ	$00000074
-VEC_30_LEVEL6_IRQ_AUTOVECT		equ	$00000078
-VEC_31_LEVEL7_IRQ_AUTOVECT		equ	$0000007C
 
 ; ascii definitions
 ASCII_NULL		equ	$00
@@ -23,12 +16,15 @@ ASCII_SPACE		equ	$20
 ASCII_CURSOR_UP		equ	$91
 ASCII_CURSOR_LEFT	equ	$9D
 
+
 ; scrn_codes
 SCRN_SPACE		equ	$20
+
 
 ; char rom
 CHAR_ROM		equ	$FE0000
 CHAR_RAM		equ	$F10000
+
 
 ; cia
 CIA_BASE		equ	$FF0300
@@ -39,24 +35,40 @@ CIA_REPEAT		equ	CIA_BASE+$03
 CIA_ASCII		equ	CIA_BASE+$04
 CIA_KEYBOARD		equ	CIA_BASE+$80
 
+
 ; vicv
 VICV_BASE		equ	$FF0400 	; vicv base register
 VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
-
 VICV_TXT		equ	VICV_BASE+$04
 VICV_COL		equ	VICV_BASE+$08
 VICV_BORDER_SIZE	equ	VICV_BASE+$0C
 VICV_ISR		equ	VICV_BASE+$0E
 VICV_BUFFERSWAP		equ	VICV_BASE+$10
 
+
+; SOUND
+SOUND_BASE	equ	$FF0500			; base register
+SID0_BASE	equ	SOUND_BASE
+SID0_VOLUME	equ	SID0_BASE+$18
+SID1_BASE	equ	SOUND_BASE+$20
+SID1_VOLUME	equ	SID1_BASE+$18
+; SOUND MIXING
+SID0_LEFT	equ	SOUND_BASE+$80
+SID0_RGHT	equ	SOUND_BASE+$81
+SID1_LEFT	equ	SOUND_BASE+$82
+SID1_RGHT	equ	SOUND_BASE+$83
+
+
 ; timer
 TIMER_BASE		equ	$FF0600
+
 
 ; blitter
 BLITTER_BASE		equ	$FF0700
 BLITTER_CONTROL		equ	BLITTER_BASE
 BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
 BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
+
 
 ; color palette
 C64_BLACK	equ	$F000
@@ -76,20 +88,8 @@ C64_LIGHTGREEN	equ	$FBFA
 C64_LIGHTBLUE	equ	$F67D
 C64_LIGHTGREY	equ	$FAAA
 
-; SOUND
-SOUND_BASE	equ	$FF0500			; base register
-SID0_BASE	equ	SOUND_BASE
-SID0_VOLUME	equ	SID0_BASE+$18
-SID1_BASE	equ	SOUND_BASE+$20
-SID1_VOLUME	equ	SID1_BASE+$18
 
-; SOUND MIXING
-SID0_LEFT	equ	SOUND_BASE+$80
-SID0_RGHT	equ	SOUND_BASE+$81
-SID1_LEFT	equ	SOUND_BASE+$82
-SID1_RGHT	equ	SOUND_BASE+$83
-
-
+; music notes index
 N_C0_	equ	00*2
 N_C0S	equ	01*2
 N_D0_	equ	02*2
@@ -192,26 +192,3 @@ N_G7_	equ	91*2
 N_G7S	equ	92*2
 N_A7_	equ	93*2
 N_A7S	equ	94*2
-
-
-; ram locations
-
-CURR_TEXT_COLOR	equ	$008000	; word
-CURSOR_POS	equ	$008002	; word
-
-TIMER0_VECTOR	equ	$008004	; long
-TIMER1_VECTOR	equ	$008008	; long
-TIMER2_VECTOR	equ	$00800C	; long
-TIMER3_VECTOR	equ	$008010	; long
-
-CURRENT_TXT_SCR	equ	$008014	; long
-
-KERNEL_TEXT_SCR	equ	$008020 ; 32 bytes (up to and incl $00805F), and 32 byte aligned
-LOGO_BLIT	equ	$008040 ; 32 bytes (up to and incl $00807F), and 32 byte aligned
-
-; screen editor variables
-SE_CRS_BLINK	equ	$008060	; byte (actually least significant bit), 0=off, 1=currently blinking
-SE_CRS_CNTDWN	equ	$008061	; byte, counter for blinking interval
-SE_CRS_INTERVAL	equ	$008062	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
-SE_ORIG_CHAR	equ	$008063	; byte, original value of the char behind the cursor
-SE_ORIG_COLOR	equ	$008084	; word, original value of the color value behind the cursor

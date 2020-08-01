@@ -1,7 +1,63 @@
-; elmerucr - 16/06/2020
+; elmerucr - 01/08/2020
 ; compiles with vasmm68k_mot
 
 	INCLUDE "kernel_definitions.s"
+
+	ORG	$0
+
+				DS.L	1	; vector 0 - supervisor stackpointer
+				DS.L	1	; vector 1 - reset vector
+vec_02				DS.L	1	; vector 2
+vec_03				DS.L	1	; vector 3
+vec_04_illegal_instruction	DS.L	1	; vector 4 - illegal instruction
+vec_05				DS.L	1
+vec_06				DS.L	1
+vec_07				DS.L	1
+vec_08				DS.L	1
+vec_09				DS.L	1
+vec_10_unimpl_instruction	DS.L	1	; vector 10
+vec_11_unimpl_instruction	DS.L	1	; vector 11
+vec_12				DS.L	1
+vec_13				DS.L	1
+vec_14				DS.L	1
+vec_15				DS.L	1
+vec_16				DS.L	1
+vec_17				DS.L	1
+vec_18				DS.L	1
+vec_19				DS.L	1
+vec_20				DS.L	1
+vec_21				DS.L	1
+vec_22				DS.L	1
+vec_23				DS.L	1
+vec_24				DS.L	1
+vec_25				DS.L	1
+vec_26_level2_irq_autovect	DS.L	1	; vector 26
+vec_27_level3_irq_autovect	DS.L	1	; vector 27
+vec_28_level4_irq_autovect	DS.L	1	; vector 28
+vec_29_level5_irq_autovect	DS.L	1	; vector 29
+vec_30_level6_irq_autovect	DS.L	1	; vector 30
+vec_31_level7_irq_autovect	DS.L	1	; vector 31
+
+
+	ORG	KERNEL_VARS
+
+curr_text_color	DS.W	1
+cursor_pos	DS.W	1
+current_txt_scr	DS.L	1
+
+timer0_vector	DS.L	1
+timer1_vector	DS.L	1
+timer2_vector	DS.L	1
+timer3_vector	DS.L	1
+
+	ALIGN	5
+kernel_text_scr	DS.B	32
+
+se_crs_blink	DS.B	1	; byte (actually least significant bit), 0=off, 1=currently blinking
+se_crs_cntdwn	DS.B	1	; byte, counter for blinking interval
+se_crs_interval	DS.B	1	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
+se_orig_char	DS.B	1	; byte, original value of the char behind the cursor
+se_orig_color	DS.W	1	; word, original value of the color value behind the cursor
 
 	ORG	KERNEL_LOC
 
@@ -59,18 +115,18 @@ kernel_main
 
 	; copy the screen blit struct from rom to appropriate ram area
 	LEA	screen_blit_structure,a0
-	LEA	KERNEL_TEXT_SCR,a1
+	LEA	kernel_text_scr,a1
 	MOVE.L	#$20,D0			; 32 bytes
 	JSR	memcopy
 
-	MOVE.L	#KERNEL_TEXT_SCR,CURRENT_TXT_SCR	; set current text screen
+	MOVE.L	#kernel_text_scr,current_txt_scr	; set current text screen
 
 
 	; set txt & color pointer  -  deprecated!
 	MOVE.L	#$00F00000,VICV_TXT
 	MOVE.L	#$00F00800,VICV_COL
 
-	MOVE.W	#C64_LIGHTBLUE,CURR_TEXT_COLOR
+	MOVE.W	#C64_LIGHTBLUE,curr_text_color
 
 	; play a welcome sound on SID0
 
@@ -98,8 +154,8 @@ kernel_main
 
 mainloop
 	BSR	se_clear_screen
-	MOVE.W	#$0,CURSOR_POS		; reset cursor position
-	MOVE.B	#$14,SE_CRS_INTERVAL	; blinking interval at 20 (0.33s)
+	MOVE.W	#$0,cursor_pos		; reset cursor position
+	MOVE.B	#$14,se_crs_interval	; blinking interval at 20 (0.33s)
 	LEA	welcome,A0
 	BSR	put_string
 	LEA	.mes1,A0
@@ -166,7 +222,7 @@ se_scroll_up
 	BNE	.1
 
 .2	MOVE.B	#ASCII_SPACE,(A0)
-	MOVE.W	CURR_TEXT_COLOR,(A1)
+	MOVE.W	curr_text_color,(A1)
 	ADDA	#$1,A0
 	ADDA	#$2,A1
 	ADDQ	#$1,D0
@@ -182,8 +238,8 @@ put_char
 
 	MOVEM.L	D0-D3/A0-A2,-(SP)	; save registers
 	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
-	MOVE.W	CURSOR_POS,D1		; load current cursor position into D1
-	MOVE.W	CURR_TEXT_COLOR,D2	; load current text colour into D2
+	MOVE.W	cursor_pos,D1		; load current cursor position into D1
+	MOVE.W	curr_text_color,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
 	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
@@ -213,7 +269,7 @@ put_char
 	BEQ	.char2			; no, go to .char2
 	JSR	se_scroll_up		; yes, scroll 1 row upwards
 	SUBI.W	#$40,D1			; subtract 64 positions from the cursor position
-.char2	MOVE.W	D1,CURSOR_POS
+.char2	MOVE.W	D1,cursor_pos
 	BRA	.end
 
 .lf	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
@@ -224,7 +280,7 @@ put_char
 	BEQ	.lf2			; no, go to .lf2
 	JSR	se_scroll_up		; yes, scroll 1 row upwards
 	SUBI.W	#$40,D1			; subtract 64 positions from the cursor position
-.lf2	MOVE.W	D1,CURSOR_POS		; store new value
+.lf2	MOVE.W	D1,cursor_pos		; store new value
 	BRA	.end
 
 .down	ADDI.W	#$40,D1			; cursor down, add 64 positions to current cursor pos
@@ -233,7 +289,7 @@ put_char
 	BEQ	.down2
 	BSR	se_scroll_up
 	BRA	.end
-.down2	MOVE.W	D1,CURSOR_POS		; store new value
+.down2	MOVE.W	D1,cursor_pos		; store new value
 	BRA	.end
 
 .right	ADDI.W	#$1,D1			; cursor right
@@ -243,25 +299,25 @@ put_char
 	BEQ	.right2
 	BSR	se_scroll_up
 	SUBI.W	#$40,D1
-.right2	MOVE.W	D1,CURSOR_POS
+.right2	MOVE.W	D1,cursor_pos
 	BRA	.end
 
 .up	SUBI.W	#$40,D1			; cursor up
 	BMI	.end			; stop if cursor out of screen, don't store position
 	ANDI.W	#$7FF,D1
-	MOVE.W	D1,CURSOR_POS
+	MOVE.W	D1,cursor_pos
 	BRA	.end
 
 .left	SUBI.W	#$1,D1			; cursor left
 	BMI	.end			; stop if cursor out of screen, don't store position
 	ANDI.W	#$7FF,D1
-	MOVE.W	D1,CURSOR_POS
+	MOVE.W	D1,cursor_pos
 	BRA	.end
 
 .bs	SUBI.W	#$1,D1			; backspace
 	BMI	.end			; stop if cursor out of screen, don't store position
 	ANDI.W	#$7FF,D1
-	MOVE.W	D1,CURSOR_POS		; store the new cursor position
+	MOVE.W	D1,cursor_pos		; store the new cursor position
 .bs1	MOVE.W	D1,D3
 	ADDQ	#$1,D3
 	ANDI.W	#%0000000000111111,D3	; are we at positon $3f?
@@ -314,7 +370,7 @@ interrupt_2_autovector
 	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
 
 	; add the blits (to be replaced by a kernel linked list)
-	MOVE.L	#KERNEL_TEXT_SCR,BLITTER_DATA_32_BIT
+	MOVE.L	#kernel_text_scr,BLITTER_DATA_32_BIT
 	MOVE.B	#%00000010,BLITTER_CONTROL
 
 	RTE
@@ -329,25 +385,25 @@ timer0_check
 	BTST	#0,TIMER_BASE		; did timer 0 cause the interrupt?
 	BEQ	timer1_check		; no, go to next timer
 	MOVE.B	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
-	MOVEA.L	TIMER0_VECTOR,A0
+	MOVEA.L	timer0_vector,A0
 	JMP	(A0)
 timer1_check
 	BTST	#1,TIMER_BASE
 	BEQ	timer2_check
 	MOVE.B	#%00000010,TIMER_BASE
-	MOVEA.L	TIMER1_VECTOR,A0
+	MOVEA.L	timer1_vector,A0
 	JMP	(A0)
 timer2_check
 	BTST	#2,TIMER_BASE		; did timer 2 cause the interrupt?
 	BEQ	timer3_check		; no, go to next timer
 	MOVE.B	#%00000100,TIMER_BASE	; yes, acknowledge interrupt
-	MOVEA.L	TIMER2_VECTOR,A0
+	MOVEA.L	timer2_vector,A0
 	JMP	(A0)
 timer3_check
 	BTST	#3,TIMER_BASE
 	BEQ	timer_finish		; no, go to timer finish
 	MOVE.B	#%00001000,TIMER_BASE	; yes, acknowledge
-	MOVEA.L	TIMER3_VECTOR,A0
+	MOVEA.L	timer3_vector,A0
 	JMP	(A0)
 timer_finish
 	MOVE.L	(SP)+,A0		; restore a0
@@ -382,15 +438,15 @@ timer0_handler
 	; cursor flash
 	MOVEM.L	D0/A0,-(SP)
 
-	BTST.B	#$0,SE_CRS_BLINK
+	BTST.B	#$0,se_crs_blink
 	BEQ	.end
 
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-	MOVE.W	CURSOR_POS,D0
-	SUBQ.B	#$1,SE_CRS_CNTDWN
+	MOVE.W	cursor_pos,D0
+	SUBQ.B	#$1,se_crs_cntdwn
 	BNE	.end
 	EORI.B	#%10000000,(A0,D0)
-	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
+	MOVE.B	se_crs_interval,se_crs_cntdwn
 
 .end	MOVEM.L	(SP)+,D0/A0
 	BRA	timer1_check
@@ -524,36 +580,36 @@ copy_charrom_to_charram
 setup_vector_table
 
 	LEA	exception_handler,A0
-	MOVE.L	A0,VEC_04_ILLEGAL_INSTRUCTION
-	MOVE.L	A0,VEC_10_UNIMPL_INSTRUCTION
-	MOVE.L	A0,VEC_11_UNIMPL_INSTRUCTION
+	MOVE.L	A0,vec_04_illegal_instruction
+	MOVE.L	A0,vec_10_unimpl_instruction
+	MOVE.L	A0,vec_11_unimpl_instruction
 
 	LEA	interrupt_2_autovector,A0
-	MOVE.L	A0,VEC_26_LEVEL2_IRQ_AUTOVECT
+	MOVE.L	A0,vec_26_level2_irq_autovect
 
 	LEA	interrupt_4_autovector,A0
-	MOVE.L	A0,VEC_28_LEVEL4_IRQ_AUTOVECT
+	MOVE.L	A0,vec_28_level4_irq_autovect
 
 	LEA	interrupt_5_autovector,A0
-	MOVE.L	A0,VEC_29_LEVEL5_IRQ_AUTOVECT
+	MOVE.L	A0,vec_29_level5_irq_autovect
 
 	LEA	interrupt_6_autovector,A0
-	MOVE.L	A0,VEC_30_LEVEL6_IRQ_AUTOVECT
+	MOVE.L	A0,vec_30_level6_irq_autovect
 
 	LEA	interrupt_7_autovector,A0
-	MOVE.L	A0,VEC_31_LEVEL7_IRQ_AUTOVECT
+	MOVE.L	A0,vec_31_level7_irq_autovect
 
 	LEA	timer0_handler,A0
-	MOVE.L	A0,TIMER0_VECTOR
+	MOVE.L	A0,timer0_vector
 
 	LEA	timer1_handler,A0
-	MOVE.L	A0,TIMER1_VECTOR
+	MOVE.L	A0,timer1_vector
 
 	LEA	timer2_handler,A0
-	MOVE.L	A0,TIMER2_VECTOR
+	MOVE.L	A0,timer2_vector
 
 	LEA	timer3_handler,A0
-	MOVE.L	A0,TIMER3_VECTOR
+	MOVE.L	A0,timer3_vector
 
 	RTS
 
@@ -588,11 +644,11 @@ se_activate_cursor
 
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1
-	MOVE.W	CURSOR_POS,D0
-	MOVE.B	(A0,D0),SE_ORIG_CHAR
+	MOVE.W	cursor_pos,D0
+	MOVE.B	(A0,D0),se_orig_char
 	EORI.B	#%10000000,(A0,D0)
-	MOVE.B	SE_CRS_INTERVAL,SE_CRS_CNTDWN
-	MOVE.B	#$1,SE_CRS_BLINK	; turn on cursor flash
+	MOVE.B	se_crs_interval,se_crs_cntdwn
+	MOVE.B	#$1,se_crs_blink	; turn on cursor flash
 
 	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
@@ -600,11 +656,11 @@ se_activate_cursor
 se_deactivate_cursor
 	MOVEM.L	D0/A0-A1,-(SP)
 
-	MOVE.B	#$0,SE_CRS_BLINK	; turn off cursor flash
+	MOVE.B	#$0,se_crs_blink	; turn off cursor flash
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1
-	MOVE.W	CURSOR_POS,D0
-	MOVE.B	SE_ORIG_CHAR,(A0,D0)
+	MOVE.W	cursor_pos,D0
+	MOVE.B	se_orig_char,(A0,D0)
 
 	MOVEM.L	(SP)+,D0/A0-A1
 	RTS
@@ -631,7 +687,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200729",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200801",ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 

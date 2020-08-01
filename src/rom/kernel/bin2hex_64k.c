@@ -5,21 +5,21 @@
 #include <stdio.h>
 
 int main() {
-	uint8_t romdata[65536];
+	uint8_t romdata[2 * 65536];
 	FILE *f;
 	f = fopen("kernel.bin", "r");
-	fread(romdata, 65536, 1, f);
+	fread(romdata, 2 * 65536, 1, f);
 	fclose(f);
 	printf("// 64k E64-II kernel elmerucr (c)2020\n");
 	printf("//\n\n");
 	printf("#include <cstdint>\n\n");
 	printf("uint8_t kernel[65536] =\n{");
 
-	for(int i=0; i<65535; i++) {
+	for(int i = 65536; i<(2 * 65535); i++) {
 		if(i%16 == 0) printf("\n\t");
 		printf("0x%02x,", romdata[i]);
 	}
-	printf("0x%02x", romdata[65535]);
+	printf("0x%02x", romdata[(2*65536)-1]);
 	printf("\n};\n");
 	return 0;
 }
