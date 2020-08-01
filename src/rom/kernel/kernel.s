@@ -5,8 +5,8 @@
 
 	ORG	$0
 
-				DS.L	1	; vector 0 - supervisor stackpointer
-				DS.L	1	; vector 1 - reset vector
+vec_00				DS.L	1	; vector 0 - supervisor stackpointer
+vec_01				DS.L	1	; vector 1 - reset vector
 vec_02				DS.L	1	; vector 2
 vec_03				DS.L	1	; vector 3
 vec_04_illegal_instruction	DS.L	1	; vector 4 - illegal instruction

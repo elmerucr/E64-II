@@ -200,8 +200,8 @@ F01:0195
 F00:0005       
 F00:0006       	ORG	$0
 F00:0007       
-F00:0008       				DS.L	1	; vector 0 - supervisor stackpointer
-F00:0009       				DS.L	1	; vector 1 - reset vector
+F00:0008       vec_00				DS.L	1	; vector 0 - supervisor stackpointer
+F00:0009       vec_01				DS.L	1	; vector 1 - reset vector
 F00:0010       vec_02				DS.L	1	; vector 2
 F00:0011       vec_03				DS.L	1	; vector 3
 F00:0012       vec_04_illegal_instruction	DS.L	1	; vector 4 - illegal instruction
@@ -2030,6 +2030,8 @@ vec_05 EXPR(20=0x14) UNUSED ABS
 vec_04_illegal_instruction EXPR(16=0x10) ABS 
 vec_03 EXPR(12=0xc) UNUSED ABS 
 vec_02 EXPR(8=0x8) UNUSED ABS 
+vec_01 EXPR(4=0x4) UNUSED ABS 
+vec_00 EXPR(0=0x0) UNUSED ABS 
 N_A7S EXPR(188=0xbc) UNUSED EQU 
 N_A7_ EXPR(186=0xba) UNUSED EQU 
 N_G7S EXPR(184=0xb8) UNUSED EQU 
