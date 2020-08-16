@@ -104,14 +104,13 @@ int main(int argc, char **argv)
                         screen_update_moment += std::chrono::microseconds(statistics.nominal_time_per_frame);
                         
                         /*  Check if the next update lies in the past,
-                         *  this can be a result of a debug session.
+                         *  this can be the result of a debug session.
                          *
                          *  If so, calculate a new update moment. This will
                          *  avoid "playing catch-up" by the virtual machine.
                          */
 
                         if( screen_update_moment < std::chrono::steady_clock::now() ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
-                        //if( (std::chrono::steady_clock::now() - screen_update_moment) > std::chrono::microseconds(250000) ) screen_update_moment = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.nominal_time_per_frame);
                         
                         std::this_thread::sleep_until(screen_update_moment);
                         

@@ -15,19 +15,19 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20200801
+#define E64_II_BUILD            20200816
 #define E64_II_YEAR             2020
 
-//  Some global objects
+//  Global objects
 extern E64::video       host_video;
 extern E64::machine     pc;
 extern E64::stats       statistics;
 extern const uint8_t    ascii_to_screencode[];
 extern const char       screencode_to_ascii[];
 
-#define RAM_SIZE                0x1000000   // 16mb system, don't change this number
+#define RAM_SIZE                0x1000000   // 16mb system, don't change
 
-/*  System uses standard 720p60 HDMI output @ half the dimensions.
+/*  System uses standard 720p60 HDMI output.
  *  In a 'distant' future, this will come in handy with real hardware.
  *  See also:
  *  https://timetoexplore.net/blog/video-timings-vga-720p-1080p

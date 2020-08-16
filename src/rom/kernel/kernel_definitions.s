@@ -1,7 +1,7 @@
 ; E64-II definitions - 2020-08-01 elmerucr
 
 ; general
-KERNEL_VARS	equ	$008000
+KERNEL_VARS	equ	$000400
 KERNEL_LOC	equ	$010000
 SUPERV_STACK	equ	$E00000
 

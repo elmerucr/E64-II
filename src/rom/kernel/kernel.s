@@ -58,6 +58,8 @@ se_crs_cntdwn	DS.B	1	; byte, counter for blinking interval
 se_crs_interval	DS.B	1	; byte, duration of blinking. e.g. @60Hz value 20 means 0.33s on, 0.33s off
 se_orig_char	DS.B	1	; byte, original value of the char behind the cursor
 se_orig_color	DS.W	1	; word, original value of the color value behind the cursor
+se_command_buf	DS.B	64	; 64 bytes, hold a string of max. 63 chars followed by a NULL
+
 
 	ORG	KERNEL_LOC
 
@@ -158,13 +160,13 @@ mainloop
 	MOVE.B	#$14,se_crs_interval	; blinking interval at 20 (0.33s)
 	LEA	welcome,A0
 	BSR	put_string
-	LEA	.mes1,A0
+	LEA	.ready,A0
 	BSR	put_string
-	JSR	se_activate_cursor
+	BSR	se_activate_cursor
 
 .main1	CLR.L	D0
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii value
-	BEQ.S	.main1			; if 0 (nothing), jump to .start
+	BEQ.S	.main1			; if 0 (nothing), jump to .main1
 
 	BSR	se_deactivate_cursor
 	BSR	put_char		; process input
@@ -175,15 +177,15 @@ mainloop
 	LEA	.mes2,A0		; yes, process command
 	; extract string here...
 	BSR	put_string
-	LEA	.mes1,A0
+	LEA	.ready,A0
 	BSR	put_string
 
 .main2	BSR	se_activate_cursor
 
 	BRA.S	.main1
 
-.mes1	DC.B	".",ASCII_NULL
-.mes2	DC.B	"error: illegal command ",ASCII_LF,ASCII_NULL
+.ready	DC.B	"ready.",ASCII_LF,ASCII_NULL
+.mes2	DC.B	ASCII_LF,"error: illegal command ",ASCII_LF,ASCII_NULL
 
 
 	ALIGN	1
@@ -687,7 +689,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200801",ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200816",ASCII_LF,ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
