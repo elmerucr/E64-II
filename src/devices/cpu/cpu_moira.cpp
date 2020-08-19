@@ -37,7 +37,7 @@ void cpu_moira::dump_registers(char *temp_string)
 {
     int n;
     int max = 2048;
-    n = snprintf( temp_string,max,"   PC:%08x SSP/USP: %08x %08x\n\n", getPC(), getSSP(), getUSP() );
+    n = snprintf( temp_string,max," PC:%08x SSP/USP: %08x %08x\n\n", getPC(), getSSP(), getUSP() );
     temp_string += n;
     max -= n;
     n = snprintf( temp_string,max,"D0-D3:%08x %08x %08x %08x\n", getD(0), getD(1), getD(2), getD(3) );
@@ -52,11 +52,11 @@ void cpu_moira::dump_registers(char *temp_string)
     n = snprintf( temp_string,max,"A4-A7:%08x %08x %08x %08x\n\n", getA(4), getA(5), getA(6), getA(7) );
     temp_string += n;
     max -= n;
-    n = snprintf( temp_string, max, "   SR: ");
+    n = snprintf( temp_string, max, "SR:");
     temp_string += n;
     max -= n;
     disassembleSR(temp_string);
     temp_string += 16;
     max -= 16;
-    n = snprintf( temp_string, max, "  ipl pins: %c%c%c", getIPL()&0b100?'1':'0', getIPL()&0b010?'1':'0', getIPL()&0b001?'1':'0');
+    n = snprintf( temp_string, max, " (%04x)   ipl pins:%c%c%c", getSR(), getIPL()&0b100?'1':'0', getIPL()&0b010?'1':'0', getIPL()&0b001?'1':'0');
 }

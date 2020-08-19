@@ -45,8 +45,8 @@ int main(int argc, char **argv)
     debug_console_init();
 
     // Select starting mode of E64-II
-    pc.switch_to_running();
-    //pc.switch_to_debug();
+    //pc.switch_to_running();
+    pc.switch_to_debug();
     
     pc.reset();
 

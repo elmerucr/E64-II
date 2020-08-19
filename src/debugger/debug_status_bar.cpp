@@ -112,7 +112,6 @@ void debug_status_bar_putchar(char character)
             debug_console.status_bar_cursor_pos += VICV_CHAR_COLUMNS;
             debug_console.status_bar_cursor_pos -= (debug_console.status_bar_cursor_pos % VICV_CHAR_COLUMNS);
             debug_console.status_bar_cursor_pos += debug_console.status_bar_base_pos;
-            //debug_console.status_bar_cursor_pos &= debug_console.status_bar_total_chars - 1;
             break;
         default:
             status_bar_chars[debug_console.status_bar_cursor_pos] = ascii_to_screencode[character];
@@ -120,7 +119,6 @@ void debug_status_bar_putchar(char character)
             status_bar_background_color_buffer[debug_console.status_bar_cursor_pos] = debug_console.status_bar_background_color;
             debug_console.status_bar_cursor_pos++;
             debug_console.status_bar_cursor_pos %= debug_console.status_bar_total_chars;
-            //debug_console.status_bar_cursor_pos &= debug_console.status_bar_total_chars - 1;
             break;
     }
 }

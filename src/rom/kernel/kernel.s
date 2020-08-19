@@ -155,7 +155,15 @@ kernel_main
 
 
 mainloop
-	BSR	se_clear_screen
+
+	LEA	.main0,A0
+	MOVE.L	A0,-(SP)		; put effective address of .main0 onto stack
+	MOVE.W	#$0100,-(SP)		; put new Status Reg onto stack
+	RTE				; jump to user mode
+
+
+
+.main0	BSR	se_clear_screen
 	MOVE.W	#$0,cursor_pos		; reset cursor position
 	MOVE.B	#$14,se_crs_interval	; blinking interval at 20 (0.33s)
 	LEA	welcome,A0
@@ -689,7 +697,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200816",ASCII_LF,ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200819",ASCII_LF,ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
