@@ -45,8 +45,8 @@ int main(int argc, char **argv)
     debug_console_init();
 
     // Select starting mode of E64-II
-    //pc.switch_to_running();
-    pc.switch_to_debug();
+    pc.switch_to_running();
+    //pc.switch_to_debug();
     
     pc.reset();
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
                  *  host cpu load, but also increases accuracy of the
                  *  system as a whole. Most importantly, SID emulation will
                  *  be very realistic. Instant changes to SID's registers
-                 *  might be reflected in audio output.
+                 *  should be reflected in audio output.
                  *  However, run(63) significantly reduces host cpu load,
                  *  once we have some music running in the virtual machine,
                  *  test this.
