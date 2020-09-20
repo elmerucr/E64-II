@@ -9,6 +9,7 @@
 #define COMMON_H
 
 #include <cstdint>
+#include "settings.hpp"
 #include "video.hpp"
 #include "machine.hpp"
 #include "stats.hpp"
@@ -19,8 +20,9 @@
 #define E64_II_YEAR             2020
 
 //  Global objects
-extern E64::video       host_video;
+extern E64::settings    prefs;
 extern E64::machine     pc;
+extern E64::video       host_video;
 extern E64::stats       statistics;
 extern const uint8_t    ascii_to_screencode[];
 extern const char       screencode_to_ascii[];

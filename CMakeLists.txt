@@ -36,4 +36,4 @@ add_executable(
     src/frequency_divider.cpp
 	src/stats.cpp)
 
-target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid sids timer TTL74LS148 vicv video ${SDL2_LIBRARIES})
+target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid resources sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
