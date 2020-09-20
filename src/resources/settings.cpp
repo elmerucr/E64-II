@@ -13,16 +13,15 @@ E64::settings::settings()
 {
     snprintf(settings_path, 256, "%s", getenv("HOME"));     // within app bundle returns too much
     
-    char *iterator = settings_path;
+    char *iterator = settings_path;         // shorten the path name to home and user dir
     int times = 0;
-    while(*iterator != '\0')                    // shorten the path name to home and user dir
+    while(times < 3)
     {
         if(*iterator == '/') times++;
-        if(times == 3) *iterator = '\0';
         iterator++;
     }
     
-    snprintf(settings_path, 256, "%s/.E64-II", settings_path);
+    snprintf(iterator, 256, ".E64-II");
     
     printf("[Settings] trying to open settings directory: %s\n",settings_path);
 }
