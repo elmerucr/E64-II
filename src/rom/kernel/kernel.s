@@ -168,7 +168,7 @@ mainloop
 	MOVE.B	#$14,se_crs_interval	; blinking interval at 20 (0.33s)
 	LEA	welcome,A0
 	BSR	put_string
-	LEA	.ready,A0
+	LEA	.prompt,A0
 	BSR	put_string
 	BSR	se_activate_cursor
 
@@ -185,14 +185,14 @@ mainloop
 	LEA	.mes2,A0		; yes, process command
 	; extract string here...
 	BSR	put_string
-	LEA	.ready,A0
+	LEA	.prompt,A0
 	BSR	put_string
 
 .main2	BSR	se_activate_cursor
 
 	BRA.S	.main1
 
-.ready	DC.B	"ready.",ASCII_LF,ASCII_NULL
+.prompt	DC.B	".",ASCII_NULL
 .mes2	DC.B	ASCII_LF,"error: illegal command ",ASCII_LF,ASCII_NULL
 
 
@@ -283,7 +283,6 @@ put_char
 	BRA	.end
 
 .lf	ADDI.W	#$40,D1			; line feed, add 64 positions to current cursor pos
-	;ANDI.W	#%0000011111000000,D1	; move cursor pos to beginning of line (and confine to screen)
 	ANDI.W	#%1111111111000000,D1	; move cursor pos to beginning of line
 	MOVE.W	D1,D3
 	ANDI.W	#$F800,D3		; are we outside screen memory?
@@ -697,7 +696,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200819",ASCII_LF,ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200915",ASCII_LF,ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
