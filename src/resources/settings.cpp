@@ -17,11 +17,12 @@ E64::settings::settings()
     int times = 0;
     while(times < 3)
     {
-        if(*iterator == '/') times++;
+        if((*iterator == '/') || (*iterator == '\0')) times++;
         iterator++;
     }
     
-    snprintf(iterator, 256, ".E64-II");
+    iterator--;
+    snprintf(iterator, 256, "/.E64-II");
     
     printf("[Settings] trying to open settings directory: %s\n",settings_path);
 }
