@@ -30,10 +30,10 @@ E64::video::video()
     
     // print the list of video backends
     int num_video_drivers = SDL_GetNumVideoDrivers();
-    printf("[SDL Video] %d video backend(s) compiled into SDL: ", num_video_drivers);
+    printf("[SDL Display] %d video backend(s) compiled into SDL: ", num_video_drivers);
     for(int i=0; i<num_video_drivers; i++) printf(" \'%s\' ", SDL_GetVideoDriver(i));
     printf("\n");
-    printf("[SDL Video] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
+    printf("[SDL Display] now using backend '%s'\n", SDL_GetCurrentVideoDriver());
     
     current_window_size = 4;
     fullscreen = false;
