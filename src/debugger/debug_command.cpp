@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <unistd.h>
 
 #include "common.hpp"
 #include "debug_command.hpp"
@@ -153,6 +154,11 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //            debug_console_print(c256_string2);
 //        }
 //    }
+    else if( strcmp(token0, "ls") == 0 )
+    {
+        debug_console_put_char('\n');
+        //
+    }
     else if( strcmp(token0, "m") == 0 )
     {
         debug_console_put_char('\n');
@@ -193,14 +199,17 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             }
         }
     }
+    else if( strcmp(token0, "pwd") == 0 )
+    {
+        debug_console_put_char('\n');
+        getcwd(command_help_string, 256);
+        debug_console_print(command_help_string);
+        debug_console_put_char('\n');
+    }
     else if( strcmp(token0, "r") == 0 )
     {
         debug_command_dump_cpu_status();
     }
-//    else if( strcmp(token0, "t") == 0 )
-//    {
-//        debug_command_memory_dump(computer.cpu_ic->sp, 1);
-//    }
     else if( strcmp(token0, "reset") == 0)
     {
         debug_console_put_char('\n');

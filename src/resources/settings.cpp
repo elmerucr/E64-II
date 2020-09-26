@@ -71,8 +71,8 @@ void E64::settings::update_current_path_from_settings()
     }
     else
     {
-        printf("[Settings] current path not found in settings, default to: %s\n", current_path);
-        write_current_path_to_settings();
+        printf("[Settings] current path not found in settings, defaulting to: %s\n", current_path);
+        //write_current_path_to_settings();
     }
 }
 
