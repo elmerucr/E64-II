@@ -7,6 +7,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <unistd.h>
+#include <dirent.h>
 
 #include "common.hpp"
 #include "debug_command.hpp"
@@ -166,7 +167,20 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     else if( strcmp(token0, "ls") == 0 )
     {
         debug_console_put_char('\n');
-        //
+        
+        DIR *directory = opendir(prefs.current_path);
+        struct dirent *entry;
+        
+        while( ( entry = readdir(directory) ) )
+        {
+            snprintf(command_help_string, 256, "%s%c",
+                     entry->d_name,
+                     (entry->d_type) & 0b100 ? '/' : '\0'
+                     );
+            debug_console_print(command_help_string);
+            debug_console_put_char('\n');
+        }
+        closedir(directory);
     }
     else if( strcmp(token0, "m") == 0 )
     {
