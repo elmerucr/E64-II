@@ -63,6 +63,28 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             }
         }
     }
+    else if( strcmp(token0, "cd") == 0 )
+    {
+        debug_console_put_char('\n');
+        if( token1 == NULL )
+        {
+            if( chdir(prefs.home_dir) )
+            {
+                snprintf(command_help_string, 256, "error: no such file or directory: %s\n", prefs.home_dir);
+                debug_console_print(command_help_string);
+            }
+            getcwd(prefs.current_path, 256);    // update current_path
+        }
+        else
+        {
+            if( chdir(token1) )
+            {
+                snprintf(command_help_string, 256, "error: no such file or directory: %s\n", token1);
+                debug_console_print(command_help_string);
+            }
+            getcwd(prefs.current_path, 256);    // update current_path
+        }
+    }
     else if( strcmp(token0, "bar") == 0 )
     {
         debug_console_put_char('\n');
@@ -79,24 +101,11 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         debug_console_put_char('\n');
         E64::sdl2_wait_until_enter_released();
         pc.switch_to_running();
-        // NEEDS WORK
-        //computer.cpu_ic->force_next_instruction();
     }
     else if( strcmp(token0, "clear") == 0 )
     {
         debug_console_clear();
     }
-//    else if( strcmp(token0, "d") == 0 )
-//    {
-//        if(token1 == NULL)
-//        {
-//            debug_command_disassemble(16);
-//        }
-//        else
-//        {
-//            debug_console_print("missing functionality: argument takes no. of instr to disassemble\n");
-//        }
-//    }
     else if( strcmp(token0, "exit") == 0 )
     {
         E64::sdl2_wait_until_enter_released();
