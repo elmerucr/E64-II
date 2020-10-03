@@ -206,7 +206,7 @@ void E64::video::update_title()
             SDL_SetWindowTitle(window, "E64-II");
             break;
         case DEBUG_MODE:
-            SDL_SetWindowTitle(window, "E64-II debugger");
+            SDL_SetWindowTitle(window, "E64-II monitor");
             break;
     }
 }

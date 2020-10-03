@@ -9,7 +9,6 @@ find_package(sdl2 REQUIRED)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
     src/
-    src/debugger/
     src/devices/
     src/devices/cpu/
     src/devices/cpu/Moira
@@ -21,6 +20,7 @@ include_directories(
     src/devices/timer/
     src/devices/TTL74LS148/
     src/devices/vicv/
+    src/monitor/
     src/resources/
     src/rom/
     src/sdl2/
@@ -36,4 +36,4 @@ add_executable(
     src/frequency_divider.cpp
 	src/stats.cpp)
 
-target_link_libraries(E64-II char_rom cia cpu debugger E64_sdl2 kernel mmu resid resources sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
+target_link_libraries(E64-II char_rom cia cpu E64_sdl2 kernel mmu monitor resid resources sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})

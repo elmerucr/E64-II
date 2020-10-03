@@ -16,10 +16,6 @@
 		4691C78823D7B28600E9E78D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C78723D7B28600E9E78D /* main.cpp */; };
 		4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79023D7B31500E9E78D /* sdl2.cpp */; };
 		4691C79623D7B34700E9E78D /* vicv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79523D7B34700E9E78D /* vicv.cpp */; };
-		4691C7A023D7B36C00E9E78D /* debug_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79823D7B36C00E9E78D /* debug_console.cpp */; };
-		4691C7A123D7B36C00E9E78D /* debug_screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79C23D7B36C00E9E78D /* debug_screen.cpp */; };
-		4691C7A223D7B36C00E9E78D /* debug_status_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */; };
-		4691C7A323D7B36C00E9E78D /* debug_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79F23D7B36C00E9E78D /* debug_command.cpp */; };
 		4691C7A623D7B3B600E9E78D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; };
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C7B123D7B40600E9E78D /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C7A923D7B40600E9E78D /* machine.cpp */; };
@@ -51,6 +47,10 @@
 		46C4CC1F24388CBC002BD371 /* wave6581_PST.cc in Sources */ = {isa = PBXBuildFile; fileRef = 46C4CC0D24388CBC002BD371 /* wave6581_PST.cc */; };
 		46C4CC2024388CBC002BD371 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 46C4CC1024388CBC002BD371 /* version.cc */; };
 		46C4CC2124388CBC002BD371 /* wave.cc in Sources */ = {isa = PBXBuildFile; fileRef = 46C4CC1124388CBC002BD371 /* wave.cc */; };
+		46D3184F2528BC3900E08C23 /* debug_status_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318472528BC3900E08C23 /* debug_status_bar.cpp */; };
+		46D318502528BC3900E08C23 /* debug_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318492528BC3900E08C23 /* debug_command.cpp */; };
+		46D318512528BC3900E08C23 /* debug_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184B2528BC3900E08C23 /* debug_console.cpp */; };
+		46D318522528BC3900E08C23 /* debug_screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184D2528BC3900E08C23 /* debug_screen.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -84,14 +84,6 @@
 		4691C79023D7B31500E9E78D /* sdl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdl2.cpp; path = ../../../src/sdl2/sdl2.cpp; sourceTree = "<group>"; };
 		4691C79423D7B34700E9E78D /* vicv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vicv.hpp; path = ../../../src/devices/vicv/vicv.hpp; sourceTree = "<group>"; };
 		4691C79523D7B34700E9E78D /* vicv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vicv.cpp; path = ../../../src/devices/vicv/vicv.cpp; sourceTree = "<group>"; };
-		4691C79823D7B36C00E9E78D /* debug_console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_console.cpp; path = ../../../src/debugger/debug_console.cpp; sourceTree = "<group>"; };
-		4691C79923D7B36C00E9E78D /* debug_status_bar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_status_bar.hpp; path = ../../../src/debugger/debug_status_bar.hpp; sourceTree = "<group>"; };
-		4691C79A23D7B36C00E9E78D /* debug_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_console.hpp; path = ../../../src/debugger/debug_console.hpp; sourceTree = "<group>"; };
-		4691C79B23D7B36C00E9E78D /* debug_command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_command.hpp; path = ../../../src/debugger/debug_command.hpp; sourceTree = "<group>"; };
-		4691C79C23D7B36C00E9E78D /* debug_screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_screen.cpp; path = ../../../src/debugger/debug_screen.cpp; sourceTree = "<group>"; };
-		4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_status_bar.cpp; path = ../../../src/debugger/debug_status_bar.cpp; sourceTree = "<group>"; };
-		4691C79E23D7B36C00E9E78D /* debug_screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_screen.hpp; path = ../../../src/debugger/debug_screen.hpp; sourceTree = "<group>"; };
-		4691C79F23D7B36C00E9E78D /* debug_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_command.cpp; path = ../../../src/debugger/debug_command.cpp; sourceTree = "<group>"; };
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		4691C7A923D7B40600E9E78D /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine.cpp; sourceTree = "<group>"; };
 		4691C7AB23D7B40600E9E78D /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = common.cpp; path = ../../../src/common.cpp; sourceTree = "<group>"; };
@@ -158,6 +150,14 @@
 		46C4CC0F24388CBC002BD371 /* pot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pot.h; path = "../../../src/devices/sids/resid-0.16/pot.h"; sourceTree = "<group>"; };
 		46C4CC1024388CBC002BD371 /* version.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = version.cc; path = "../../../src/devices/sids/resid-0.16/version.cc"; sourceTree = "<group>"; };
 		46C4CC1124388CBC002BD371 /* wave.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wave.cc; path = "../../../src/devices/sids/resid-0.16/wave.cc"; sourceTree = "<group>"; };
+		46D318472528BC3900E08C23 /* debug_status_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_status_bar.cpp; path = ../../../src/monitor/debug_status_bar.cpp; sourceTree = "<group>"; };
+		46D318482528BC3900E08C23 /* debug_screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_screen.hpp; path = ../../../src/monitor/debug_screen.hpp; sourceTree = "<group>"; };
+		46D318492528BC3900E08C23 /* debug_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_command.cpp; path = ../../../src/monitor/debug_command.cpp; sourceTree = "<group>"; };
+		46D3184A2528BC3900E08C23 /* debug_status_bar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_status_bar.hpp; path = ../../../src/monitor/debug_status_bar.hpp; sourceTree = "<group>"; };
+		46D3184B2528BC3900E08C23 /* debug_console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_console.cpp; path = ../../../src/monitor/debug_console.cpp; sourceTree = "<group>"; };
+		46D3184C2528BC3900E08C23 /* debug_command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_command.hpp; path = ../../../src/monitor/debug_command.hpp; sourceTree = "<group>"; };
+		46D3184D2528BC3900E08C23 /* debug_screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug_screen.cpp; path = ../../../src/monitor/debug_screen.cpp; sourceTree = "<group>"; };
+		46D3184E2528BC3900E08C23 /* debug_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = debug_console.hpp; path = ../../../src/monitor/debug_console.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,7 +228,7 @@
 		4691C77323D7B23A00E9E78D /* E64-II */ = {
 			isa = PBXGroup;
 			children = (
-				4691C79723D7B35500E9E78D /* debugger */,
+				4691C79723D7B35500E9E78D /* monitor */,
 				4691C79223D7B32300E9E78D /* devices */,
 				4633A79523FD560600AFD176 /* resources */,
 				461CAD9C24AE765A001A3313 /* rom */,
@@ -292,19 +292,19 @@
 			name = vicv;
 			sourceTree = "<group>";
 		};
-		4691C79723D7B35500E9E78D /* debugger */ = {
+		4691C79723D7B35500E9E78D /* monitor */ = {
 			isa = PBXGroup;
 			children = (
-				4691C79E23D7B36C00E9E78D /* debug_screen.hpp */,
-				4691C79C23D7B36C00E9E78D /* debug_screen.cpp */,
-				4691C79A23D7B36C00E9E78D /* debug_console.hpp */,
-				4691C79823D7B36C00E9E78D /* debug_console.cpp */,
-				4691C79B23D7B36C00E9E78D /* debug_command.hpp */,
-				4691C79F23D7B36C00E9E78D /* debug_command.cpp */,
-				4691C79923D7B36C00E9E78D /* debug_status_bar.hpp */,
-				4691C79D23D7B36C00E9E78D /* debug_status_bar.cpp */,
+				46D318482528BC3900E08C23 /* debug_screen.hpp */,
+				46D3184D2528BC3900E08C23 /* debug_screen.cpp */,
+				46D3184E2528BC3900E08C23 /* debug_console.hpp */,
+				46D3184B2528BC3900E08C23 /* debug_console.cpp */,
+				46D3184C2528BC3900E08C23 /* debug_command.hpp */,
+				46D318492528BC3900E08C23 /* debug_command.cpp */,
+				46D3184A2528BC3900E08C23 /* debug_status_bar.hpp */,
+				46D318472528BC3900E08C23 /* debug_status_bar.cpp */,
 			);
-			name = debugger;
+			name = monitor;
 			sourceTree = "<group>";
 		};
 		4691C7A423D7B3B600E9E78D /* Frameworks */ = {
@@ -501,14 +501,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				46C4CC1C24388CBC002BD371 /* voice.cc in Sources */,
-				4691C7A323D7B36C00E9E78D /* debug_command.cpp in Sources */,
 				4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */,
 				467817062517567F008F8A1A /* settings.cpp in Sources */,
 				4691C78823D7B28600E9E78D /* main.cpp in Sources */,
 				46C4CC1A24388CBC002BD371 /* filter.cc in Sources */,
-				4691C7A123D7B36C00E9E78D /* debug_screen.cpp in Sources */,
 				46C4CC1F24388CBC002BD371 /* wave6581_PST.cc in Sources */,
 				46B4480B23EF3AB30000DAB1 /* blitter.cpp in Sources */,
+				46D3184F2528BC3900E08C23 /* debug_status_bar.cpp in Sources */,
 				46C4CC1324388CBC002BD371 /* wave6581__ST.cc in Sources */,
 				46C4CC2124388CBC002BD371 /* wave.cc in Sources */,
 				4691C7B323D7B40600E9E78D /* common.cpp in Sources */,
@@ -518,20 +517,21 @@
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,
 				4691C79623D7B34700E9E78D /* vicv.cpp in Sources */,
 				4633A79823FD565800AFD176 /* video.cpp in Sources */,
+				46D318512528BC3900E08C23 /* debug_console.cpp in Sources */,
 				4697AE1C24756DB100F498CE /* stats.cpp in Sources */,
 				46C4CC1924388CBC002BD371 /* wave8580_PS_.cc in Sources */,
 				46C4CC1724388CBC002BD371 /* wave8580__ST.cc in Sources */,
-				4691C7A023D7B36C00E9E78D /* debug_console.cpp in Sources */,
 				46C4CC1424388CBC002BD371 /* pot.cc in Sources */,
 				4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */,
-				4691C7A223D7B36C00E9E78D /* debug_status_bar.cpp in Sources */,
 				4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */,
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
+				46D318502528BC3900E08C23 /* debug_command.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,
 				46C4CC2024388CBC002BD371 /* version.cc in Sources */,
 				46C4CC1524388CBC002BD371 /* envelope.cc in Sources */,
 				46C4CC1D24388CBC002BD371 /* sid.cc in Sources */,
 				4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */,
+				46D318522528BC3900E08C23 /* debug_screen.cpp in Sources */,
 				46C4CC1B24388CBC002BD371 /* wave8580_PST.cc in Sources */,
 				46C4CC1E24388CBC002BD371 /* wave6581_P_T.cc in Sources */,
 				4691C80723D7B62400E9E78D /* timer.cpp in Sources */,
