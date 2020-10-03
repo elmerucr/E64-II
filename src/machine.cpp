@@ -3,8 +3,8 @@
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
-#include "debug_console.hpp"
-#include "debug_screen.hpp"
+#include "monitor_console.hpp"
+#include "monitor_screen.hpp"
 #include "machine.hpp"
 #include "sdl2.hpp"
 #include "common.hpp"

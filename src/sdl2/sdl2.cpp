@@ -9,9 +9,9 @@
 #include <SDL2/SDL.h>
 #include "common.hpp"
 #include "sdl2.hpp"
-#include "debug_screen.hpp"
-#include "debug_console.hpp"
-#include "debug_command.hpp"
+#include "monitor_screen.hpp"
+#include "monitor_console.hpp"
+#include "monitor_command.hpp"
 
 SDL_AudioDeviceID E64_sdl2_audio_dev;
 SDL_AudioSpec want, have;

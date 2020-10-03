@@ -1,7 +1,7 @@
-//  debug_console.hpp
-//  E64
+//  monitor_console.hpp
+//  E64-II
 //
-//  Copyright © 2018 elmerucr. All rights reserved.
+//  Copyright © 2018-2020 elmerucr. All rights reserved.
 
 #include <cstdint>
 #include "common.hpp"

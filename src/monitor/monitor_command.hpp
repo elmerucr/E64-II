@@ -1,7 +1,7 @@
-//  debug_command.hpp
+//  monitor_command.hpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #ifndef DEBUG_COMMAND_HPP
 #define DEBUG_COMMAND_HPP

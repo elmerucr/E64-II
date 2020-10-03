@@ -1,4 +1,4 @@
-//  debug_status_bar.cpp
+//  monitor_status_bar.cpp
 //  E64-II
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
@@ -6,8 +6,8 @@
 #include <cstdio>
 
 #include "common.hpp"
-#include "debug_status_bar.hpp"
-#include "debug_console.hpp"
+#include "monitor_status_bar.hpp"
+#include "monitor_console.hpp"
 
 uint8_t status_bar_chars[16*VICV_CHAR_COLUMNS];
 uint16_t status_bar_foreground_color_buffer[16*VICV_CHAR_COLUMNS];

@@ -1,9 +1,9 @@
-//  debug_screen.cpp
-//  E64
+//  monitor_screen.cpp
+//  E64-II
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2020 elmerucr. All rights reserved.
 
-#include "debug_screen.hpp"
+#include "monitor_screen.hpp"
 #include "common.hpp"
 
 uint8_t debug_screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];

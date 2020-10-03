@@ -1,7 +1,7 @@
-//  debug_command.cpp
+//  monitor_command.cpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include <cstdio>
 #include <cstring>
@@ -10,10 +10,10 @@
 #include <dirent.h>
 
 #include "common.hpp"
-#include "debug_command.hpp"
-#include "debug_console.hpp"
+#include "monitor_command.hpp"
+#include "monitor_console.hpp"
 #include "sdl2.hpp"
-#include "debug_status_bar.hpp"
+#include "monitor_status_bar.hpp"
 
 char command_help_string[2048];
 

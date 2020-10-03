@@ -1,15 +1,15 @@
-//  debug_console.cpp
-//  E64
+//  monitor_console.cpp
+//  E64-II
 //
 //  Copyright © 2018 elmerucr. All rights reserved.
 
 #include <cstdio>
 
 #include "common.hpp"
-#include "debug_console.hpp"
-#include "debug_screen.hpp"
-#include "debug_command.hpp"
-#include "debug_status_bar.hpp"
+#include "monitor_console.hpp"
+#include "monitor_screen.hpp"
+#include "monitor_command.hpp"
+#include "monitor_status_bar.hpp"
 
 debug_console_struct debug_console;
 

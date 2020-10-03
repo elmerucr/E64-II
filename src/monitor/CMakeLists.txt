@@ -1,3 +1,3 @@
-add_library(monitor STATIC debug_screen.cpp debug_console.cpp debug_status_bar.cpp debug_command.cpp)
+add_library(monitor STATIC monitor_screen.cpp monitor_console.cpp monitor_status_bar.cpp monitor_command.cpp)
 
 target_link_libraries(monitor char_rom cpu)
