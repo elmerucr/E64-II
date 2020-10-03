@@ -3,8 +3,8 @@
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
 
-#ifndef DEBUG_COMMAND_HPP
-#define DEBUG_COMMAND_HPP
+#ifndef MONITOR_COMMAND_HPP
+#define MONITOR_COMMAND_HPP
 
 #include <cstdint>
 

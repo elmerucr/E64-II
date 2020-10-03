@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     // set up window management, audio and some other stuff
     E64::sdl2_init();
 
-    E64::debug_screen_init();
+    E64::monitor_screen_init();
     debug_console_init();
 
     // Select starting mode of E64-II
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
                 {
                     debug_status_bar_refresh();
                     debug_console_blit_to_debug_screen();
-                    E64::debug_screen_update();
+                    E64::monitor_screen_update();
                     host_video.update_screen();
                 }
 
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
                     case E64::KEYPRESS_EVENT:
                         debug_status_bar_refresh();
                         debug_console_blit_to_debug_screen();
-                        E64::debug_screen_update();
+                        E64::monitor_screen_update();
                         host_video.update_screen();
                         break;
                 }

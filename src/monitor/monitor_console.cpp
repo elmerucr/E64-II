@@ -146,7 +146,7 @@ void debug_console_blit_to_debug_screen()
 {
     for(int i = 0; i < ((VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS); i++)
     {
-        debug_screen_character_buffer[i] = debug_console.console_character_buffer[i];
+        monitor_screen_character_buffer[i] = debug_console.console_character_buffer[i];
         debug_screen_foreground_color_buffer[i] = debug_console.console_foreground_color_buffer[i];
         debug_screen_background_color_buffer[i] = debug_console.console_background_color_buffer[i];
     }
@@ -154,7 +154,7 @@ void debug_console_blit_to_debug_screen()
     {
         for(int i = 0; i < (debug_console.status_bar_rows * VICV_CHAR_COLUMNS); i++)
         {
-            debug_screen_character_buffer[i] = status_bar_chars[i];
+            monitor_screen_character_buffer[i] = status_bar_chars[i];
             debug_screen_foreground_color_buffer[i] = status_bar_foreground_color_buffer[i];
             debug_screen_background_color_buffer[i] = status_bar_background_color_buffer[i];
         }

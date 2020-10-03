@@ -5,8 +5,8 @@
 
 #include <cstdint>
 
-#ifndef DEBUG_STATUS_BAR_HPP
-#define DEBUG_STATUS_BAR_HPP
+#ifndef MONITOR_STATUS_BAR_HPP
+#define MONITOR_STATUS_BAR_HPP
 
 extern uint8_t status_bar_chars[];
 extern uint16_t status_bar_foreground_color_buffer[];

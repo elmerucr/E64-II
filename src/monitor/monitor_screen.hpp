@@ -8,19 +8,19 @@
 
 #include "common.hpp"
 
-#ifndef debug_screen_hpp
-#define debug_screen_hpp
+#ifndef monitor_screen_hpp
+#define monitor_screen_hpp
 
 namespace E64
 {
 
-void debug_screen_init();
-void debug_screen_update();
-void debug_screen_render_scanline(int line_number);
+void monitor_screen_init();
+void monitor_screen_update();
+void monitor_screen_render_scanline(int line_number);
 
 }
 
-extern uint8_t debug_screen_character_buffer[];
+extern uint8_t monitor_screen_character_buffer[];
 extern uint16_t debug_screen_foreground_color_buffer[];
 extern uint16_t debug_screen_background_color_buffer[];
 

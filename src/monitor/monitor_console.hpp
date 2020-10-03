@@ -6,8 +6,8 @@
 #include <cstdint>
 #include "common.hpp"
 
-#ifndef debug_console_hpp
-#define debug_console_hpp
+#ifndef monitor_console_hpp
+#define monitor_console_hpp
 
 enum monitor_type {
     NOTHING,

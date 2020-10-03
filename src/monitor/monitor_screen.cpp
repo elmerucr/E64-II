@@ -6,23 +6,23 @@
 #include "monitor_screen.hpp"
 #include "common.hpp"
 
-uint8_t debug_screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint8_t monitor_screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 uint16_t debug_screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 uint16_t debug_screen_background_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 
 uint16_t debug_screen_pixel_cursor_blink_time;
 uint16_t debug_screen_pixel_cursor_blink_time_countdown;
 
-void E64::debug_screen_init()
+void E64::monitor_screen_init()
 {
     debug_screen_pixel_cursor_blink_time = 40;
     debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
 }
 
-void E64::debug_screen_update()
+void E64::monitor_screen_update()
 {
     // update all scanlines
-    for(int i=0; i < VICV_SCANLINES - 64; i++) debug_screen_render_scanline(i);
+    for(int i=0; i < VICV_SCANLINES - 64; i++) monitor_screen_render_scanline(i);
 
     // copy relevant area of vicv screen buffer to bottom of debug screen buffer
     uint16_t scanline_normalized;
@@ -67,7 +67,7 @@ void E64::debug_screen_update()
     host_video.debug_screen_buffer[((VICV_SCANLINES - 64)*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
 }
 
-inline void E64::debug_screen_render_scanline(int line_number)
+inline void E64::monitor_screen_render_scanline(int line_number)
 {
     int base;
 
@@ -89,7 +89,7 @@ inline void E64::debug_screen_render_scanline(int line_number)
         {
             int current_text_column = (x >> 3);
             uint16_t char_position = (((current_text_row * VICV_CHAR_COLUMNS) + current_text_column));
-            current_char = debug_screen_character_buffer[char_position];
+            current_char = monitor_screen_character_buffer[char_position];
             current_foreground_color = debug_screen_foreground_color_buffer[char_position];
             current_background_color = debug_screen_background_color_buffer[char_position];
             eight_pixels = patched_char_rom[(current_char<<3) | current_character_line];
