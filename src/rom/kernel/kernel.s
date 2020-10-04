@@ -170,14 +170,17 @@ mainloop
 	BSR	put_string
 	LEA	.prompt,A0
 	BSR	put_string
+	MOVE.B	#ASCII_LF,D0
+	BSR	put_char
+
 	BSR	se_activate_cursor
+
 
 .main1	CLR.L	D0
 	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii value
 	BEQ.S	.main1			; if 0 (nothing), jump to .main1
 
 	BSR	se_deactivate_cursor
-	BSR	put_char		; process input
 
 	CMP.B	#ASCII_LF,D0		; did we have a return as keypress?
 	BNE	.main2			; no
@@ -188,12 +191,13 @@ mainloop
 	LEA	.prompt,A0
 	BSR	put_string
 
-.main2	BSR	se_activate_cursor
+.main2	BSR	put_char		; process input
+	BSR	se_activate_cursor
 
 	BRA.S	.main1
 
-.prompt	DC.B	".",ASCII_NULL
-.mes2	DC.B	ASCII_LF,"error: illegal command ",ASCII_LF,ASCII_NULL
+.prompt	DC.B	"ready.",ASCII_NULL
+.mes2	DC.B	ASCII_LF,ASCII_LF,"error: illegal command",ASCII_LF,ASCII_NULL
 
 
 	ALIGN	1

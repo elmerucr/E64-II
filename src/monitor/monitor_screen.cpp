@@ -7,16 +7,16 @@
 #include "common.hpp"
 
 uint8_t monitor_screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
-uint16_t debug_screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
-uint16_t debug_screen_background_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint16_t monitor_screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint16_t monitor_screen_background_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 
 uint16_t debug_screen_pixel_cursor_blink_time;
-uint16_t debug_screen_pixel_cursor_blink_time_countdown;
+uint16_t monitor_screen_pixel_cursor_blink_time_countdown;
 
 void E64::monitor_screen_init()
 {
     debug_screen_pixel_cursor_blink_time = 40;
-    debug_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
+    monitor_screen_pixel_cursor_blink_time_countdown = debug_screen_pixel_cursor_blink_time;
 }
 
 void E64::monitor_screen_update()
@@ -90,8 +90,8 @@ inline void E64::monitor_screen_render_scanline(int line_number)
             int current_text_column = (x >> 3);
             uint16_t char_position = (((current_text_row * VICV_CHAR_COLUMNS) + current_text_column));
             current_char = monitor_screen_character_buffer[char_position];
-            current_foreground_color = debug_screen_foreground_color_buffer[char_position];
-            current_background_color = debug_screen_background_color_buffer[char_position];
+            current_foreground_color = monitor_screen_foreground_color_buffer[char_position];
+            current_background_color = monitor_screen_background_color_buffer[char_position];
             eight_pixels = patched_char_rom[(current_char<<3) | current_character_line];
         }
         host_video.debug_screen_buffer[base+x] = (eight_pixels & 0x80) ? host_video.palette[current_foreground_color] : host_video.palette[current_background_color];

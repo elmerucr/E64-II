@@ -21,9 +21,9 @@ void monitor_screen_render_scanline(int line_number);
 }
 
 extern uint8_t monitor_screen_character_buffer[];
-extern uint16_t debug_screen_foreground_color_buffer[];
-extern uint16_t debug_screen_background_color_buffer[];
+extern uint16_t monitor_screen_foreground_color_buffer[];
+extern uint16_t monitor_screen_background_color_buffer[];
 
-extern uint16_t debug_screen_pixel_cursor_blink_time_countdown;
+extern uint16_t monitor_screen_pixel_cursor_blink_time_countdown;
 
 #endif

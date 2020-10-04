@@ -117,21 +117,30 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         debug_console_put_char('\n');
         host_video.toggle_fullscreen();
     }
-//    else if( strcmp(token0, "help") == 0 )
-//    {
-//        if(token1 == NULL)
-//        {
-//            debug_console_print("Debugger                        Running Mode\n");
-//            debug_console_print("========                        ============\n");
-//            debug_console_print("F1    next cpu instruction      F9    switch mode\n");
-//            debug_console_print("b     cpu breakpoints           F10   toggle runtime stats\n");
+    else if( strcmp(token0, "help") == 0 )
+    {
+        if(token1 == NULL)
+        {
+            debug_console_put_char('\n');
+            debug_console_print("<F1>    run next instruction\n");
+            debug_console_print("<F2>    switch between readable and hexadecimal disassembly\n");
+            debug_console_print("<F9>    switch to monitor and back to running\n");
+            debug_console_print("<F10>   toggle runtime stats (running only)\n");
+            debug_console_print("<ALT+q> quit application\n");
+            debug_console_print("<ALT+r> reset machine\n");
+            debug_console_print("<ALT+f> switch between full screen and windowed mode\n");
+            debug_console_put_char('\n');
+            debug_console_print("other commands:\n");
+            debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
+            debug_console_print("    full    help      ls       m      mc     pwd       r\n");
+            debug_console_print("   reset      sb     sbc     ver     win\n");
 //            debug_console_print("bc    clear all cpu breakpoints\n");
 //            debug_console_print("c     continue execution\n");
 //            debug_console_print("d     disassemble\n");
 //            debug_console_print("m     memory dump\n");
 //            debug_console_print("r     cpu registers\n");
-//            debug_console_print("sb    scanline breakpoints\n);
-//            debug_console_print("sbc   clear all scanline breakpoints\n);
+//            debug_console_print("sb    scanline breakpoints\n");
+//            debug_console_print("sbc   clear all scanline breakpoints\n");
 //            debug_console_print("bar   debug status bar on/off\n");
 //            debug_console_print("clear clear screen\n");
 //            debug_console_print("exit  exit application\n");
@@ -141,7 +150,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //            debug_console_print("ver   version information\n");
 //            debug_console_print("win   window options\n\n");
 //            debug_console_print("<help> <command name> for more info on some commands\n");
-//        }
+        }
 //        else if( strcmp(token1, "b") == 0 )
 //        {
 //            debug_console_print("<b>      current breakpoint settings\n");
@@ -163,7 +172,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 //            snprintf(c256_string2, 256, "error: unrecognized option '%s'\n", token1);
 //            debug_console_print(c256_string2);
 //        }
-//    }
+    }
     else if( strcmp(token0, "ls") == 0 )
     {
         debug_console_put_char('\n');
