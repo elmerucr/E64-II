@@ -25,22 +25,21 @@ void debug_console_init()
     for(int i=0; i<(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS; i++)
     {
         debug_console.console_character_buffer[i] = ASCII_SPACE;
-        //debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[i] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[i] = debug_console.current_background_color;
     }
     debug_console_cursor_activate();
 
-    // status bar stuff
-    debug_console.status_bar_active = true;
+    // status bar stuff (initial state)
+    debug_console.status_bar_active = false;
     debug_console.status_bar_rows = 14;
     debug_console.status_bar_total_chars = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
     debug_console.status_bar_cursor_pos = 0;
     debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos & (64-1);
     debug_console.status_bar_hex_view = false;
     debug_status_bar_refresh();
-    //
-    for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
+
+    //for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
     debug_console_version();
     debug_console_welcome();
 }
@@ -71,7 +70,6 @@ void debug_console_add_bottom_row()
     for(int i=0; i<VICV_CHAR_COLUMNS; i++)
     {
         debug_console.console_character_buffer[start_pos] = ASCII_SPACE;
-        //debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[start_pos] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[start_pos] = debug_console.current_background_color;
         start_pos++;
@@ -91,7 +89,6 @@ void debug_console_add_top_row()
     for(int i=0; i<VICV_CHAR_COLUMNS; i++)
     {
         debug_console.console_character_buffer[start_pos] = ASCII_SPACE;
-        //debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[start_pos] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[start_pos] = debug_console.current_background_color;
         start_pos++;
@@ -113,7 +110,6 @@ void debug_console_put_char(char character)
             break;
         default:
             debug_console.console_character_buffer[debug_console.cursor_pos] = character;
-            //debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[character];
             debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
             debug_console.console_background_color_buffer[debug_console.cursor_pos] = debug_console.current_background_color;
             debug_console.cursor_pos++;
@@ -315,7 +311,6 @@ void debug_console_enter()
     for(int i=0; i<64; i++)
     {
         console_help_string[i] = (debug_console.console_character_buffer[start_of_row + i]) & 0x7f;
-        //console_help_string[i] = screencode_to_ascii[ (debug_console.console_character_buffer[start_of_row + i]) & 0x7f ];
     }
     console_help_string[64] = ASCII_NULL;
     E64::debug_command_execute(console_help_string);
@@ -353,7 +348,6 @@ void debug_console_backspace()
         }
         // last char in current row becomes empty space
         debug_console.console_character_buffer[debug_console.cursor_pos | 0x003f] = ASCII_SPACE;
-        //debug_console.console_character_buffer[debug_console.cursor_pos | 0x003f] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_background_color_buffer[debug_console.cursor_pos | 0x003f] = debug_console.current_background_color;
         debug_console.console_foreground_color_buffer[debug_console.cursor_pos | 0x003f] = debug_console.current_foreground_color;
     }
@@ -370,7 +364,6 @@ void debug_console_insert()
         debug_console.console_background_color_buffer[i] = debug_console.console_background_color_buffer[i-1];
     }
     debug_console.console_character_buffer[debug_console.cursor_pos] = ASCII_SPACE;
-    //debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[ASCII_SPACE];
     debug_console.console_background_color_buffer[debug_console.cursor_pos] = debug_console.current_background_color;
     debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
     debug_console_cursor_activate();
@@ -382,7 +375,6 @@ void debug_console_clear()
     for(int i = 0; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i++)
     {
         debug_console.console_character_buffer[i] = ASCII_SPACE;
-        //debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_background_color_buffer[i] = debug_console.current_background_color;
         debug_console.console_foreground_color_buffer[i] = debug_console.current_foreground_color;
     }
@@ -420,7 +412,6 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
     for(int i = start_pos; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i += VICV_CHAR_COLUMNS)
     {
         if(debug_console.console_character_buffer[i] == ':' )
-        //if(debug_console.console_character_buffer[i] == ascii_to_screencode[':'] )
         {
             output_type = ASCII;
             
@@ -428,14 +419,12 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
             for(int j=0; j<6; j++)
             {
                 potential_address[j] = debug_console.console_character_buffer[i+1+j];
-                //potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
             }
             potential_address[6] = 0;
             E64::debug_command_hex_string_to_int(potential_address, address);
             if(top_down) break;
         }
         if(debug_console.console_character_buffer[i] == ';' )
-        //if(debug_console.console_character_buffer[i] == ascii_to_screencode[';'] )
         {
             output_type = CHARACTER;
             
@@ -443,7 +432,6 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
             for(int j=0; j<6; j++)
             {
                 potential_address[j] = debug_console.console_character_buffer[i+1+j];
-                //potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
             }
             potential_address[6] = 0;
             E64::debug_command_hex_string_to_int(potential_address, address);

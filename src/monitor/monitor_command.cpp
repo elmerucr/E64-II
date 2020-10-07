@@ -124,6 +124,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_put_char('\n');
             debug_console_print("<F1>    run next instruction\n");
             debug_console_print("<F2>    switch between readable and hexadecimal disassembly\n");
+            debug_console_print("<F3>    switch system status bar on and off\n");
             debug_console_print("<F9>    switch to monitor and back to running\n");
             debug_console_print("<F10>   toggle runtime stats (running only)\n");
             debug_console_print("<ALT+q> quit application\n");

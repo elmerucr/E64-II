@@ -15,7 +15,7 @@ int main() {
 	printf("#include <cstdint>\n\n");
 	printf("uint8_t kernel[65536] =\n{");
 
-	for(int i = 65536; i<(2 * 65535); i++) {
+	for(int i = 65536; i<((2 * 65536) - 1); i++) {
 		if(i%16 == 0) printf("\n\t");
 		printf("0x%02x,", romdata[i]);
 	}

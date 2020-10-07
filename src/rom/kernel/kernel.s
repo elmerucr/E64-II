@@ -250,13 +250,12 @@ se_scroll_up
 
 put_char
 
-	MOVEM.L	D0-D3/A0-A2,-(SP)	; save registers
+	MOVEM.L	D1-D3/A0-A1,-(SP)	; save registers
 	ANDI.W	#$00FF,D0		; clear bits 8-15 from D0
 	MOVE.W	cursor_pos,D1		; load current cursor position into D1
 	MOVE.W	curr_text_color,D2	; load current text colour into D2
 	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
 	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
-	LEA	ascii_to_screencode,A2	; A2 now points to ascii-screencode table
 	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
 	BEQ	.lf
 	CMP.B	#ASCII_CURSOR_DOWN,D0
@@ -271,8 +270,7 @@ put_char
 	BEQ	.bs
 
 	; it's not a control character so print it
-.char	MOVE.B	(A2,D0),D0		; change ascii value into screencode value
-	MOVE.B	D0,(A0,D1)		; copy the char into screen
+.char	MOVE.B	D0,(A0,D1)		; copy the char into screen
 	MOVE.W	D1,D3			; copy cursor position into D3
 	LSL.W	#$1,D3			; multiply index by two (color values are words contrary to tiles)
 	MOVE.W	D2,(A1,D3)		; copy the color value
@@ -341,7 +339,7 @@ put_char
 	ADDQ	#$1,D1
 	BRA	.bs1
 
-.end	MOVEM.L	(SP)+,D0-D3/A0-A2	; restore registers, including original ascii in D0
+.end	MOVEM.L	(SP)+,D1-D3/A0-A1	; restore registers
 	RTS
 
 
@@ -700,7 +698,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20200915",ASCII_LF,ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20201007",ASCII_LF,ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 

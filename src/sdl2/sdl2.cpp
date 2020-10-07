@@ -299,6 +299,9 @@ int E64::sdl2_process_events()
                         case SDLK_F2:
                             debug_console.status_bar_hex_view = !debug_console.status_bar_hex_view;
                             break;
+                        case SDLK_F3:
+                            debug_console_toggle_status_bar();
+                            break;
                     }
                 }
                 break;
