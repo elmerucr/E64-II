@@ -20,7 +20,8 @@ void debug_status_bar_clear()
 {
     for(int i=0; i<(debug_console.status_bar_rows * VICV_CHAR_COLUMNS); i++)
     {
-        status_bar_chars[i] = ascii_to_screencode[ASCII_SPACE];
+        status_bar_chars[i] = ASCII_SPACE;
+        //status_bar_chars[i] = ascii_to_screencode[ASCII_SPACE];
         status_bar_foreground_color_buffer[i] = COBALT_06;
         status_bar_background_color_buffer[i] = COBALT_02;
     }
@@ -114,7 +115,8 @@ void debug_status_bar_putchar(char character)
             debug_console.status_bar_cursor_pos += debug_console.status_bar_base_pos;
             break;
         default:
-            status_bar_chars[debug_console.status_bar_cursor_pos] = ascii_to_screencode[character];
+            status_bar_chars[debug_console.status_bar_cursor_pos] = character;
+            //status_bar_chars[debug_console.status_bar_cursor_pos] = ascii_to_screencode[character];
             status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos] = debug_console.status_bar_foreground_color;
             status_bar_background_color_buffer[debug_console.status_bar_cursor_pos] = debug_console.status_bar_background_color;
             debug_console.status_bar_cursor_pos++;

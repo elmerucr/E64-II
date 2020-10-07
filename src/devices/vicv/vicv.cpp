@@ -116,7 +116,8 @@ inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
             // are we at the first pixel of a char
             if( !(x & 7) )
             {
-                eight_pixels = patched_char_rom[((ascii_to_screencode[*temp_text]) * 8) + y];
+                eight_pixels = patched_char_rom[(*temp_text * 8) + y];
+                //eight_pixels = patched_char_rom[((ascii_to_screencode[*temp_text]) * 8) + y];
             }
 
             host_video.backbuffer[base + x] = (eight_pixels & 0x80) ? host_video.palette[COBALT_06] : host_video.palette[COBALT_01];

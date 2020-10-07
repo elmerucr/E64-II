@@ -24,7 +24,8 @@ void debug_console_init()
     debug_console.current_background_color = COBALT_01;
     for(int i=0; i<(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS; i++)
     {
-        debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
+        debug_console.console_character_buffer[i] = ASCII_SPACE;
+        //debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[i] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[i] = debug_console.current_background_color;
     }
@@ -69,7 +70,8 @@ void debug_console_add_bottom_row()
     uint16_t start_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
     for(int i=0; i<VICV_CHAR_COLUMNS; i++)
     {
-        debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
+        debug_console.console_character_buffer[start_pos] = ASCII_SPACE;
+        //debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[start_pos] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[start_pos] = debug_console.current_background_color;
         start_pos++;
@@ -88,7 +90,8 @@ void debug_console_add_top_row()
     uint16_t start_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
     for(int i=0; i<VICV_CHAR_COLUMNS; i++)
     {
-        debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
+        debug_console.console_character_buffer[start_pos] = ASCII_SPACE;
+        //debug_console.console_character_buffer[start_pos] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_foreground_color_buffer[start_pos] = debug_console.current_foreground_color;
         debug_console.console_background_color_buffer[start_pos] = debug_console.current_background_color;
         start_pos++;
@@ -109,7 +112,8 @@ void debug_console_put_char(char character)
             debug_console.cursor_pos = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
             break;
         default:
-            debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[character];
+            debug_console.console_character_buffer[debug_console.cursor_pos] = character;
+            //debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[character];
             debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
             debug_console.console_background_color_buffer[debug_console.cursor_pos] = debug_console.current_background_color;
             debug_console.cursor_pos++;
@@ -310,7 +314,8 @@ void debug_console_enter()
     //uint16_t start_of_row = debug_console.cursor_pos & 0xffc0;
     for(int i=0; i<64; i++)
     {
-        console_help_string[i] = screencode_to_ascii[ (debug_console.console_character_buffer[start_of_row + i]) & 0x7f ];
+        console_help_string[i] = (debug_console.console_character_buffer[start_of_row + i]) & 0x7f;
+        //console_help_string[i] = screencode_to_ascii[ (debug_console.console_character_buffer[start_of_row + i]) & 0x7f ];
     }
     console_help_string[64] = ASCII_NULL;
     E64::debug_command_execute(console_help_string);
@@ -347,7 +352,8 @@ void debug_console_backspace()
             debug_console.console_background_color_buffer[i] = debug_console.console_background_color_buffer[i+1];
         }
         // last char in current row becomes empty space
-        debug_console.console_character_buffer[debug_console.cursor_pos | 0x003f] = ascii_to_screencode[ASCII_SPACE];
+        debug_console.console_character_buffer[debug_console.cursor_pos | 0x003f] = ASCII_SPACE;
+        //debug_console.console_character_buffer[debug_console.cursor_pos | 0x003f] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_background_color_buffer[debug_console.cursor_pos | 0x003f] = debug_console.current_background_color;
         debug_console.console_foreground_color_buffer[debug_console.cursor_pos | 0x003f] = debug_console.current_foreground_color;
     }
@@ -363,7 +369,8 @@ void debug_console_insert()
         debug_console.console_foreground_color_buffer[i] = debug_console.console_foreground_color_buffer[i-1];
         debug_console.console_background_color_buffer[i] = debug_console.console_background_color_buffer[i-1];
     }
-    debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[ASCII_SPACE];
+    debug_console.console_character_buffer[debug_console.cursor_pos] = ASCII_SPACE;
+    //debug_console.console_character_buffer[debug_console.cursor_pos] = ascii_to_screencode[ASCII_SPACE];
     debug_console.console_background_color_buffer[debug_console.cursor_pos] = debug_console.current_background_color;
     debug_console.console_foreground_color_buffer[debug_console.cursor_pos] = debug_console.current_foreground_color;
     debug_console_cursor_activate();
@@ -374,7 +381,8 @@ void debug_console_clear()
     debug_console.cursor_pos = 0;
     for(int i = 0; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i++)
     {
-        debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
+        debug_console.console_character_buffer[i] = ASCII_SPACE;
+        //debug_console.console_character_buffer[i] = ascii_to_screencode[ASCII_SPACE];
         debug_console.console_background_color_buffer[i] = debug_console.current_background_color;
         debug_console.console_foreground_color_buffer[i] = debug_console.current_foreground_color;
     }
@@ -411,27 +419,31 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
     
     for(int i = start_pos; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i += VICV_CHAR_COLUMNS)
     {
-        if(debug_console.console_character_buffer[i] == ascii_to_screencode[':'] )
+        if(debug_console.console_character_buffer[i] == ':' )
+        //if(debug_console.console_character_buffer[i] == ascii_to_screencode[':'] )
         {
             output_type = ASCII;
             
             char potential_address[7];
             for(int j=0; j<6; j++)
             {
-                potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
+                potential_address[j] = debug_console.console_character_buffer[i+1+j];
+                //potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
             }
             potential_address[6] = 0;
             E64::debug_command_hex_string_to_int(potential_address, address);
             if(top_down) break;
         }
-        if(debug_console.console_character_buffer[i] == ascii_to_screencode[';'] )
+        if(debug_console.console_character_buffer[i] == ';' )
+        //if(debug_console.console_character_buffer[i] == ascii_to_screencode[';'] )
         {
             output_type = CHARACTER;
             
             char potential_address[7];
             for(int j=0; j<6; j++)
             {
-                potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
+                potential_address[j] = debug_console.console_character_buffer[i+1+j];
+                //potential_address[j] = screencode_to_ascii[debug_console.console_character_buffer[i+1+j]];
             }
             potential_address[6] = 0;
             E64::debug_command_hex_string_to_int(potential_address, address);

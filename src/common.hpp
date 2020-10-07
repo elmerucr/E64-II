@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201004
+#define E64_II_BUILD            20201007
 #define E64_II_YEAR             2020
 
 //  Global objects
@@ -24,8 +24,6 @@ extern E64::settings    prefs;
 extern E64::machine     pc;
 extern E64::video       host_video;
 extern E64::stats       statistics;
-extern const uint8_t    ascii_to_screencode[];
-extern const char       screencode_to_ascii[];
 
 #define RAM_SIZE                0x1000000   // 16mb system, don't change
 
