@@ -127,9 +127,9 @@ inline char event_to_ascii(uint8_t scancode, uint8_t modifiers)
         case E64::SCANCODE_8:
             return (modifiers & SHIFT_PRESSED) ? ASCII_ASTERISK : ASCII_8;
         case E64::SCANCODE_9:
-            return (modifiers & SHIFT_PRESSED) ? ASCII_OPEN_PAR : ASCII_9;
+            return (modifiers & SHIFT_PRESSED) ? ASCII_OPEN_PAR : ((modifiers & CTRL_PRESSED) ? ASCII_REVERSE_ON : ASCII_9);
         case E64::SCANCODE_0:
-            return (modifiers & SHIFT_PRESSED) ? ASCII_CLOSE_PAR : ASCII_0;
+            return (modifiers & SHIFT_PRESSED) ? ASCII_CLOSE_PAR : ((modifiers & CTRL_PRESSED) ? ASCII_REVERSE_OFF : ASCII_0);
         case E64::SCANCODE_MINUS:
             return (modifiers & SHIFT_PRESSED) ? ASCII_UNDERSCORE : ASCII_HYPHEN;
         case E64::SCANCODE_EQUALS:
@@ -279,7 +279,10 @@ void E64::cia::run(int no_of_cycles)
         cycle_counter -= cycles_per_interval;
         
         // check modifier keys
-        uint8_t modifier_keys_status = (keys_last_known_state[SCANCODE_LSHIFT] ? SHIFT_PRESSED : 0) | (keys_last_known_state[SCANCODE_RSHIFT] ? SHIFT_PRESSED : 0);
+        uint8_t modifier_keys_status =  (keys_last_known_state[SCANCODE_LSHIFT] ? SHIFT_PRESSED : 0) |
+                                        (keys_last_known_state[SCANCODE_RSHIFT] ? SHIFT_PRESSED : 0) |
+                                        (keys_last_known_state[SCANCODE_LCTRL ] ? CTRL_PRESSED :  0) |
+                                        (keys_last_known_state[SCANCODE_RCTRL ] ? CTRL_PRESSED :  0);
         
         // registers 128 to 255 reflect the current keyboard state
         // shift each register one bit to the left, bit 0 is only set if key is pressed

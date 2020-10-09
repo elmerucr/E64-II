@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201007
+#define E64_II_BUILD            20201009
 #define E64_II_YEAR             2020
 
 //  Global objects
@@ -25,7 +25,7 @@ extern E64::machine     pc;
 extern E64::video       host_video;
 extern E64::stats       statistics;
 
-#define RAM_SIZE                0x1000000   // 16mb system, don't change
+#define RAM_SIZE                0x1000000   // 16mb system, DON'T change
 
 /*  System uses standard 720p60 HDMI output.
  *  In a 'distant' future, this will come in handy with real hardware.
@@ -166,9 +166,10 @@ extern E64::stats       statistics;
 #define ASCII_HOR_TAB       0x09
 #define ASCII_CR            0x0d    // carriage return
 #define ASCII_LF            0x0a    // linefeed
-#define ASCII_CURSOR_DOWN   0x11    // petscii cursor down
+#define ASCII_CURSOR_DOWN   0x11    // petscii
+#define ASCII_REVERSE_ON    0x12    // petscii
 #define ASCII_ESCAPE        0x1b
-#define ASCII_CURSOR_RIGHT  0x1d    // petscii cursor right
+#define ASCII_CURSOR_RIGHT  0x1d    // petscii
 #define ASCII_SPACE         0x20    // space
 #define ASCII_EXCL_MARK     0x21    // !
 #define ASCII_DOUBLE_QUOTES 0x22    // "
@@ -276,6 +277,7 @@ extern E64::stats       statistics;
 #define ASCII_F8            0x8c    // taken from cbm petscii
 
 #define ASCII_CURSOR_UP     0x91    // petscii cursor up
+#define ASCII_REVERSE_OFF   0x92    // petscii
 #define ASCII_CURSOR_LEFT   0x9d    // petscii cursor left
 
 #endif

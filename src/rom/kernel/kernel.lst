@@ -16,188 +16,190 @@ F01:0011       ASCII_BACKSPACE		equ	$08
 F01:0012       ASCII_LF		equ	$0A
 F01:0013       ASCII_CR		equ	$0D
 F01:0014       ASCII_CURSOR_DOWN	equ	$11
-F01:0015       ASCII_CURSOR_RIGHT	equ	$1D
-F01:0016       ASCII_SPACE		equ	$20
-F01:0017       ASCII_CURSOR_UP		equ	$91
-F01:0018       ASCII_CURSOR_LEFT	equ	$9D
-F01:0019       
-F01:0020       
-F01:0021       ; scrn_codes
-F01:0022       SCRN_SPACE		equ	$20
-F01:0023       
-F01:0024       
-F01:0025       ; char rom
-F01:0026       CHAR_ROM		equ	$FE0000
-F01:0027       CHAR_RAM		equ	$F10000
-F01:0028       
-F01:0029       
-F01:0030       ; cia
-F01:0031       CIA_BASE		equ	$FF0300
-F01:0032       CIA_STATUS		equ	CIA_BASE
-F01:0033       CIA_CONTROL		equ	CIA_BASE+$01
-F01:0034       CIA_DELAY		equ	CIA_BASE+$02
-F01:0035       CIA_REPEAT		equ	CIA_BASE+$03
-F01:0036       CIA_ASCII		equ	CIA_BASE+$04
-F01:0037       CIA_KEYBOARD		equ	CIA_BASE+$80
-F01:0038       
-F01:0039       
-F01:0040       ; vicv
-F01:0041       VICV_BASE		equ	$FF0400 	; vicv base register
-F01:0042       VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
-F01:0043       VICV_TXT		equ	VICV_BASE+$04
-F01:0044       VICV_COL		equ	VICV_BASE+$08
-F01:0045       VICV_BORDER_SIZE	equ	VICV_BASE+$0C
-F01:0046       VICV_ISR		equ	VICV_BASE+$0E
-F01:0047       VICV_BUFFERSWAP		equ	VICV_BASE+$10
-F01:0048       
-F01:0049       
-F01:0050       ; SOUND
-F01:0051       SOUND_BASE	equ	$FF0500			; base register
-F01:0052       SID0_BASE	equ	SOUND_BASE
-F01:0053       SID0_VOLUME	equ	SID0_BASE+$18
-F01:0054       SID1_BASE	equ	SOUND_BASE+$20
-F01:0055       SID1_VOLUME	equ	SID1_BASE+$18
-F01:0056       ; SOUND MIXING
-F01:0057       SID0_LEFT	equ	SOUND_BASE+$80
-F01:0058       SID0_RGHT	equ	SOUND_BASE+$81
-F01:0059       SID1_LEFT	equ	SOUND_BASE+$82
-F01:0060       SID1_RGHT	equ	SOUND_BASE+$83
-F01:0061       
-F01:0062       
-F01:0063       ; timer
-F01:0064       TIMER_BASE		equ	$FF0600
-F01:0065       
-F01:0066       
-F01:0067       ; blitter
-F01:0068       BLITTER_BASE		equ	$FF0700
-F01:0069       BLITTER_CONTROL		equ	BLITTER_BASE
-F01:0070       BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
-F01:0071       BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
-F01:0072       
-F01:0073       
-F01:0074       ; color palette
-F01:0075       C64_BLACK	equ	$F000
-F01:0076       C64_WHITE	equ	$FFFF
-F01:0077       C64_RED		equ	$F733
-F01:0078       C64_CYAN	equ	$F8CC
-F01:0079       C64_PURPLE	equ	$F849
-F01:0080       C64_GREEN	equ	$F6A5
-F01:0081       C64_BLUE	equ	$F339
-F01:0082       C64_YELLOW	equ	$FEE8
-F01:0083       C64_ORANGE	equ	$F853
-F01:0084       C64_BROWN	equ	$F531
-F01:0085       C64_LIGHTRED	equ	$FB77
-F01:0086       C64_DARKGREY	equ	$F444
-F01:0087       C64_GREY	equ	$F777
-F01:0088       C64_LIGHTGREEN	equ	$FBFA
-F01:0089       C64_LIGHTBLUE	equ	$F67D
-F01:0090       C64_LIGHTGREY	equ	$FAAA
-F01:0091       
-F01:0092       
-F01:0093       ; music notes index
-F01:0094       N_C0_	equ	00*2
-F01:0095       N_C0S	equ	01*2
-F01:0096       N_D0_	equ	02*2
-F01:0097       N_D0S	equ	03*2
-F01:0098       N_E0_	equ	04*2
-F01:0099       N_F0_	equ	05*2
-F01:0100       N_F0S	equ	06*2
-F01:0101       N_G0_	equ	07*2
-F01:0102       N_G0S	equ	08*2
-F01:0103       N_A0_	equ	09*2
-F01:0104       N_A0S	equ	10*2
-F01:0105       N_B0_	equ	11*2
-F01:0106       
-F01:0107       N_C1_	equ	12*2
-F01:0108       N_C1S	equ	13*2
-F01:0109       N_D1_	equ	14*2
-F01:0110       N_D1S	equ	15*2
-F01:0111       N_E1_	equ	16*2
-F01:0112       N_F1_	equ	17*2
-F01:0113       N_F1S	equ	18*2
-F01:0114       N_G1_	equ	19*2
-F01:0115       N_G1S	equ	20*2
-F01:0116       N_A1_	equ	21*2
-F01:0117       N_A1S	equ	22*2
-F01:0118       N_B1_	equ	23*2
-F01:0119       
-F01:0120       N_C2_	equ	24*2
-F01:0121       N_C2S	equ	25*2
-F01:0122       N_D2_	equ	26*2
-F01:0123       N_D2S	equ	27*2
-F01:0124       N_E2_	equ	28*2
-F01:0125       N_F2_	equ	29*2
-F01:0126       N_F2S	equ	30*2
-F01:0127       N_G2_	equ	31*2
-F01:0128       N_G2S	equ	32*2
-F01:0129       N_A2_	equ	33*2
-F01:0130       N_A2S	equ	34*2
-F01:0131       N_B2_	equ	35*2
-F01:0132       
-F01:0133       N_C3_	equ	36*2
-F01:0134       N_C3S	equ	37*2
-F01:0135       N_D3_	equ	38*2
-F01:0136       N_D3S	equ	39*2
-F01:0137       N_E3_	equ	40*2
-F01:0138       N_F3_	equ	41*2
-F01:0139       N_F3S	equ	42*2
-F01:0140       N_G3_	equ	43*2
-F01:0141       N_G3S	equ	44*2
-F01:0142       N_A3_	equ	45*2
-F01:0143       N_A3S	equ	46*2
-F01:0144       N_B3_	equ	47*2
-F01:0145       
-F01:0146       N_C4_	equ	48*2
-F01:0147       N_C4S	equ	49*2
-F01:0148       N_D4_	equ	50*2
-F01:0149       N_D4S	equ	51*2
-F01:0150       N_E4_	equ	52*2
-F01:0151       N_F4_	equ	53*2
-F01:0152       N_F4S	equ	54*2
-F01:0153       N_G4_	equ	55*2
-F01:0154       N_G4S	equ	56*2
-F01:0155       N_A4_	equ	57*2
-F01:0156       N_A4S	equ	58*2
-F01:0157       N_B4_	equ	59*2
-F01:0158       
-F01:0159       N_C5_	equ	60*2
-F01:0160       N_C5S	equ	61*2
-F01:0161       N_D5_	equ	62*2
-F01:0162       N_D5S	equ	63*2
-F01:0163       N_E5_	equ	64*2
-F01:0164       N_F5_	equ	65*2
-F01:0165       N_F5S	equ	66*2
-F01:0166       N_G5_	equ	67*2
-F01:0167       N_G5S	equ	68*2
-F01:0168       N_A5_	equ	69*2
-F01:0169       N_A5S	equ	70*2
-F01:0170       N_B5_	equ	71*2
-F01:0171       
-F01:0172       N_C6_	equ	72*2
-F01:0173       N_C6S	equ	73*2
-F01:0174       N_D6_	equ	74*2
-F01:0175       N_D6S	equ	75*2
-F01:0176       N_E6_	equ	76*2
-F01:0177       N_F6_	equ	77*2
-F01:0178       N_F6S	equ	78*2
-F01:0179       N_G6_	equ	79*2
-F01:0180       N_G6S	equ	80*2
-F01:0181       N_A6_	equ	81*2
-F01:0182       N_A6S	equ	82*2
-F01:0183       N_B6_	equ	83*2
-F01:0184       
-F01:0185       N_C7_	equ	84*2
-F01:0186       N_C7S	equ	85*2
-F01:0187       N_D7_	equ	86*2
-F01:0188       N_D7S	equ	87*2
-F01:0189       N_E7_	equ	88*2
-F01:0190       N_F7_	equ	89*2
-F01:0191       N_F7S	equ	90*2
-F01:0192       N_G7_	equ	91*2
-F01:0193       N_G7S	equ	92*2
-F01:0194       N_A7_	equ	93*2
-F01:0195       N_A7S	equ	94*2
-F01:0196       
+F01:0015       ASCII_REVERSE_ON	equ	$12
+F01:0016       ASCII_CURSOR_RIGHT	equ	$1D
+F01:0017       ASCII_SPACE		equ	$20
+F01:0018       ASCII_CURSOR_UP		equ	$91
+F01:0019       ASCII_REVERSE_OFF	equ	$92
+F01:0020       ASCII_CURSOR_LEFT	equ	$9D
+F01:0021       
+F01:0022       
+F01:0023       ; scrn_codes
+F01:0024       SCRN_SPACE		equ	$20
+F01:0025       
+F01:0026       
+F01:0027       ; char rom
+F01:0028       CHAR_ROM		equ	$FE0000
+F01:0029       CHAR_RAM		equ	$F10000
+F01:0030       
+F01:0031       
+F01:0032       ; cia
+F01:0033       CIA_BASE		equ	$FF0300
+F01:0034       CIA_STATUS		equ	CIA_BASE
+F01:0035       CIA_CONTROL		equ	CIA_BASE+$01
+F01:0036       CIA_DELAY		equ	CIA_BASE+$02
+F01:0037       CIA_REPEAT		equ	CIA_BASE+$03
+F01:0038       CIA_ASCII		equ	CIA_BASE+$04
+F01:0039       CIA_KEYBOARD		equ	CIA_BASE+$80
+F01:0040       
+F01:0041       
+F01:0042       ; vicv
+F01:0043       VICV_BASE		equ	$FF0400 	; vicv base register
+F01:0044       VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
+F01:0045       VICV_TXT		equ	VICV_BASE+$04
+F01:0046       VICV_COL		equ	VICV_BASE+$08
+F01:0047       VICV_BORDER_SIZE	equ	VICV_BASE+$0C
+F01:0048       VICV_ISR		equ	VICV_BASE+$0E
+F01:0049       VICV_BUFFERSWAP		equ	VICV_BASE+$10
+F01:0050       
+F01:0051       
+F01:0052       ; SOUND
+F01:0053       SOUND_BASE	equ	$FF0500			; base register
+F01:0054       SID0_BASE	equ	SOUND_BASE
+F01:0055       SID0_VOLUME	equ	SID0_BASE+$18
+F01:0056       SID1_BASE	equ	SOUND_BASE+$20
+F01:0057       SID1_VOLUME	equ	SID1_BASE+$18
+F01:0058       ; SOUND MIXING
+F01:0059       SID0_LEFT	equ	SOUND_BASE+$80
+F01:0060       SID0_RGHT	equ	SOUND_BASE+$81
+F01:0061       SID1_LEFT	equ	SOUND_BASE+$82
+F01:0062       SID1_RGHT	equ	SOUND_BASE+$83
+F01:0063       
+F01:0064       
+F01:0065       ; timer
+F01:0066       TIMER_BASE		equ	$FF0600
+F01:0067       
+F01:0068       
+F01:0069       ; blitter
+F01:0070       BLITTER_BASE		equ	$FF0700
+F01:0071       BLITTER_CONTROL		equ	BLITTER_BASE
+F01:0072       BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
+F01:0073       BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
+F01:0074       
+F01:0075       
+F01:0076       ; color palette
+F01:0077       C64_BLACK	equ	$F000
+F01:0078       C64_WHITE	equ	$FFFF
+F01:0079       C64_RED		equ	$F733
+F01:0080       C64_CYAN	equ	$F8CC
+F01:0081       C64_PURPLE	equ	$F849
+F01:0082       C64_GREEN	equ	$F6A5
+F01:0083       C64_BLUE	equ	$F339
+F01:0084       C64_YELLOW	equ	$FEE8
+F01:0085       C64_ORANGE	equ	$F853
+F01:0086       C64_BROWN	equ	$F531
+F01:0087       C64_LIGHTRED	equ	$FB77
+F01:0088       C64_DARKGREY	equ	$F444
+F01:0089       C64_GREY	equ	$F777
+F01:0090       C64_LIGHTGREEN	equ	$FBFA
+F01:0091       C64_LIGHTBLUE	equ	$F67D
+F01:0092       C64_LIGHTGREY	equ	$FAAA
+F01:0093       
+F01:0094       
+F01:0095       ; music notes index
+F01:0096       N_C0_	equ	00*2
+F01:0097       N_C0S	equ	01*2
+F01:0098       N_D0_	equ	02*2
+F01:0099       N_D0S	equ	03*2
+F01:0100       N_E0_	equ	04*2
+F01:0101       N_F0_	equ	05*2
+F01:0102       N_F0S	equ	06*2
+F01:0103       N_G0_	equ	07*2
+F01:0104       N_G0S	equ	08*2
+F01:0105       N_A0_	equ	09*2
+F01:0106       N_A0S	equ	10*2
+F01:0107       N_B0_	equ	11*2
+F01:0108       
+F01:0109       N_C1_	equ	12*2
+F01:0110       N_C1S	equ	13*2
+F01:0111       N_D1_	equ	14*2
+F01:0112       N_D1S	equ	15*2
+F01:0113       N_E1_	equ	16*2
+F01:0114       N_F1_	equ	17*2
+F01:0115       N_F1S	equ	18*2
+F01:0116       N_G1_	equ	19*2
+F01:0117       N_G1S	equ	20*2
+F01:0118       N_A1_	equ	21*2
+F01:0119       N_A1S	equ	22*2
+F01:0120       N_B1_	equ	23*2
+F01:0121       
+F01:0122       N_C2_	equ	24*2
+F01:0123       N_C2S	equ	25*2
+F01:0124       N_D2_	equ	26*2
+F01:0125       N_D2S	equ	27*2
+F01:0126       N_E2_	equ	28*2
+F01:0127       N_F2_	equ	29*2
+F01:0128       N_F2S	equ	30*2
+F01:0129       N_G2_	equ	31*2
+F01:0130       N_G2S	equ	32*2
+F01:0131       N_A2_	equ	33*2
+F01:0132       N_A2S	equ	34*2
+F01:0133       N_B2_	equ	35*2
+F01:0134       
+F01:0135       N_C3_	equ	36*2
+F01:0136       N_C3S	equ	37*2
+F01:0137       N_D3_	equ	38*2
+F01:0138       N_D3S	equ	39*2
+F01:0139       N_E3_	equ	40*2
+F01:0140       N_F3_	equ	41*2
+F01:0141       N_F3S	equ	42*2
+F01:0142       N_G3_	equ	43*2
+F01:0143       N_G3S	equ	44*2
+F01:0144       N_A3_	equ	45*2
+F01:0145       N_A3S	equ	46*2
+F01:0146       N_B3_	equ	47*2
+F01:0147       
+F01:0148       N_C4_	equ	48*2
+F01:0149       N_C4S	equ	49*2
+F01:0150       N_D4_	equ	50*2
+F01:0151       N_D4S	equ	51*2
+F01:0152       N_E4_	equ	52*2
+F01:0153       N_F4_	equ	53*2
+F01:0154       N_F4S	equ	54*2
+F01:0155       N_G4_	equ	55*2
+F01:0156       N_G4S	equ	56*2
+F01:0157       N_A4_	equ	57*2
+F01:0158       N_A4S	equ	58*2
+F01:0159       N_B4_	equ	59*2
+F01:0160       
+F01:0161       N_C5_	equ	60*2
+F01:0162       N_C5S	equ	61*2
+F01:0163       N_D5_	equ	62*2
+F01:0164       N_D5S	equ	63*2
+F01:0165       N_E5_	equ	64*2
+F01:0166       N_F5_	equ	65*2
+F01:0167       N_F5S	equ	66*2
+F01:0168       N_G5_	equ	67*2
+F01:0169       N_G5S	equ	68*2
+F01:0170       N_A5_	equ	69*2
+F01:0171       N_A5S	equ	70*2
+F01:0172       N_B5_	equ	71*2
+F01:0173       
+F01:0174       N_C6_	equ	72*2
+F01:0175       N_C6S	equ	73*2
+F01:0176       N_D6_	equ	74*2
+F01:0177       N_D6S	equ	75*2
+F01:0178       N_E6_	equ	76*2
+F01:0179       N_F6_	equ	77*2
+F01:0180       N_F6S	equ	78*2
+F01:0181       N_G6_	equ	79*2
+F01:0182       N_G6S	equ	80*2
+F01:0183       N_A6_	equ	81*2
+F01:0184       N_A6S	equ	82*2
+F01:0185       N_B6_	equ	83*2
+F01:0186       
+F01:0187       N_C7_	equ	84*2
+F01:0188       N_C7S	equ	85*2
+F01:0189       N_D7_	equ	86*2
+F01:0190       N_D7S	equ	87*2
+F01:0191       N_E7_	equ	88*2
+F01:0192       N_F7_	equ	89*2
+F01:0193       N_F7S	equ	90*2
+F01:0194       N_G7_	equ	91*2
+F01:0195       N_G7S	equ	92*2
+F01:0196       N_A7_	equ	93*2
+F01:0197       N_A7S	equ	94*2
+F01:0198       
 F00:0005       
 F00:0006       	ORG	$0
 F00:0007       
@@ -1252,7 +1254,7 @@ F00:0697
 F00:0698       ; string data
 F00:0699       
 F00:0700       welcome
-F00:0701       	DC.B	"E64-II (C)2019-2020 kernel 0.2.20201007",ASCII_LF,ASCII_LF,ASCII_NULL
+F00:0701       	DC.B	"E64-II (C)2019-2020 kernel 0.2.20201009",ASCII_LF,ASCII_LF,ASCII_NULL
                S03:00010580:  45 36 34 2D 49 49 20 28 43 29 32 30 31 39 2D 32
                S03:00010590:  30 32 30 20 6B 65 72 6E 65 6C 20 30 2E 32 2E 32
                S03:000105A0:  0A
@@ -1388,280 +1390,317 @@ F02:0027       ;	dc.w	$224b,$2455,$267e,$28c8,$2b34,$2dc6,$307f,$3361,$366f,$39a
 F02:0028       ;	dc.w	$4495,$48a9,$4cfc,$518f,$5669,$5b8c,$60fe,$6602,$6cdf,$7358,$7a34,$8178	; N_C6_ to N_B6_
 F02:0029       ;	dc.w	$892b,$9153,$99f7,$a31f,$acd2,$b719,$c1fc,$cd85,$d9bd,$e6b0,$f467	; N_C7_	to N_A7S
 F02:0030       
-F02:0031       	ALIGN	1
-F02:0032       test_table
-F02:0033       	DC.B	$00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0A,$0B,$0C,$0D,$0E,$0F
-               S03:00010678:  00
-               S03:00010679:  01
-               S03:0001067A:  02
-               S03:0001067B:  03
-               S03:0001067C:  04
-               S03:0001067D:  05
-               S03:0001067E:  06
-               S03:0001067F:  07
-               S03:00010680:  08
-               S03:00010681:  09
-               S03:00010682:  0A
-               S03:00010683:  0B
-               S03:00010684:  0C
-               S03:00010685:  0D
-               S03:00010686:  0E
-               S03:00010687:  0F
-F02:0034       	DC.B	$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1A,$1B,$1C,$1D,$1E,$1F
-               S03:00010688:  10
-               S03:00010689:  11
-               S03:0001068A:  12
-               S03:0001068B:  13
-               S03:0001068C:  14
-               S03:0001068D:  15
-               S03:0001068E:  16
-               S03:0001068F:  17
-               S03:00010690:  18
-               S03:00010691:  19
-               S03:00010692:  1A
-               S03:00010693:  1B
-               S03:00010694:  1C
-               S03:00010695:  1D
-               S03:00010696:  1E
-               S03:00010697:  1F
-F02:0035       	DC.B	$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2A,$2B,$2C,$2D,$2E,$2F
-               S03:00010698:  20
-               S03:00010699:  21
-               S03:0001069A:  22
-               S03:0001069B:  23
-               S03:0001069C:  24
-               S03:0001069D:  25
-               S03:0001069E:  26
-               S03:0001069F:  27
-               S03:000106A0:  28
-               S03:000106A1:  29
-               S03:000106A2:  2A
-               S03:000106A3:  2B
-               S03:000106A4:  2C
-               S03:000106A5:  2D
-               S03:000106A6:  2E
-               S03:000106A7:  2F
-F02:0036       	DC.B	$30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
-               S03:000106A8:  30
-               S03:000106A9:  31
-               S03:000106AA:  32
-               S03:000106AB:  33
-               S03:000106AC:  34
-               S03:000106AD:  35
-               S03:000106AE:  36
-               S03:000106AF:  37
-               S03:000106B0:  38
-               S03:000106B1:  39
-               S03:000106B2:  3A
-               S03:000106B3:  3B
-               S03:000106B4:  3C
-               S03:000106B5:  3D
-               S03:000106B6:  3E
-               S03:000106B7:  3F
-F02:0037       	DC.B	$40,$41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$4B,$4C,$4D,$4E,$4F
-               S03:000106B8:  40
-               S03:000106B9:  41
-               S03:000106BA:  42
-               S03:000106BB:  43
-               S03:000106BC:  44
-               S03:000106BD:  45
-               S03:000106BE:  46
-               S03:000106BF:  47
-               S03:000106C0:  48
-               S03:000106C1:  49
-               S03:000106C2:  4A
-               S03:000106C3:  4B
-               S03:000106C4:  4C
-               S03:000106C5:  4D
-               S03:000106C6:  4E
-               S03:000106C7:  4F
-F02:0038       	DC.B	$50,$51,$52,$53,$54,$55,$56,$57,$58,$59,$5A,$5B,$5C,$5D,$5E,$5F
-               S03:000106C8:  50
-               S03:000106C9:  51
-               S03:000106CA:  52
-               S03:000106CB:  53
-               S03:000106CC:  54
-               S03:000106CD:  55
-               S03:000106CE:  56
-               S03:000106CF:  57
-               S03:000106D0:  58
-               S03:000106D1:  59
-               S03:000106D2:  5A
-               S03:000106D3:  5B
-               S03:000106D4:  5C
-               S03:000106D5:  5D
-               S03:000106D6:  5E
-               S03:000106D7:  5F
-F02:0039       	DC.B	$60,$61,$62,$63,$64,$65,$66,$67,$68,$69,$6A,$6B,$6C,$6D,$6E,$6F
-               S03:000106D8:  60
-               S03:000106D9:  61
-               S03:000106DA:  62
-               S03:000106DB:  63
-               S03:000106DC:  64
-               S03:000106DD:  65
-               S03:000106DE:  66
-               S03:000106DF:  67
-               S03:000106E0:  68
-               S03:000106E1:  69
-               S03:000106E2:  6A
-               S03:000106E3:  6B
-               S03:000106E4:  6C
-               S03:000106E5:  6D
-               S03:000106E6:  6E
-               S03:000106E7:  6F
-F02:0040       	DC.B	$70,$71,$72,$73,$74,$75,$76,$77,$78,$79,$7A,$7B,$7C,$7D,$7E,$7F
-               S03:000106E8:  70
-               S03:000106E9:  71
-               S03:000106EA:  72
-               S03:000106EB:  73
-               S03:000106EC:  74
-               S03:000106ED:  75
-               S03:000106EE:  76
-               S03:000106EF:  77
-               S03:000106F0:  78
-               S03:000106F1:  79
-               S03:000106F2:  7A
-               S03:000106F3:  7B
-               S03:000106F4:  7C
-               S03:000106F5:  7D
-               S03:000106F6:  7E
-               S03:000106F7:  7F
-F02:0041       	DC.B	$80,$81,$82,$83,$84,$85,$86,$87,$88,$89,$8A,$8B,$8C,$8D,$8E,$8F
-               S03:000106F8:  80
-               S03:000106F9:  81
-               S03:000106FA:  82
-               S03:000106FB:  83
-               S03:000106FC:  84
-               S03:000106FD:  85
-               S03:000106FE:  86
-               S03:000106FF:  87
-               S03:00010700:  88
-               S03:00010701:  89
-               S03:00010702:  8A
-               S03:00010703:  8B
-               S03:00010704:  8C
-               S03:00010705:  8D
-               S03:00010706:  8E
-               S03:00010707:  8F
-F02:0042       	DC.B	$90,$91,$92,$93,$94,$95,$96,$97,$98,$99,$9A,$9B,$9C,$9D,$9E,$9F
-               S03:00010708:  90
-               S03:00010709:  91
-               S03:0001070A:  92
-               S03:0001070B:  93
-               S03:0001070C:  94
-               S03:0001070D:  95
-               S03:0001070E:  96
-               S03:0001070F:  97
-               S03:00010710:  98
-               S03:00010711:  99
-               S03:00010712:  9A
-               S03:00010713:  9B
-               S03:00010714:  9C
-               S03:00010715:  9D
-               S03:00010716:  9E
-               S03:00010717:  9F
-F02:0043       	DC.B	$A0,$A1,$A2,$A3,$A4,$A5,$A6,$A7,$A8,$A9,$AA,$AB,$AC,$AD,$AE,$AF
-               S03:00010718:  A0
-               S03:00010719:  A1
-               S03:0001071A:  A2
-               S03:0001071B:  A3
-               S03:0001071C:  A4
-               S03:0001071D:  A5
-               S03:0001071E:  A6
-               S03:0001071F:  A7
-               S03:00010720:  A8
-               S03:00010721:  A9
-               S03:00010722:  AA
-               S03:00010723:  AB
-               S03:00010724:  AC
-               S03:00010725:  AD
-               S03:00010726:  AE
-               S03:00010727:  AF
-F02:0044       	DC.B	$B0,$B1,$B2,$B3,$B4,$B5,$B6,$B7,$B8,$B9,$BA,$BB,$BC,$BD,$BE,$BF
-               S03:00010728:  B0
-               S03:00010729:  B1
-               S03:0001072A:  B2
-               S03:0001072B:  B3
-               S03:0001072C:  B4
-               S03:0001072D:  B5
-               S03:0001072E:  B6
-               S03:0001072F:  B7
-               S03:00010730:  B8
-               S03:00010731:  B9
-               S03:00010732:  BA
-               S03:00010733:  BB
-               S03:00010734:  BC
-               S03:00010735:  BD
-               S03:00010736:  BE
-               S03:00010737:  BF
-F02:0045       	DC.B	$C0,$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9,$CA,$CB,$CC,$CD,$CE,$CF
-               S03:00010738:  C0
-               S03:00010739:  C1
-               S03:0001073A:  C2
-               S03:0001073B:  C3
-               S03:0001073C:  C4
-               S03:0001073D:  C5
-               S03:0001073E:  C6
-               S03:0001073F:  C7
-               S03:00010740:  C8
-               S03:00010741:  C9
-               S03:00010742:  CA
-               S03:00010743:  CB
-               S03:00010744:  CC
-               S03:00010745:  CD
-               S03:00010746:  CE
-               S03:00010747:  CF
-F02:0046       	DC.B	$D0,$D1,$D2,$D3,$D4,$D5,$D6,$D7,$D8,$D9,$DA,$DB,$DC,$DD,$DE,$DF
-               S03:00010748:  D0
-               S03:00010749:  D1
-               S03:0001074A:  D2
-               S03:0001074B:  D3
-               S03:0001074C:  D4
-               S03:0001074D:  D5
-               S03:0001074E:  D6
-               S03:0001074F:  D7
-               S03:00010750:  D8
-               S03:00010751:  D9
-               S03:00010752:  DA
-               S03:00010753:  DB
-               S03:00010754:  DC
-               S03:00010755:  DD
-               S03:00010756:  DE
-               S03:00010757:  DF
-F02:0047       	DC.B	$E0,$E1,$E2,$E3,$E4,$E5,$E6,$E7,$E8,$E9,$EA,$EB,$EC,$ED,$EE,$EF
-               S03:00010758:  E0
-               S03:00010759:  E1
-               S03:0001075A:  E2
-               S03:0001075B:  E3
-               S03:0001075C:  E4
-               S03:0001075D:  E5
-               S03:0001075E:  E6
-               S03:0001075F:  E7
-               S03:00010760:  E8
-               S03:00010761:  E9
-               S03:00010762:  EA
-               S03:00010763:  EB
-               S03:00010764:  EC
-               S03:00010765:  ED
-               S03:00010766:  EE
-               S03:00010767:  EF
-F02:0048       	DC.B	$F0,$F1,$F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9,$FA,$FB,$FC,$FD,$FE,$FF
-               S03:00010768:  F0
-               S03:00010769:  F1
-               S03:0001076A:  F2
-               S03:0001076B:  F3
-               S03:0001076C:  F4
-               S03:0001076D:  F5
-               S03:0001076E:  F6
-               S03:0001076F:  F7
-               S03:00010770:  F8
-               S03:00010771:  F9
-               S03:00010772:  FA
-               S03:00010773:  FB
-               S03:00010774:  FC
-               S03:00010775:  FD
-               S03:00010776:  FE
-               S03:00010777:  FF
+F02:0031       
+F02:0032       	ALIGN	1
+F02:0033       color_table
+F02:0034       	DC.W	C64_BLACK
+               S03:00010678:  F0 00
+F02:0035       	DC.W	C64_WHITE
+               S03:0001067A:  FF FF
+F02:0036       	DC.W	C64_RED
+               S03:0001067C:  F7 33
+F02:0037       	DC.W	C64_CYAN
+               S03:0001067E:  F8 CC
+F02:0038       	DC.W	C64_PURPLE
+               S03:00010680:  F8 49
+F02:0039       	DC.W	C64_GREEN
+               S03:00010682:  F6 A5
+F02:0040       	DC.W	C64_BLUE
+               S03:00010684:  F3 39
+F02:0041       	DC.W	C64_YELLOW
+               S03:00010686:  FE E8
+F02:0042       	DC.W	C64_ORANGE
+               S03:00010688:  F8 53
+F02:0043       	DC.W	C64_BROWN
+               S03:0001068A:  F5 31
+F02:0044       	DC.W	C64_LIGHTRED
+               S03:0001068C:  FB 77
+F02:0045       	DC.W	C64_DARKGREY
+               S03:0001068E:  F4 44
+F02:0046       	DC.W	C64_GREY
+               S03:00010690:  F7 77
+F02:0047       	DC.W	C64_LIGHTGREEN
+               S03:00010692:  FB FA
+F02:0048       	DC.W	C64_LIGHTBLUE
+               S03:00010694:  F6 7D
+F02:0049       	DC.W	C64_LIGHTGREY
+               S03:00010696:  FA AA
+F02:0050       
+F02:0051       
+F02:0052       	ALIGN	1
+F02:0053       test_table
+F02:0054       	DC.B	$00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0A,$0B,$0C,$0D,$0E,$0F
+               S03:00010698:  00
+               S03:00010699:  01
+               S03:0001069A:  02
+               S03:0001069B:  03
+               S03:0001069C:  04
+               S03:0001069D:  05
+               S03:0001069E:  06
+               S03:0001069F:  07
+               S03:000106A0:  08
+               S03:000106A1:  09
+               S03:000106A2:  0A
+               S03:000106A3:  0B
+               S03:000106A4:  0C
+               S03:000106A5:  0D
+               S03:000106A6:  0E
+               S03:000106A7:  0F
+F02:0055       	DC.B	$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1A,$1B,$1C,$1D,$1E,$1F
+               S03:000106A8:  10
+               S03:000106A9:  11
+               S03:000106AA:  12
+               S03:000106AB:  13
+               S03:000106AC:  14
+               S03:000106AD:  15
+               S03:000106AE:  16
+               S03:000106AF:  17
+               S03:000106B0:  18
+               S03:000106B1:  19
+               S03:000106B2:  1A
+               S03:000106B3:  1B
+               S03:000106B4:  1C
+               S03:000106B5:  1D
+               S03:000106B6:  1E
+               S03:000106B7:  1F
+F02:0056       	DC.B	$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2A,$2B,$2C,$2D,$2E,$2F
+               S03:000106B8:  20
+               S03:000106B9:  21
+               S03:000106BA:  22
+               S03:000106BB:  23
+               S03:000106BC:  24
+               S03:000106BD:  25
+               S03:000106BE:  26
+               S03:000106BF:  27
+               S03:000106C0:  28
+               S03:000106C1:  29
+               S03:000106C2:  2A
+               S03:000106C3:  2B
+               S03:000106C4:  2C
+               S03:000106C5:  2D
+               S03:000106C6:  2E
+               S03:000106C7:  2F
+F02:0057       	DC.B	$30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
+               S03:000106C8:  30
+               S03:000106C9:  31
+               S03:000106CA:  32
+               S03:000106CB:  33
+               S03:000106CC:  34
+               S03:000106CD:  35
+               S03:000106CE:  36
+               S03:000106CF:  37
+               S03:000106D0:  38
+               S03:000106D1:  39
+               S03:000106D2:  3A
+               S03:000106D3:  3B
+               S03:000106D4:  3C
+               S03:000106D5:  3D
+               S03:000106D6:  3E
+               S03:000106D7:  3F
+F02:0058       	DC.B	$40,$41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$4B,$4C,$4D,$4E,$4F
+               S03:000106D8:  40
+               S03:000106D9:  41
+               S03:000106DA:  42
+               S03:000106DB:  43
+               S03:000106DC:  44
+               S03:000106DD:  45
+               S03:000106DE:  46
+               S03:000106DF:  47
+               S03:000106E0:  48
+               S03:000106E1:  49
+               S03:000106E2:  4A
+               S03:000106E3:  4B
+               S03:000106E4:  4C
+               S03:000106E5:  4D
+               S03:000106E6:  4E
+               S03:000106E7:  4F
+F02:0059       	DC.B	$50,$51,$52,$53,$54,$55,$56,$57,$58,$59,$5A,$5B,$5C,$5D,$5E,$5F
+               S03:000106E8:  50
+               S03:000106E9:  51
+               S03:000106EA:  52
+               S03:000106EB:  53
+               S03:000106EC:  54
+               S03:000106ED:  55
+               S03:000106EE:  56
+               S03:000106EF:  57
+               S03:000106F0:  58
+               S03:000106F1:  59
+               S03:000106F2:  5A
+               S03:000106F3:  5B
+               S03:000106F4:  5C
+               S03:000106F5:  5D
+               S03:000106F6:  5E
+               S03:000106F7:  5F
+F02:0060       	DC.B	$60,$61,$62,$63,$64,$65,$66,$67,$68,$69,$6A,$6B,$6C,$6D,$6E,$6F
+               S03:000106F8:  60
+               S03:000106F9:  61
+               S03:000106FA:  62
+               S03:000106FB:  63
+               S03:000106FC:  64
+               S03:000106FD:  65
+               S03:000106FE:  66
+               S03:000106FF:  67
+               S03:00010700:  68
+               S03:00010701:  69
+               S03:00010702:  6A
+               S03:00010703:  6B
+               S03:00010704:  6C
+               S03:00010705:  6D
+               S03:00010706:  6E
+               S03:00010707:  6F
+F02:0061       	DC.B	$70,$71,$72,$73,$74,$75,$76,$77,$78,$79,$7A,$7B,$7C,$7D,$7E,$7F
+               S03:00010708:  70
+               S03:00010709:  71
+               S03:0001070A:  72
+               S03:0001070B:  73
+               S03:0001070C:  74
+               S03:0001070D:  75
+               S03:0001070E:  76
+               S03:0001070F:  77
+               S03:00010710:  78
+               S03:00010711:  79
+               S03:00010712:  7A
+               S03:00010713:  7B
+               S03:00010714:  7C
+               S03:00010715:  7D
+               S03:00010716:  7E
+               S03:00010717:  7F
+F02:0062       	DC.B	$80,$81,$82,$83,$84,$85,$86,$87,$88,$89,$8A,$8B,$8C,$8D,$8E,$8F
+               S03:00010718:  80
+               S03:00010719:  81
+               S03:0001071A:  82
+               S03:0001071B:  83
+               S03:0001071C:  84
+               S03:0001071D:  85
+               S03:0001071E:  86
+               S03:0001071F:  87
+               S03:00010720:  88
+               S03:00010721:  89
+               S03:00010722:  8A
+               S03:00010723:  8B
+               S03:00010724:  8C
+               S03:00010725:  8D
+               S03:00010726:  8E
+               S03:00010727:  8F
+F02:0063       	DC.B	$90,$91,$92,$93,$94,$95,$96,$97,$98,$99,$9A,$9B,$9C,$9D,$9E,$9F
+               S03:00010728:  90
+               S03:00010729:  91
+               S03:0001072A:  92
+               S03:0001072B:  93
+               S03:0001072C:  94
+               S03:0001072D:  95
+               S03:0001072E:  96
+               S03:0001072F:  97
+               S03:00010730:  98
+               S03:00010731:  99
+               S03:00010732:  9A
+               S03:00010733:  9B
+               S03:00010734:  9C
+               S03:00010735:  9D
+               S03:00010736:  9E
+               S03:00010737:  9F
+F02:0064       	DC.B	$A0,$A1,$A2,$A3,$A4,$A5,$A6,$A7,$A8,$A9,$AA,$AB,$AC,$AD,$AE,$AF
+               S03:00010738:  A0
+               S03:00010739:  A1
+               S03:0001073A:  A2
+               S03:0001073B:  A3
+               S03:0001073C:  A4
+               S03:0001073D:  A5
+               S03:0001073E:  A6
+               S03:0001073F:  A7
+               S03:00010740:  A8
+               S03:00010741:  A9
+               S03:00010742:  AA
+               S03:00010743:  AB
+               S03:00010744:  AC
+               S03:00010745:  AD
+               S03:00010746:  AE
+               S03:00010747:  AF
+F02:0065       	DC.B	$B0,$B1,$B2,$B3,$B4,$B5,$B6,$B7,$B8,$B9,$BA,$BB,$BC,$BD,$BE,$BF
+               S03:00010748:  B0
+               S03:00010749:  B1
+               S03:0001074A:  B2
+               S03:0001074B:  B3
+               S03:0001074C:  B4
+               S03:0001074D:  B5
+               S03:0001074E:  B6
+               S03:0001074F:  B7
+               S03:00010750:  B8
+               S03:00010751:  B9
+               S03:00010752:  BA
+               S03:00010753:  BB
+               S03:00010754:  BC
+               S03:00010755:  BD
+               S03:00010756:  BE
+               S03:00010757:  BF
+F02:0066       	DC.B	$C0,$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9,$CA,$CB,$CC,$CD,$CE,$CF
+               S03:00010758:  C0
+               S03:00010759:  C1
+               S03:0001075A:  C2
+               S03:0001075B:  C3
+               S03:0001075C:  C4
+               S03:0001075D:  C5
+               S03:0001075E:  C6
+               S03:0001075F:  C7
+               S03:00010760:  C8
+               S03:00010761:  C9
+               S03:00010762:  CA
+               S03:00010763:  CB
+               S03:00010764:  CC
+               S03:00010765:  CD
+               S03:00010766:  CE
+               S03:00010767:  CF
+F02:0067       	DC.B	$D0,$D1,$D2,$D3,$D4,$D5,$D6,$D7,$D8,$D9,$DA,$DB,$DC,$DD,$DE,$DF
+               S03:00010768:  D0
+               S03:00010769:  D1
+               S03:0001076A:  D2
+               S03:0001076B:  D3
+               S03:0001076C:  D4
+               S03:0001076D:  D5
+               S03:0001076E:  D6
+               S03:0001076F:  D7
+               S03:00010770:  D8
+               S03:00010771:  D9
+               S03:00010772:  DA
+               S03:00010773:  DB
+               S03:00010774:  DC
+               S03:00010775:  DD
+               S03:00010776:  DE
+               S03:00010777:  DF
+F02:0068       	DC.B	$E0,$E1,$E2,$E3,$E4,$E5,$E6,$E7,$E8,$E9,$EA,$EB,$EC,$ED,$EE,$EF
+               S03:00010778:  E0
+               S03:00010779:  E1
+               S03:0001077A:  E2
+               S03:0001077B:  E3
+               S03:0001077C:  E4
+               S03:0001077D:  E5
+               S03:0001077E:  E6
+               S03:0001077F:  E7
+               S03:00010780:  E8
+               S03:00010781:  E9
+               S03:00010782:  EA
+               S03:00010783:  EB
+               S03:00010784:  EC
+               S03:00010785:  ED
+               S03:00010786:  EE
+               S03:00010787:  EF
+F02:0069       	DC.B	$F0,$F1,$F2,$F3,$F4,$F5,$F6,$F7,$F8,$F9,$FA,$FB,$FC,$FD,$FE,$FF
+               S03:00010788:  F0
+               S03:00010789:  F1
+               S03:0001078A:  F2
+               S03:0001078B:  F3
+               S03:0001078C:  F4
+               S03:0001078D:  F5
+               S03:0001078E:  F6
+               S03:0001078F:  F7
+               S03:00010790:  F8
+               S03:00010791:  F9
+               S03:00010792:  FA
+               S03:00010793:  FB
+               S03:00010794:  FC
+               S03:00010795:  FD
+               S03:00010796:  FE
+               S03:00010797:  FF
 F00:0706       
 F00:0707       	ORG	KERNEL_LOC+$FFFC
 F00:0708       	DC.L	$DEADBEEF
@@ -1682,7 +1721,8 @@ F02  kernel_tables.s
 
 
 Symbols:
-test_table EXPR(67192=0x10678) UNUSED ABS 
+test_table EXPR(67224=0x10698) UNUSED ABS 
+color_table EXPR(67192=0x10678) UNUSED ABS 
 hex_table EXPR(66986=0x105aa) UNUSED ABS 
  copy_charrom_to_charram .4 EXPR(66628=0x10444) ABS 
  copy_charrom_to_charram .3 EXPR(66624=0x10440) ABS 
@@ -1889,21 +1929,21 @@ N_D0S EXPR(6=0x6) UNUSED EQU
 N_D0_ EXPR(4=0x4) UNUSED EQU 
 N_C0S EXPR(2=0x2) UNUSED EQU 
 N_C0_ EXPR(0=0x0) UNUSED EQU 
-C64_LIGHTGREY EXPR(64170=0xfaaa) UNUSED EQU 
+C64_LIGHTGREY EXPR(64170=0xfaaa) EQU 
 C64_LIGHTBLUE EXPR(63101=0xf67d) EQU 
-C64_LIGHTGREEN EXPR(64506=0xfbfa) UNUSED EQU 
+C64_LIGHTGREEN EXPR(64506=0xfbfa) EQU 
 C64_GREY EXPR(63351=0xf777) EQU 
-C64_DARKGREY EXPR(62532=0xf444) UNUSED EQU 
-C64_LIGHTRED EXPR(64375=0xfb77) UNUSED EQU 
-C64_BROWN EXPR(62769=0xf531) UNUSED EQU 
-C64_ORANGE EXPR(63571=0xf853) UNUSED EQU 
-C64_YELLOW EXPR(65256=0xfee8) UNUSED EQU 
+C64_DARKGREY EXPR(62532=0xf444) EQU 
+C64_LIGHTRED EXPR(64375=0xfb77) EQU 
+C64_BROWN EXPR(62769=0xf531) EQU 
+C64_ORANGE EXPR(63571=0xf853) EQU 
+C64_YELLOW EXPR(65256=0xfee8) EQU 
 C64_BLUE EXPR(62265=0xf339) EQU 
-C64_GREEN EXPR(63141=0xf6a5) UNUSED EQU 
-C64_PURPLE EXPR(63561=0xf849) UNUSED EQU 
-C64_CYAN EXPR(63692=0xf8cc) UNUSED EQU 
-C64_RED EXPR(63283=0xf733) UNUSED EQU 
-C64_WHITE EXPR(65535=0xffff) UNUSED EQU 
+C64_GREEN EXPR(63141=0xf6a5) EQU 
+C64_PURPLE EXPR(63561=0xf849) EQU 
+C64_CYAN EXPR(63692=0xf8cc) EQU 
+C64_RED EXPR(63283=0xf733) EQU 
+C64_WHITE EXPR(65535=0xffff) EQU 
 C64_BLACK EXPR(61440=0xf000) EQU 
 BLITTER_CLEAR_COLOR EXPR(16713478=0xff0706) EQU 
 BLITTER_DATA_32_BIT EXPR(16713474=0xff0702) EQU 
@@ -1937,9 +1977,11 @@ CHAR_RAM EXPR(15794176=0xf10000) EQU
 CHAR_ROM EXPR(16646144=0xfe0000) EQU 
 SCRN_SPACE EXPR(32=0x20) EQU 
 ASCII_CURSOR_LEFT EXPR(157=0x9d) EQU 
+ASCII_REVERSE_OFF EXPR(146=0x92) UNUSED EQU 
 ASCII_CURSOR_UP EXPR(145=0x91) EQU 
 ASCII_SPACE EXPR(32=0x20) EQU 
 ASCII_CURSOR_RIGHT EXPR(29=0x1d) EQU 
+ASCII_REVERSE_ON EXPR(18=0x12) UNUSED EQU 
 ASCII_CURSOR_DOWN EXPR(17=0x11) EQU 
 ASCII_CR EXPR(13=0xd) UNUSED EQU 
 ASCII_LF EXPR(10=0xa) EQU 

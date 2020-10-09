@@ -698,7 +698,7 @@ screen_blit_structure
 ; string data
 
 welcome
-	DC.B	"E64-II (C)2019-2020 kernel 0.2.20201007",ASCII_LF,ASCII_LF,ASCII_NULL
+	DC.B	"E64-II (C)2019-2020 kernel 0.2.20201009",ASCII_LF,ASCII_LF,ASCII_NULL
 
 	ALIGN	1
 
