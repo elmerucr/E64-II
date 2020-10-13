@@ -1,7 +1,7 @@
 //  cpu_moira.hpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #ifndef	CPU_MOIRA
 #define	CPU_MOIRA

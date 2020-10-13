@@ -1,7 +1,7 @@
 //  cpu_moira.cpp
 //  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "cpu_moira.hpp"
 #include "common.hpp"
@@ -37,7 +37,7 @@ void cpu_moira::dump_registers(char *temp_string)
 {
     int n;
     int max = 2048;
-    n = snprintf( temp_string,max," PC:%08x SSP/USP: %08x %08x\n\n", getPC(), getSSP(), getUSP() );
+    n = snprintf( temp_string,max,"  PC:%08x SSP/USP:%08x %08x\n\n", getPC(), getSSP(), getUSP() );
     temp_string += n;
     max -= n;
     n = snprintf( temp_string,max,"D0-D3:%08x %08x %08x %08x\n", getD(0), getD(1), getD(2), getD(3) );

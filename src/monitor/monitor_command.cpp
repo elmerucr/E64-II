@@ -201,29 +201,48 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     }
     else if( strcmp(token0, "m") == 0 )
     {
-        debug_console_put_char('\n');
+        uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+        if(lines_remaining == 0) lines_remaining = 1;
+        
+        uint32_t temp_pc = pc.m68k_ic->getPC();
+        
+        //debug_console_put_char('\n');
+        
         if( token1 == NULL )
         {
-            debug_command_memory_dump(pc.m68k_ic->getPC(), 1);
+            for(int i=0; i<lines_remaining; i++)
+            {
+                debug_console_put_char('\n');
+                debug_command_memory_dump(temp_pc, 1);
+                temp_pc = (temp_pc + 8) & 0x00ffffff;
+            }
         }
         else
         {
-            uint32_t temp_32bit;
-            if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
+            if ( !debug_command_hex_string_to_int(token1, &temp_pc) )
             {
+                debug_console_put_char('\n');
                 debug_console_print("error: invalid address\n");
             }
             else
             {
-                debug_command_memory_dump(temp_32bit & (RAM_SIZE - 1), 1);
+                for(int i=0; i<lines_remaining; i++)
+                {
+                    debug_console_put_char('\n');
+                    debug_command_memory_dump(temp_pc & (RAM_SIZE - 1), 1);
+                    temp_pc = (temp_pc + 8) & 0x00ffffff;
+                }
             }
         }
     }
     else if( strcmp(token0, "mc") == 0 )
     {
-        debug_console_put_char('\n');
+        uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+        if(lines_remaining == 0) lines_remaining = 1;
+        
         if( token1 == NULL )
         {
+            debug_console_put_char('\n');
             debug_console_print("error: need address\n");
         }
         else
@@ -231,11 +250,17 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             uint32_t temp_32bit;
             if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
             {
+                debug_console_put_char('\n');
                 debug_console_print("error: invalid address\n");
             }
             else
             {
-                debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 1);
+                for(int i=0; i<lines_remaining; i++)
+                {
+                    debug_console_put_char('\n');
+                    debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 1);
+                    temp_32bit = (temp_32bit + 16) & 0x00ffffff;
+                }
             }
         }
     }
