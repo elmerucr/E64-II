@@ -1,7 +1,7 @@
 # E64-II
 ![E64](./docs/E64-II_icon.png)
 ## Description
-The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's mainly inspired by the Commodore 64 but implements a significant part of Amiga 500 technology as well.
+The E64-II (Enhanced 64-II) is a virtual computer system (under construction) that runs on macOS and linux. It's mainly inspired by the Commodore 64 but implements significant parts of Amiga 500 and Atari ST technology as well.
 ## Technical specifications:
 * Motorola 68000 CPU running at 11.88MHz using the [Moira](https://github.com/dirkwhoffmann/Moira) library.
 * A total of 16MB ram.
@@ -37,24 +37,31 @@ $ ./E64-II
 The sourcecode comes with a working version of the kernel ````kernel.cpp````. If you want to build it yourself however, you can do the following:
 * Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
 * In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.s```` sourcefiles into a binary rom image. Furthermore, the ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the E64-II build.
-## Other websites and projects of interest
+## Websites and projects of interest
+### Assemblers and Compilers
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
 * [asmx multi-CPU assembler](http://xi6.com/projects/asmx/) - Excellent assembler with Motorola 680x0 support amongst others.
-* [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time.
+* [ATARI MiNT cross-compiler for Mac OS X](https://donzé.ch/atari/articles/cross-compiler/) - Based on the latest m68k-atari-mint cross-compiler work of Vincent Rivière.
+* [vasm](http://sun.hasenbraten.de/vasm/) - A portable and retargetable assembler with very good support for the Motorola 680x0 family by Volker Barthelmann / Frank Wille.
+* [Vincent Rivière's m68k-atari-mint cross-tools](http://vincent.riviere.free.fr/soft/m68k-atari-mint/) - Both bin tools and gcc to target m68k platform.
+### Emulators
 * [CCS64](http://www.ccs64.com) - A Commodore 64 Emulator by Per Håkan Sundell.
-* [Commander X16](https://www.commanderx16.com) - The Commander X16 is a modern 8-bit computer currently in active development. It is the brainchild of David "the 8 Bit Guy" Murray.
+* [Commander X16 emulator](https://github.com/commanderx16/x16-emulator) - Software version of Commander X16.
 * [Hatari](https://hatari.tuxfamily.org) - Hatari is an Atari ST/STE/TT/Falcon emulator.
 * [lib65ce02](https://github.com/elmerucr/lib65ce02) - CSG65CE02 emulator written in C.
-* [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage.
 * [Moira](https://github.com/dirkwhoffmann/Moira) - New Motorola 68000 emulator written in C++ by Dirk W. Hoffmann.
 * [Musashi](https://github.com/kstenerud/Musashi) - Motorola 680x0 emulator written in C by Karl Stenerud.
 * [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) - ReSID is a Commodore 6581 or 8580 Sound Interface Device emulator by Dag Lem.
+* [vAmiga](http://www.dirkwhoffmann.de/software/vamiga.html) - An Amiga 500, 1000, or 2000 on your Apple Macintosh by Dirk W. Hoffmann.
+* [VICE](http://vice-emu.sourceforge.net) - The Versatile Commodore Emulator.
+* [VirtualC64](http://www.dirkwhoffmann.de/software/virtualc64.html) - A Commodore 64 on your Apple Macintosh by Dirk W. Hoffmann.
+### Other
+* [C256 Foenix](https://c256foenix.com) - A computer that could have possibly followed the Commodore 128 if things would have been different at Commodore at the time.
+* [Commander X16](https://www.commanderx16.com) - The Commander X16 is a modern 8-bit computer currently in active development. It is the brainchild of David "the 8 Bit Guy" Murray.
+* [EmuTOS](https://emutos.sourceforge.io) - EmuTOS is a Free operating system for computers based on Motorola 680x0 or ColdFire microprocessors.
+* [Mega65](http://mega65.org) - The 21st century realization of the C65 heritage.
 * [SDL Simple DirectMedia Layer](https://www.libsdl.org) - A cross-platform development library by Sam Lantinga designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware.
 * [ultimate64](https://ultimate64.com/Ultimate-64) - A hardware implementation (FPGA) of the C64.
-* [vAmiga](http://www.dirkwhoffmann.de/software/vAmiga.html) - An Amiga 500, 1000, or 2000 on your Apple Macintosh by Dirk W. Hoffmann.
-* [vasm](http://sun.hasenbraten.de/vasm/) - A portable and retargetable assembler with very good support for the Motorola 680x0 family by Volker Barthelmann / Frank Wille.
-* [VICE](http://vice-emu.sourceforge.net) - The Versatile Commodore Emulator.
-* [VirtualC64](http://www.dirkwhoffmann.de/software/virtualC64.html) - A Commodore 64 on your Apple Macintosh by Dirk W. Hoffmann.
 * [visual6502](http://www.visual6502.org) - Visual Transistor-level Simulation of the 6502 CPU and other chips.
 ## MIT License
 Copyright (c) 2020 elmerucr
