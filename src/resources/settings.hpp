@@ -17,6 +17,7 @@ private:
     
     void update_current_path_from_settings();
     void write_current_path_to_settings();
+    void find_and_update_kernel();
 public:
     settings();
     ~settings();

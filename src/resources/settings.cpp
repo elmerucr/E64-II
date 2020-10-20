@@ -10,6 +10,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+extern uint8_t kernel[];
+
 E64::settings::settings()
 {
     snprintf(settings_path, 256, "%s", getenv("HOME"));     // within apple app container this returns a long path
@@ -31,7 +33,7 @@ E64::settings::settings()
     
     snprintf(iterator, 256, "/.E64-II");
     
-    printf("[Settings] trying to open settings directory: %s\n", settings_path);
+    printf("[Settings] opening settings directory: %s\n", settings_path);
     settings_directory = opendir(settings_path);
     if( settings_directory == NULL )
     {
@@ -42,6 +44,10 @@ E64::settings::settings()
     
     // switch to settings path and try to update current_path from settings
     chdir(settings_path);
+    
+    // call this before update_current_...
+    find_and_update_kernel();
+    
     update_current_path_from_settings();
 }
 
@@ -65,7 +71,7 @@ void E64::settings::update_current_path_from_settings()
         size_t ln = strlen(current_path) - 1;
         if (*current_path && current_path[ln] == '\n') current_path[ln] = '\0';
         
-        printf("[Settings] the current path is now: %s\n", current_path);
+        printf("[Settings] current path is now: %s\n", current_path);
         fclose(temp_file);
         chdir(current_path);
     }
@@ -90,4 +96,20 @@ void E64::settings::write_current_path_to_settings()
     }
     
     fclose(temp_file);
+}
+
+void E64::settings::find_and_update_kernel()
+{
+    FILE *temp_file = fopen("kernel.bin", "r");
+    
+    if( temp_file )
+    {
+        printf("[Settings] found 'kernel.bin' in settings dir, using it\n");
+        fread(kernel, 65536, 1, temp_file);
+        fclose(temp_file);
+    }
+    else
+    {
+        printf("[Settings] no 'kernel.bin' in settings dir, using enclosed version\n");
+    }
 }

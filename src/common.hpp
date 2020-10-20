@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201017
+#define E64_II_BUILD            20201019
 #define E64_II_YEAR             2020
 
 //  Global objects
@@ -25,7 +25,7 @@ extern E64::machine     pc;
 extern E64::video       host_video;
 extern E64::stats       statistics;
 
-#define RAM_SIZE                0x1000000   // 16mb system, DON'T change
+#define RAM_SIZE                0x1000000   // 16mb system, DO NOT CHANGE
 
 /*  System uses standard 720p60 HDMI output.
  *  In a 'distant' future, this will come in handy with real hardware.
