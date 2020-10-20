@@ -6,6 +6,7 @@
 #include "settings.hpp"
 #include <cstdio>
 #include <cstring>
+#include <cstdint>
 #include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
