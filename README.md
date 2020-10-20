@@ -10,9 +10,9 @@ The Enhanced 64-II (or E64-II shortly) is a virtual computer system that runs on
 * Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for the same pitch as the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to big endian format for interoperability with the Motorola 68000.
 * Four independent and programmable timers with interrupt functionality.
 ## Screenshots
-### Running (2020-05-28):
+### Running (normal mode):
 ![E64-II running](./docs/E64-II_normal_2020-05-28.png)
-### Monitor view (2020-10-20):
+### Monitor (debugging mode):
 ![E64-II monitor view](./docs/E64-II_debug_2020-10-20.png)
 ## Compiling
 ### Core application
