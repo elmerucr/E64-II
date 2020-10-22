@@ -29,12 +29,12 @@ F01:0024       SCRN_SPACE		equ	$20
 F01:0025       
 F01:0026       
 F01:0027       ; char rom
-F01:0028       CHAR_ROM		equ	$FB0000
+F01:0028       CHAR_ROM		equ	$FB8000
 F01:0029       CHAR_RAM		equ	$F10000
 F01:0030       
 F01:0031       
 F01:0032       ; cia
-F01:0033       CIA_BASE		equ	$FA0300
+F01:0033       CIA_BASE		equ	$FB0300
 F01:0034       CIA_STATUS		equ	CIA_BASE
 F01:0035       CIA_CONTROL		equ	CIA_BASE+$01
 F01:0036       CIA_DELAY		equ	CIA_BASE+$02
@@ -44,7 +44,7 @@ F01:0039       CIA_KEYBOARD		equ	CIA_BASE+$80
 F01:0040       
 F01:0041       
 F01:0042       ; vicv
-F01:0043       VICV_BASE		equ	$FA0400 	; vicv base register
+F01:0043       VICV_BASE		equ	$FB0400 	; vicv base register
 F01:0044       VICV_BORDER_COLOR	equ	VICV_BASE	; 16 bit value
 F01:0045       VICV_TXT		equ	VICV_BASE+$04
 F01:0046       VICV_COL		equ	VICV_BASE+$08
@@ -54,7 +54,7 @@ F01:0049       VICV_BUFFERSWAP		equ	VICV_BASE+$10
 F01:0050       
 F01:0051       
 F01:0052       ; SOUND
-F01:0053       SOUND_BASE	equ	$FA0500			; base register
+F01:0053       SOUND_BASE	equ	$FB0500			; base register
 F01:0054       SID0_BASE	equ	SOUND_BASE
 F01:0055       SID0_VOLUME	equ	SID0_BASE+$18
 F01:0056       SID1_BASE	equ	SOUND_BASE+$20
@@ -67,11 +67,11 @@ F01:0062       SID1_RGHT	equ	SOUND_BASE+$83
 F01:0063       
 F01:0064       
 F01:0065       ; timer
-F01:0066       TIMER_BASE		equ	$FA0600
+F01:0066       TIMER_BASE		equ	$FB0600
 F01:0067       
 F01:0068       
 F01:0069       ; blitter
-F01:0070       BLITTER_BASE		equ	$FA0700
+F01:0070       BLITTER_BASE		equ	$FB0700
 F01:0071       BLITTER_CONTROL		equ	BLITTER_BASE
 F01:0072       BLITTER_DATA_32_BIT	equ	BLITTER_BASE+$02
 F01:0073       BLITTER_CLEAR_COLOR	equ	BLITTER_BASE+$06	; 16 bit word
@@ -287,9 +287,9 @@ F00:0081
 F00:0082       	; set up timer0 interrupts (cursor flashing)
 F00:0083       
 F00:0084       	MOVE.W	#$E10,TIMER_BASE+2	; load value 3600 ($E10 = 3600bpm = 60Hz)
-               S03:00FC001C:  33 FC 0E 10 00 FA 06 02
+               S03:00FC001C:  33 FC 0E 10 00 FB 06 02
 F00:0085       	ORI.B	#%00000001,TIMER_BASE+1	; turn on interrupt generation by clock0
-               S03:00FC0024:  00 39 00 01 00 FA 06 01
+               S03:00FC0024:  00 39 00 01 00 FB 06 01
 F00:0086       
 F00:0087       
 F00:0088       	; set up timer1 interrupts (ting sound)
@@ -317,18 +317,18 @@ F00:0105       	MOVE.W	D0,SR
 F00:0106       
 F00:0107       	; CIA start generating keyboard events
 F00:0108       	MOVE.B	#%00000001,CIA_CONTROL
-               S03:00FC0038:  13 FC 00 01 00 FA 03 01
+               S03:00FC0038:  13 FC 00 01 00 FB 03 01
 F00:0109       
 F00:0110       
 F00:0111       	; set color and size of border
 F00:0112       	MOVE.W	#C64_BLACK,VICV_BORDER_COLOR
-               S03:00FC0040:  33 FC F0 00 00 FA 04 00
+               S03:00FC0040:  33 FC F0 00 00 FB 04 00
 F00:0113       	MOVE.B	#$10,VICV_BORDER_SIZE
-               S03:00FC0048:  13 FC 00 10 00 FA 04 0C
+               S03:00FC0048:  13 FC 00 10 00 FB 04 0C
 F00:0114       
 F00:0115       	; set clear color ('background')
 F00:0116       	MOVE.W	#C64_BLUE,BLITTER_CLEAR_COLOR
-               S03:00FC0050:  33 FC F3 39 00 FA 07 06
+               S03:00FC0050:  33 FC F3 39 00 FB 07 06
 F00:0117       
 F00:0118       	; copy the screen blit struct from rom to appropriate ram area
 F00:0119       	LEA	screen_blit_structure,a0
@@ -346,9 +346,9 @@ F00:0125
 F00:0126       
 F00:0127       	; set txt & color pointer  -  deprecated!
 F00:0128       	MOVE.L	#$00F00000,VICV_TXT
-               S03:00FC006E:  23 FC 00 F0 00 00 00 FA 04 04
+               S03:00FC006E:  23 FC 00 F0 00 00 00 FB 04 04
 F00:0129       	MOVE.L	#$00F00800,VICV_COL
-               S03:00FC0078:  23 FC 00 F0 08 00 00 FA 04 08
+               S03:00FC0078:  23 FC 00 F0 08 00 00 FB 04 08
 F00:0130       
 F00:0131       	MOVE.W	#C64_LIGHTBLUE,curr_text_color
                S03:00FC0082:  31 FC F6 7D 04 00
@@ -356,7 +356,7 @@ F00:0132
 F00:0133       	; play a welcome sound on SID0
 F00:0134       
 F00:0135       	LEA	SID0_BASE,A0
-               S03:00FC0088:  41 F9 00 FA 05 00
+               S03:00FC0088:  41 F9 00 FB 05 00
 F00:0136       	LEA	notes,A1
                S03:00FC008E:  43 FA 05 2A
 F00:0137       	MOVE.W	N_D3_(A1),(A0)		; set frequency of voice 1
@@ -366,9 +366,9 @@ F00:0138       	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
 F00:0139       	MOVE.W	#$F0F,$02(A0)		; pulse width of voice 1
                S03:00FC009C:  31 7C 0F 0F 00 02
 F00:0140       	MOVE.B	#$FF,SID0_LEFT		; left channel mix
-               S03:00FC00A2:  13 FC 00 FF 00 FA 05 80
+               S03:00FC00A2:  13 FC 00 FF 00 FB 05 80
 F00:0141       	MOVE.B	#$10,SID0_RGHT		; right channel mix
-               S03:00FC00AA:  13 FC 00 10 00 FA 05 81
+               S03:00FC00AA:  13 FC 00 10 00 FB 05 81
 F00:0142       	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
                S03:00FC00B2:  11 7C 00 41 00 04
 F00:0143       
@@ -376,7 +376,7 @@ F00:0144
 F00:0145       	; play a welcome sound on SID1
 F00:0146       
 F00:0147       	LEA	SID1_BASE,A0
-               S03:00FC00B8:  41 F9 00 FA 05 20
+               S03:00FC00B8:  41 F9 00 FB 05 20
 F00:0148       	LEA	notes,A1
                S03:00FC00BE:  43 FA 04 FA
 F00:0149       	MOVE.W	N_A3_(A1),(A0)		; set frequency of voice 1
@@ -386,9 +386,9 @@ F00:0150       	MOVE.B	#%00001001,$5(A0)	; attack and decay of voice 1
 F00:0151       	MOVE.W	#$F0F,$2(A0)		; pulse width of voice 1
                S03:00FC00CC:  31 7C 0F 0F 00 02
 F00:0152       	MOVE.B	#$10,SID1_LEFT		; left channel mix
-               S03:00FC00D2:  13 FC 00 10 00 FA 05 82
+               S03:00FC00D2:  13 FC 00 10 00 FB 05 82
 F00:0153       	MOVE.B	#$FF,SID1_RGHT		; right channel mix
-               S03:00FC00DA:  13 FC 00 FF 00 FA 05 83
+               S03:00FC00DA:  13 FC 00 FF 00 FB 05 83
 F00:0154       	MOVE.B	#%01000001,$4(A0)	; pulse (bit 6) and open gate (bit 0)
                S03:00FC00E2:  11 7C 00 41 00 04
 F00:0155       
@@ -432,7 +432,7 @@ F00:0178
 F00:0179       .main1	CLR.L	D0
                S03:00FC011E:  70 00
 F00:0180       	MOVE.B	CIA_ASCII,D0		; scan for a keyboard event/ascii value
-               S03:00FC0120:  10 39 00 FA 03 04
+               S03:00FC0120:  10 39 00 FB 03 04
 F00:0181       	BEQ.S	.main1			; if 0 (nothing), jump to .main1
                S03:00FC0126:  67 F6
 F00:0182       
@@ -481,7 +481,7 @@ F00:0206       	MOVEM.L	D0-D1/A0,-(SP)
                S03:00FC016E:  48 E7 C0 80
 F00:0207       
 F00:0208       	MOVEA.L	(VICV_TXT),A0
-               S03:00FC0172:  20 79 00 FA 04 04
+               S03:00FC0172:  20 79 00 FB 04 04
 F00:0209       	MOVE.L	#$800,D0
                S03:00FC0178:  20 3C 00 00 08 00
 F00:0210       	MOVE.B	#SCRN_SPACE,D1			; space screencode
@@ -490,7 +490,7 @@ F00:0211       	JSR	blockfill_bytes
                S03:00FC0182:  61 00 02 54
 F00:0212       
 F00:0213       	MOVEA.L	(VICV_COL),A0
-               S03:00FC0186:  20 79 00 FA 04 08
+               S03:00FC0186:  20 79 00 FB 04 08
 F00:0214       	MOVE.L	#$800,D0
                S03:00FC018C:  20 3C 00 00 08 00
 F00:0215       	MOVE.W	#C64_LIGHTBLUE,D1
@@ -513,9 +513,9 @@ F00:0226       	MOVE.L	#$7C0,D0
                S03:00FC01A4:  20 3C 00 00 07 C0
 F00:0227       
 F00:0228       	MOVEA.L	(VICV_TXT),A0
-               S03:00FC01AA:  20 79 00 FA 04 04
+               S03:00FC01AA:  20 79 00 FB 04 04
 F00:0229       	MOVEA.L	(VICV_COL),A1
-               S03:00FC01B0:  22 79 00 FA 04 08
+               S03:00FC01B0:  22 79 00 FB 04 08
 F00:0230       
 F00:0231       .1	MOVE.B	$40(A0),(A0)
                S03:00FC01B6:  10 A8 00 40
@@ -563,9 +563,9 @@ F00:0255       	MOVE.W	cursor_pos,D1		; load current cursor position into D1
 F00:0256       	MOVE.W	curr_text_color,D2	; load current text colour into D2
                S03:00FC01EC:  34 38 04 00
 F00:0257       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S03:00FC01F0:  20 79 00 FA 04 04
+               S03:00FC01F0:  20 79 00 FB 04 04
 F00:0258       	MOVEA.L	VICV_COL,A1		; load pointer to current color screen into A1
-               S03:00FC01F6:  22 79 00 FA 04 08
+               S03:00FC01F6:  22 79 00 FB 04 08
 F00:0259       	CMP.B	#ASCII_LF,D0		; do we have a line feed as the next ascii?
                S03:00FC01FC:  B0 3C 00 0A
 F00:0260       	BEQ	.lf
@@ -770,19 +770,19 @@ F00:0374
 F00:0375       interrupt_2_autovector
 F00:0376       
 F00:0377       	MOVE.B	#%00000001,VICV_ISR				; acknowledge VBLANK interrupt
-               S03:00FC0306:  13 FC 00 01 00 FA 04 0E
+               S03:00FC0306:  13 FC 00 01 00 FB 04 0E
 F00:0378       
 F00:0379       	MOVE.B	#%00000001,VICV_BUFFERSWAP			; switch front- and backbuffer
-               S03:00FC030E:  13 FC 00 01 00 FA 04 10
+               S03:00FC030E:  13 FC 00 01 00 FB 04 10
 F00:0380       
 F00:0381       	MOVE.B	#%00000001,BLITTER_CONTROL			; clear the backbuffer
-               S03:00FC0316:  13 FC 00 01 00 FA 07 00
+               S03:00FC0316:  13 FC 00 01 00 FB 07 00
 F00:0382       
 F00:0383       	; add the blits (to be replaced by a kernel linked list)
 F00:0384       	MOVE.L	#kernel_text_scr,BLITTER_DATA_32_BIT
-               S03:00FC031E:  23 FC 00 00 04 20 00 FA 07 02
+               S03:00FC031E:  23 FC 00 00 04 20 00 FB 07 02
 F00:0385       	MOVE.B	#%00000010,BLITTER_CONTROL
-               S03:00FC0328:  13 FC 00 02 00 FA 07 00
+               S03:00FC0328:  13 FC 00 02 00 FB 07 00
 F00:0386       
 F00:0387       	RTE
                S03:00FC0330:  4E 73
@@ -796,44 +796,44 @@ F00:0394       	MOVE.L	A0,-(SP)		; save a0
                S03:00FC0332:  2F 08
 F00:0395       timer0_check
 F00:0396       	BTST	#0,TIMER_BASE		; did timer 0 cause the interrupt?
-               S03:00FC0334:  08 39 00 00 00 FA 06 00
+               S03:00FC0334:  08 39 00 00 00 FB 06 00
 F00:0397       	BEQ	timer1_check		; no, go to next timer
                S03:00FC033C:  67 0E
 F00:0398       	MOVE.B	#%00000001,TIMER_BASE	; yes, acknowledge interrupt
-               S03:00FC033E:  13 FC 00 01 00 FA 06 00
+               S03:00FC033E:  13 FC 00 01 00 FB 06 00
 F00:0399       	MOVEA.L	timer0_vector,A0
                S03:00FC0346:  20 78 04 08
 F00:0400       	JMP	(A0)
                S03:00FC034A:  4E D0
 F00:0401       timer1_check
 F00:0402       	BTST	#1,TIMER_BASE
-               S03:00FC034C:  08 39 00 01 00 FA 06 00
+               S03:00FC034C:  08 39 00 01 00 FB 06 00
 F00:0403       	BEQ	timer2_check
                S03:00FC0354:  67 0E
 F00:0404       	MOVE.B	#%00000010,TIMER_BASE
-               S03:00FC0356:  13 FC 00 02 00 FA 06 00
+               S03:00FC0356:  13 FC 00 02 00 FB 06 00
 F00:0405       	MOVEA.L	timer1_vector,A0
                S03:00FC035E:  20 78 04 0C
 F00:0406       	JMP	(A0)
                S03:00FC0362:  4E D0
 F00:0407       timer2_check
 F00:0408       	BTST	#2,TIMER_BASE		; did timer 2 cause the interrupt?
-               S03:00FC0364:  08 39 00 02 00 FA 06 00
+               S03:00FC0364:  08 39 00 02 00 FB 06 00
 F00:0409       	BEQ	timer3_check		; no, go to next timer
                S03:00FC036C:  67 0E
 F00:0410       	MOVE.B	#%00000100,TIMER_BASE	; yes, acknowledge interrupt
-               S03:00FC036E:  13 FC 00 04 00 FA 06 00
+               S03:00FC036E:  13 FC 00 04 00 FB 06 00
 F00:0411       	MOVEA.L	timer2_vector,A0
                S03:00FC0376:  20 78 04 10
 F00:0412       	JMP	(A0)
                S03:00FC037A:  4E D0
 F00:0413       timer3_check
 F00:0414       	BTST	#3,TIMER_BASE
-               S03:00FC037C:  08 39 00 03 00 FA 06 00
+               S03:00FC037C:  08 39 00 03 00 FB 06 00
 F00:0415       	BEQ	timer_finish		; no, go to timer finish
                S03:00FC0384:  67 0E
 F00:0416       	MOVE.B	#%00001000,TIMER_BASE	; yes, acknowledge
-               S03:00FC0386:  13 FC 00 08 00 FA 06 00
+               S03:00FC0386:  13 FC 00 08 00 FB 06 00
 F00:0417       	MOVEA.L	timer3_vector,A0
                S03:00FC038E:  20 78 04 14
 F00:0418       	JMP	(A0)
@@ -885,7 +885,7 @@ F00:0453       	BEQ	.end
                S03:00FC03AC:  67 1C
 F00:0454       
 F00:0455       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S03:00FC03AE:  20 79 00 FA 04 04
+               S03:00FC03AE:  20 79 00 FB 04 04
 F00:0456       	MOVE.W	cursor_pos,D0
                S03:00FC03B4:  30 38 04 02
 F00:0457       	SUBQ.B	#$1,se_crs_cntdwn
@@ -1039,10 +1039,10 @@ F00:0568       	MOVEQ	#0,D0			;    current_byte = 0;
 F00:0569       	LEA	CHAR_RAM,A0		;    char_ram = CHAR_RAM;
                S03:00FC041C:  41 F9 00 F1 00 00
 F00:0570       	LEA	CHAR_ROM,A1		;    char_rom = CHAR_ROM;
-               S03:00FC0422:  43 F9 00 FB 00 00
+               S03:00FC0422:  43 F9 00 FB 80 00
 F00:0571       
 F00:0572       .1	CMPA.L	#CHAR_ROM+$800,A1	;    while(char_ram != CHAR_ROM+$800)
-               S03:00FC0428:  B3 FC 00 FB 08 00
+               S03:00FC0428:  B3 FC 00 FB 88 00
 F00:0573       	BEQ	.5			;    {   //	branch to end of compound statement
                S03:00FC042E:  67 1C
 F00:0574       					;        // load a byte from charset and incr pntr
@@ -1141,7 +1141,7 @@ F00:0630       	MOVEM.L	D0-D1/A0,-(SP)
                S03:00FC04AC:  48 E7 C0 80
 F00:0631       
 F00:0632       	LEA	SOUND_BASE,A0
-               S03:00FC04B0:  41 F9 00 FA 05 00
+               S03:00FC04B0:  41 F9 00 FB 05 00
 F00:0633       	MOVE.L	#$100,D0
                S03:00FC04B6:  20 3C 00 00 01 00
 F00:0634       	MOVE.B	#$00,D1
@@ -1151,22 +1151,22 @@ F00:0635       	JSR	blockfill_bytes
 F00:0636       
 F00:0637       	; max volume for both sids
 F00:0638       	MOVE.B	#$0F,SID0_VOLUME
-               S03:00FC04C4:  13 FC 00 0F 00 FA 05 18
+               S03:00FC04C4:  13 FC 00 0F 00 FB 05 18
 F00:0639       	MOVE.B	#$0F,SID1_VOLUME
-               S03:00FC04CC:  13 FC 00 0F 00 FA 05 38
+               S03:00FC04CC:  13 FC 00 0F 00 FB 05 38
 F00:0640       
 F00:0641       	LEA	SOUND_BASE,A0
-               S03:00FC04D4:  41 F9 00 FA 05 00
+               S03:00FC04D4:  41 F9 00 FB 05 00
 F00:0642       	MOVE.B	#$FF,D0
                S03:00FC04DA:  10 3C 00 FF
 F00:0643       	MOVE.B	D0,SID0_LEFT		; left channel mix
-               S03:00FC04DE:  13 C0 00 FA 05 80
+               S03:00FC04DE:  13 C0 00 FB 05 80
 F00:0644       	MOVE.B	D0,SID0_RGHT		; right channel mix
-               S03:00FC04E4:  13 C0 00 FA 05 81
+               S03:00FC04E4:  13 C0 00 FB 05 81
 F00:0645       	MOVE.B	D0,SID1_LEFT		; left channel mix
-               S03:00FC04EA:  13 C0 00 FA 05 82
+               S03:00FC04EA:  13 C0 00 FB 05 82
 F00:0646       	MOVE.B	D0,SID1_RGHT		; right channel mix
-               S03:00FC04F0:  13 C0 00 FA 05 83
+               S03:00FC04F0:  13 C0 00 FB 05 83
 F00:0647       
 F00:0648       	MOVEM.L	(SP)+,D0-D1/A0
                S03:00FC04F6:  4C DF 01 03
@@ -1180,9 +1180,9 @@ F00:0654       	MOVEM.L	D0/A0-A1,-(SP)
                S03:00FC04FC:  48 E7 80 C0
 F00:0655       
 F00:0656       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S03:00FC0500:  20 79 00 FA 04 04
+               S03:00FC0500:  20 79 00 FB 04 04
 F00:0657       	MOVEA.L	VICV_COL,A1
-               S03:00FC0506:  22 79 00 FA 04 08
+               S03:00FC0506:  22 79 00 FB 04 08
 F00:0658       	MOVE.W	cursor_pos,D0
                S03:00FC050C:  30 38 04 02
 F00:0659       	MOVE.B	(A0,D0),se_orig_char
@@ -1206,9 +1206,9 @@ F00:0669
 F00:0670       	MOVE.B	#$0,se_crs_blink	; turn off cursor flash
                S03:00FC0532:  11 FC 00 00 04 40
 F00:0671       	MOVEA.L	VICV_TXT,A0		; load pointer to current text screen into A0
-               S03:00FC0538:  20 79 00 FA 04 04
+               S03:00FC0538:  20 79 00 FB 04 04
 F00:0672       	MOVEA.L	VICV_COL,A1
-               S03:00FC053E:  22 79 00 FA 04 08
+               S03:00FC053E:  22 79 00 FB 04 08
 F00:0673       	MOVE.W	cursor_pos,D0
                S03:00FC0544:  30 38 04 02
 F00:0674       	MOVE.B	se_orig_char,(A0,D0)
@@ -1945,36 +1945,36 @@ C64_CYAN EXPR(63692=0xf8cc) EQU
 C64_RED EXPR(63283=0xf733) EQU 
 C64_WHITE EXPR(65535=0xffff) EQU 
 C64_BLACK EXPR(61440=0xf000) EQU 
-BLITTER_CLEAR_COLOR EXPR(16385798=0xfa0706) EQU 
-BLITTER_DATA_32_BIT EXPR(16385794=0xfa0702) EQU 
-BLITTER_CONTROL EXPR(16385792=0xfa0700) EQU 
-BLITTER_BASE EXPR(16385792=0xfa0700) EQU 
-TIMER_BASE EXPR(16385536=0xfa0600) EQU 
-SID1_RGHT EXPR(16385411=0xfa0583) EQU 
-SID1_LEFT EXPR(16385410=0xfa0582) EQU 
-SID0_RGHT EXPR(16385409=0xfa0581) EQU 
-SID0_LEFT EXPR(16385408=0xfa0580) EQU 
-SID1_VOLUME EXPR(16385336=0xfa0538) EQU 
-SID1_BASE EXPR(16385312=0xfa0520) EQU 
-SID0_VOLUME EXPR(16385304=0xfa0518) EQU 
-SID0_BASE EXPR(16385280=0xfa0500) EQU 
-SOUND_BASE EXPR(16385280=0xfa0500) EQU 
-VICV_BUFFERSWAP EXPR(16385040=0xfa0410) EQU 
-VICV_ISR EXPR(16385038=0xfa040e) EQU 
-VICV_BORDER_SIZE EXPR(16385036=0xfa040c) EQU 
-VICV_COL EXPR(16385032=0xfa0408) EQU 
-VICV_TXT EXPR(16385028=0xfa0404) EQU 
-VICV_BORDER_COLOR EXPR(16385024=0xfa0400) EQU 
-VICV_BASE EXPR(16385024=0xfa0400) EQU 
-CIA_KEYBOARD EXPR(16384896=0xfa0380) UNUSED EQU 
-CIA_ASCII EXPR(16384772=0xfa0304) EQU 
-CIA_REPEAT EXPR(16384771=0xfa0303) UNUSED EQU 
-CIA_DELAY EXPR(16384770=0xfa0302) UNUSED EQU 
-CIA_CONTROL EXPR(16384769=0xfa0301) EQU 
-CIA_STATUS EXPR(16384768=0xfa0300) UNUSED EQU 
-CIA_BASE EXPR(16384768=0xfa0300) EQU 
+BLITTER_CLEAR_COLOR EXPR(16451334=0xfb0706) EQU 
+BLITTER_DATA_32_BIT EXPR(16451330=0xfb0702) EQU 
+BLITTER_CONTROL EXPR(16451328=0xfb0700) EQU 
+BLITTER_BASE EXPR(16451328=0xfb0700) EQU 
+TIMER_BASE EXPR(16451072=0xfb0600) EQU 
+SID1_RGHT EXPR(16450947=0xfb0583) EQU 
+SID1_LEFT EXPR(16450946=0xfb0582) EQU 
+SID0_RGHT EXPR(16450945=0xfb0581) EQU 
+SID0_LEFT EXPR(16450944=0xfb0580) EQU 
+SID1_VOLUME EXPR(16450872=0xfb0538) EQU 
+SID1_BASE EXPR(16450848=0xfb0520) EQU 
+SID0_VOLUME EXPR(16450840=0xfb0518) EQU 
+SID0_BASE EXPR(16450816=0xfb0500) EQU 
+SOUND_BASE EXPR(16450816=0xfb0500) EQU 
+VICV_BUFFERSWAP EXPR(16450576=0xfb0410) EQU 
+VICV_ISR EXPR(16450574=0xfb040e) EQU 
+VICV_BORDER_SIZE EXPR(16450572=0xfb040c) EQU 
+VICV_COL EXPR(16450568=0xfb0408) EQU 
+VICV_TXT EXPR(16450564=0xfb0404) EQU 
+VICV_BORDER_COLOR EXPR(16450560=0xfb0400) EQU 
+VICV_BASE EXPR(16450560=0xfb0400) EQU 
+CIA_KEYBOARD EXPR(16450432=0xfb0380) UNUSED EQU 
+CIA_ASCII EXPR(16450308=0xfb0304) EQU 
+CIA_REPEAT EXPR(16450307=0xfb0303) UNUSED EQU 
+CIA_DELAY EXPR(16450306=0xfb0302) UNUSED EQU 
+CIA_CONTROL EXPR(16450305=0xfb0301) EQU 
+CIA_STATUS EXPR(16450304=0xfb0300) UNUSED EQU 
+CIA_BASE EXPR(16450304=0xfb0300) EQU 
 CHAR_RAM EXPR(15794176=0xf10000) EQU 
-CHAR_ROM EXPR(16449536=0xfb0000) EQU 
+CHAR_ROM EXPR(16482304=0xfb8000) EQU 
 SCRN_SPACE EXPR(32=0x20) EQU 
 ASCII_CURSOR_LEFT EXPR(157=0x9d) EQU 
 ASCII_REVERSE_OFF EXPR(146=0x92) UNUSED EQU 

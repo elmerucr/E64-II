@@ -51,7 +51,7 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     {
         return pc.cia_ic->read_byte(address & 0x000000ff);
     }
-    else if( ( (address & 0xfffc0000) >> 16) == IO_KERNEL_MASK )
+    else if( ( (address & 0x00fc0000) >> 16) == IO_KERNEL_MASK )
     {
         return kernel[address & 0x0000ffff];
     }
@@ -59,7 +59,7 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     {
         return kernel[address & 0x0000ffff];
     }
-    else if( (address >> 16) == IO_PATCHED_CHAR_ROM_MASK)
+    else if( (address & IO_PATCHED_CHAR_ROM_MASK) == IO_PATCHED_CHAR_ROM_MASK)
     {
         return patched_char_rom[address & 0x000007ff];
     }
