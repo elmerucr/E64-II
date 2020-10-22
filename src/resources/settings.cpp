@@ -101,16 +101,16 @@ void E64::settings::write_current_path_to_settings()
 
 void E64::settings::find_and_update_kernel()
 {
-    FILE *temp_file = fopen("kernel.bin", "r");
+    FILE *temp_file = fopen("rom.bin", "r");
     
     if( temp_file )
     {
-        printf("[Settings] found 'kernel.bin' in settings dir, using it\n");
+        printf("[Settings] found 'rom.bin' in settings dir, using it\n");
         fread(kernel, 65536, 1, temp_file);
         fclose(temp_file);
     }
     else
     {
-        printf("[Settings] no 'kernel.bin' in settings dir, using enclosed version\n");
+        printf("[Settings] no 'rom.bin' in settings dir, using built-in rom\n");
     }
 }
