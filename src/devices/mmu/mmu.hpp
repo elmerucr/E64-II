@@ -15,7 +15,7 @@
 #define IO_BLITTER_PAGE             0xfb07
 #define IO_RESET_VECTOR_MASK        0xfffff8
 #define IO_PATCHED_CHAR_ROM_MASK    0xfb8000
-#define IO_KERNEL_MASK              0xfc
+#define IO_ROM_MASK                 0xfc
 
 extern uint8_t patched_char_rom[];
 
@@ -31,6 +31,7 @@ public:
     
     uint8_t  *ram;                  // make this private and work with friend class?
     uint16_t *ram_as_words;         // make this private and work with friend class?
+    uint8_t  current_rom_image[65536];
     
     void reset();
     
@@ -42,6 +43,8 @@ public:
     
     void write_memory_8(unsigned int address, unsigned int value);
     void write_memory_16(unsigned int address, unsigned int value);
+    
+    void find_and_update_rom_image();
 };
 
 }

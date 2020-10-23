@@ -42,13 +42,11 @@ E64::settings::settings()
         mkdir(settings_path, 0777);
         settings_directory = opendir(settings_path);
     }
+
+    snprintf(path_to_rom, 256, "%s/rom.bin", settings_path);
     
     // switch to settings path and try to update current_path from settings
     chdir(settings_path);
-    
-    // call this before update_current_...
-    find_and_update_kernel();
-    
     update_current_path_from_settings();
 }
 
@@ -79,7 +77,6 @@ void E64::settings::update_current_path_from_settings()
     else
     {
         printf("[Settings] current path not found in settings, defaulting to: %s\n", current_path);
-        //write_current_path_to_settings();
     }
 }
 
@@ -97,20 +94,4 @@ void E64::settings::write_current_path_to_settings()
     }
     
     fclose(temp_file);
-}
-
-void E64::settings::find_and_update_kernel()
-{
-    FILE *temp_file = fopen("rom.bin", "r");
-    
-    if( temp_file )
-    {
-        printf("[Settings] found 'rom.bin' in settings dir, using it\n");
-        fread(kernel, 65536, 1, temp_file);
-        fclose(temp_file);
-    }
-    else
-    {
-        printf("[Settings] no 'rom.bin' in settings dir, using built-in rom\n");
-    }
 }

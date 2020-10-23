@@ -50,6 +50,7 @@
 		46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318492528BC3900E08C23 /* monitor_command.cpp */; };
 		46D318512528BC3900E08C23 /* monitor_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184B2528BC3900E08C23 /* monitor_console.cpp */; };
 		46D318522528BC3900E08C23 /* monitor_screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184D2528BC3900E08C23 /* monitor_screen.cpp */; };
+		46FF02D32542FABF001C0A52 /* rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46FF02D22542FABF001C0A52 /* rom.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -156,6 +157,7 @@
 		46D3184C2528BC3900E08C23 /* monitor_command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_command.hpp; path = ../../../src/monitor/monitor_command.hpp; sourceTree = "<group>"; };
 		46D3184D2528BC3900E08C23 /* monitor_screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor_screen.cpp; path = ../../../src/monitor/monitor_screen.cpp; sourceTree = "<group>"; };
 		46D3184E2528BC3900E08C23 /* monitor_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_console.hpp; path = ../../../src/monitor/monitor_console.hpp; sourceTree = "<group>"; };
+		46FF02D22542FABF001C0A52 /* rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rom.cpp; path = ../../../src/rom/rom.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 			children = (
 				461CAD9E24AE76C6001A3313 /* char_rom */,
 				461CAD9D24AE768A001A3313 /* kernel */,
+				46FF02D22542FABF001C0A52 /* rom.cpp */,
 			);
 			name = rom;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				46C4CC2124388CBC002BD371 /* wave.cc in Sources */,
 				46C4CC1824388CBC002BD371 /* wave8580_P_T.cc in Sources */,
 				4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */,
+				46FF02D32542FABF001C0A52 /* rom.cpp in Sources */,
 				46C4CBF824388BD2002BD371 /* sids.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,
 				4691C79623D7B34700E9E78D /* vicv.cpp in Sources */,

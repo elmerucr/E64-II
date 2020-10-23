@@ -17,13 +17,13 @@ private:
     
     void update_current_path_from_settings();
     void write_current_path_to_settings();
-    void find_and_update_kernel();
 public:
     settings();
     ~settings();
 
     char home_dir[256];
     char settings_path[256];
+    char path_to_rom[256];
     char current_path[256];
 };
 

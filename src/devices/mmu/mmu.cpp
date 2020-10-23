@@ -26,6 +26,9 @@ void E64::mmu::reset()
 {
     // fill alternating blocks with 0x00 and 0x80
     for(int i=0; i<RAM_SIZE; i++) ram[i] = (i & 64) ? 0x10 : 0x00;
+    
+    // try to find and update rom image
+    find_and_update_rom_image();
 }
 
 unsigned int E64::mmu::read_memory_8(unsigned int address)
@@ -51,13 +54,13 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     {
         return pc.cia_ic->read_byte(address & 0x000000ff);
     }
-    else if( ( (address & 0x00fc0000) >> 16) == IO_KERNEL_MASK )
+    else if( ( (address & 0x00fc0000) >> 16) == IO_ROM_MASK )
     {
-        return kernel[address & 0x0000ffff];
+        return current_rom_image[address & 0x0000ffff];
     }
     else if( (address & IO_RESET_VECTOR_MASK) == 0 )
     {
-        return kernel[address & 0x0000ffff];
+        return current_rom_image[address & 0x0000ffff];
     }
     else if( (address & IO_PATCHED_CHAR_ROM_MASK) == IO_PATCHED_CHAR_ROM_MASK)
     {
@@ -126,4 +129,21 @@ void E64::mmu::write_memory_16(unsigned int address, unsigned int value)
     write_memory_8(temp_address, value >> 8);
     temp_address++;
     write_memory_8(temp_address, value & 0xff);
+}
+
+void E64::mmu::find_and_update_rom_image()
+{
+    FILE *temp_file = fopen(prefs.path_to_rom, "r");
+    
+    if( temp_file )
+    {
+        printf("[mmu] found 'rom.bin' in %s, using this image\n", prefs.settings_path);
+        fread(current_rom_image, 65536, 1, temp_file);
+        fclose(temp_file);
+    }
+    else
+    {
+        printf("[mmu] no 'rom.bin' in %s, using built-in rom\n", prefs.settings_path);
+        for(int i=0; i<65536; i++) current_rom_image[i] = kernel[i];
+    }
 }
