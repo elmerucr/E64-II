@@ -13,7 +13,6 @@ include_directories(
     src/devices/cpu/
     src/devices/cpu/Moira
     src/devices/mmu/
-    src/devices/kernel/
     src/devices/cia/
     src/devices/sids/
     src/devices/sids/resid-0.16/
