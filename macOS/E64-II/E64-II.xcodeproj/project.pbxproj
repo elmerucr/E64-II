@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */; };
 		4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4626D91D24AE78350089B4C3 /* kernel.cpp */; };
 		4633A79823FD565800AFD176 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4633A79723FD565800AFD176 /* video.cpp */; };
 		467817062517567F008F8A1A /* settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 467817042517567F008F8A1A /* settings.cpp */; };
@@ -68,7 +67,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = patched_char_rom.cpp; path = ../../../src/rom/char_rom/patched_char_rom.cpp; sourceTree = "<group>"; };
 		4626D91D24AE78350089B4C3 /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kernel.cpp; path = ../../../src/rom/kernel/kernel.cpp; sourceTree = "<group>"; };
 		4633A79623FD565800AFD176 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/resources/video.hpp; sourceTree = "<group>"; };
 		4633A79723FD565800AFD176 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/resources/video.cpp; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 		461CAD9C24AE765A001A3313 /* rom */ = {
 			isa = PBXGroup;
 			children = (
-				461CAD9E24AE76C6001A3313 /* char_rom */,
 				461CAD9D24AE768A001A3313 /* kernel */,
 				46FF02D22542FABF001C0A52 /* rom.cpp */,
 			);
@@ -188,14 +185,6 @@
 				4626D91D24AE78350089B4C3 /* kernel.cpp */,
 			);
 			name = kernel;
-			sourceTree = "<group>";
-		};
-		461CAD9E24AE76C6001A3313 /* char_rom */ = {
-			isa = PBXGroup;
-			children = (
-				4626D91B24AE780B0089B4C3 /* patched_char_rom.cpp */,
-			);
-			name = char_rom;
 			sourceTree = "<group>";
 		};
 		4633A79523FD560600AFD176 /* resources */ = {
@@ -511,7 +500,6 @@
 				46C4CC1324388CBC002BD371 /* wave6581__ST.cc in Sources */,
 				46C4CC2124388CBC002BD371 /* wave.cc in Sources */,
 				46C4CC1824388CBC002BD371 /* wave8580_P_T.cc in Sources */,
-				4626D91C24AE780B0089B4C3 /* patched_char_rom.cpp in Sources */,
 				46FF02D32542FABF001C0A52 /* rom.cpp in Sources */,
 				46C4CBF824388BD2002BD371 /* sids.cpp in Sources */,
 				4691C7D123D7B59900E9E78D /* MoiraDebugger.cpp in Sources */,

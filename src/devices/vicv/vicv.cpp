@@ -116,7 +116,7 @@ inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
             // are we at the first pixel of a char
             if( !(x & 7) )
             {
-                eight_pixels = patched_char_rom[(*temp_text * 8) + y];
+                eight_pixels = cbm_cp437_font[(*temp_text * 8) + y];
                 //eight_pixels = patched_char_rom[((ascii_to_screencode[*temp_text]) * 8) + y];
             }
 

@@ -17,7 +17,7 @@
 #define IO_PATCHED_CHAR_ROM_MASK    0xfb8000
 #define IO_ROM_MASK                 0xfc
 
-extern uint8_t patched_char_rom[];
+extern uint8_t cbm_cp437_font[];
 
 namespace E64
 {

@@ -64,7 +64,7 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     }
     else if( (address & IO_PATCHED_CHAR_ROM_MASK) == IO_PATCHED_CHAR_ROM_MASK)
     {
-        return patched_char_rom[address & 0x000007ff];
+        return cbm_cp437_font[address & 0x000007ff];
     }
     else
     {

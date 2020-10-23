@@ -1,17 +1,22 @@
-// The original c64 characters are copyright Commodore Business Systems
+// The original C64 characters are copyright Commodore Business Systems.
+// The order of, and character have been altered to match code page 437
 //
-// Parts of the characterset have been altered to match code page 437
-//
-// 2020-10-06 elmerucr
+// 2020-10-23 elmerucr
 //
 // Part of E64-II - Character ROM 2kb
-//
 
 #include <cstdint>
 
-uint8_t patched_char_rom[2048] =
+uint8_t cbm_cp437_font[2048] =
 {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	// $00 (space)
+    0b00000000,                                     // $00 (space)
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
 
 	0b01111110,										// $01 (smiley)
 	0b10000001,
