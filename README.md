@@ -33,10 +33,8 @@ Finally, to run the application from the build directory:
 ````console
 $ ./E64-II
 ````
-### Assembling the kernel ROM
-The sourcecode comes with a working version of the kernel ````kernel.cpp````. If you want to build it yourself however, you can do the following:
-* Make sure to have ````vasmm68k_mot```` installed on your system (see [vasm](http://sun.hasenbraten.de/vasm/)) and have it working from the command line.
-* In the ````./src/devices/rom/kernel/```` directory, a ````Makefile```` can be found that makes use of ````vasmm68k_mot```` to assemble the ````*.s```` sourcefiles into a binary rom image. Furthermore, the ````bin2hex_64k```` utility will be built that converts this image into a c++ sourcefile (````kernel.cpp````) that's part of the E64-II build.
+### Building ROM
+The sourcecode comes with a working version of the rom ````rom.cpp````. If you want to build and/or modify it yourself however, have a look the [E64-II-rom project](https://github.com/elmerucr/E64-II-rom).
 ## Websites and projects of interest
 ### Assemblers and Compilers
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
