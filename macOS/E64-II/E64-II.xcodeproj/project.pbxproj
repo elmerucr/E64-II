@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4626D91D24AE78350089B4C3 /* kernel.cpp */; };
 		4633A79823FD565800AFD176 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4633A79723FD565800AFD176 /* video.cpp */; };
 		467817062517567F008F8A1A /* settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 467817042517567F008F8A1A /* settings.cpp */; };
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
@@ -50,6 +49,7 @@
 		46D318512528BC3900E08C23 /* monitor_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184B2528BC3900E08C23 /* monitor_console.cpp */; };
 		46D318522528BC3900E08C23 /* monitor_screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184D2528BC3900E08C23 /* monitor_screen.cpp */; };
 		46FF02D32542FABF001C0A52 /* rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46FF02D22542FABF001C0A52 /* rom.cpp */; };
+		46FF02D5254300B0001C0A52 /* character_rom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46FF02D4254300B0001C0A52 /* character_rom.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,7 +67,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4626D91D24AE78350089B4C3 /* kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kernel.cpp; path = ../../../src/rom/kernel/kernel.cpp; sourceTree = "<group>"; };
 		4633A79623FD565800AFD176 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/resources/video.hpp; sourceTree = "<group>"; };
 		4633A79723FD565800AFD176 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/resources/video.cpp; sourceTree = "<group>"; };
 		467817042517567F008F8A1A /* settings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = settings.cpp; path = ../../../src/resources/settings.cpp; sourceTree = "<group>"; };
@@ -156,6 +155,7 @@
 		46D3184D2528BC3900E08C23 /* monitor_screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor_screen.cpp; path = ../../../src/monitor/monitor_screen.cpp; sourceTree = "<group>"; };
 		46D3184E2528BC3900E08C23 /* monitor_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_console.hpp; path = ../../../src/monitor/monitor_console.hpp; sourceTree = "<group>"; };
 		46FF02D22542FABF001C0A52 /* rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rom.cpp; path = ../../../src/rom/rom.cpp; sourceTree = "<group>"; };
+		46FF02D4254300B0001C0A52 /* character_rom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = character_rom.cpp; path = ../../../src/rom/character_rom.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,18 +173,10 @@
 		461CAD9C24AE765A001A3313 /* rom */ = {
 			isa = PBXGroup;
 			children = (
-				461CAD9D24AE768A001A3313 /* kernel */,
 				46FF02D22542FABF001C0A52 /* rom.cpp */,
+				46FF02D4254300B0001C0A52 /* character_rom.cpp */,
 			);
 			name = rom;
-			sourceTree = "<group>";
-		};
-		461CAD9D24AE768A001A3313 /* kernel */ = {
-			isa = PBXGroup;
-			children = (
-				4626D91D24AE78350089B4C3 /* kernel.cpp */,
-			);
-			name = kernel;
 			sourceTree = "<group>";
 		};
 		4633A79523FD560600AFD176 /* resources */ = {
@@ -511,10 +503,10 @@
 				46C4CC1724388CBC002BD371 /* wave8580__ST.cc in Sources */,
 				46C4CC1424388CBC002BD371 /* pot.cc in Sources */,
 				4691C7BD23D7B57100E9E78D /* cpu_moira.cpp in Sources */,
-				4626D91E24AE78350089B4C3 /* kernel.cpp in Sources */,
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
 				46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,
+				46FF02D5254300B0001C0A52 /* character_rom.cpp in Sources */,
 				46C4CC2024388CBC002BD371 /* version.cc in Sources */,
 				46C4CC1524388CBC002BD371 /* envelope.cc in Sources */,
 				46C4CC1D24388CBC002BD371 /* sid.cc in Sources */,

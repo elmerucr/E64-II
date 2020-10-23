@@ -6,7 +6,7 @@
 #include "mmu.hpp"
 #include "common.hpp"
 
-extern uint8_t kernel[];
+extern uint8_t rom[];
 
 E64::mmu::mmu()
 {
@@ -144,6 +144,6 @@ void E64::mmu::find_and_update_rom_image()
     else
     {
         printf("[mmu] no 'rom.bin' in %s, using built-in rom\n", prefs.settings_path);
-        for(int i=0; i<65536; i++) current_rom_image[i] = kernel[i];
+        for(int i=0; i<65536; i++) current_rom_image[i] = rom[i];
     }
 }

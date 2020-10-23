@@ -37,7 +37,7 @@ todo / bugs
 
 2020
 ====
-2020-05-26 Removal of pid and delay, now working with chrono and thread classes to haver stable fps on non vsync situations
+2020-05-26 Removal of pid and delay, now working with chrono and thread classes to have stable fps on non vsync situations
 2020-05-25 Release of 0.5 (see above)
 2020-05-15 Most work on sprites is done. Double size, flipping, etc...
 2020-03-14 Scanline breakpoints seem to work nicely

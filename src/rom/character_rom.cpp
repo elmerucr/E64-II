@@ -1,5 +1,6 @@
 // The original C64 characters are copyright Commodore Business Systems.
-// The order of, and character have been altered to match code page 437
+// The order of characters and characters themselves have been altered to
+// match code page 437.
 //
 // 2020-10-23 elmerucr
 //
