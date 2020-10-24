@@ -48,7 +48,7 @@ void debug_status_bar_refresh()
         {
             debug_console.status_bar_foreground_color = AMBER_06; // bright amber
         }
-        snprintf(help_string, 256, "%06x  ", temp_pc );
+        snprintf(help_string, 256, "%06x ", temp_pc );
         debug_status_bar_print(help_string);
         int no_of_bytes = pc.m68k_ic->disassemble(temp_pc, help_string);
         
@@ -62,11 +62,6 @@ void debug_status_bar_refresh()
         }
         else
         {
-//            // code to capitalize the mnemonics
-//            for(int i=0; i<8; i++)
-//            {
-//                if( (help_string[i] > 96)  && (help_string[i] < 123) ) help_string[i] = help_string[i] - 32;
-//            }
             debug_status_bar_print(help_string);
         }
         
@@ -89,7 +84,7 @@ void debug_status_bar_refresh()
     snprintf(help_string, 256, " CPU Status                              ");
     debug_status_bar_set_cursor_pos(0);
     debug_status_bar_print(help_string);
-    snprintf(help_string, 256, " Disassembly                                                    ");
+    snprintf(help_string, 256, " Disassembly                             ");
     debug_status_bar_set_cursor_pos(9*VICV_CHAR_COLUMNS + 0);
     debug_status_bar_print(help_string);
     snprintf(help_string, 256, "     vic v      ");

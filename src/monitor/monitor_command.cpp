@@ -383,6 +383,8 @@ void E64::debug_command_dump_cpu_status()
 
 void E64::debug_command_memory_dump(uint32_t address, int rows)
 {
+    address = address & 0xfffffffe;  // only even addresses allowed
+    
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;

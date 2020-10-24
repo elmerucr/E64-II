@@ -13,8 +13,8 @@ E64::vicv::vicv()
 {
     stats_overlay_present = false;
 
-    framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[0x00e00000];
-    framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[0x00e80000];
+    framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[0x00f00000];
+    framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[0x00f48000];
     
     breakpoint_reached = false;
     clear_scanline_breakpoints();

@@ -1,7 +1,7 @@
 //  monitor_console.cpp
 //  E64-II
 //
-//  Copyright © 2018 elmerucr. All rights reserved.
+//  Copyright © 2018-2020 elmerucr. All rights reserved.
 
 #include <cstdio>
 
@@ -263,15 +263,6 @@ void debug_console_arrow_down()
                 E64::debug_command_memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
                 break;
         }
-//        if( debug_console_check_output(false, &address))
-//        {
-//            debug_console_add_bottom_row();
-//            E64::debug_command_memory_dump((address+8) & (RAM_SIZE - 1), 1);
-//        }
-//        else
-//        {
-//            debug_console_add_bottom_row();
-//        }
     }
     debug_console_cursor_activate();
 }

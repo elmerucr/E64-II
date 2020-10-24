@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201023
+#define E64_II_BUILD            20201024
 #define E64_II_YEAR             2020
 
 //  Global objects
