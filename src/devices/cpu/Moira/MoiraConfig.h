@@ -17,7 +17,7 @@
  *
  * Enable to improve emulation compatibility, disable to gain speed.
  */
-#define EMULATE_ADDRESS_ERROR false
+#define EMULATE_ADDRESS_ERROR true
 
 /* Set to true to emulate the function code pins FC0 - FC2.
  *
@@ -36,6 +36,6 @@
  *
  * Disable to improve emulation compatibility.
  */
-#define MIMIC_MUSASHI true
+#define MIMIC_MUSASHI false
 
 #endif

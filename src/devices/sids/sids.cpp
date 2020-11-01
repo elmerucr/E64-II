@@ -7,36 +7,57 @@
 #include "sdl2.hpp"
 #include "common.hpp"
 
-E64::sids::sids(bool big_endian)
+E64::sids::sids()
 {
-    for(int i=0; i<32; i++) register_index[i] = i;
-    if( big_endian == true )
-    {
-        // voice 1
-        register_index[0] = 1;      // freq
-        register_index[1] = 0;
+    // Remapping registers, rewiring necessary to have big endian support
+    // and even addresses for word access. NEEDS WORK: where in documentation?
 
-        register_index[2] = 3;      // pulse width
-        register_index[3] = 2;
+    // voice 1
+    register_index[0x00] = 1;       // frequency high byte
+    register_index[0x01] = 0;       // frequency low byte
+    register_index[0x02] = 3;       // pulsewidth high byte
+    register_index[0x03] = 2;       // pulsewidth low byte
+    register_index[0x04] = 4;       // control register
+    register_index[0x05] = 5;       // attack decay
+    register_index[0x06] = 6;       // sustain release
+    
+    register_index[0x07] = 31;      // PADDING BYTE
 
-        // voice 2
-        register_index[7] = 8;      // freq
-        register_index[8] = 7;
-        
-        register_index[9] = 10;     // pulse width
-        register_index[10] = 9;
-        
-        // voice 3
-        register_index[14] = 15;    // freq
-        register_index[15] = 14;
-        
-        register_index[16] = 17;    // pulse width
-        register_index[17] = 16;
-        
-        // filter
-        register_index[21] = 22;    // fc
-        register_index[22] = 21;
-    }
+    // voice 2
+    register_index[0x08] = 8;       // frequency high byte
+    register_index[0x09] = 7;       // frequency low byte
+    register_index[0x0a] = 10;      // pulsewidth high byte
+    register_index[0x0b] = 9;       // pulsewidth low byte
+    register_index[0x0c] = 11;      // control register
+    register_index[0x0d] = 12;      // attack decay
+    register_index[0x0e] = 13;      // sustain release
+    
+    register_index[0x0f] = 31;      // PADDING BYTE
+    
+    // voice 3
+    register_index[0x10] = 15;      // frequency high byte
+    register_index[0x11] = 14;      // frequency low byte
+    register_index[0x12] = 17;      // pulsewidth high byte
+    register_index[0x13] = 16;      // pulsewidth low byte
+    register_index[0x14] = 18;      // control register
+    register_index[0x15] = 19;      // attack decay
+    register_index[0x16] = 20;      // sustain release
+    
+    register_index[0x17] = 31;      // PADDING BYTE
+    
+    // filter
+    register_index[0x18] = 22;      // filter cutoff high byte
+    register_index[0x19] = 21;      // filter cutoff low byte
+    register_index[0x1a] = 23;      // res filt
+    register_index[0x1b] = 24;      // mode vol
+    
+    // misc
+    register_index[0x1c] = 25;      // pot x
+    register_index[0x1d] = 26;      // pot y
+    register_index[0x1e] = 27;      // osc3_random
+    register_index[0x1f] = 28;      // env3
+    
+    
     
     for(int i = 0; i<2; i++)
     {

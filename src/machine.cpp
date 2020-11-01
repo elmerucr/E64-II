@@ -28,7 +28,7 @@ E64::machine::machine()
     
     blitter_ic = new blitter();
     
-    sids_ic = new sids(true);
+    sids_ic = new sids();
     
     cia_ic = new cia();
     
@@ -154,7 +154,7 @@ void E64::machine::reset()
     m68k_ic->reset();
     sids_ic->reset();
     vicv_ic->reset();
-    blitter_ic->reset();
+    blitter_ic->reset();    // sometimes, when resetting there's the warning message blitter not finished
     timer_ic->reset();
     cia_ic->reset();
     TTL74LS148_ic->update_interrupt_level();
