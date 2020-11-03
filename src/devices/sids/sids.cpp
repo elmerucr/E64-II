@@ -13,49 +13,49 @@ E64::sids::sids()
     // and even addresses for word access. NEEDS WORK: where in documentation?
 
     // voice 1
-    register_index[0x00] = 1;       // frequency high byte
-    register_index[0x01] = 0;       // frequency low byte
-    register_index[0x02] = 3;       // pulsewidth high byte
-    register_index[0x03] = 2;       // pulsewidth low byte
-    register_index[0x04] = 4;       // control register
-    register_index[0x05] = 5;       // attack decay
-    register_index[0x06] = 6;       // sustain release
+    register_index[0x00] = 0x01;    // frequency high byte
+    register_index[0x01] = 0x00;    // frequency low byte
+    register_index[0x02] = 0x03;    // pulsewidth high byte
+    register_index[0x03] = 0x02;    // pulsewidth low byte
+    register_index[0x04] = 0x04;    // control register
+    register_index[0x05] = 0x05;    // attack decay
+    register_index[0x06] = 0x06;    // sustain release
     
-    register_index[0x07] = 31;      // PADDING BYTE
+    register_index[0x07] = 0x1f;    // PADDING BYTE
 
     // voice 2
-    register_index[0x08] = 8;       // frequency high byte
-    register_index[0x09] = 7;       // frequency low byte
-    register_index[0x0a] = 10;      // pulsewidth high byte
-    register_index[0x0b] = 9;       // pulsewidth low byte
-    register_index[0x0c] = 11;      // control register
-    register_index[0x0d] = 12;      // attack decay
-    register_index[0x0e] = 13;      // sustain release
+    register_index[0x08] = 0x08;    // frequency high byte
+    register_index[0x09] = 0x07;    // frequency low byte
+    register_index[0x0a] = 0x0a;    // pulsewidth high byte
+    register_index[0x0b] = 0x09;    // pulsewidth low byte
+    register_index[0x0c] = 0x0b;    // control register
+    register_index[0x0d] = 0x0c;    // attack decay
+    register_index[0x0e] = 0x0d;    // sustain release
     
-    register_index[0x0f] = 31;      // PADDING BYTE
+    register_index[0x0f] = 0x1f;    // PADDING BYTE
     
     // voice 3
-    register_index[0x10] = 15;      // frequency high byte
-    register_index[0x11] = 14;      // frequency low byte
-    register_index[0x12] = 17;      // pulsewidth high byte
-    register_index[0x13] = 16;      // pulsewidth low byte
-    register_index[0x14] = 18;      // control register
-    register_index[0x15] = 19;      // attack decay
-    register_index[0x16] = 20;      // sustain release
+    register_index[0x10] = 0x0f;    // frequency high byte
+    register_index[0x11] = 0x0e;    // frequency low byte
+    register_index[0x12] = 0x11;    // pulsewidth high byte
+    register_index[0x13] = 0x10;    // pulsewidth low byte
+    register_index[0x14] = 0x12;    // control register
+    register_index[0x15] = 0x13;    // attack decay
+    register_index[0x16] = 0x14;    // sustain release
     
-    register_index[0x17] = 31;      // PADDING BYTE
+    register_index[0x17] = 0x1f;    // PADDING BYTE
     
     // filter
-    register_index[0x18] = 22;      // filter cutoff high byte
-    register_index[0x19] = 21;      // filter cutoff low byte
-    register_index[0x1a] = 23;      // res filt
-    register_index[0x1b] = 24;      // mode vol
+    register_index[0x18] = 0x15;    // filter cutoff low byte  (bits 0-2)
+    register_index[0x19] = 0x16;    // filter cutoff high byte (bits 3-10)
+    register_index[0x1a] = 0x17;    // res filt
+    register_index[0x1b] = 0x18;    // mode vol
     
     // misc
-    register_index[0x1c] = 25;      // pot x
-    register_index[0x1d] = 26;      // pot y
-    register_index[0x1e] = 27;      // osc3_random
-    register_index[0x1f] = 28;      // env3
+    register_index[0x1c] = 0x19;    // pot x
+    register_index[0x1d] = 0x1a;    // pot y
+    register_index[0x1e] = 0x1b;    // osc3_random
+    register_index[0x1f] = 0x1c;    // env3
     
     
     

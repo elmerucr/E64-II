@@ -388,17 +388,16 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;
-        snprintf(command_help_string, 256, "\r:%06x  ", temp_address);
+        snprintf(command_help_string, 256, "\r:%06x ", temp_address);
         debug_console_print(command_help_string);
         for(int i=0; i<8; i++)
         {
-            snprintf(command_help_string, 256, "%02x ", pc.mmu_ic->read_memory_8(temp_address));
+            snprintf(command_help_string, 256, "%02x", pc.mmu_ic->read_memory_8(temp_address));
             debug_console_print(command_help_string);
+            if(i & 0b1) debug_console_put_char(' ');
             temp_address ++;
             temp_address &= RAM_SIZE - 1;
         }
-        
-        debug_console_put_char(' ');
         
         debug_console.current_background_color = COBALT_02;
         
@@ -414,7 +413,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         
         debug_console.current_background_color = COBALT_01;
         
-        debug_console.cursor_pos -= 33;
+        debug_console.cursor_pos -= 28;
     }
 }
 

@@ -31,7 +31,7 @@ void debug_console_init()
     debug_console_cursor_activate();
 
     // status bar stuff (initial state)
-    debug_console.status_bar_active = false;
+    debug_console.status_bar_active = true;
     debug_console.status_bar_rows = 14;
     debug_console.status_bar_total_chars = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
     debug_console.status_bar_cursor_pos = 0;
@@ -39,20 +39,14 @@ void debug_console_init()
     debug_console.status_bar_hex_view = false;
     debug_status_bar_refresh();
 
-    //for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
+    for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
     debug_console_version();
-    debug_console_welcome();
 }
 
 void debug_console_version()
 {
-    snprintf(console_help_string,256,"E64-II (C)%i - version %i.%i.%i\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
+    snprintf(console_help_string,256,"E64-II (C)%i - version %i.%i (%i)\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
     debug_console_print(console_help_string);
-}
-
-void debug_console_welcome()
-{
-    debug_console_print("monitor - type <help> for more information\n");
 }
 
 void debug_console_add_bottom_row()

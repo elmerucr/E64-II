@@ -30,13 +30,16 @@ v basic pulse working (breakpoints and continue execution with correct scanlines
 
 todo / bugs
 ===========
-- ram access by not-cpu chips is not protected!
-- irq functionality in console is strange
 - currently access is granted to sdl2 to read registers etc... from cia
 - call stack, stack tracing, former instructions log etc...
 
 2020
 ====
+2020-11-02 Upgrade of Moira sources from upstream vAmiga project
+2020-11-01 Rewiring of SID chips in order to have correct word access on 16 bit registers
+2020-10-26 (probably) removal of the old assembler kernel from this source tree
+2020-10-20 Starting rewrite of kernel/rom in c and make it a separate project on github
+<<<huge gap with no tracking>>>
 2020-05-26 Removal of pid and delay, now working with chrono and thread classes to have stable fps on non vsync situations
 2020-05-25 Release of 0.5 (see above)
 2020-05-15 Most work on sprites is done. Double size, flipping, etc...

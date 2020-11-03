@@ -45,7 +45,6 @@ extern debug_console_struct debug_console;
 
 void debug_console_init();
 void debug_console_version();
-void debug_console_welcome();
 void debug_console_blit_to_debug_screen();
 void debug_console_put_char(char character);
 void debug_console_put_screencode(char screencode);
