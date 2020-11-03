@@ -29,6 +29,21 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     {
         debug_console_put_char('\n');
     }
+    else if( token0[0] == ':' )
+    {
+        // editing monitor command output
+        debug_command_enter_monitor_line(string_to_parse_and_exec);
+//        uint32_t address;
+//        //token0[
+//        if( !debug_command_hex_string_to_int(&token0[1], &address))
+//        {
+//            debug_console_print("error: invalid address\n");
+//        }
+//        else
+//        {
+//            printf("%06x\n", address);
+//        }
+    }
     else if( strcmp(token0, "b") == 0 )
     {
         debug_console_put_char('\n');
@@ -135,44 +150,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
             debug_console_print("    full    help      ls       m      mc     pwd       r\n");
             debug_console_print("   reset      sb     sbc     ver     win\n");
-//            debug_console_print("bc    clear all cpu breakpoints\n");
-//            debug_console_print("c     continue execution\n");
-//            debug_console_print("d     disassemble\n");
-//            debug_console_print("m     memory dump\n");
-//            debug_console_print("r     cpu registers\n");
-//            debug_console_print("sb    scanline breakpoints\n");
-//            debug_console_print("sbc   clear all scanline breakpoints\n");
-//            debug_console_print("bar   debug status bar on/off\n");
-//            debug_console_print("clear clear screen\n");
-//            debug_console_print("exit  exit application\n");
-//            debug_console_print("full  toggle window/fullscreen\n");
-//            debug_console_print("help  print this help message\n");
-//            debug_console_print("irq   irq related commands\n");
-//            debug_console_print("ver   version information\n");
-//            debug_console_print("win   window options\n\n");
-//            debug_console_print("<help> <command name> for more info on some commands\n");
         }
-//        else if( strcmp(token1, "b") == 0 )
-//        {
-//            debug_console_print("<b>      current breakpoint settings\n");
-//            debug_console_print("<b on>   enable defined breakpoints\n");
-//            debug_console_print("<b off>  disable defined breakpoints\n");
-//            debug_console_print("<b xxxx> enable or disable a breakpoint at $xxxx\n");
-//        }
-//        else if( strcmp(token1, "g") == 0 )
-//        {
-//            debug_console_print("<g xxxx> start execution at $xxxx\n");
-//        }
-//        else if( strcmp(token1, "n") == 0 )
-//        {
-//            debug_console_print("<n>        executes the next instruction on the cpu\n");
-//            debug_console_print("<n number> executes the next <number> instructions on the cpu\n");
-//        }
-//        else
-//        {
-//            snprintf(c256_string2, 256, "error: unrecognized option '%s'\n", token1);
-//            debug_console_print(c256_string2);
-//        }
     }
     else if( strcmp(token0, "ls") == 0 )
     {
@@ -500,4 +478,77 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
 void E64::debug_command_single_step_cpu()
 {
     pc.run(0);
+}
+
+void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
+{
+    uint32_t address;
+    uint32_t arg0, arg1, arg2, arg3;
+    
+    string_to_parse_and_exec[7]  = '\0';
+    string_to_parse_and_exec[12] = '\0';
+    string_to_parse_and_exec[17] = '\0';
+    string_to_parse_and_exec[22] = '\0';
+    string_to_parse_and_exec[27] = '\0';
+    
+    if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 1;
+        debug_console_print("??????\n");
+    }
+    else if( address & 0b1 )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 1;
+        debug_console_print("??????\n");
+    }
+    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 8;
+        debug_console_print("????\n");
+    }
+    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 13;
+        debug_console_print("????\n");
+    }
+    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 18;
+        debug_console_print("????\n");
+    }
+    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
+    {
+        debug_console_put_char('\r');
+        debug_console.cursor_pos += 23;
+        debug_console_print("????\n");
+    }
+    else
+    {
+        uint32_t original_address = address;
+        
+        arg0 &= 0xffff;
+        arg1 &= 0xffff;
+        arg2 &= 0xffff;
+        arg3 &= 0xffff;
+        
+        pc.mmu_ic->write_memory_16(address, (uint16_t)arg0); address +=2; address &= 0xffffff;
+        pc.mmu_ic->write_memory_16(address, (uint16_t)arg1); address +=2; address &= 0xffffff;
+        pc.mmu_ic->write_memory_16(address, (uint16_t)arg2); address +=2; address &= 0xffffff;
+        pc.mmu_ic->write_memory_16(address, (uint16_t)arg3); address +=2; address &= 0xffffff;
+
+        debug_console_put_char('\r');
+        
+        debug_command_memory_dump(original_address, 1);
+        
+        original_address += 8;
+        original_address &= 0xffffff;
+        
+        snprintf(command_help_string, 256, "\n:%06x ", original_address);
+        debug_console_print(command_help_string);
+    }
 }

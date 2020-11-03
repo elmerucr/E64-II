@@ -292,12 +292,16 @@ void debug_console_enter()
 {
     // find starting position of the current row
     uint16_t start_of_row = debug_console.cursor_pos - (debug_console.cursor_pos % VICV_CHAR_COLUMNS);
-    //uint16_t start_of_row = debug_console.cursor_pos & 0xffc0;
+    
+    /*  Copy screen contents into helper character string
+     */
     for(int i=0; i<64; i++)
     {
         console_help_string[i] = (debug_console.console_character_buffer[start_of_row + i]) & 0x7f;
     }
+    
     console_help_string[64] = ASCII_NULL;
+    
     E64::debug_command_execute(console_help_string);
 }
 

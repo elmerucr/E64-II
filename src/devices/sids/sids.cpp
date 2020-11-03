@@ -49,7 +49,7 @@ E64::sids::sids()
     register_index[0x18] = 0x15;    // filter cutoff low byte  (bits 0-2)
     register_index[0x19] = 0x16;    // filter cutoff high byte (bits 3-10)
     register_index[0x1a] = 0x17;    // res filt
-    register_index[0x1b] = 0x18;    // mode vol
+    register_index[0x1b] = 0x18;    // filtermode / volume
     
     // misc
     register_index[0x1c] = 0x19;    // pot x
