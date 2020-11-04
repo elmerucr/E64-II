@@ -330,8 +330,9 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
                 
                 uint32_t ptr_to_blit_struct = (registers[2]<<24) | (registers[3]<<16) | (registers[4]<<8) | registers[5];
                 
-                // make sure it is 32 byte aligned, and below 0x1000000
-                ptr_to_blit_struct &= 0x00ffffe0;
+                // make sure it is word aligned, and equal or below 0xffffe0
+                ptr_to_blit_struct &= 0xfffffe;
+                if( ptr_to_blit_struct > 0xffffe0 ) ptr_to_blit_struct = 0xffffe0;
                 
                 // copy the structure into the operations list
                 operations[head].this_blit = *(struct surface_blit *)&pc.mmu_ic->ram[ptr_to_blit_struct];
