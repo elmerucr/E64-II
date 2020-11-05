@@ -55,9 +55,9 @@ inline void alpha_blend(uint16_t *destination, uint16_t *source)
     b_dest = (*destination & 0x0f00);   // bitshift of >> 8 is done in final step
 
     a_src = ((*source & 0x00f0) >> 4) + 1;
-    r_src = (*source & 0x000f);
-    g_src = (*source & 0xf000); // bitshift of >>12 is done in final step
-    b_src = (*source & 0x0f00); // bitshift of >> 8 is done in final step
+    r_src =  (*source & 0x000f);
+    g_src =  (*source & 0xf000); // bitshift of >>12 is done in final step
+    b_src =  (*source & 0x0f00); // bitshift of >> 8 is done in final step
     
     a_src_inv = 17 - a_src;
     
@@ -318,25 +318,25 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     switch( address )
     {
         case 0x00:
-            if( byte & 0b00000001 ) // add a clear framebuffer operation
+            if( byte & 0b00000001 ) // add operation
             {
-                operations[head].type = CLEAR_FRAMEBUFFER;
-                
-                head++;
-            }
-            if( byte & 0b00000010 ) // add a blit operation
-            {
-                operations[head].type = BLIT;
-                
                 uint32_t ptr_to_blit_struct = (registers[2]<<24) | (registers[3]<<16) | (registers[4]<<8) | registers[5];
                 
-                // make sure it is word aligned, and equal or below 0xffffe0
-                ptr_to_blit_struct &= 0xfffffe;
-                if( ptr_to_blit_struct > 0xffffe0 ) ptr_to_blit_struct = 0xffffe0;
-                
-                // copy the structure into the operations list
-                operations[head].this_blit = *(struct surface_blit *)&pc.mmu_ic->ram[ptr_to_blit_struct];
-                
+                if( ptr_to_blit_struct & 0x80000000 )
+                {
+                    operations[head].type = CLEAR_FRAMEBUFFER;
+                }
+                else
+                {
+                    operations[head].type = BLIT;
+                    
+                    // make sure it is word aligned, and equal or below 0xffffe0
+                    ptr_to_blit_struct &= 0xfffffe;
+                    if( ptr_to_blit_struct > 0xffffe0 ) ptr_to_blit_struct = 0xffffe0;
+
+                    // copy the structure into the operations list
+                    operations[head].this_blit = *(struct surface_blit *)&pc.mmu_ic->ram[ptr_to_blit_struct];
+                }
                 head++;
             }
             break;

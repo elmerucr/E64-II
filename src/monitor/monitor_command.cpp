@@ -400,20 +400,18 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
     for(int i=0; i<rows; i++ )
     {
         uint32_t temp_address = address;
-        snprintf(command_help_string, 256, "\r;%06x ", temp_address);
+        snprintf(command_help_string, 256, "\r;%06x", temp_address);
         debug_console_print(command_help_string);
         for(int i=0; i<16; i++)
         {
             if( (i & 1) == 0 ) debug_console_put_char(' ');
-            //snprintf(command_help_string, 256, "%02x", pc.mmu_ic->read_memory_8(temp_address));
             // important: vicv and blitter are not able to see roms and i/o adresses, so don't use read_memory_8
             snprintf(command_help_string, 256, "%02x", pc.mmu_ic->ram[temp_address]);
             debug_console_print(command_help_string);
             temp_address++;
             temp_address &= RAM_SIZE - 1;
         }
-        
-        debug_console_put_char(' ');
+
         debug_console_put_char(' ');
         
         temp_address = address;
@@ -421,8 +419,6 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         {
             debug_console.current_background_color = *(uint16_t *)(&(pc.mmu_ic->ram[temp_address & 0x00ffffff]));
             debug_console_put_char(' ');
-            //if( (( temp_byte & 0x7f) == ASCII_LF) || ( (temp_byte & 0x7f) == ASCII_CR) ) temp_byte = 0x80;
-            //debug_console_put_char( temp_byte );
             temp_address += 2;
         }
 
@@ -430,7 +426,7 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         
         address += 16;
         address &= RAM_SIZE - 1;
-        debug_console.cursor_pos -= 49;
+        debug_console.cursor_pos -= 48;
     }
 }
 

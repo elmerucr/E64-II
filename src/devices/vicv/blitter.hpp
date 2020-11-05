@@ -33,7 +33,7 @@ enum blitter_state
  *  into finite state machine data of the blitter.
  */
 
-struct __attribute__((packed)) surface_blit 
+struct __attribute__((packed)) surface_blit
 {
     /*  The size of this structure is 32 bytes. Inside the machine,
      *  alignment at 2^5 = 32 bytes must be arranged.
@@ -184,8 +184,7 @@ class blitter
 private:
     /*  reg 0:
      *  blitter control register
-     *  - write 1 to bit 0: add a clear framebuffer operation
-     *  - write 1 to bit 1: add a blitting operation
+     *  - write 1 to bit 0: add an operation
      *  - on read: returns 0 if blitter is idle, returns 1 if blitter is busy
      *
      *  reg 1:

@@ -337,8 +337,10 @@ uint8_t E64::cia::read_byte(uint8_t address)
     {
         case 0x00:
             return_value = events_waiting() ? 0x01 : 0x00;
+            break;
         case 0x01:
             return_value = (generate_key_events ? 0x01 : 0x00);
+            break;
         case 0x02:
             return_value = keyboard_repeat_delay;
             break;

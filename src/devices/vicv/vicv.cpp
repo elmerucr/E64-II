@@ -41,7 +41,11 @@ void E64::vicv::reset()
 
 void E64::vicv::run(uint32_t number_of_cycles)
 {
-    uint32_t y_pos;
+    /*  y_pos needs initialization otherwise compiler complains
+     *  chosen for bogus 0xff value => probably in initialized data
+     *  section. Seems to be fastest when looking at cpu usage.
+     */
+    uint32_t y_pos = 0xff;
     
     while(number_of_cycles > 0)
     {
@@ -56,7 +60,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
         {
             if(hborder)
             {
-                host_video.backbuffer[dot_clock] = host_video.palette[*((uint16_t *)(&registers[VICV_REG_BOR]))];
+                host_video.backbuffer[dot_clock] = host_video.palette[*((uint16_t *)(&registers[VICV_REG_BOR_HIGH]))];
             }
             else
             {
