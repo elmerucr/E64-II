@@ -281,8 +281,8 @@ void E64::cia::run(int no_of_cycles)
         // check modifier keys
         uint8_t modifier_keys_status =  (keys_last_known_state[SCANCODE_LSHIFT] ? SHIFT_PRESSED : 0) |
                                         (keys_last_known_state[SCANCODE_RSHIFT] ? SHIFT_PRESSED : 0) |
-                                        (keys_last_known_state[SCANCODE_LCTRL ] ? CTRL_PRESSED :  0) |
-                                        (keys_last_known_state[SCANCODE_RCTRL ] ? CTRL_PRESSED :  0);
+                                        (keys_last_known_state[SCANCODE_LCTRL ] ? CTRL_PRESSED  : 0) |
+                                        (keys_last_known_state[SCANCODE_RCTRL ] ? CTRL_PRESSED  : 0);
         
         // registers 128 to 255 reflect the current keyboard state
         // shift each register one bit to the left, bit 0 is only set if key is pressed
@@ -380,7 +380,7 @@ void E64::cia::write_byte(uint8_t address, uint8_t byte)
             keyboard_repeat_speed = byte;
             break;
         default:
-            // all other addresses are not written to
+            // no other addresses are written to
             break;
     }
 }

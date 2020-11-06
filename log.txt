@@ -35,6 +35,7 @@ todo / bugs
 
 2020
 ====
+2020-11-06 Updated Icon / Editing char colors enabled
 2020-11-02 Upgrade of Moira sources from upstream vAmiga project
 2020-11-01 Rewiring of SID chips in order to have correct word access on 16 bit registers
 2020-10-26 (probably) removal of the old assembler kernel from this source tree

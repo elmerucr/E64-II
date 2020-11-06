@@ -52,14 +52,14 @@ struct __attribute__((packed)) surface_blit
      */
     uint8_t     flags_0;
 
-    /*  Flags 1 - Sizes & Flips
+    /*  Flags 1 - Stretching & Flips
      *
      *  7 6 5 4 3 2 1 0
      *      | |   |   |
-     *      | |   |   +-- Horizontal double pixel size (1 = on)
-     *      | |   +------ Vertical double pixel size (1 = on)
-     *      | +---------- Horizontal flip (1 = on)
-     *      +------------ Vertical flip (1 = on)
+     *      | |   |   +-- Horizontal stretching (0 = off, 1 = on)
+     *      | |   +------ Vertical stretching (0 = off, 1 = on)
+     *      | +---------- Horizontal flip (0 = off, 1 = on)
+     *      +------------ Vertical flip (0 = off, 1 = on)
      *
      *  bits 1, 3, 6 and 7: Reserved
      */
@@ -73,11 +73,13 @@ struct __attribute__((packed)) surface_blit
      *    | | |
      *    +-+-+---------- High nibble (just 3 of 4 bits)
      *
-     *  Low nibble codes for the width (in tiles log2) of the blit.
-     *  High nibble codes for the height. Bits 3 and 7 are actually unused.
+     *  Low nibble codes for width (in tiles log2) of the blit.
+     *  High nibble codes for height.
      *
-     *  The 3 least significant bits of a nibble indicate a number of
-     *  0 - 7 (n). Finally, a bit shift occurs: 0b00000001 << n
+     *  Bits 3 and 7: Reserved.
+     *
+     *  The 3 least significant bits of each nibble indicate a number of
+     *  0 - 7 (n). Finally, a bit shift occurs: 0b00000001 << n (2^n)
      *  Resulting in the final width/height in 'tiles' (8 pixels per tile)
      *  { 1, 2, 4, 8, 16, 32, 64, 128 }
      */
