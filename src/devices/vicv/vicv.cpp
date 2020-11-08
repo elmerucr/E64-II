@@ -1,99 +1,88 @@
-//  vicv.cpp
-//  E64
-//
-//  Copyright © 2017-2020 elmerucr. All rights reserved.
-
+/*
+ * vicv.cpp
+ * E64-II
+ *
+ * Copyright © 2017-2020 elmerucr. All rights reserved.
+ */
+ 
 #include <cstdio>
-
 #include "vicv.hpp"
 #include "common.hpp"
 
-
 E64::vicv::vicv()
 {
-    stats_overlay_present = false;
+	stats_overlay_present = false;
 
-    framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[0x00f00000];
-    framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[0x00f48000];
-    
-    breakpoint_reached = false;
-    clear_scanline_breakpoints();
-    old_y_pos = 0;
-    
-    stats_text = nullptr;
+	framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[VICV_FRAMEBUFFER0];
+	framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[VICV_FRAMEBUFFER1];
+
+	breakpoint_reached = false;
+	clear_scanline_breakpoints();
+	old_y_pos = 0;
+
+	stats_text = nullptr;
 }
-
 
 void E64::vicv::reset()
 {
-    pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);
+	pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);
 
-    frame_done = false;
+	frame_done = false;
 
-    cycle_clock = dot_clock = 0;
+	cycle_clock = dot_clock = 0;
 
-    for(int i=0; i<256; i++) registers[i] = 0;
-    
-    frontbuffer = framebuffer0;
-    backbuffer  = framebuffer1;
+	for (int i=0; i<256; i++) registers[i] = 0;
+
+	frontbuffer = framebuffer0;
+	backbuffer  = framebuffer1;
 }
-
 
 void E64::vicv::run(uint32_t number_of_cycles)
 {
-    /*  y_pos needs initialization otherwise compiler complains
-     *  chosen for bogus 0xff value => probably in initialized data
-     *  section. Seems to be fastest when looking at cpu usage.
-     */
-    uint32_t y_pos = 0xff;
-    
-    while(number_of_cycles > 0)
-    {
-        y_pos = (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK));
-        uint32_t x_pos = (cycle_clock - (y_pos * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)));
-        bool hblank = (x_pos >= VICV_PIXELS_PER_SCANLINE);
-        bool vblank = (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES));
-        bool blank = hblank || vblank;
-        bool hborder = (y_pos < registers[VICV_REG_BORDER_SIZE]) || (y_pos > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]));
-        
-        if(!blank)
-        {
-            if(hborder)
-            {
-                host_video.backbuffer[dot_clock] = host_video.palette[*((uint16_t *)(&registers[VICV_REG_BOR_HIGH]))];
-            }
-            else
-            {
-                host_video.backbuffer[dot_clock] = host_video.palette[frontbuffer[dot_clock]];
-            }
-            // only progress the dot clock if a pixel was actually sent to screen (!BLANK)
-            dot_clock++;
-        }
+	/* y_pos needs initialization otherwise compiler complains
+	 * chosen for bogus 0xff value => probably in initialized data
+	 * section. Seems to be fastest when looking at cpu usage.
+	 */
+	uint32_t y_pos = 0xff;
 
-        cycle_clock++;
+	while (number_of_cycles > 0) {
+		y_pos = (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK));
+		uint32_t x_pos = (cycle_clock - (y_pos * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)));
+		bool hblank = (x_pos >= VICV_PIXELS_PER_SCANLINE);
+		bool vblank = (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES));
+		bool blank = hblank || vblank;
+		bool hborder = (y_pos < registers[VICV_REG_BORDER_SIZE]) || (y_pos > ((VICV_SCANLINES-1)-registers[VICV_REG_BORDER_SIZE]));
+
+		if (!blank) {
+			if (hborder)
+				host_video.backbuffer[dot_clock] = host_video.palette[*((uint16_t *)(&registers[VICV_REG_HOR_BOR_HIGH]))];
+			else
+				host_video.backbuffer[dot_clock] = host_video.palette[frontbuffer[dot_clock]];
+			dot_clock++;	// progr dot clock if pixel was sent (!blank)
+		}
+
+		cycle_clock++;
         
-        switch(cycle_clock)
-        {
-            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
-                // start of vblank
-                pc.TTL74LS148_ic->pull_line(vblank_interrupt_device_number);
-                break;
-            case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
-                // finished vblank, do other necessary stuff
-                if(stats_overlay_present) render_stats(44, 276);
-                host_video.swap_buffers();
-                cycle_clock = dot_clock = 0;
-                frame_done = true;
-                break;
+        switch (cycle_clock) {
+	case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
+		// start of vblank
+		pc.TTL74LS148_ic->pull_line(vblank_interrupt_device_number);
+		break;
+	case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
+		// finished vblank, do other necessary stuff
+		if(stats_overlay_present) render_stats(44, 276);
+		host_video.swap_buffers();
+		cycle_clock = dot_clock = 0;
+		frame_done = true;
+		break;
         }
-        
-        number_of_cycles--;
-    }
-    
-    if( (y_pos != old_y_pos) && scanline_breakpoints[y_pos] == true) breakpoint_reached = true;
-    old_y_pos = y_pos;
+	number_of_cycles--;
+	}
+
+	if ((y_pos != old_y_pos) && scanline_breakpoints[y_pos] == true)
+		breakpoint_reached = true;
+	old_y_pos = y_pos;
 }
-
 
 #define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
 #define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
@@ -167,22 +156,19 @@ bool E64::vicv::is_scanline_breakpoint(uint16_t scanline)
 
 uint8_t E64::vicv::read_byte(uint8_t address)
 {
-    return registers[address];
+    return registers[address & 0x07];
 }
 
 
 void E64::vicv::write_byte(uint8_t address, uint8_t byte)
 {
-    switch( address )
-    {
+    switch (address) {
         case VICV_REG_ISR:
-            if( byte & 0b00000001 ) pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
+            if (byte & 0b00000001) pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
             break;
         case VICV_REG_BUFFERSWAP:
-            if( byte & 0b00000001 )
-            {
-                if( pc.blitter_ic->current_state != IDLE )
-                {
+            if (byte & 0b00000001) {
+                if (pc.blitter_ic->current_state != IDLE) {
                     pc.blitter_ic->current_state = IDLE;
                     printf("[VICV] warning: blitter was not finished when swapping buffers\n");
                 }
@@ -192,7 +178,7 @@ void E64::vicv::write_byte(uint8_t address, uint8_t byte)
             }
             break;
         default:
-            registers[address] = byte;
+            registers[address & 0x07] = byte;
             break;
     }
 }

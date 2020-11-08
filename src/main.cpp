@@ -64,15 +64,16 @@ int main(int argc, char **argv)
         {
             case E64::NORMAL_MODE:
 
-                /*  Note: using run(0) function causes the cpu to run only
-                 *  1 instruction per call. This will increase the overall
-                 *  host cpu load, but also increases accuracy of the
-                 *  system as a whole. Most importantly, SID emulation will
-                 *  be very realistic. Instant changes to SID's registers
-                 *  should be reflected in audio output.
-                 *  However, run(63) significantly reduces host cpu load,
-                 *  once we have some music running in the virtual machine,
-                 *  test this.
+                /*
+                 * Note: using run(0) function causes the cpu to run only
+                 * 1 instruction per call. This will increase the overall
+                 * host cpu load, but also increases accuracy of the
+                 * system as a whole. Most importantly, SID emulation will
+                 * be very realistic. Instant changes to SID's registers
+                 * should be reflected in audio output.
+                 * However, run(63) significantly reduces host cpu load,
+                 * once we have some music running in the virtual machine,
+                 * test this.
                  */
 
                 if( pc.run(511) != 0 ) pc.switch_to_debug();

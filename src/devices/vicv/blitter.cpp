@@ -121,7 +121,7 @@ void E64::blitter::run(int no_of_cycles)
                             double_width    = (operations[tail].this_blit.flags_1 & 0b00000001) ? 1 : 0;
                             double_height   = (operations[tail].this_blit.flags_1 & 0b00000100) ? 1 : 0;
                             hor_flip = (operations[tail].this_blit.flags_1 & 0b00010000) ? true : false;
-                            ver_flip   = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
+                            ver_flip = (operations[tail].this_blit.flags_1 & 0b00100000) ? true : false;
                             
                             width_in_tiles_log2  = operations[tail].this_blit.size_in_tiles_log2  & 0b00000111;
                             height_in_tiles_log2 = (operations[tail].this_blit.size_in_tiles_log2 & 0b01110000) >> 4;
@@ -257,7 +257,7 @@ void E64::blitter::run(int no_of_cycles)
                                 :
                                 pc.mmu_ic->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
                             
-                            /*  If the source color has an alpha value (there is a pixel),
+                            /*  If the source color has an alpha value of higher than 0x0 (there is a pixel),
                              *  and we're not in multicolor mode, replace with foreground color.
                              *
                              *  If there's no alpha value (no pixel), and we have background 'on',

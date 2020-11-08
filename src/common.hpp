@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201106
+#define E64_II_BUILD            20201108
 #define E64_II_YEAR             2020
 
 //  Global objects
@@ -74,14 +74,16 @@ extern E64::stats       statistics;
  *  32-bit Memory     28,800
  *
  */
-#define VICV_PIXELS_PER_SCANLINE    512
-#define VICV_PIXELS_HBLANK          148
-#define VICV_SCANLINES              288
-#define VICV_SCANLINES_VBLANK       12
+#define VICV_PIXELS_PER_SCANLINE	512
+#define VICV_PIXELS_HBLANK		148
+#define VICV_SCANLINES			288
+#define VICV_SCANLINES_VBLANK		12
+#define VICV_FRAMEBUFFER0		0x00f00000
+#define VICV_FRAMEBUFFER1		0x00f48000
 
 //  These two macros are defined for use within the debugger.
-#define VICV_CHAR_COLUMNS           (VICV_PIXELS_PER_SCANLINE/8)
-#define VICV_CHAR_ROWS              (VICV_SCANLINES/8)
+#define VICV_CHAR_COLUMNS		(VICV_PIXELS_PER_SCANLINE/8)
+#define VICV_CHAR_ROWS			(VICV_SCANLINES/8)
 
 
 #define FPS                         60
