@@ -169,7 +169,7 @@ struct operation
 };
 
 
-class blitter
+class blitter_ic
 {
     
     /*

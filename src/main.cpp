@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
 
     // place this call into machine class?
-    pc.vicv_ic->set_stats( statistics.stats_info() );
+    pc.vicv->set_stats( statistics.stats_info() );
 
     // set up window management, audio and some other stuff
     E64::sdl2_init();
@@ -68,20 +68,20 @@ int main(int argc, char **argv)
                  * Note: using run(0) function causes the cpu to run only
                  * 1 instruction per call. This will increase the overall
                  * host cpu load, but also increases accuracy of the
-                 * system as a whole. Most importantly, SID emulation will
-                 * be very realistic. Instant changes to SID's registers
-                 * should be reflected in audio output.
+                 * system as a whole. Most importantly, SID and VICV emulation
+		 * will be very realistic. Instant changes to registers should
+                 * be reflected in audio output.
                  * However, run(63) significantly reduces host cpu load,
                  * once we have some music running in the virtual machine,
                  * test this.
                  */
 
-                if( pc.run(511) != 0 ) pc.switch_to_debug();
+                if( pc.run(0) != 0 ) pc.switch_to_debug();
 
                 // if a full frame is done, call other update functions:
-                if( pc.vicv_ic->frame_done )
+                if( pc.vicv->frame_done )
                 {
-                    pc.vicv_ic->frame_done = false;
+                    pc.vicv->frame_done = false;
 
                     // process events and check for possible exit signal
                     if(E64::sdl2_process_events() == E64::QUIT_EVENT) pc.running = false;

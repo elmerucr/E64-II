@@ -22,12 +22,12 @@ extern uint8_t cbm_cp437_font[];
 namespace E64
 {
 
-class mmu
+class mmu_ic
 {
 private:
 public:
-    mmu();
-    ~mmu();
+    mmu_ic();
+    ~mmu_ic();
     
     uint8_t  *ram;                  // make this private and work with friend class?
     uint16_t *ram_as_words;         // make this private and work with friend class?

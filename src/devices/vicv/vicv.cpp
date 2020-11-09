@@ -9,12 +9,12 @@
 #include "vicv.hpp"
 #include "common.hpp"
 
-E64::vicv::vicv()
+E64::vicv_ic::vicv_ic()
 {
 	stats_overlay_present = false;
 
-	framebuffer0 = (uint16_t *)&pc.mmu_ic->ram[VICV_FRAMEBUFFER0];
-	framebuffer1 = (uint16_t *)&pc.mmu_ic->ram[VICV_FRAMEBUFFER1];
+	framebuffer0 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER0];
+	framebuffer1 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER1];
 
 	breakpoint_reached = false;
 	clear_scanline_breakpoints();
@@ -23,9 +23,9 @@ E64::vicv::vicv()
 	stats_text = nullptr;
 }
 
-void E64::vicv::reset()
+void E64::vicv_ic::reset()
 {
-	pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);
+	pc.TTL74LS148->release_line(vblank_interrupt_device_number);
 
 	frame_done = false;
 
@@ -37,7 +37,7 @@ void E64::vicv::reset()
 	backbuffer  = framebuffer1;
 }
 
-void E64::vicv::run(uint32_t number_of_cycles)
+void E64::vicv_ic::run(uint32_t number_of_cycles)
 {
 	/* y_pos needs initialization otherwise compiler complains
 	 * chosen for bogus 0xff value => probably in initialized data
@@ -66,7 +66,7 @@ void E64::vicv::run(uint32_t number_of_cycles)
         switch (cycle_clock) {
 	case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
 		// start of vblank
-		pc.TTL74LS148_ic->pull_line(vblank_interrupt_device_number);
+		pc.TTL74LS148->pull_line(vblank_interrupt_device_number);
 		break;
 	case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
 		// finished vblank, do other necessary stuff
@@ -90,11 +90,11 @@ void E64::vicv::run(uint32_t number_of_cycles)
 #define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 
 
-bool E64::vicv::is_hblank() { return HBLANK; }
-bool E64::vicv::is_vblank() { return VBLANK; }
+bool E64::vicv_ic::is_hblank() { return HBLANK; }
+bool E64::vicv_ic::is_vblank() { return VBLANK; }
 
 
-inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
+inline void E64::vicv_ic::render_stats(uint16_t xpos, uint16_t ypos)
 {
     uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) % (VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
     uint8_t  eight_pixels = 0;
@@ -126,50 +126,50 @@ inline void E64::vicv::render_stats(uint16_t xpos, uint16_t ypos)
 }
 
 
-uint16_t E64::vicv::get_current_scanline() { return Y_POS; }
-uint16_t E64::vicv::get_current_pixel() { return X_POS; }
+uint16_t E64::vicv_ic::get_current_scanline() { return Y_POS; }
+uint16_t E64::vicv_ic::get_current_pixel() { return X_POS; }
 
 
-void E64::vicv::clear_scanline_breakpoints()
+void E64::vicv_ic::clear_scanline_breakpoints()
 {
     for(int i=0; i<1024; i++) scanline_breakpoints[i] = false;
 }
 
 
-void E64::vicv::add_scanline_breakpoint(uint16_t scanline)
+void E64::vicv_ic::add_scanline_breakpoint(uint16_t scanline)
 {
     scanline_breakpoints[scanline & 1023] = true;
 }
 
 
-void E64::vicv::remove_scanline_breakpoint(uint16_t scanline)
+void E64::vicv_ic::remove_scanline_breakpoint(uint16_t scanline)
 {
     scanline_breakpoints[scanline & 1023] = false;
 }
 
 
-bool E64::vicv::is_scanline_breakpoint(uint16_t scanline)
+bool E64::vicv_ic::is_scanline_breakpoint(uint16_t scanline)
 {
     return scanline_breakpoints[scanline & 1023];
 }
 
 
-uint8_t E64::vicv::read_byte(uint8_t address)
+uint8_t E64::vicv_ic::read_byte(uint8_t address)
 {
     return registers[address & 0x07];
 }
 
 
-void E64::vicv::write_byte(uint8_t address, uint8_t byte)
+void E64::vicv_ic::write_byte(uint8_t address, uint8_t byte)
 {
     switch (address) {
         case VICV_REG_ISR:
-            if (byte & 0b00000001) pc.TTL74LS148_ic->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
+            if (byte & 0b00000001) pc.TTL74LS148->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
             break;
         case VICV_REG_BUFFERSWAP:
             if (byte & 0b00000001) {
-                if (pc.blitter_ic->current_state != IDLE) {
-                    pc.blitter_ic->current_state = IDLE;
+                if (pc.blitter->current_state != IDLE) {
+                    pc.blitter->current_state = IDLE;
                     printf("[VICV] warning: blitter was not finished when swapping buffers\n");
                 }
                 uint16_t *tempbuffer = frontbuffer;

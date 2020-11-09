@@ -39,7 +39,7 @@
 
 namespace E64 {
 
-class vicv
+class vicv_ic
 {
 private:
 	// this chip contains 256 registers (and are mapped to a specific page)
@@ -72,7 +72,7 @@ public:
 		{ stats_text = text; }
     
 public:
-	vicv();
+	vicv_ic();
 
 	// framebuffer pointers inside the virtual machine
 	uint16_t *frontbuffer;

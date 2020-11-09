@@ -14,7 +14,7 @@
 
 namespace E64
 {
-    class TTL74LS148
+    class TTL74LS148_ic
     {
     private:
         struct device
@@ -26,7 +26,7 @@ namespace E64
         uint8_t number_of_devices;
         int output_level;
     public:
-        TTL74LS148();
+        TTL74LS148_ic();
         
         void pull_line(uint8_t handler);
         void release_line(uint8_t handler);
@@ -37,8 +37,6 @@ namespace E64
         // when connecting a device, both a pointer to a pin and an interrupt level (1-6) must be supplied
         // returns a unique interrupt_device_no
         uint8_t connect_device(int level);
-        
-
     };
 }
 

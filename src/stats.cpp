@@ -61,7 +61,7 @@ void E64::stats::process_parameters()
         idle_per_frame = total_idle_time / (framecounter_interval);
         smoothed_idle_per_frame = (alpha * smoothed_idle_per_frame) + ((1.0 - alpha) * idle_per_frame);
         
-        percentage_blitter = pc.blitter_ic->fraction_busy();
+        percentage_blitter = pc.blitter->fraction_busy();
         smoothed_percentage_blitter = (alpha * smoothed_percentage_blitter) + (100.0 * (1.0 - alpha) * percentage_blitter);
         
         total_time = total_idle_time = 0;

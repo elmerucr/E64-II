@@ -6,14 +6,14 @@
 #include "timer.hpp"
 #include "common.hpp"
 
-E64::timer::timer()
+E64::timer_ic::timer_ic()
 {
     //
 }
 
-void E64::timer::reset()
+void E64::timer_ic::reset()
 {
-    pc.TTL74LS148_ic->release_line(interrupt_device_number);
+    pc.TTL74LS148->release_line(interrupt_device_number);
     
     registers[0] = 0x00;        // no pending irq's
     registers[1] = 0x00;        // all interrupt times turned off
@@ -39,7 +39,7 @@ void E64::timer::reset()
     timer3_counter = 0;
 }
 
-void E64::timer::run(uint32_t number_of_cycles)
+void E64::timer_ic::run(uint32_t number_of_cycles)
 {
     timer0_counter += number_of_cycles;
     timer1_counter += number_of_cycles;
@@ -49,41 +49,41 @@ void E64::timer::run(uint32_t number_of_cycles)
     if( (timer0_counter >= timer0_clock_interval) && (registers[1] & 0x01) )
     {
         timer0_counter -= timer0_clock_interval;
-        pc.TTL74LS148_ic->pull_line(interrupt_device_number);
+        pc.TTL74LS148->pull_line(interrupt_device_number);
         registers[0] |= 0x81;       // turn on bits 7 and 0
     }
     if( (timer1_counter >= timer1_clock_interval) && (registers[1] & 0x02) )
     {
         timer1_counter -= timer1_clock_interval;
-        pc.TTL74LS148_ic->pull_line(interrupt_device_number);
+        pc.TTL74LS148->pull_line(interrupt_device_number);
         registers[0] |= 0x82;       // turn on bits 7 and 1
     }
     if( (timer2_counter >= timer2_clock_interval) && (registers[1] & 0x04) )
     {
         timer2_counter -= timer2_clock_interval;
-        pc.TTL74LS148_ic->pull_line(interrupt_device_number);
+        pc.TTL74LS148->pull_line(interrupt_device_number);
         registers[0] |= 0x84;       // turn on bits 7 and 2
     }
     if( (timer3_counter >= timer3_clock_interval) && (registers[1] & 0x08) )
     {
         timer3_counter -= timer3_clock_interval;
-        pc.TTL74LS148_ic->pull_line(interrupt_device_number);
+        pc.TTL74LS148->pull_line(interrupt_device_number);
         registers[0] |= 0x88;       // turn on bits 7 and 3
     }
 }
 
-uint32_t E64::timer::bpm_to_clock_interval(uint16_t bpm)
+uint32_t E64::timer_ic::bpm_to_clock_interval(uint16_t bpm)
 {
     uint32_t result = (60.0 / bpm) * CPU_CLOCK_SPEED;
     return result;
 }
 
-uint8_t E64::timer::read_byte(uint8_t address)
+uint8_t E64::timer_ic::read_byte(uint8_t address)
 {
     return registers[ address & 0x03 ];
 }
 
-void E64::timer::write_byte(uint8_t address, uint8_t byte)
+void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
 {
     switch(address & 0x03)
     {
@@ -103,7 +103,7 @@ void E64::timer::write_byte(uint8_t address, uint8_t byte)
             if( (registers[0] & 0x0f) == 0 )
             {
                 // there are no pending interrupts anymore
-                pc.TTL74LS148_ic->release_line(interrupt_device_number);
+                pc.TTL74LS148->release_line(interrupt_device_number);
                 registers[0] = 0x00;    // clear timer status register
             }
             break;
@@ -147,42 +147,42 @@ void E64::timer::write_byte(uint8_t address, uint8_t byte)
     }
 }
 
-uint64_t E64::timer::get_timer0_counter()
+uint64_t E64::timer_ic::get_timer0_counter()
 {
     return timer0_counter;
 }
 
-uint64_t E64::timer::get_timer0_clock_interval()
+uint64_t E64::timer_ic::get_timer0_clock_interval()
 {
     return timer0_clock_interval;
 }
 
-uint64_t E64::timer::get_timer1_counter()
+uint64_t E64::timer_ic::get_timer1_counter()
 {
     return timer1_counter;
 }
 
-uint64_t E64::timer::get_timer1_clock_interval()
+uint64_t E64::timer_ic::get_timer1_clock_interval()
 {
     return timer1_clock_interval;
 }
 
-uint64_t E64::timer::get_timer2_counter()
+uint64_t E64::timer_ic::get_timer2_counter()
 {
     return timer2_counter;
 }
 
-uint64_t E64::timer::get_timer2_clock_interval()
+uint64_t E64::timer_ic::get_timer2_clock_interval()
 {
     return timer2_clock_interval;
 }
 
-uint64_t E64::timer::get_timer3_counter()
+uint64_t E64::timer_ic::get_timer3_counter()
 {
     return timer3_counter;
 }
 
-uint64_t E64::timer::get_timer3_clock_interval()
+uint64_t E64::timer_ic::get_timer3_clock_interval()
 {
     return timer3_clock_interval;
 }

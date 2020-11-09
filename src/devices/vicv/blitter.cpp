@@ -70,7 +70,7 @@ inline void alpha_blend(uint16_t *destination, uint16_t *source)
     *destination = (g_dest << 12) | (b_dest << 8) | 0x00f0 | r_dest;
 }
 
-void E64::blitter::reset()
+void E64::blitter_ic::reset()
 {
     current_state = IDLE;
     
@@ -81,7 +81,7 @@ void E64::blitter::reset()
     cycles_idle = 0;
 }
 
-void E64::blitter::run(int no_of_cycles)
+void E64::blitter_ic::run(int no_of_cycles)
 {
     while(no_of_cycles > 0)
     {
@@ -200,7 +200,7 @@ void E64::blitter::run(int no_of_cycles)
                 
                 if( !(pixel_no == total_no_of_pix) )
                 {
-                    pc.vicv_ic->backbuffer[pixel_no] = clear_color;
+                    pc.vicv->backbuffer[pixel_no] = clear_color;
                     pixel_no++;
                 }
                 else
@@ -239,23 +239,23 @@ void E64::blitter::run(int no_of_cycles)
                             
                             tile_number = tile_x + (tile_y << width_in_tiles_log2);
                             
-                            tile_index = pc.mmu_ic->ram[(tile_data + tile_number) & 0x00ffffff];
+                            tile_index = pc.mmu->ram[(tile_data + tile_number) & 0x00ffffff];
                             
                             /* Replace foreground and background colors if necessary */
                             if( color_per_tile )
                             {
-                                foreground_color = pc.mmu_ic->ram_as_words[((tile_color_data >> 1) + tile_number) & 0x007fffff];
+                                foreground_color = pc.mmu->ram_as_words[((tile_color_data >> 1) + tile_number) & 0x007fffff];
                                 
-                                background_color = pc.mmu_ic->ram_as_words[ ((tile_background_color_data >> 1) + tile_number) & 0x007fffff ];
+                                background_color = pc.mmu->ram_as_words[ ((tile_background_color_data >> 1) + tile_number) & 0x007fffff ];
                             }
                             
                             pixel_in_tile = (x_in_blit & 0b111) | ((y_in_blit & 0b111) << 3);
                             
                             /*  Pick the right pixel depending on bitmap mode or tile mode */
                             source_color = bitmap_mode ?
-                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + normalized_pixel_no) & 0x007fffff]
+                                pc.mmu->ram_as_words[((pixel_data >> 1) + normalized_pixel_no) & 0x007fffff]
                                 :
-                                pc.mmu_ic->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
+                                pc.mmu->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
                             
                             /*  If the source color has an alpha value of higher than 0x0 (there is a pixel),
                              *  and we're not in multicolor mode, replace with foreground color.
@@ -277,7 +277,7 @@ void E64::blitter::run(int no_of_cycles)
                             }
                             
                             /*  Finally, call the alpha blend function */
-                            alpha_blend( &pc.vicv_ic->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
+                            alpha_blend( &pc.vicv->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
                             //alpha_blend( &pc.vicv_ic->backbuffer[scrn_x | (scrn_y << 9)], &source_color );
                         }
                     }
@@ -293,7 +293,7 @@ void E64::blitter::run(int no_of_cycles)
 }
 
 
-uint8_t E64::blitter::read_byte(uint8_t address)
+uint8_t E64::blitter_ic::read_byte(uint8_t address)
 {
     switch( address )
     {
@@ -313,7 +313,7 @@ uint8_t E64::blitter::read_byte(uint8_t address)
     }
 }
 
-void E64::blitter::write_byte(uint8_t address, uint8_t byte)
+void E64::blitter_ic::write_byte(uint8_t address, uint8_t byte)
 {
     switch( address )
     {
@@ -335,7 +335,7 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
                     if( ptr_to_blit_struct > 0xffffe0 ) ptr_to_blit_struct = 0xffffe0;
 
                     // copy the structure into the operations list
-                    operations[head].this_blit = *(struct surface_blit *)&pc.mmu_ic->ram[ptr_to_blit_struct];
+                    operations[head].this_blit = *(struct surface_blit *)&pc.mmu->ram[ptr_to_blit_struct];
                 }
                 head++;
             }
@@ -346,7 +346,7 @@ void E64::blitter::write_byte(uint8_t address, uint8_t byte)
     }
 }
 
-double E64::blitter::fraction_busy()
+double E64::blitter_ic::fraction_busy()
 {
     double percentage = (double)cycles_busy / (double)(cycles_busy + cycles_idle);
     cycles_busy = cycles_idle = 0;

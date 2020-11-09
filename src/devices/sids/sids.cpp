@@ -7,7 +7,7 @@
 #include "sdl2.hpp"
 #include "common.hpp"
 
-E64::sids::sids()
+E64::sids_ic::sids_ic()
 {
     // Remapping registers, rewiring necessary to have big endian support
     // and even addresses for word access. NEEDS WORK: where in documentation?
@@ -92,12 +92,12 @@ E64::sids::sids()
     }
 }
 
-E64::sids::~sids()
+E64::sids_ic::~sids_ic()
 {
     // nothing
 }
 
-uint8_t E64::sids::read_byte(uint8_t address)
+uint8_t E64::sids_ic::read_byte(uint8_t address)
 {
     if(address & 0x80)
     {
@@ -109,7 +109,7 @@ uint8_t E64::sids::read_byte(uint8_t address)
     }
 }
 
-void E64::sids::write_byte(uint8_t address, uint8_t byte)
+void E64::sids_ic::write_byte(uint8_t address, uint8_t byte)
 {
     // each sid requires 32 addresses (of which 29 are used)
     // bit 7 of address determines if a sid chip should be addressed
@@ -126,7 +126,7 @@ void E64::sids::write_byte(uint8_t address, uint8_t byte)
     }
 }
 
-void E64::sids::run(uint32_t number_of_cycles)
+void E64::sids_ic::run(uint32_t number_of_cycles)
 {
     delta_t_sid0 += number_of_cycles;
     delta_t_sid1 = delta_t_sid0;
@@ -150,7 +150,7 @@ void E64::sids::run(uint32_t number_of_cycles)
     E64::sdl2_queue_audio((void *)sample_buffer_stereo, 2 * n * sizeof(int16_t));
 }
 
-void E64::sids::reset()
+void E64::sids_ic::reset()
 {
     sid[0].reset();
     sid[1].reset();

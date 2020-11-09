@@ -222,13 +222,13 @@ inline char event_to_ascii(uint8_t scancode, uint8_t modifiers)
     return 0;
 }
 
-E64::cia::cia()
+E64::cia_ic::cia_ic()
 {
     cycles_per_interval = CPU_CLOCK_SPEED / 100; // no of cycles @ CPU clockspeed for a total of 10 ms
     reset();
 }
 
-void E64::cia::reset()
+void E64::cia_ic::reset()
 {
     cycle_counter = 0;
     
@@ -245,14 +245,14 @@ void E64::cia::reset()
     keyboard_repeat_counter = 0;
 }
 
-void E64::cia::push_event(uint8_t event)
+void E64::cia_ic::push_event(uint8_t event)
 {
     event_list[head] = event;
     head++;
     if( head == tail) tail++;
 }
 
-uint8_t E64::cia::pop_event()
+uint8_t E64::cia_ic::pop_event()
 {
     uint8_t result;
     
@@ -270,7 +270,7 @@ uint8_t E64::cia::pop_event()
     return result;
 }
 
-void E64::cia::run(int no_of_cycles)
+void E64::cia_ic::run(int no_of_cycles)
 {
     cycle_counter += no_of_cycles;
     
@@ -329,7 +329,7 @@ void E64::cia::run(int no_of_cycles)
     }
 }
 
-uint8_t E64::cia::read_byte(uint8_t address)
+uint8_t E64::cia_ic::read_byte(uint8_t address)
 {
     uint8_t return_value = 0x00;
     
@@ -359,7 +359,7 @@ uint8_t E64::cia::read_byte(uint8_t address)
 }
 
 
-void E64::cia::write_byte(uint8_t address, uint8_t byte)
+void E64::cia_ic::write_byte(uint8_t address, uint8_t byte)
 {
     switch(address)
     {

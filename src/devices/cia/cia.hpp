@@ -117,7 +117,7 @@ enum scancodes
     SCANCODE_RIGHT
 };
 
-class cia
+class cia_ic
 {
 private:
     uint32_t    cycle_counter;
@@ -149,7 +149,7 @@ private:
     }
     
 public:
-    cia();
+    cia_ic();
     
     // reset, also called by constructor
     void reset();

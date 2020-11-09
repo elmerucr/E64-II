@@ -43,14 +43,14 @@ public:
     enum machine_mode   current_mode;
     bool running;
     
-    mmu                 *mmu_ic;
-    cpu_moira           *m68k_ic;
-    TTL74LS148          *TTL74LS148_ic;
-    timer               *timer_ic;
-    vicv                *vicv_ic;
-    blitter             *blitter_ic;
-    sids                *sids_ic;
-    cia                 *cia_ic;
+    mmu_ic              *mmu;
+    cpu_moira           *m68k;
+    TTL74LS148_ic       *TTL74LS148;
+    timer_ic            *timer;
+    vicv_ic             *vicv;
+    blitter_ic          *blitter;
+    sids_ic             *sids;
+    cia_ic              *cia;
 
     machine();
     ~machine();

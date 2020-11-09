@@ -44,7 +44,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         debug_console_put_char('\n');
         if(token1 == NULL)
         {
-            unsigned int no_of_breakpoints = (unsigned int)pc.m68k_ic->debugger.breakpoints.elements();
+            unsigned int no_of_breakpoints = (unsigned int)pc.m68k->debugger.breakpoints.elements();
             snprintf(command_help_string, 256, "currently %i cpu breakpoint(s) defined\n", no_of_breakpoints);
             debug_console_print(command_help_string);
             if( no_of_breakpoints > 0 )
@@ -53,7 +53,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
                 debug_console_print(command_help_string);
                 for(int i=0; i<no_of_breakpoints; i++)
                 {
-                    snprintf(command_help_string, 256, "%2u $%06x  %s\n", i, pc.m68k_ic->debugger.breakpoints.guardAddr(i), pc.m68k_ic->debugger.breakpoints.isEnabled(i) ? "yes" : "no");
+                    snprintf(command_help_string, 256, "%2u $%06x  %s\n", i, pc.m68k->debugger.breakpoints.guardAddr(i), pc.m68k->debugger.breakpoints.isEnabled(i) ? "yes" : "no");
                     debug_console_print(command_help_string);
                 }
             }
@@ -64,7 +64,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             if( debug_command_hex_string_to_int(token1, &temp_32bit) )
             {
                 temp_32bit &= (RAM_SIZE - 1);
-                pc.m68k_ic->debugger.breakpoints.addAt(temp_32bit);
+                pc.m68k->debugger.breakpoints.addAt(temp_32bit);
                 snprintf(command_help_string, 256, "cpu breakpoint at $%06x added\n", temp_32bit);
                 debug_console_print(command_help_string);
             }
@@ -104,7 +104,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
     else if( strcmp(token0, "bc") == 0 )
     {
         debug_console_put_char('\n');
-        pc.m68k_ic->debugger.breakpoints.removeAll();
+        pc.m68k->debugger.breakpoints.removeAll();
         debug_console_print("all cpu breakpoints removed\n");
     }
     else if( strcmp(token0, "c") == 0 )
@@ -177,7 +177,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
         if(lines_remaining == 0) lines_remaining = 1;
         
-        uint32_t temp_pc = pc.m68k_ic->getPC();
+        uint32_t temp_pc = pc.m68k->getPC();
         
         //debug_console_put_char('\n');
         
@@ -262,7 +262,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             unsigned int no_of_scanline_breakpoints = 0;
             for(int i=0; i<1024; i++)
             {
-                if(pc.vicv_ic->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
+                if(pc.vicv->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
             }
             if(no_of_scanline_breakpoints)
             {
@@ -270,7 +270,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
                 debug_console_print(command_help_string);
                 for(int i=0; i<1024; i++)
                 {
-                    if(pc.vicv_ic->is_scanline_breakpoint(i))
+                    if(pc.vicv->is_scanline_breakpoint(i))
                     {
                         snprintf(command_help_string, 256, " %3i\n", i);
                         debug_console_print(command_help_string);
@@ -286,23 +286,23 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         {
             uint32_t temp_32bit = atoi(token1);
             temp_32bit &= 1023;
-            if(pc.vicv_ic->is_scanline_breakpoint(temp_32bit))
+            if(pc.vicv->is_scanline_breakpoint(temp_32bit))
             {
                 snprintf(command_help_string, 256, "removing scanline breakpoint %i\n", temp_32bit);
                 debug_console_print(command_help_string);
-                pc.vicv_ic->remove_scanline_breakpoint(temp_32bit);
+                pc.vicv->remove_scanline_breakpoint(temp_32bit);
             }
             else
             {
                 snprintf(command_help_string, 256, "adding scanline breakpoint %i\n", temp_32bit);
                 debug_console_print(command_help_string);
-                pc.vicv_ic->add_scanline_breakpoint(temp_32bit);
+                pc.vicv->add_scanline_breakpoint(temp_32bit);
             }
         }
     }
     else if( strcmp(token0, "sbc") == 0 )
     {
-        pc.vicv_ic->clear_scanline_breakpoints();
+        pc.vicv->clear_scanline_breakpoints();
         debug_console_put_char('\n');
         debug_console_print("all scanline breakpoints removed\n");
     }
@@ -349,7 +349,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 void E64::debug_command_dump_cpu_status()
 {
     debug_console_put_char('\n');
-    pc.m68k_ic->dump_registers(command_help_string);
+    pc.m68k->dump_registers(command_help_string);
     debug_console_print(command_help_string);
     debug_console_put_char('\n');
 }
@@ -365,7 +365,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         debug_console_print(command_help_string);
         for(int i=0; i<8; i++)
         {
-            snprintf(command_help_string, 256, "%02x", pc.mmu_ic->read_memory_8(temp_address));
+            snprintf(command_help_string, 256, "%02x", pc.mmu->read_memory_8(temp_address));
             debug_console_print(command_help_string);
             if(i & 0b1) debug_console_put_char(' ');
             temp_address ++;
@@ -377,7 +377,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         temp_address = address;
         for(int i=0; i<8; i++)
         {
-            uint8_t temp_byte = pc.mmu_ic->read_memory_8(temp_address);
+            uint8_t temp_byte = pc.mmu->read_memory_8(temp_address);
             debug_console_put_screencode( temp_byte );
             temp_address++;
         }
@@ -401,7 +401,7 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         {
             if( (i & 1) == 0 ) debug_console_put_char(' ');
             // important: vicv and blitter are not able to see roms and i/o adresses, so don't use read_memory_8
-            snprintf(command_help_string, 256, "%02x", pc.mmu_ic->ram[temp_address]);
+            snprintf(command_help_string, 256, "%02x", pc.mmu->ram[temp_address]);
             debug_console_print(command_help_string);
             temp_address++;
             temp_address &= RAM_SIZE - 1;
@@ -412,7 +412,7 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         temp_address = address;
         for(int i=0; i<8; i++)
         {
-            debug_console.current_background_color = *(uint16_t *)(&(pc.mmu_ic->ram[temp_address & 0x00ffffff]));
+            debug_console.current_background_color = *(uint16_t *)(&(pc.mmu->ram[temp_address & 0x00ffffff]));
             debug_console_put_char(' ');
             temp_address += 2;
         }
@@ -527,10 +527,10 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
         arg2 &= 0xffff;
         arg3 &= 0xffff;
         
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg0); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg1); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg2); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg3); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg0); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg1); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg2); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg3); address +=2; address &= 0xffffff;
 
         debug_console_put_char('\r');
         
@@ -633,14 +633,14 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
         arg6 &= 0xffff;
         arg7 &= 0xffff;
         
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg0); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg1); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg2); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg3); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg4); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg5); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg6); address +=2; address &= 0xffffff;
-        pc.mmu_ic->write_memory_16(address, (uint16_t)arg7); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg0); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg1); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg2); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg3); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg4); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg5); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg6); address +=2; address &= 0xffffff;
+        pc.mmu->write_memory_16(address, (uint16_t)arg7); address +=2; address &= 0xffffff;
 
         debug_console_put_char('\r');
         

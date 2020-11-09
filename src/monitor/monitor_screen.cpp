@@ -26,13 +26,13 @@ void E64::monitor_screen_update()
 
     // copy relevant area of vicv screen buffer to bottom of debug screen buffer
     uint16_t scanline_normalized;
-    if(pc.vicv_ic->get_current_scanline() >= (VICV_SCANLINES - 32))
+    if(pc.vicv->get_current_scanline() >= (VICV_SCANLINES - 32))
     {
         scanline_normalized = VICV_SCANLINES - 64;
     }
-    else if(pc.vicv_ic->get_current_scanline() >= 32)
+    else if(pc.vicv->get_current_scanline() >= 32)
     {
-        scanline_normalized = pc.vicv_ic->get_current_scanline() - 32;
+        scanline_normalized = pc.vicv->get_current_scanline() - 32;
     }
     else
     {
@@ -50,8 +50,8 @@ void E64::monitor_screen_update()
         host_video.debug_screen_buffer[((VICV_SCANLINES-64)*VICV_PIXELS_PER_SCANLINE) + i] = host_video.backbuffer[base + i];
     }
     
-    uint16_t current_pixel = pc.vicv_ic->get_current_pixel();
-    uint16_t current_scanline = pc.vicv_ic->get_current_scanline();
+    uint16_t current_pixel = pc.vicv->get_current_pixel();
+    uint16_t current_scanline = pc.vicv->get_current_scanline();
     uint32_t pixel_cursor_color = 0xff00ff00;
     if(current_pixel >= VICV_PIXELS_PER_SCANLINE)
     {

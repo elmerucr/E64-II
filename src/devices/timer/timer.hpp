@@ -42,52 +42,53 @@
 
 namespace E64
 {
-    class timer
-    {
-    private:
-        uint8_t registers[4];
 
-        uint16_t timer0_bpm;
-        uint16_t timer1_bpm;
-        uint16_t timer2_bpm;
-        uint16_t timer3_bpm;
-        
-        uint32_t timer0_clock_interval;
-        uint32_t timer1_clock_interval;
-        uint32_t timer2_clock_interval;
-        uint32_t timer3_clock_interval;
+class timer_ic
+{
+private:
+	uint8_t registers[4];
 
-        uint64_t timer0_counter;
-        uint64_t timer1_counter;
-        uint64_t timer2_counter;
-        uint64_t timer3_counter;
+	uint16_t timer0_bpm;
+	uint16_t timer1_bpm;
+	uint16_t timer2_bpm;
+	uint16_t timer3_bpm;
 
-        uint32_t bpm_to_clock_interval(uint16_t bpm);
-    public:
-        // constructor
-        timer();
-        // reset, called by constructor
-        void reset(void);
-        
-        uint8_t interrupt_device_number;
+	uint32_t timer0_clock_interval;
+	uint32_t timer1_clock_interval;
+	uint32_t timer2_clock_interval;
+	uint32_t timer3_clock_interval;
 
-        // register access functions
-        uint8_t read_byte(uint8_t address);
-        void write_byte(uint8_t address, uint8_t byte);
+	uint64_t timer0_counter;
+	uint64_t timer1_counter;
+	uint64_t timer2_counter;
+	uint64_t timer3_counter;
 
-        // get / set functions
-        uint64_t get_timer0_counter(void);
-        uint64_t get_timer0_clock_interval(void);
-        uint64_t get_timer1_counter(void);
-        uint64_t get_timer1_clock_interval(void);
-        uint64_t get_timer2_counter(void);
-        uint64_t get_timer2_clock_interval(void);
-        uint64_t get_timer3_counter(void);
-        uint64_t get_timer3_clock_interval(void);
-        
-        // run cycles on this ic
-        void run(uint32_t number_of_cycles);
-    };
+	uint32_t bpm_to_clock_interval(uint16_t bpm);
+public:
+	timer_ic();
+	// reset, called by constructor
+	void reset();
+
+	uint8_t interrupt_device_number;
+
+	// register access functions
+	uint8_t read_byte(uint8_t address);
+	void write_byte(uint8_t address, uint8_t byte);
+
+	// get / set functions
+	uint64_t get_timer0_counter();
+	uint64_t get_timer0_clock_interval();
+	uint64_t get_timer1_counter();
+	uint64_t get_timer1_clock_interval();
+	uint64_t get_timer2_counter();
+	uint64_t get_timer2_clock_interval();
+	uint64_t get_timer3_counter();
+	uint64_t get_timer3_clock_interval();
+
+	// run cycles on this ic
+	void run(uint32_t number_of_cycles);
+};
+
 }
 
 #endif /* timer_hpp */

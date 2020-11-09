@@ -8,7 +8,7 @@
 
 extern uint8_t rom[];
 
-E64::mmu::mmu()
+E64::mmu_ic::mmu_ic()
 {
     // allocate main ram and fill with a pattern
     ram = new uint8_t[RAM_SIZE * sizeof(uint8_t)];
@@ -16,13 +16,13 @@ E64::mmu::mmu()
     reset();
 }
 
-E64::mmu::~mmu()
+E64::mmu_ic::~mmu_ic()
 {
     delete ram;
     ram = nullptr;
 }
 
-void E64::mmu::reset()
+void E64::mmu_ic::reset()
 {
     // fill alternating blocks with 0x00 and 0x80
     for(int i=0; i<RAM_SIZE; i++) ram[i] = (i & 64) ? 0x10 : 0x00;
@@ -31,28 +31,28 @@ void E64::mmu::reset()
     find_and_update_rom_image();
 }
 
-unsigned int E64::mmu::read_memory_8(unsigned int address)
+unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
 {
     uint32_t page = address >> 8;
     if( page == IO_VICV_PAGE )
     {
-        return pc.vicv_ic->read_byte(address & 0x000000ff);
+        return pc.vicv->read_byte(address & 0x000000ff);
     }
     else if( page == IO_SND_PAGE )
     {
-        return pc.sids_ic->read_byte(address & 0x000000ff);
+        return pc.sids->read_byte(address & 0x000000ff);
     }
     else if( page == IO_BLITTER_PAGE )
     {
-        return pc.blitter_ic->read_byte(address & 0x000000ff);
+        return pc.blitter->read_byte(address & 0x000000ff);
     }
     else if( page == IO_TIMER_PAGE )
     {
-        return pc.timer_ic->read_byte(address & 0x000000ff);
+        return pc.timer->read_byte(address & 0x000000ff);
     }
     else if( page == IO_CIA_PAGE )
     {
-        return pc.cia_ic->read_byte(address & 0x000000ff);
+        return pc.cia->read_byte(address & 0x000000ff);
     }
     else if( ( (address & 0x00fc0000) >> 16) == IO_ROM_MASK )
     {
@@ -73,7 +73,7 @@ unsigned int E64::mmu::read_memory_8(unsigned int address)
     }
 }
 
-unsigned int E64::mmu::read_memory_16(unsigned int address)
+unsigned int E64::mmu_ic::read_memory_16(unsigned int address)
 {
     unsigned int result;
     uint32_t temp_address = address;
@@ -83,38 +83,38 @@ unsigned int E64::mmu::read_memory_16(unsigned int address)
     return result;
 }
 
-unsigned int E64::mmu::read_disassembler_8(unsigned int address)
+unsigned int E64::mmu_ic::read_disassembler_8(unsigned int address)
 {
     return read_memory_8(address);
 }
 
-unsigned int E64::mmu::read_disassembler_16(unsigned int address)
+unsigned int E64::mmu_ic::read_disassembler_16(unsigned int address)
 {
     return read_memory_16(address);
 }
 
-void E64::mmu::write_memory_8(unsigned int address, unsigned int value)
+void E64::mmu_ic::write_memory_8(unsigned int address, unsigned int value)
 {
     uint32_t page = address >> 8;
     if( page == IO_VICV_PAGE )
     {
-        pc.vicv_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.vicv->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_SND_PAGE )
     {
-        pc.sids_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.sids->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_BLITTER_PAGE )
     {
-        pc.blitter_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.blitter->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_TIMER_PAGE )
     {
-        pc.timer_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.timer->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else if( page == IO_CIA_PAGE )
     {
-        pc.cia_ic->write_byte(address & 0x000000ff, value & 0x000000ff);
+        pc.cia->write_byte(address & 0x000000ff, value & 0x000000ff);
     }
     else
     {
@@ -123,7 +123,7 @@ void E64::mmu::write_memory_8(unsigned int address, unsigned int value)
     }
 }
 
-void E64::mmu::write_memory_16(unsigned int address, unsigned int value)
+void E64::mmu_ic::write_memory_16(unsigned int address, unsigned int value)
 {
     uint32_t temp_address = address;
     write_memory_8(temp_address, value >> 8);
@@ -131,7 +131,7 @@ void E64::mmu::write_memory_16(unsigned int address, unsigned int value)
     write_memory_8(temp_address, value & 0xff);
 }
 
-void E64::mmu::find_and_update_rom_image()
+void E64::mmu_ic::find_and_update_rom_image()
 {
     FILE *temp_file = fopen(prefs.path_to_rom, "r");
     
