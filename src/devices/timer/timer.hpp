@@ -1,22 +1,20 @@
 //  timer.hpp
-//  E64
+//  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 //
-//  register 0 is Interrupt Status Register
+//  register 0 is Status Register
 //  ON READ
-//    bit 0     set: timer0 event waiting
+//    bit 0     set: timer0 event waiting, interrupt line pulled
 //          not set: no timer0 event waiting
-//    bit 1     set: timer1 event waiting
+//    bit 1     set: timer1 event waiting, interrupt line pulled
 //          not set: no timer1 event waiting
-//    bit 2     set: timer2 event waiting
+//    bit 2     set: timer2 event waiting, interrupt line pulled
 //          not set: no timer2 event waiting
-//    bit 3     set: timer3 event waiting
+//    bit 3     set: timer3 event waiting, interrupt line pulled
 //          not set: no timer3 event waiting
 //    .
-//    bit 4-6: currently unused
-//    .
-//    bit 7: An interrupt occurred and it has not yet been acknowledged (check bits 0 - 3)
+//    bit 4-7: currently unused
 //
 //  ON WRITE
 //    bit 0: Write a 1: Acknowledge timer0 interrupt
@@ -25,14 +23,14 @@
 //    bit 3: Write a 1: Acknowledge timer3 interrupt
 //    .
 //
-//  register 1 is Interrupt Control Register
+//  register 1 is Control Register
 //  READ and WRITE:
 //    bit 0: Timer0 interrupts 1=on, 0=off
 //    bit 1: Timer1 interrupts 1=on, 0=off
 //    bit 2: Timer2 interrupts 1=on, 0=off
 //    bit 3: Timer3 interrupts 1=on, 0=off
 //    .
-//    register 2 and 3 are respectively the hi and lo byte
+//    register 2 and 3 are respectively the high and low byte
 //    of an unsigned 16bit value (big endian format!)
 
 #ifndef timer_hpp
@@ -65,8 +63,6 @@ private:
 
 	uint32_t bpm_to_clock_interval(uint16_t bpm);
 public:
-	timer_ic();
-	// reset, called by constructor
 	void reset();
 
 	uint8_t interrupt_device_number;

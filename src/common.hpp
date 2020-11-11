@@ -16,7 +16,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201109
+#define E64_II_BUILD            20201110
 #define E64_II_YEAR             2020
 
 //  Global objects
@@ -27,52 +27,52 @@ extern E64::stats       statistics;
 
 #define RAM_SIZE                0x1000000   // 16mb system, DO NOT CHANGE
 
-/*  System uses standard 720p60 HDMI output.
- *  In a 'distant' future, this will come in handy with real hardware.
- *  See also:
- *  https://timetoexplore.net/blog/video-timings-vga-720p-1080p
+/*
+ * System uses standard 720p60 HDMI output.
+ * In a 'distant' future, this will come in handy with real hardware.
+ * See also:
+ * https://timetoexplore.net/blog/video-timings-vga-720p-1080p
  *
- *  Name         1280x720p60
- *  Standard       CTA-770.3
- *  VIC                    4
- *  Short Name          720p
- *  Aspect Ratio        16:9
+ * Name         1280x720p60
+ * Standard       CTA-770.3
+ * VIC                    4
+ * Short Name          720p
+ * Aspect Ratio        16:9
  *
- *  Pixel Clock       74.250 MHz
- *  TMDS Clock       742.500 MHz
- *  Pixel Time          13.5 ns ±0.5%
- *  Horizontal Freq.  45.000 kHz
- *  Line Time           22.2 μs
- *  Vertical Freq.    60.000 Hz
- *  Frame Time          16.7 ms
+ * Pixel Clock       74.250 MHz
+ * TMDS Clock       742.500 MHz
+ * Pixel Time          13.5 ns ±0.5%
+ * Horizontal Freq.  45.000 kHz
+ * Line Time           22.2 μs
+ * Vertical Freq.    60.000 Hz
+ * Frame Time          16.7 ms
  *
- *  Horizontal Timings
- *  Active Pixels       1280
- *  Front Porch          110
- *  Sync Width            40
- *  Back Porch           220
- *  Blanking Total       370
- *  Total Pixels        1650
- *  Sync Polarity        pos
+ * Horizontal Timings
+ * Active Pixels       1280
+ * Front Porch          110
+ * Sync Width            40
+ * Back Porch           220
+ * Blanking Total       370
+ * Total Pixels        1650
+ * Sync Polarity        pos
  *
- *  Vertical Timings
- *  Active Lines         720
- *  Front Porch            5
- *  Sync Width             5
- *  Back Porch            20
- *  Blanking Total        30
- *  Total Lines          750
- *  Sync Polarity        pos
+ * Vertical Timings
+ * Active Lines         720
+ * Front Porch            5
+ * Sync Width             5
+ * Back Porch            20
+ * Blanking Total        30
+ * Total Lines          750
+ * Sync Polarity        pos
  *
- *  Active Pixels    921,600
- *  Data Rate           1.78 Gbps
+ * Active Pixels    921,600
+ * Data Rate           1.78 Gbps
  *
- *  Frame Memory (Kbits)
- *   8-bit Memory      7,200
- *  12-bit Memory     10,800
- *  24-bit Memory     21,600
- *  32-bit Memory     28,800
- *
+ * Frame Memory (Kbits)
+ *  8-bit Memory      7,200
+ * 12-bit Memory     10,800
+ * 24-bit Memory     21,600
+ * 32-bit Memory     28,800
  */
 #define VICV_PIXELS_PER_SCANLINE	512
 #define VICV_PIXELS_HBLANK		148
@@ -81,7 +81,7 @@ extern E64::stats       statistics;
 #define VICV_FRAMEBUFFER0		0x00f00000
 #define VICV_FRAMEBUFFER1		0x00f48000
 
-//  These two macros are defined for use within the debugger.
+/* These two macros are defined for use within the debugger */
 #define VICV_CHAR_COLUMNS		(VICV_PIXELS_PER_SCANLINE/8)
 #define VICV_CHAR_ROWS			(VICV_SCANLINES/8)
 
@@ -96,7 +96,7 @@ extern E64::stats       statistics;
 #define SAMPLE_RATE                 44100
 #define AUDIO_BUFFER_SIZE           8192.0
 
-//  C64 (VirtualC64)
+/* C64 colors (VirtualC64) */
 #define C64_BLACK       0x00f0
 #define C64_WHITE       0xffff
 #define C64_RED         0x33f7
@@ -114,7 +114,7 @@ extern E64::stats       statistics;
 #define C64_LIGHTBLUE   0x7df6
 #define C64_LIGHTGREY   0xaafa
 
-//  Grey
+/* Grey */
 #define GREY_00 0x00f0
 #define GREY_01 0x11f1
 #define GREY_02 0x22f2
@@ -132,7 +132,7 @@ extern E64::stats       statistics;
 #define GREY_14 0xeefe
 #define GREY_15 0xffff
 
-//  Green
+/* Green */
 #define GREEN_00  0x00f0
 #define GREEN_01  0x21f1
 #define GREEN_02  0x42f2
@@ -142,7 +142,7 @@ extern E64::stats       statistics;
 #define GREEN_06  0xc6f6
 #define GREEN_07  0xe7f7
 
-//  Cobalt
+/* Cobalt */
 #define COBALT_00   0x00f0
 #define COBALT_01   0x12f1
 #define COBALT_02   0x24f2
@@ -152,7 +152,7 @@ extern E64::stats       statistics;
 #define COBALT_06   0x6cf6
 #define COBALT_07   0x7ef7
 
-//  Amber
+/* Amber */
 #define AMBER_00   0x00f0
 #define AMBER_01   0x11f2
 #define AMBER_02   0x22f4
@@ -162,7 +162,7 @@ extern E64::stats       statistics;
 #define AMBER_06   0x66fc
 #define AMBER_07   0x77fe
 
-//  Ascii values (some of them are petscii)
+/* Ascii values (some of them are petscii) */
 #define ASCII_NULL          0x00    // null
 #define ASCII_BACKSPACE     0x08
 #define ASCII_HOR_TAB       0x09

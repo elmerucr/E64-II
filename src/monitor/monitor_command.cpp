@@ -143,8 +143,8 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_put_char('\n');
             debug_console_print("other commands:\n");
             debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
-            debug_console_print("    full    help      ls       m      mc     pwd       r\n");
-            debug_console_print("   reset      sb     sbc     ver     win\n");
+            debug_console_print("    full    help      ls       m      mb      mc     pwd\n");
+            debug_console_print("       r   reset      sb     sbc     ver     win\n");
         }
     }
     else if( strcmp(token0, "ls") == 0 )
@@ -236,6 +236,32 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
                 }
             }
         }
+    }
+    else if( strcmp(token0, "mb") == 0 )
+    {
+	uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+	if(lines_remaining == 0) lines_remaining = 1;
+	
+	uint32_t temp_pc = pc.m68k->getPC();
+	
+	if (token1 == NULL) {
+	    for (int i=0; i<lines_remaining; i++) {
+		debug_console_put_char('\n');
+		debug_command_memory_word_dump(temp_pc, 1);
+		temp_pc = (temp_pc + 2) & 0x00ffffff;
+	    }
+	} else {
+	    if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
+		debug_console_put_char('\n');
+		debug_console_print("error: invalid address\n");
+	    } else {
+		for (int i=0; i<lines_remaining; i++) {
+		    debug_console_put_char('\n');
+		    debug_command_memory_word_dump(temp_pc & (RAM_SIZE - 1), 1);
+		    temp_pc = (temp_pc + 2) & 0x00ffffff;
+		}
+	    }
+	}
     }
     else if( strcmp(token0, "pwd") == 0 )
     {
@@ -425,6 +451,55 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
     }
 }
 
+void E64::debug_command_memory_word_dump(uint32_t address, int rows)
+{
+    address = address & 0xfffffffe;  // only even addresses allowed
+    
+    for(int i=0; i<rows; i++ )
+    {
+	uint32_t temp_address = address;
+	snprintf(command_help_string, 256, "\r'%06x ", temp_address);
+	debug_console_print(command_help_string);
+	for(int i=0; i<2; i++)
+	{
+	    snprintf(command_help_string, 256, "%02x", pc.mmu->read_memory_8(temp_address));
+	    debug_console_print(command_help_string);
+	    temp_address ++;
+	    temp_address &= RAM_SIZE - 1;
+	}
+	    
+	debug_console_put_char(' ');
+	
+	debug_console.current_background_color = COBALT_02;
+	
+	temp_address = address;
+	for(int i=0; i<2; i++)
+	{
+	    uint8_t temp_byte = pc.mmu->read_memory_8(temp_address);
+	    debug_console_put_screencode( temp_byte );
+	    temp_address++;
+	}
+	//address += 8;
+	address &= RAM_SIZE - 1;
+	
+	debug_console.current_background_color = COBALT_01;
+	    
+	debug_console_put_char(' ');
+	    
+	temp_address = address;
+	    for(int i=0; i<1; i++)
+	    {
+		debug_console.current_background_color = *(uint16_t *)(&(pc.mmu->ram[temp_address & 0x00ffffff]));
+		debug_console_put_char(' ');
+		debug_console_put_char(' ');
+		temp_address += 2;
+	    }
+
+	    debug_console.current_background_color = COBALT_01;
+	
+	debug_console.cursor_pos -= 10;
+    }
+}
 
 /*
  * hex2int

@@ -1,24 +1,19 @@
 //  timer.cpp
-//  E64
+//  E64-II
 //
-//  Copyright © 2019 elmerucr. All rights reserved.
+//  Copyright © 2019-2020 elmerucr. All rights reserved.
 
 #include "timer.hpp"
 #include "common.hpp"
-
-E64::timer_ic::timer_ic()
-{
-    //
-}
 
 void E64::timer_ic::reset()
 {
     pc.TTL74LS148->release_line(interrupt_device_number);
     
     registers[0] = 0x00;        // no pending irq's
-    registers[1] = 0x00;        // all interrupt times turned off
+    registers[1] = 0x00;        // all timers turned off
     
-    // load register with value 1 bpm
+    // load data register with value 1 bpm
     registers[2] = 0x00;    // hi
     registers[3] = 0x01;    // lo
     
@@ -50,25 +45,25 @@ void E64::timer_ic::run(uint32_t number_of_cycles)
     {
         timer0_counter -= timer0_clock_interval;
         pc.TTL74LS148->pull_line(interrupt_device_number);
-        registers[0] |= 0x81;       // turn on bits 7 and 0
+        registers[0] |= 0b00000001;
     }
     if( (timer1_counter >= timer1_clock_interval) && (registers[1] & 0x02) )
     {
         timer1_counter -= timer1_clock_interval;
         pc.TTL74LS148->pull_line(interrupt_device_number);
-        registers[0] |= 0x82;       // turn on bits 7 and 1
+        registers[0] |= 0b00000010;
     }
     if( (timer2_counter >= timer2_clock_interval) && (registers[1] & 0x04) )
     {
         timer2_counter -= timer2_clock_interval;
         pc.TTL74LS148->pull_line(interrupt_device_number);
-        registers[0] |= 0x84;       // turn on bits 7 and 2
+        registers[0] |= 0b00000100;
     }
     if( (timer3_counter >= timer3_clock_interval) && (registers[1] & 0x08) )
     {
         timer3_counter -= timer3_clock_interval;
         pc.TTL74LS148->pull_line(interrupt_device_number);
-        registers[0] |= 0x88;       // turn on bits 7 and 3
+        registers[0] |= 0b00001000;
     }
 }
 
@@ -88,57 +83,55 @@ void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
     switch(address & 0x03)
     {
         case 0x00:
-            //    b s   r
-            //    0 0 = 0
-            //    0 1 = 1
-            //    1 0 = 0
-            //    1 1 = 0
-            //
-            //    b = bit that's written
-            //    s = status (on if an interrupt was caused)
-            //    r = boolean result (acknowledge an interrupt (s=1) if it is written to with a 1
-            //    r = (~b) & s
-            
+            /*
+             *  b s   r
+             *  0 0 = 0
+             *  0 1 = 1
+             *  1 0 = 0
+             *  1 1 = 0
+             *
+             *  b = bit that's written
+             *  s = status (on if an interrupt was caused)
+             *  r = boolean result (acknowledge an interrupt (s=1) if it is written to with a 1
+             *  r = (~b) & s
+	     */
+
             registers[0] = (~(byte & 0x0f)) & registers[0];
-            if( (registers[0] & 0x0f) == 0 )
-            {
-                // there are no pending interrupts anymore
+
+            if ((registers[0] & 0x0f) == 0) {
+                // no timers left causing interrupts
                 pc.TTL74LS148->release_line(interrupt_device_number);
-                registers[0] = 0x00;    // clear timer status register
             }
             break;
         case 0x01:
         {
             uint8_t turned_on = byte & (~registers[1]);
-            if( turned_on & 0x01 )
-            {
+		
+            if (turned_on & 0b00000001) {
                 timer0_bpm = (uint16_t)(registers[2] << 8) | registers[3];
                 if(timer0_bpm == 0) timer0_bpm = 1;
                 timer0_clock_interval = bpm_to_clock_interval(timer0_bpm);
                 timer0_counter = 0;
             }
-            if( turned_on & 0x02 )
-            {
+            if (turned_on & 0b00000010) {
                 timer1_bpm = (uint16_t)(registers[2] << 8) | registers[3];
                 if(timer1_bpm == 0) timer1_bpm = 1;
                 timer1_clock_interval = bpm_to_clock_interval(timer1_bpm);
                 timer1_counter = 0;
             }
-            if( turned_on & 0x04 )
-            {
+            if (turned_on & 0b00000100) {
                 timer2_bpm = (uint16_t)(registers[2] << 8) | registers[3];
                 if(timer2_bpm == 0) timer2_bpm = 1;
                 timer2_clock_interval = bpm_to_clock_interval(timer2_bpm);
                 timer2_counter = 0;
             }
-            if( turned_on & 0x08 )
-            {
+            if (turned_on & 0b00001000) {
                 timer3_bpm = (uint16_t)(registers[2] << 8) | registers[3];
                 if(timer3_bpm == 0) timer3_bpm = 1;
                 timer3_clock_interval = bpm_to_clock_interval(timer3_bpm);
                 timer3_counter = 0;
             }
-            registers[0x01] = byte & 0x0f;
+            registers[0x01] = byte & 0x0f;	// turn off all the rest?
             break;
         }
         default:

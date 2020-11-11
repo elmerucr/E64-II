@@ -18,7 +18,8 @@ void debug_command_dump_cpu_status(void);
 void debug_command_disassemble(uint8_t number);
 void debug_command_memory_dump(uint32_t address, int rows);
 void debug_command_memory_character_dump(uint32_t address, int rows);
-void debug_command_single_step_cpu(void);
+void debug_command_memory_word_dump(uint32_t address, int rows);
+void debug_command_single_step_cpu();
 
 /*
  * Second argument is a pointer to an uint32_t and writes its
