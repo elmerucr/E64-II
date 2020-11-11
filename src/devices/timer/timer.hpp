@@ -2,36 +2,42 @@
 //  E64-II
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
-//
-//  register 0 is Status Register
-//  ON READ
-//    bit 0     set: timer0 event waiting, interrupt line pulled
-//          not set: no timer0 event waiting
-//    bit 1     set: timer1 event waiting, interrupt line pulled
-//          not set: no timer1 event waiting
-//    bit 2     set: timer2 event waiting, interrupt line pulled
-//          not set: no timer2 event waiting
-//    bit 3     set: timer3 event waiting, interrupt line pulled
-//          not set: no timer3 event waiting
-//    .
-//    bit 4-7: currently unused
-//
-//  ON WRITE
-//    bit 0: Write a 1: Acknowledge timer0 interrupt
-//    bit 1: Write a 1: Acknowledge timer1 interrupt
-//    bit 2: Write a 1: Acknowledge timer2 interrupt
-//    bit 3: Write a 1: Acknowledge timer3 interrupt
-//    .
-//
-//  register 1 is Control Register
-//  READ and WRITE:
-//    bit 0: Timer0 interrupts 1=on, 0=off
-//    bit 1: Timer1 interrupts 1=on, 0=off
-//    bit 2: Timer2 interrupts 1=on, 0=off
-//    bit 3: Timer3 interrupts 1=on, 0=off
-//    .
-//    register 2 and 3 are respectively the high and low byte
-//    of an unsigned 16bit value (big endian format!)
+
+/*
+ * Register 0 - Status register
+ *
+ * (READ)
+ * 7 6 5 4 3 2 1 0
+ *         | | | |
+ *         | | | +-- 1 = timer0 pulled the irq
+ *         | | +---- 1 = timer1 pulled the irq
+ *         | +------ 1 = timer2 pulled the irq
+ *         +-------- 1 = timer3 pulled the irq
+ *
+ * bits 4-7: Reserved
+ *
+ * On write, interrupts will be acknowledged. Only if all bits are zero again,
+ * interrupt line is up again.
+ */
+
+/*
+ * Register 1 - Control Register
+ *
+ * READ and WRITE:
+ * 7 6 5 4 3 2 1 0
+ *         | | | |
+ *         | | | +-- timer0 interrupts, 1=on, 0=off
+ *         | | +---- timer1 interrupts, 1=on, 0=off
+ *         | +------ timer2 interrupts, 1=on, 0=off
+ *         +-------- timer3 interrupts, 1=on, 0=off
+ *
+ * bits 4-7: Reserved
+ */
+ 
+/*
+ * register 2 and 3 are respectively the high and low byte
+ * of an unsigned 16bit data value
+ */
 
 #ifndef timer_hpp
 #define timer_hpp
@@ -41,25 +47,18 @@
 namespace E64
 {
 
+struct timer_unit {
+	uint16_t bpm;
+	uint32_t clock_interval;
+	uint64_t counter;
+};
+
 class timer_ic
 {
 private:
 	uint8_t registers[4];
-
-	uint16_t timer0_bpm;
-	uint16_t timer1_bpm;
-	uint16_t timer2_bpm;
-	uint16_t timer3_bpm;
-
-	uint32_t timer0_clock_interval;
-	uint32_t timer1_clock_interval;
-	uint32_t timer2_clock_interval;
-	uint32_t timer3_clock_interval;
-
-	uint64_t timer0_counter;
-	uint64_t timer1_counter;
-	uint64_t timer2_counter;
-	uint64_t timer3_counter;
+	
+	struct timer_unit timers[4];
 
 	uint32_t bpm_to_clock_interval(uint16_t bpm);
 public:
@@ -71,15 +70,9 @@ public:
 	uint8_t read_byte(uint8_t address);
 	void write_byte(uint8_t address, uint8_t byte);
 
-	// get / set functions
-	uint64_t get_timer0_counter();
-	uint64_t get_timer0_clock_interval();
-	uint64_t get_timer1_counter();
-	uint64_t get_timer1_clock_interval();
-	uint64_t get_timer2_counter();
-	uint64_t get_timer2_clock_interval();
-	uint64_t get_timer3_counter();
-	uint64_t get_timer3_clock_interval();
+	// get functions
+	uint64_t get_timer_counter(uint8_t timer_number);
+	uint64_t get_timer_clock_interval(uint8_t timer_number);
 
 	// run cycles on this ic
 	void run(uint32_t number_of_cycles);
@@ -87,4 +80,4 @@ public:
 
 }
 
-#endif /* timer_hpp */
+#endif

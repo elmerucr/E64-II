@@ -19,26 +19,27 @@ char command_help_string[2048];
 
 void E64::debug_command_execute(char *string_to_parse_and_exec)
 {
-    // get tokens, if commands could take more arguments, make more ....
-    char *token0, *token1, *token2, *token3;
-    token0 = strtok( string_to_parse_and_exec, " ");
-    token1 = strtok( NULL, " ");
-    token2 = strtok( NULL, " ");
-    token3 = strtok( NULL, " ");
-    if(token0 == NULL)
-    {
-        debug_console_put_char('\n');
-    }
-    else if( token0[0] == ':' )
-    {
-        // editing monitor command output
-        debug_command_enter_monitor_line(string_to_parse_and_exec);
-    }
-    else if( token0[0] == ';' )
-    {
-        // editing monitor character command output
-        debug_command_enter_monitor_character_line(string_to_parse_and_exec);
-    }
+	// get tokens, if commands could take more arguments, make more ....
+	char *token0, *token1, *token2, *token3;
+	token0 = strtok( string_to_parse_and_exec, " ");
+	token1 = strtok( NULL, " ");
+	token2 = strtok( NULL, " ");
+	token3 = strtok( NULL, " ");
+	
+	if (token0 == NULL) {
+		debug_console_put_char('\n');
+	} else if (token0[0] == ':') {
+		// editing monitor command output
+		debug_command_enter_monitor_line(string_to_parse_and_exec);
+	} else if (token0[0] == ';') {
+		// editing monitor character command output
+		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
+	}
+//    else if( token0[0] == '\'' )
+//    {
+//	// editing monitor word command output
+//	debug_command_enter_monitor_character_line(string_to_parse_and_exec);
+//    }
     else if( strcmp(token0, "b") == 0 )
     {
         debug_console_put_char('\n');
@@ -143,7 +144,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_put_char('\n');
             debug_console_print("other commands:\n");
             debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
-            debug_console_print("    full    help      ls       m      mb      mc     pwd\n");
+            debug_console_print("    full    help      ls       m      mc      mw     pwd\n");
             debug_console_print("       r   reset      sb     sbc     ver     win\n");
         }
     }
@@ -237,7 +238,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             }
         }
     }
-    else if( strcmp(token0, "mb") == 0 )
+    else if( strcmp(token0, "mw") == 0 )
     {
 	uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 	if(lines_remaining == 0) lines_remaining = 1;
@@ -483,21 +484,8 @@ void E64::debug_command_memory_word_dump(uint32_t address, int rows)
 	address &= RAM_SIZE - 1;
 	
 	debug_console.current_background_color = COBALT_01;
-	    
-	debug_console_put_char(' ');
-	    
-	temp_address = address;
-	    for(int i=0; i<1; i++)
-	    {
-		debug_console.current_background_color = *(uint16_t *)(&(pc.mmu->ram[temp_address & 0x00ffffff]));
-		debug_console_put_char(' ');
-		debug_console_put_char(' ');
-		temp_address += 2;
-	    }
-
-	    debug_console.current_background_color = COBALT_01;
 	
-	debug_console.cursor_pos -= 10;
+	debug_console.cursor_pos -= 7;
     }
 }
 

@@ -16,10 +16,10 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201110
+#define E64_II_BUILD            20201111
 #define E64_II_YEAR             2020
 
-//  Global objects
+/* Global objects */
 extern E64::settings    prefs;
 extern E64::machine     pc;
 extern E64::video       host_video;
