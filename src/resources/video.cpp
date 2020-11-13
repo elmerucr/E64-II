@@ -146,7 +146,7 @@ void E64::video::update_screen()
         case NORMAL_MODE:
             SDL_UpdateTexture(texture, NULL, frontbuffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
-        case DEBUG_MODE:
+        case MONITOR_MODE:
             SDL_UpdateTexture(texture, NULL, debug_screen_buffer, VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
             break;
     }
@@ -205,7 +205,7 @@ void E64::video::update_title()
         case NORMAL_MODE:
             SDL_SetWindowTitle(window, "E64-II");
             break;
-        case DEBUG_MODE:
+        case MONITOR_MODE:
             SDL_SetWindowTitle(window, "E64-II monitor");
             break;
     }

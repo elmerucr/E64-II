@@ -36,7 +36,7 @@ void E64::stats::reset()
     
     alpha = 0.90f;
     
-    nominal_time_per_frame = 1000000 / FPS;
+    time_per_frame = 1000000 / FPS;
 
     now = then = std::chrono::steady_clock::now();
 }

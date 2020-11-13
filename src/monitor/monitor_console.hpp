@@ -15,8 +15,7 @@ enum monitor_type {
     CHARACTER
 };
 
-typedef struct
-{
+typedef struct {
     uint8_t console_character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
     uint16_t console_foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
     uint16_t console_background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];

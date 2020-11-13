@@ -26,7 +26,7 @@ namespace E64
 
 enum machine_mode
 {
-    DEBUG_MODE,
+    MONITOR_MODE,
     NORMAL_MODE
 };
     

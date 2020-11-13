@@ -70,7 +70,7 @@ void E64::machine::switch_to_running()
 
 void E64::machine::switch_to_debug()
 {
-	current_mode = DEBUG_MODE;
+	current_mode = MONITOR_MODE;
 	debug_console_cursor_activate();
 	host_video.update_title();
 	E64::sdl2_stop_audio();
@@ -82,12 +82,21 @@ void E64::machine::switch_mode()
 	case NORMAL_MODE:
 		switch_to_debug();
 		break;
-        case DEBUG_MODE:
+        case MONITOR_MODE:
 		switch_to_running();
 		break;
 	}
 }
 
+/*
+ * Note: using run(0) function causes the cpu to run only 1 instruction per
+ * call. This will increase the overall host cpu load, but also increases
+ * accuracy of the system as a whole. Most importantly, SID and VICV emulation
+ * will be very realistic. Instant changes to registers should be reflected in
+ * audio output.
+ * However, run(63) significantly reduces host cpu load, once we have some music
+ * running in the virtual machine, test this.
+ */
 uint8_t E64::machine::run(uint16_t no_of_cycles)
 {
 	// default exit_code of the function is 0, no breakpoints have occurred

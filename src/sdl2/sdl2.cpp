@@ -115,7 +115,7 @@ int E64::sdl2_process_events()
                         pc.vicv->toggle_stats();
                     }
                 }
-                else if(pc.current_mode == DEBUG_MODE)
+                else if(pc.current_mode == MONITOR_MODE)
                 {
                     switch(event.key.keysym.sym)
                     {

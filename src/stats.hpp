@@ -47,7 +47,7 @@ private:
 public:
     void reset();
     
-    uint32_t nominal_time_per_frame;      // in microseconds
+    uint32_t time_per_frame;      // in microseconds
     
     // process calculations on parameters (fps/mhz/buffersize)
     void process_parameters();
