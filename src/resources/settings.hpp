@@ -13,18 +13,18 @@ namespace E64 {
 class settings
 {
 private:
-    DIR *settings_directory;
+	DIR *settings_directory;
     
-    void update_current_path_from_settings();
-    void write_current_path_to_settings();
+	void update_current_path_from_settings();
+	void write_current_path_to_settings();
 public:
-    settings();
-    ~settings();
+	settings();
+	~settings();
 
-    char home_dir[256];
-    char settings_path[256];
-    char path_to_rom[256];
-    char current_path[256];
+	char home_dir[256];
+	char settings_path[256];
+	char path_to_rom[256];
+	char current_path[256];
 };
 
 }

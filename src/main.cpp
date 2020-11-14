@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
 	while (pc.running) {
 		if (pc.current_mode == E64::NORMAL_MODE) {
-			if (pc.run(0))
+			if (pc.run(63))
 				pc.switch_to_debug();
 			if (pc.vicv->frame_done) {
 				pc.vicv->frame_done = false;

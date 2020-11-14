@@ -8,7 +8,8 @@
 #ifndef VIDEO_HPP
 #define VIDEO_HPP
 
-namespace E64 {
+namespace E64
+{
 
 struct window_size
 {
