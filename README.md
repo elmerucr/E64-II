@@ -8,7 +8,7 @@ E64-II is a virtual computer system that runs on macOS and linux. It's mainly in
 * Custom Video Interface Chip (VICV) with a resolution of 512x288 pixels and a palette of 4096 colors (12bit).
 * Custom Blitter Chip with alpha blending capabilities.
 * Two SID chips (MOS 6581) with stereo mixing possibilities. Each individual SID chip runs at 985248Hz for the same pitch as the original C64 pal version. Emulation is achieved with the excellent [reSID](http://www.zimmers.net/anonftp/pub/cbm/crossplatform/emulators/resid/index.html) library by Dag Lem. All combined 16 bit registers (lo/hi voice frequencies, pulse widths and filters) have been swapped to big endian format for interoperability with the Motorola 68000.
-* Four independent and programmable timers with interrupt functionality.
+* Eight independent and programmable timers with interrupt functionality.
 ## Screenshots
 ### Running (normal mode):
 ![E64-II running](./docs/E64-II_normal_2020-05-28.png)
