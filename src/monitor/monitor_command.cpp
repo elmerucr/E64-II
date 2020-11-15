@@ -26,20 +26,14 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	token2 = strtok( NULL, " ");
 	token3 = strtok( NULL, " ");
 	
-	if (token0 == NULL) {
+	if (token0 == NULL)
 		debug_console_put_char('\n');
-	} else if (token0[0] == ':') {
-		// editing monitor command output
+	else if (token0[0] == ':')
 		debug_command_enter_monitor_line(string_to_parse_and_exec);
-	} else if (token0[0] == ';') {
-		// editing monitor character command output
+	else if (token0[0] == ';')
 		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
-	}
-//    else if( token0[0] == '\'' )
-//    {
-//	// editing monitor word command output
-//	debug_command_enter_monitor_character_line(string_to_parse_and_exec);
-//    }
+	else if (token0[0] == '\'')
+		debug_command_enter_monitor_binary_line(string_to_parse_and_exec);
     else if( strcmp(token0, "b") == 0 )
     {
         debug_console_put_char('\n');
@@ -115,9 +109,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         pc.switch_to_running();
     }
     else if( strcmp(token0, "clear") == 0 )
-    {
         debug_console_clear();
-    }
     else if( strcmp(token0, "exit") == 0 )
     {
         E64::sdl2_wait_until_enter_released();
@@ -134,8 +126,8 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         {
             debug_console_put_char('\n');
             debug_console_print("<F1>    run next instruction\n");
-            debug_console_print("<F2>    switch between readable and hexadecimal disassembly\n");
-            debug_console_print("<F3>    switch system status bar on and off\n");
+            debug_console_print("<F2>    switch system status bar on and off\n");
+            debug_console_print("<F3>    switch between readable and hexadecimal disassembly\n");
             debug_console_print("<F9>    switch to monitor and back to running\n");
             debug_console_print("<F10>   toggle runtime stats (running only)\n");
             debug_console_print("<ALT+q> quit application\n");
@@ -144,7 +136,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_put_char('\n');
             debug_console_print("other commands:\n");
             debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
-            debug_console_print("    full    help      ls       m      mc      mw     pwd\n");
+            debug_console_print("    full    help      ls       m      mb      mc     pwd\n");
             debug_console_print("       r   reset      sb     sbc     ver     win\n");
         }
     }
@@ -238,7 +230,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             }
         }
     }
-    else if( strcmp(token0, "mw") == 0 )
+    else if( strcmp(token0, "mb") == 0 )
     {
 	uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 	if(lines_remaining == 0) lines_remaining = 1;
@@ -248,8 +240,8 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	if (token1 == NULL) {
 	    for (int i=0; i<lines_remaining; i++) {
 		debug_console_put_char('\n');
-		debug_command_memory_word_dump(temp_pc, 1);
-		temp_pc = (temp_pc + 2) & 0x00ffffff;
+		debug_command_memory_binary_dump(temp_pc, 1);
+		temp_pc = (temp_pc + 1) & 0x00ffffff;
 	    }
 	} else {
 	    if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
@@ -258,8 +250,8 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	    } else {
 		for (int i=0; i<lines_remaining; i++) {
 		    debug_console_put_char('\n');
-		    debug_command_memory_word_dump(temp_pc & (RAM_SIZE - 1), 1);
-		    temp_pc = (temp_pc + 2) & 0x00ffffff;
+		    debug_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
+		    temp_pc = (temp_pc + 1) & 0x00ffffff;
 		}
 	    }
 	}
@@ -452,42 +444,52 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
     }
 }
 
-void E64::debug_command_memory_word_dump(uint32_t address, int rows)
+void E64::debug_command_memory_binary_dump(uint32_t address, int rows)
 {
-    address = address & 0xfffffffe;  // only even addresses allowed
-    
-    for(int i=0; i<rows; i++ )
-    {
-	uint32_t temp_address = address;
-	snprintf(command_help_string, 256, "\r'%06x ", temp_address);
-	debug_console_print(command_help_string);
-	for(int i=0; i<2; i++)
-	{
-	    snprintf(command_help_string, 256, "%02x", pc.mmu->read_memory_8(temp_address));
-	    debug_console_print(command_help_string);
-	    temp_address ++;
-	    temp_address &= RAM_SIZE - 1;
+	for (int i=0; i<rows; i++) {
+		uint8_t temp_byte = pc.mmu->read_memory_8(address);
+		
+		snprintf(command_help_string, 256, "\r'%06x ", address);
+		debug_console_print(command_help_string);
+
+		snprintf(command_help_string, 256, "%02x ", temp_byte);
+		debug_console_print(command_help_string);
+		
+		for (int i=0; i<8; i++) {
+			if (temp_byte & 0x80)
+				debug_console_put_char('*');
+			else
+				debug_console_put_char('.');
+			temp_byte = temp_byte << 1;
+		}
+
+		debug_console_put_char(' ');
+
+		debug_console.current_background_color = COBALT_02;
+		debug_console_put_screencode( pc.mmu->read_memory_8(address));
+		debug_console.current_background_color = COBALT_01;
+		
+		if (address & 0b1)
+			snprintf(command_help_string, 256, "      ");
+		else
+			snprintf(command_help_string, 256, " %04x ",
+				 pc.mmu->read_memory_16(address));
+		debug_console_print(command_help_string);
+		
+		debug_console.current_background_color =
+			pc.mmu->read_memory_8(address & 0xfffffe) |
+			pc.mmu->read_memory_8((address & 0xfffffe)+1) << 8;
+		
+		debug_console_print("  ");
+		
+		debug_console.current_background_color = COBALT_01;
+		
+		address++;
+		address &= RAM_SIZE - 1;
 	}
-	    
-	debug_console_put_char(' ');
-	
-	debug_console.current_background_color = COBALT_02;
-	
-	temp_address = address;
-	for(int i=0; i<2; i++)
-	{
-	    uint8_t temp_byte = pc.mmu->read_memory_8(temp_address);
-	    debug_console_put_screencode( temp_byte );
-	    temp_address++;
-	}
-	//address += 8;
-	address &= RAM_SIZE - 1;
-	
-	debug_console.current_background_color = COBALT_01;
-	
-	debug_console.cursor_pos -= 7;
-    }
+	debug_console.cursor_pos -= 21;
 }
+
 
 /*
  * hex2int
@@ -531,7 +533,7 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
 
 void E64::debug_command_single_step_cpu()
 {
-    pc.run(0);
+	pc.run(0);
 }
 
 void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
@@ -715,4 +717,36 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
         snprintf(command_help_string, 256, "\n;%06x ", original_address);
         debug_console_print(command_help_string);
     }
+}
+
+void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec)
+{
+	uint32_t address;
+	uint32_t arg0;
+	
+	string_to_parse_and_exec[7]  = '\0';
+	string_to_parse_and_exec[10] = '\0';
+	
+	if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+	{
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 1;
+		debug_console_print("??????\n");
+	}
+	else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+	{
+	    debug_console_put_char('\r');
+	    debug_console.cursor_pos += 8;
+	    debug_console_print("??\n");
+	}
+	else {
+		arg0 &= 0xff;
+		pc.mmu->write_memory_8(address, (uint8_t)arg0);
+		debug_console_put_char('\r');
+		debug_command_memory_binary_dump(address, 1);
+		address++;
+		address &= 0xffffff;
+		snprintf(command_help_string, 256, "\n\'%06x ", address);
+		debug_console_print(command_help_string);
+	}
 }

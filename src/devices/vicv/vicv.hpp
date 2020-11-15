@@ -10,13 +10,15 @@
 #ifndef vicv_hpp
 #define vicv_hpp
 
-/*  Register 0x00 is interrupt status register. Write to bit 0 means
- *  acknowledge VBLANK interrupt.
+/*
+ * Register 0x00 is interrupt status register. Write to bit 0 means
+ * acknowledge VBLANK interrupt.
  */
 #define VICV_REG_ISR		0x00
 
-/*  Register 0x01, write to bit 0 = swap front and back buffer
- *  (machine internally).
+/*
+ * Register 0x01, write to bit 0 = swap front and back buffer
+ * (machine internally).
  */
 #define VICV_REG_BUFFERSWAP	0x01
 
@@ -26,10 +28,10 @@
  */
 #define VICV_REG_BORDER_SIZE	0x02
 
-/* Registers 0x03 currently reserved for left/right border size */
+/* Register 0x03 currently reserved for left/right border size */
 
 /*
- * Registers 0x04-0x05 combined are a 16 bit color value for the current
+ * Registers 0x04-0x05 combined: 16 bit color value for the current
  * horizontal border color.
  */
 #define VICV_REG_HOR_BOR_HIGH	0x04

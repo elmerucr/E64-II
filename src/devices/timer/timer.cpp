@@ -17,7 +17,7 @@ void E64::timer_ic::reset()
 	registers[2] = 0x00;	// high byte
 	registers[3] = 0x01;	// low byte
 	
-	for (int i=0; i<4; i++) {
+	for (int i=0; i<8; i++) {
 		timers[i].bpm = (registers[2] << 8) | registers[3];
 		timers[i].clock_interval = bpm_to_clock_interval(timers[i].bpm);
 		timers[i].counter = 0;
@@ -26,11 +26,12 @@ void E64::timer_ic::reset()
 
 void E64::timer_ic::run(uint32_t number_of_cycles)
 {
-	for (int i=0; i<4; i++) {
+	for (int i=0; i<8; i++) {
 		timers[i].counter += number_of_cycles;
 		if ((timers[i].counter >= timers[i].clock_interval) &&
 		    (registers[1] & (0b1 << i))) {
 			timers[i].counter -= timers[i].clock_interval;
+			// NEEDS WORK: what if counter flips below 0?
 			pc.TTL74LS148->pull_line(interrupt_device_number);
 			registers[0] |= (0b1 << i);
 		}
@@ -60,13 +61,13 @@ void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
              *
              *  b = bit that's written
              *  s = status (on if an interrupt was caused)
-             *  r = boolean result (acknowledge an interrupt (s=1) if it is written to with a 1
+             *  r = boolean result (acknowledge an interrupt (s=1) if b=1
              *  r = (~b) & s
 	     */
 
-            registers[0] = (~(byte & 0x0f)) & registers[0];
+            registers[0] = (~byte) & registers[0];
 
-            if ((registers[0] & 0x0f) == 0) {
+            if ((registers[0] & 0xff) == 0) {
                 // no timers left causing interrupts
                 pc.TTL74LS148->release_line(interrupt_device_number);
             }
@@ -75,16 +76,18 @@ void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
 	{
 		uint8_t turned_on = byte & (~registers[1]);
 		
-		for (int i=0; i<4; i++) {
+		for (int i=0; i<8; i++) {
 			if (turned_on & (0b1 << i)) {
-				timers[i].bpm = (uint16_t)(registers[2] << 8) | registers[3];
+				timers[i].bpm = (uint16_t)(registers[2] << 8) |
+					registers[3];
 				if (timers[i].bpm == 0)
 					timers[i].bpm = 1;
-				timers[i].clock_interval = bpm_to_clock_interval(timers[i].bpm);
+				timers[i].clock_interval =
+					bpm_to_clock_interval(timers[i].bpm);
 				timers[i].counter = 0;
 			}
 		}
-		registers[0x01] = byte & 0x0f;	// turn off all the rest?
+		registers[0x01] = byte; //& 0x0f;	// turn off all the rest?
 		break;
 	}
 	default:
@@ -95,10 +98,10 @@ void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
 
 uint64_t E64::timer_ic::get_timer_counter(uint8_t timer_number)
 {
-	return timers[timer_number & 0x03].counter;
+	return timers[timer_number & 0x07].counter;
 }
 
 uint64_t E64::timer_ic::get_timer_clock_interval(uint8_t timer_number)
 {
-	return timers[timer_number & 0x03].clock_interval;
+	return timers[timer_number & 0x07].clock_interval;
 }

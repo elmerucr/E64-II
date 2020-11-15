@@ -28,9 +28,9 @@
  *
  *  Register 3 - Keyboard Repeat Speed, 1 byte, in multiples of 10ms (READ/WRITE)
  *
- *  Register 4 - Contains last key ascii code (READ), returns 0 on nothing
+ *  Register 4 - Contains next key ascii code (READ), returns 0 on events available
  *
- *  Returns 0 when no events are available.
+ *  Register 0x80 -->  key state array
  *
  */
 

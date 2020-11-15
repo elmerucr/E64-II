@@ -13,7 +13,7 @@ E64-II is a virtual computer system that runs on macOS and linux. It's mainly in
 ### Running (normal mode):
 ![E64-II running](./docs/E64-II_normal_2020-05-28.png)
 ### Monitor (debugging mode):
-![E64-II monitor view](./docs/E64-II_debug_2020-10-20.png)
+![E64-II monitor view](./docs/E64-II_monitor_2020-10-20.png)
 ## Compiling
 ### Core application
 #### macOS

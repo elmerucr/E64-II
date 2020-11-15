@@ -10,9 +10,10 @@
 #define monitor_console_hpp
 
 enum monitor_type {
-    NOTHING,
-    ASCII,
-    CHARACTER
+	NOTHING,
+	ASCII,
+	CHARACTER,
+	BINARY
 };
 
 typedef struct {

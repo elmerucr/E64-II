@@ -58,7 +58,7 @@ class timer_ic
 private:
 	uint8_t registers[4];
 	
-	struct timer_unit timers[4];
+	struct timer_unit timers[8];
 
 	uint32_t bpm_to_clock_interval(uint16_t bpm);
 public:

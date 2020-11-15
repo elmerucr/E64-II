@@ -243,7 +243,7 @@ void debug_console_arrow_down()
     {
         uint32_t address;
         
-        switch( debug_console_check_output(false, &address) )
+        switch (debug_console_check_output(false, &address))
         {
             case NOTHING:
                 debug_console_add_bottom_row();
@@ -256,6 +256,10 @@ void debug_console_arrow_down()
                 debug_console_add_bottom_row();
                 E64::debug_command_memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
                 break;
+		case BINARY:
+			debug_console_add_bottom_row();
+			E64::debug_command_memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
+			break;
         }
     }
     debug_console_cursor_activate();
@@ -283,6 +287,10 @@ void debug_console_arrow_up()
                 debug_console_add_top_row();
                 E64::debug_command_memory_character_dump((address-16) & (RAM_SIZE - 1), 1);
                 break;
+		case BINARY:
+			debug_console_add_top_row();
+			E64::debug_command_memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
+			break;
         }
     }
     debug_console_cursor_activate();
@@ -394,38 +402,49 @@ void debug_console_toggle_status_bar()
 
 enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 {
-    enum monitor_type output_type = NOTHING;
+	enum monitor_type output_type = NOTHING;
     
-    uint16_t start_pos = debug_console.status_bar_active ? (debug_console.status_bar_rows * VICV_CHAR_COLUMNS) : 0;
+	uint16_t start_pos =
+		debug_console.status_bar_active ? (debug_console.status_bar_rows * VICV_CHAR_COLUMNS) : 0;
     
-    for(int i = start_pos; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i += VICV_CHAR_COLUMNS)
-    {
-        if(debug_console.console_character_buffer[i] == ':' )
-        {
-            output_type = ASCII;
-            
-            char potential_address[7];
-            for(int j=0; j<6; j++)
-            {
-                potential_address[j] = debug_console.console_character_buffer[i+1+j];
-            }
-            potential_address[6] = 0;
-            E64::debug_command_hex_string_to_int(potential_address, address);
-            if(top_down) break;
-        }
-        if(debug_console.console_character_buffer[i] == ';' )
-        {
-            output_type = CHARACTER;
-            
-            char potential_address[7];
-            for(int j=0; j<6; j++)
-            {
-                potential_address[j] = debug_console.console_character_buffer[i+1+j];
-            }
-            potential_address[6] = 0;
-            E64::debug_command_hex_string_to_int(potential_address, address);
-            if(top_down) break;
-        }
-    }
-    return output_type;
+	for (int i = start_pos; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i += VICV_CHAR_COLUMNS) {
+		if (debug_console.console_character_buffer[i] == ':') {
+			output_type = ASCII;
+
+			char potential_address[7];
+			for(int j=0; j<6; j++) {
+				potential_address[j] =
+				debug_console.console_character_buffer[i+1+j];
+			}
+			potential_address[6] = 0;
+			E64::debug_command_hex_string_to_int(potential_address, address);
+			if (top_down)
+				break;
+		} else if (debug_console.console_character_buffer[i] == ';') {
+			output_type = CHARACTER;
+
+			char potential_address[7];
+			for (int j=0; j<6; j++) {
+				potential_address[j] =
+					debug_console.console_character_buffer[i+1+j];
+			}
+			potential_address[6] = 0;
+			E64::debug_command_hex_string_to_int(potential_address, address);
+			if (top_down)
+				break;
+		} else if (debug_console.console_character_buffer[i] == '\'') {
+			output_type = BINARY;
+		
+			char potential_address[7];
+			for (int j=0; j<6; j++) {
+				potential_address[j] =
+					debug_console.console_character_buffer[i+1+j];
+			}
+			potential_address[6] = 0;
+			E64::debug_command_hex_string_to_int(potential_address, address);
+			if(top_down)
+				break;
+		}
+	}
+	return output_type;
 }

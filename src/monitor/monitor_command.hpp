@@ -14,11 +14,12 @@ namespace E64
 void debug_command_execute(char *string_to_parse_and_exec);
 void debug_command_enter_monitor_line(char *string_to_parse_and_exec);
 void debug_command_enter_monitor_character_line(char *string_to_parse_and_exec);
+void debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec);
 void debug_command_dump_cpu_status(void);
 void debug_command_disassemble(uint8_t number);
 void debug_command_memory_dump(uint32_t address, int rows);
 void debug_command_memory_character_dump(uint32_t address, int rows);
-void debug_command_memory_word_dump(uint32_t address, int rows);
+void debug_command_memory_binary_dump(uint32_t address, int rows);
 void debug_command_single_step_cpu();
 
 /*

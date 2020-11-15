@@ -278,14 +278,16 @@ private:
     uint16_t width_mask;
     uint16_t width_on_screen_mask;
     
-    uint16_t foreground_color;
-    uint16_t background_color;
+	uint16_t foreground_color;
+	uint16_t background_color;
     
-    uint32_t pixel_data;
-    uint32_t tile_data;
-    uint32_t tile_color_data;
-    uint32_t tile_background_color_data;
-    uint32_t user_data;
+	uint32_t pixel_data;
+	uint32_t tile_data;
+	uint32_t tile_color_data;
+	uint32_t tile_background_color_data;
+	uint32_t user_data;
+	
+	inline void check_new_operation();
     
 public:
     
