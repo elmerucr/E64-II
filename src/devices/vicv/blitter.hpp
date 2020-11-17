@@ -196,10 +196,10 @@ private:
      *  contains a 32 bit pointer to a blit structure for adding blit operations
      *
      *  reg 6-7 combined (16 bits):
-     *  contains CLEAR_COLOR for clear framebuffer operations
+     *  contains CLEAR_COLOR for clear framebuffer operation
      *  
      */
-    uint8_t  registers[256];
+    uint8_t registers[256];
     
     /*  Keeping track of busy and idle cycles. This way, it is possible
      *  to estimate the % of usage of the blitter chip. It is best to
