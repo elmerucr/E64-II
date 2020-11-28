@@ -361,26 +361,28 @@ uint8_t E64::cia_ic::read_byte(uint8_t address)
 
 void E64::cia_ic::write_byte(uint8_t address, uint8_t byte)
 {
-    switch(address)
-    {
-        case 0x01:
-            generate_key_events = ( byte & 0b00000001 ) ? true : false;
-            
-            if( byte & 0b10000000 )
-            {
-                // a write to bit 7 clears the event list
-                tail = head;
-                key_down = false;
-            }
-            break;
-        case 0x02:
-            keyboard_repeat_delay = byte;
-            break;
-        case 0x03:
-            keyboard_repeat_speed = byte;
-            break;
-        default:
-            // no other addresses are written to
-            break;
-    }
+	switch (address) {
+	case 0x01:
+		if (byte & 0b00000001) {
+			generate_key_events = true;
+		} else {
+			generate_key_events = false;
+			key_down = false;
+		}
+		if (byte & 0b10000000) {
+			// a write to bit 7 clears the event list
+			tail = head;
+			key_down = false;
+		}
+		break;
+	case 0x02:
+		keyboard_repeat_delay = byte;
+		break;
+	case 0x03:
+		keyboard_repeat_speed = byte;
+		break;
+	default:
+		// no other addresses are written to
+		break;
+	}
 }
