@@ -21,10 +21,10 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 {
 	// get tokens, if commands could take more arguments, make more ....
 	char *token0, *token1, *token2, *token3;
-	token0 = strtok( string_to_parse_and_exec, " ");
-	token1 = strtok( NULL, " ");
-	token2 = strtok( NULL, " ");
-	token3 = strtok( NULL, " ");
+	token0 = strtok(string_to_parse_and_exec, " ");
+	token1 = strtok(NULL, " ");
+	token2 = strtok(NULL, " ");
+	token3 = strtok(NULL, " ");
 	
 	if (token0 == NULL)
 		debug_console_put_char('\n');
