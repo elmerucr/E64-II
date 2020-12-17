@@ -56,7 +56,7 @@ unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
     }
     else if( ( (address & 0x00fc0000) >> 16) == IO_ROM_MASK )
     {
-        return current_rom_image[address & 0x0000ffff];
+        return current_rom_image[address & 0x0003ffff];
     }
     else if( (address & IO_RESET_VECTOR_MASK) == 0 )
     {
@@ -138,12 +138,12 @@ void E64::mmu_ic::find_and_update_rom_image()
     if( temp_file )
     {
         printf("[mmu] found 'rom.bin' in %s, using this image\n", prefs.settings_path);
-        fread(current_rom_image, 65536, 1, temp_file);
+        fread(current_rom_image, 262144, 1, temp_file);
         fclose(temp_file);
     }
     else
     {
         printf("[mmu] no 'rom.bin' in %s, using built-in rom\n", prefs.settings_path);
-        for(int i=0; i<65536; i++) current_rom_image[i] = rom[i];
+        for(int i=0; i<262144; i++) current_rom_image[i] = rom[i];
     }
 }

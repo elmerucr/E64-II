@@ -31,7 +31,7 @@ public:
     
     uint8_t  *ram;                  // make this private and work with friend class?
     uint16_t *ram_as_words;         // make this private and work with friend class?
-    uint8_t  current_rom_image[65536];
+    uint8_t  current_rom_image[262144];
     
     void reset();
     
