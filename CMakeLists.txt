@@ -34,4 +34,4 @@ add_executable(
     src/frequency_divider.cpp
 	src/stats.cpp)
 
-target_link_libraries(E64-II cia cpu E64_sdl2 mmu monitor resid resources roms sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
+target_link_libraries(E64-II cia cpu E64_sdl2 mmu monitor resid resources rom sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})

@@ -16,16 +16,17 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201217
+#define E64_II_BUILD            20201218
 #define E64_II_YEAR             2020
 
 /* Global objects */
-extern E64::settings    prefs;
-extern E64::machine     pc;
-extern E64::video       host_video;
-extern E64::stats       statistics;
+extern E64::settings	prefs;
+extern E64::machine	pc;
+extern E64::video	host_video;
+extern E64::stats	statistics;
+extern uint8_t		rom[];
 
-#define RAM_SIZE                0x1000000   // 16mb system, DO NOT CHANGE
+#define	RAM_SIZE	0x1000000   // 16mb system, DO NOT CHANGE
 
 /*
  * System uses standard 720p60 HDMI output.
@@ -85,6 +86,7 @@ extern E64::stats       statistics;
 #define VICV_CHAR_COLUMNS		(VICV_PIXELS_PER_SCANLINE/8)
 #define VICV_CHAR_ROWS			(VICV_SCANLINES/8)
 
+#define	CBM_CP437_FONT_ADDRESS		0x3f000
 
 #define FPS                         60
 

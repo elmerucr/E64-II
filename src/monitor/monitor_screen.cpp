@@ -88,7 +88,7 @@ inline void E64::monitor_screen_render_scanline(int line_number)
 			current_char = monitor_screen_character_buffer[char_position];
 			current_foreground_color = monitor_screen_foreground_color_buffer[char_position];
 			current_background_color = monitor_screen_background_color_buffer[char_position];
-			eight_pixels = cbm_cp437_font[(current_char<<3) | current_character_line];
+			eight_pixels = rom[CBM_CP437_FONT_ADDRESS + ((current_char<<3) | current_character_line)];
 		}
 		host_video.debug_screen_buffer[base+x] = (eight_pixels & 0x80) ? host_video.palette[current_foreground_color] : host_video.palette[current_background_color];
 
