@@ -1,5 +1,6 @@
 add_subdirectory(cia/)
 add_subdirectory(cpu/)
+add_subdirectory(fd/)
 add_subdirectory(mmu/)
 add_subdirectory(sids/)
 add_subdirectory(timer/)
