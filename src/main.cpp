@@ -19,7 +19,7 @@
 #include <chrono>
 #include <thread>
 
-// global components
+// global components (split constructor to init function)
 E64::settings   prefs;
 E64::machine    pc;
 E64::video      host_video;
@@ -31,6 +31,9 @@ int main(int argc, char **argv)
 	       E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION,
 	       E64_II_BUILD);
 
+	debug_console_init();
+	// call inits to global components? messages can be in console
+
 	// place this call into machine class?
 	pc.vicv->set_stats(statistics.stats_info());
 
@@ -38,7 +41,7 @@ int main(int argc, char **argv)
 	E64::sdl2_init();
 
 	E64::monitor_screen_init();
-	debug_console_init();
+
 
 	// Select starting mode of E64-II
 	pc.switch_to_running();

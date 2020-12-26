@@ -17,28 +17,28 @@ enum monitor_type {
 };
 
 typedef struct {
-    uint8_t console_character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
-    uint16_t console_foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
-    uint16_t console_background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+	uint8_t console_character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+	uint16_t console_foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+	uint16_t console_background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
 
-    // cursor related vars
-    int16_t     cursor_pos;
-    bool        cursor_pos_original_reverse;
-    uint8_t     cursor_blink_time;
-    uint8_t     cursor_count_down;
+	// cursor related vars
+	int16_t		cursor_pos;
+	bool		cursor_pos_original_reverse;
+	uint8_t		cursor_blink_time;
+	uint8_t		cursor_count_down;
 
-    uint16_t  current_foreground_color;
-    uint16_t  current_background_color;
+	uint16_t  	current_foreground_color;
+	uint16_t  	current_background_color;
 
-    // status bar related things
-    bool        status_bar_active;
-    uint8_t     status_bar_rows;
-    uint16_t    status_bar_total_chars;
-    uint16_t    status_bar_cursor_pos;
-    uint16_t    status_bar_base_pos;
-    uint16_t    status_bar_foreground_color;
-    uint16_t    status_bar_background_color;
-    bool        status_bar_hex_view;
+	// status bar related things
+	bool		status_bar_active;
+	uint8_t		status_bar_rows;
+	uint16_t	status_bar_total_chars;
+	uint16_t	status_bar_cursor_pos;
+	uint16_t	status_bar_base_pos;
+	uint16_t	status_bar_foreground_color;
+	uint16_t	status_bar_background_color;
+	bool		status_bar_hex_view;
 } debug_console_struct;
 
 extern debug_console_struct debug_console;

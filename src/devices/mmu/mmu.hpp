@@ -10,13 +10,14 @@
 
 #include <cstdint>
 
-#define IO_CIA_PAGE                 0xfb03
-#define IO_VICV_PAGE                0xfb04
-#define IO_SND_PAGE                 0xfb05
-#define IO_TIMER_PAGE               0xfb06
-#define IO_BLITTER_PAGE             0xfb07
-#define IO_RESET_VECTOR_MASK        0xfffff8
-#define IO_ROM_MASK                 0xfc
+#define IO_FD0_PAGE		0xfb00
+#define IO_CIA_PAGE		0xfb03
+#define IO_VICV_PAGE		0xfb04
+#define IO_SND_PAGE		0xfb05
+#define IO_TIMER_PAGE		0xfb06
+#define IO_BLITTER_PAGE		0xfb07
+#define IO_RESET_VECTOR_MASK	0xfffff8
+#define IO_ROM_MASK		0xfc
 
 namespace E64
 {

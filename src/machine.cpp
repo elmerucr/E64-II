@@ -32,24 +32,26 @@ E64::machine::machine()
 	
 	cia = new cia_ic();
 	
+	fd0 = new fd();
+	
 	// init frequency dividers (make sure the right amount of cycles will run on different ic's)
 	m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
 	m68k_to_blitter = new frequency_divider(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
 	m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
-	m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
-	m68k_to_cia = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
+//	m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
+//	m68k_to_cia = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
+//	m68k_to_fd0 = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
 	
 	m68k->configDasm(true, false);   // output numbers in hex, use small case for mnemonics
 }
 
 E64::machine::~machine()
 {
-	delete m68k_to_cia;
-	delete m68k_to_timer;
 	delete m68k_to_sid;
 	delete m68k_to_blitter;
 	delete m68k_to_vicv;
 	
+	delete fd0;
 	delete cia;
 	delete sids;
 	delete blitter;
@@ -65,7 +67,7 @@ void E64::machine::switch_to_running()
 	current_mode = NORMAL_MODE;
 	debug_console_cursor_deactivate();
 	host_video.update_title();
-	// audio starts "automatically" when buffer reaches a minimum size
+	// audio starts automatically when buffer reaches a minimum size
 }
 
 void E64::machine::switch_to_debug()
@@ -125,10 +127,10 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
 	blitter->run(m68k_to_blitter->clock(processed_cycles));
 	
 	// run cycles on timer
-	timer->run(m68k_to_timer->clock(processed_cycles));
+	timer->run(processed_cycles);
 	
 	// run cycles on cia
-	cia->run(m68k_to_cia->clock(processed_cycles));
+	cia->run(processed_cycles);
 	
 	// run cycles on sound device & start audio if buffer is large enough
 	// some cheating by adjustment of cycles to run depending on current
@@ -159,6 +161,7 @@ void E64::machine::reset()
 	blitter->reset();    // sometimes, when resetting there's the warning message blitter not finished
 	timer->reset();
 	cia->reset();
+	fd0->reset();
 	TTL74LS148->update_interrupt_level();
 	printf("[machine] system reset\n");
 }

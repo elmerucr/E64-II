@@ -45,7 +45,7 @@
  * Speeds up a little.
  */
 
-inline void alpha_blend(uint16_t *destination, uint16_t *source)
+static void alpha_blend(uint16_t *destination, uint16_t *source)
 {
 	uint16_t r_dest, g_dest, b_dest;
 	uint16_t a_src, a_src_inv, r_src, g_src, b_src;
@@ -275,7 +275,6 @@ void E64::blitter_ic::run(int no_of_cycles)
                             
                             /*  Finally, call the alpha blend function */
                             alpha_blend( &pc.vicv->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
-                            //alpha_blend( &pc.vicv_ic->backbuffer[scrn_x | (scrn_y << 9)], &source_color );
                         }
                     }
                     pixel_no++;
@@ -289,58 +288,51 @@ void E64::blitter_ic::run(int no_of_cycles)
     }
 }
 
-
 uint8_t E64::blitter_ic::read_byte(uint8_t address)
 {
-    switch( address )
-    {
-        case 0x00:
-            if( current_state == IDLE )
-            {
-                return 0b00000000;
-            }
-            else
-            {
-                return 0b00000001;
-            }
-            break;
-        default:
-            return registers[address];
-            break;
-    }
+	switch (address) {
+	case 0x00:
+		if (current_state == IDLE)
+			return 0b00000000;
+		else
+			return 0b00000001;
+		break;
+	default:
+		return registers[address];
+		break;
+	}
 }
 
 void E64::blitter_ic::write_byte(uint8_t address, uint8_t byte)
 {
-    switch( address )
-    {
-        case 0x00:
-            if( byte & 0b00000001 ) // add operation
-            {
-                uint32_t ptr_to_blit_struct = (registers[2]<<24) | (registers[3]<<16) | (registers[4]<<8) | registers[5];
-                
-                if( ptr_to_blit_struct & 0x80000000 )
-                {
-                    operations[head].type = CLEAR_FRAMEBUFFER;
-                }
-                else
-                {
-                    operations[head].type = BLIT;
-                    
-                    // make sure it is word aligned, and equal or below 0xffffe0
-                    ptr_to_blit_struct &= 0xfffffe;
-                    if( ptr_to_blit_struct > 0xffffe0 ) ptr_to_blit_struct = 0xffffe0;
+	switch (address) {
+	case 0x00:
+		if (byte & 0b00000001) { // add operation
+			uint32_t ptr_to_blit_struct =
+				(registers[2]<<24) |
+				(registers[3]<<16) |
+				(registers[4]<<8) |
+				registers[5];
+			if (ptr_to_blit_struct & 0x80000000) {
+				operations[head].type = CLEAR_FRAMEBUFFER;
+			} else {
+				operations[head].type = BLIT;
 
-                    // copy the structure into the operations list
-                    operations[head].this_blit = *(struct surface_blit *)&pc.mmu->ram[ptr_to_blit_struct];
-                }
-                head++;
-            }
-            break;
-        default:
-            registers[address] = byte;
-            break;
-    }
+				// make sure word aligned and equal or below 0xffffe0
+				ptr_to_blit_struct &= 0xfffffe;
+				if (ptr_to_blit_struct > 0xffffe0)
+					ptr_to_blit_struct = 0xffffe0;
+
+				// copy the structure into the operations list
+				operations[head].this_blit = *(struct surface_blit *)&pc.mmu->ram[ptr_to_blit_struct];
+			}
+			head++;
+		}
+		break;
+	default:
+		registers[address] = byte;
+		break;
+	}
 }
 
 double E64::blitter_ic::fraction_busy()

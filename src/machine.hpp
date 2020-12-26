@@ -15,6 +15,7 @@
 #include "TTL74LS148.hpp"
 #include "vicv.hpp"
 #include "blitter.hpp"
+#include "fd.hpp"
 
 // output states for run member function
 #define NO_BREAKPOINT       0b00000000
@@ -36,32 +37,31 @@ private:
     frequency_divider *m68k_to_vicv;
     frequency_divider *m68k_to_blitter;
     frequency_divider *m68k_to_sid;
-    frequency_divider *m68k_to_timer;
-    frequency_divider *m68k_to_cia;
     char machine_help_string[2048];
 public:
     enum machine_mode   current_mode;
     bool running;
     
-    mmu_ic              *mmu;
-    cpu_moira           *m68k;
-    TTL74LS148_ic       *TTL74LS148;
-    timer_ic            *timer;
-    vicv_ic             *vicv;
-    blitter_ic          *blitter;
-    sids_ic             *sids;
-    cia_ic              *cia;
+	mmu_ic		*mmu;
+	cpu_moira	*m68k;
+	TTL74LS148_ic	*TTL74LS148;
+	timer_ic	*timer;
+	vicv_ic		*vicv;
+	blitter_ic	*blitter;
+	sids_ic		*sids;
+	cia_ic		*cia;
+	fd		*fd0;
 
-    machine();
-    ~machine();
-    
-    uint8_t  run(uint16_t no_of_cycles);
-    
-    void reset();
-    
-    void switch_to_running();
-    void switch_to_debug();
-    void switch_mode();
+	machine();
+	~machine();
+
+	uint8_t  run(uint16_t no_of_cycles);
+
+	void reset();
+
+	void switch_to_running();
+	void switch_to_debug();
+	void switch_mode();
 };
 
 }

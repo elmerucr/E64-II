@@ -34,8 +34,14 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
 	else if (token0[0] == '\'')
 		debug_command_enter_monitor_binary_line(string_to_parse_and_exec);
-    else if( strcmp(token0, "b") == 0 )
-    {
+	else if (strcmp(token0, "attach") == 0) {
+		if (token1 == NULL) {
+			debug_console_print("\nerror: missing filename\n");
+		} else {
+			pc.fd0->attach_disk_image(token1, true);
+		}
+	} else if( strcmp(token0, "b") == 0 )
+		{
         debug_console_put_char('\n');
         if(token1 == NULL)
         {
@@ -102,24 +108,23 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
         pc.m68k->debugger.breakpoints.removeAll();
         debug_console_print("all cpu breakpoints removed\n");
     }
-    else if( strcmp(token0, "c") == 0 )
-    {
-        debug_console_put_char('\n');
-        E64::sdl2_wait_until_enter_released();
-        pc.switch_to_running();
-    }
-    else if( strcmp(token0, "clear") == 0 )
-        debug_console_clear();
-    else if( strcmp(token0, "exit") == 0 )
-    {
-        E64::sdl2_wait_until_enter_released();
-        pc.running = false;
-    }
-    else if( strcmp(token0, "full") == 0 )
-    {
-        debug_console_put_char('\n');
-        host_video.toggle_fullscreen();
-    }
+	else if (strcmp(token0, "c") == 0) {
+		debug_console_put_char('\n');
+		E64::sdl2_wait_until_enter_released();
+		pc.switch_to_running();
+	} else if( strcmp(token0, "clear") == 0 ) {
+		debug_console_clear();
+	} else if (strcmp(token0, "detach") == 0) {
+		debug_console_put_char('\n');
+		if (pc.fd0->detach_disk_image())
+			debug_console_print("error: no disk attached\n");
+	} else if (strcmp(token0, "exit") == 0) {
+		E64::sdl2_wait_until_enter_released();
+		pc.running = false;
+	} else if (strcmp(token0, "full") == 0) {
+		debug_console_put_char('\n');
+		host_video.toggle_fullscreen();
+	}
     else if( strcmp(token0, "help") == 0 )
     {
         if(token1 == NULL)
@@ -135,9 +140,9 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
             debug_console_print("<ALT+f> switch between full screen and windowed mode\n");
             debug_console_put_char('\n');
             debug_console_print("other commands:\n");
-            debug_console_print("       b      cd     bar      bc       c   clear    exit\n");
-            debug_console_print("    full    help      ls       m      mb      mc     pwd\n");
-            debug_console_print("       r   reset      sb     sbc     ver     win\n");
+            debug_console_print("  attach       b      cd     bar      bc       c   clear\n");
+            debug_console_print("    exit    full    help      ls       m      mb      mc\n");
+            debug_console_print("     pwd       r   reset      sb     sbc     ver     win\n");
         }
     }
     else if( strcmp(token0, "ls") == 0 )

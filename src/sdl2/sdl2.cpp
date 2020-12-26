@@ -311,6 +311,10 @@ int E64::sdl2_process_events()
                     printf("[SDL] window resize event\n");
                 }
                 break;
+            case SDL_DROPFILE:
+                pc.fd0->attach_disk_image(event.drop.file, false);
+                SDL_free(event.drop.file);
+		break;
             case SDL_QUIT:
                 return_value = QUIT_EVENT;
                 break;
