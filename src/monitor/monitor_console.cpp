@@ -31,7 +31,8 @@ void debug_console_init()
     debug_console_cursor_activate();
 
     // status bar stuff (initial state)
-    debug_console.status_bar_active = true;
+    debug_console.status_bar_active = false;
+    //debug_console.status_bar_active = true;
     debug_console.status_bar_rows = 14;
     debug_console.status_bar_total_chars = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
     debug_console.status_bar_cursor_pos = 0;
@@ -39,7 +40,8 @@ void debug_console_init()
     debug_console.status_bar_hex_view = false;
     debug_status_bar_refresh();
 
-    for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
+	debug_console_put_char('\n');
+    //for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
     debug_console_version();
 }
 
@@ -260,6 +262,10 @@ void debug_console_arrow_down()
 			debug_console_add_bottom_row();
 			E64::debug_command_memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
 			break;
+		case DISK:
+			debug_console_add_bottom_row();
+			E64::debug_command_fd_dump(address + 0x10, 1);
+			break;
         }
     }
     debug_console_cursor_activate();
@@ -290,6 +296,10 @@ void debug_console_arrow_up()
 		case BINARY:
 			debug_console_add_top_row();
 			E64::debug_command_memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
+			break;
+		case DISK:
+			debug_console_add_top_row();
+			E64::debug_command_fd_dump(address - 0x10, 1);
 			break;
         }
     }
@@ -368,36 +378,37 @@ void debug_console_insert()
 
 void debug_console_clear()
 {
-    debug_console.cursor_pos = 0;
-    for(int i = 0; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i++)
-    {
-        debug_console.console_character_buffer[i] = ASCII_SPACE;
-        debug_console.console_background_color_buffer[i] = debug_console.current_background_color;
-        debug_console.console_foreground_color_buffer[i] = debug_console.current_foreground_color;
-    }
-    if( debug_console.status_bar_active == true )
-    {
-        if( debug_console.cursor_pos < (debug_console.status_bar_rows * VICV_CHAR_COLUMNS) )
-        {
-            debug_console.cursor_pos = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
-        }
-    }
+	debug_console.cursor_pos = 0;
+	for (int i = 0; i < (VICV_CHAR_COLUMNS*(VICV_CHAR_ROWS-8)); i++) {
+		debug_console.console_character_buffer[i] = ASCII_SPACE;
+		debug_console.console_background_color_buffer[i] =
+			debug_console.current_background_color;
+		debug_console.console_foreground_color_buffer[i] =
+			debug_console.current_foreground_color;
+	}
+	if (debug_console.status_bar_active == true) {
+		if (debug_console.cursor_pos <
+		    (debug_console.status_bar_rows * VICV_CHAR_COLUMNS)) {
+			debug_console.cursor_pos =
+				debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
+		}
+	}
 }
 
 void debug_console_toggle_status_bar()
 {
-    if( debug_console.status_bar_active == true )
-    {
-        debug_console.status_bar_active = false;
-    }
-    else
-    {
-        debug_console.status_bar_active = true;
-        if( debug_console.cursor_pos < (debug_console.status_bar_rows * VICV_CHAR_COLUMNS) )
-        {
-            debug_console.cursor_pos = debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
-        }
-    }
+	if (debug_console.status_bar_active == true) {
+		debug_console.status_bar_active = false;
+	} else {
+		debug_console_cursor_deactivate();
+		debug_console.status_bar_active = true;
+		if (debug_console.cursor_pos <
+		    (debug_console.status_bar_rows * VICV_CHAR_COLUMNS)) {
+			debug_console.cursor_pos =
+				debug_console.status_bar_rows * VICV_CHAR_COLUMNS;
+		}
+		debug_console_cursor_activate();
+	}
 }
 
 enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
@@ -443,6 +454,30 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 			potential_address[6] = 0;
 			E64::debug_command_hex_string_to_int(potential_address, address);
 			if(top_down)
+				break;
+		} else if (debug_console.console_character_buffer[i] == '"') {
+			output_type = DISK;
+			
+			char potential_sector[5];
+			uint32_t sector;
+			for (int j=0; j<4; j++) {
+				potential_sector[j] =
+					debug_console.console_character_buffer[i+1+j];
+			}
+			potential_sector[4] = 0;
+			E64::debug_command_hex_string_to_int(potential_sector, &sector);
+			
+			char potential_offset[5];
+			uint32_t offset;
+			for (int j=0; j<4; j++) {
+				potential_offset[j] =
+					debug_console.console_character_buffer[i+6+j];
+			}
+			potential_offset[4] = 0;
+			E64::debug_command_hex_string_to_int(potential_offset, &offset);
+			
+			*address = (sector * pc.fd0->bytes_per_sector()) + offset;
+			if (top_down)
 				break;
 		}
 	}

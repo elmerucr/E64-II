@@ -94,8 +94,20 @@ int E64::fd::detach_disk_image()
 		}
 		fclose(current_disk);
 		disk_attached = false;
+		for (int i=0; i<DISK_SIZE; i++)
+			disk_contents[i] = 0;
 	} else {
 		return_value = 1;
 	}
 	return return_value;
+}
+
+uint16_t E64::fd::bytes_per_sector()
+{
+	return BYTES_PER_SECTOR;
+}
+
+uint32_t E64::fd::disk_size()
+{
+	return DISK_SIZE;
 }

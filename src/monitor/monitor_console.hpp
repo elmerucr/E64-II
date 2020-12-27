@@ -13,7 +13,8 @@ enum monitor_type {
 	NOTHING,
 	ASCII,
 	CHARACTER,
-	BINARY
+	BINARY,
+	DISK
 };
 
 typedef struct {

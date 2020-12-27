@@ -23,12 +23,11 @@ private:
 	bool	write_protect;
 	
 	FILE	*current_disk;
-	
-	uint8_t	*disk_contents;
-	
 public:
 	fd();
 	~fd();
+	
+	uint8_t	*disk_contents;
 	
 	int	attach_disk_image(const char *path, bool write_on_detach);
 	int	detach_disk_image();
@@ -37,6 +36,9 @@ public:
 	uint8_t	read_byte(uint8_t address);
 	void	write_byte(uint8_t address, uint8_t byte);
 	void	run(uint32_t number_of_cycles);
+	
+	uint16_t bytes_per_sector();
+	uint32_t disk_size();
 };
 
 }

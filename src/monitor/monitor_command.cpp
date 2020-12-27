@@ -19,96 +19,84 @@ char command_help_string[2048];
 
 void E64::debug_command_execute(char *string_to_parse_and_exec)
 {
-	// get tokens, if commands could take more arguments, make more ....
-	char *token0, *token1, *token2, *token3;
+	char *token0, *token1;
 	token0 = strtok(string_to_parse_and_exec, " ");
-	token1 = strtok(NULL, " ");
-	token2 = strtok(NULL, " ");
-	token3 = strtok(NULL, " ");
 	
-	if (token0 == NULL)
+	if (token0 == NULL) {
 		debug_console_put_char('\n');
-	else if (token0[0] == ':')
+	} else if (token0[0] == ':') {
 		debug_command_enter_monitor_line(string_to_parse_and_exec);
-	else if (token0[0] == ';')
+	} else if (token0[0] == ';') {
 		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
-	else if (token0[0] == '\'')
+	} else if (token0[0] == '\'') {
 		debug_command_enter_monitor_binary_line(string_to_parse_and_exec);
-	else if (strcmp(token0, "attach") == 0) {
+	} else if (token0[0] == '"') {
+		debug_command_enter_monitor_disk_line(string_to_parse_and_exec);
+	} else if (strcmp(token0, "attach") == 0) {
+		token1 = strtok(NULL, " ");
 		if (token1 == NULL) {
 			debug_console_print("\nerror: missing filename\n");
 		} else {
 			pc.fd0->attach_disk_image(token1, true);
 		}
-	} else if( strcmp(token0, "b") == 0 )
-		{
-        debug_console_put_char('\n');
-        if(token1 == NULL)
-        {
-            unsigned int no_of_breakpoints = (unsigned int)pc.m68k->debugger.breakpoints.elements();
-            snprintf(command_help_string, 256, "currently %i cpu breakpoint(s) defined\n", no_of_breakpoints);
-            debug_console_print(command_help_string);
-            if( no_of_breakpoints > 0 )
-            {
-                snprintf(command_help_string, 256, "\n # address active\n");
-                debug_console_print(command_help_string);
-                for(int i=0; i<no_of_breakpoints; i++)
-                {
-                    snprintf(command_help_string, 256, "%2u $%06x  %s\n", i, pc.m68k->debugger.breakpoints.guardAddr(i), pc.m68k->debugger.breakpoints.isEnabled(i) ? "yes" : "no");
-                    debug_console_print(command_help_string);
-                }
-            }
-        }
-        else
-        {
-            uint32_t temp_32bit;
-            if( debug_command_hex_string_to_int(token1, &temp_32bit) )
-            {
-                temp_32bit &= (RAM_SIZE - 1);
-                pc.m68k->debugger.breakpoints.addAt(temp_32bit);
-                snprintf(command_help_string, 256, "cpu breakpoint at $%06x added\n", temp_32bit);
-                debug_console_print(command_help_string);
-            }
-            else
-            {
-                debug_console_print("error: invalid address\n");
-            }
-        }
-    }
-    else if( strcmp(token0, "cd") == 0 )
-    {
-        debug_console_put_char('\n');
-        if( token1 == NULL )
-        {
-            if( chdir(prefs.home_dir) )
-            {
-                snprintf(command_help_string, 256, "error: no such file or directory: %s\n", prefs.home_dir);
-                debug_console_print(command_help_string);
-            }
-            getcwd(prefs.current_path, 256);    // update current_path
-        }
-        else
-        {
-            if( chdir(token1) )
-            {
-                snprintf(command_help_string, 256, "error: no such file or directory: %s\n", token1);
-                debug_console_print(command_help_string);
-            }
-            getcwd(prefs.current_path, 256);    // update current_path
-        }
-    }
-    else if( strcmp(token0, "bar") == 0 )
-    {
-        debug_console_put_char('\n');
-        debug_console_toggle_status_bar();
-    }
-    else if( strcmp(token0, "bc") == 0 )
-    {
-        debug_console_put_char('\n');
-        pc.m68k->debugger.breakpoints.removeAll();
-        debug_console_print("all cpu breakpoints removed\n");
-    }
-	else if (strcmp(token0, "c") == 0) {
+	} else if (strcmp(token0, "b") == 0) {
+		token1 = strtok(NULL, " ");
+		debug_console_put_char('\n');
+		if (token1 == NULL) {
+			unsigned int no_of_breakpoints = (unsigned int)pc.m68k->debugger.breakpoints.elements();
+			snprintf(command_help_string, 256, "currently %i cpu breakpoint(s) defined\n", no_of_breakpoints);
+			debug_console_print(command_help_string);
+			if (no_of_breakpoints > 0) {
+				snprintf(command_help_string, 256, "\n # address active\n");
+				debug_console_print(command_help_string);
+				for (int i=0; i<no_of_breakpoints; i++) {
+					snprintf(command_help_string, 256, "%2u $%06x  %s\n", i,
+						 pc.m68k->debugger.breakpoints.guardAddr(i),
+						 pc.m68k->debugger.breakpoints.isEnabled(i) ? "yes" : "no");
+					debug_console_print(command_help_string);
+				}
+			}
+		} else {
+			uint32_t temp_32bit;
+			if (debug_command_hex_string_to_int(token1, &temp_32bit)) {
+				temp_32bit &= (RAM_SIZE - 1);
+				pc.m68k->debugger.breakpoints.addAt(temp_32bit);
+				snprintf(command_help_string, 256,
+					 "cpu breakpoint at $%06x added\n",
+					 temp_32bit);
+				debug_console_print(command_help_string);
+			} else {
+				debug_console_print("error: invalid address\n");
+			}
+		}
+	} else if (strcmp(token0, "cd") == 0) {
+		token1 = strtok(NULL, " ");
+		debug_console_put_char('\n');
+		if (token1 == NULL) {
+			if (chdir(prefs.home_dir)) {
+				snprintf(command_help_string, 256,
+					 "error: no such file or directory: %s\n",
+					 prefs.home_dir);
+				debug_console_print(command_help_string);
+			}
+			getcwd(prefs.current_path, 256);    // update current_path
+		} else {
+			if (chdir(token1)) {
+				snprintf(command_help_string, 256,
+					 "error: no such file or directory: %s\n",
+					 token1);
+				debug_console_print(command_help_string);
+			}
+			getcwd(prefs.current_path, 256);    // update current_path
+		}
+	} else if (strcmp(token0, "bar") == 0) {
+		debug_console_put_char('\n');
+		debug_console_toggle_status_bar();
+	} else if (strcmp(token0, "bc") == 0) {
+		debug_console_put_char('\n');
+		pc.m68k->debugger.breakpoints.removeAll();
+		debug_console_print("all cpu breakpoints removed\n");
+	} else if (strcmp(token0, "c") == 0) {
 		debug_console_put_char('\n');
 		E64::sdl2_wait_until_enter_released();
 		pc.switch_to_running();
@@ -124,250 +112,231 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "full") == 0) {
 		debug_console_put_char('\n');
 		host_video.toggle_fullscreen();
-	}
-    else if( strcmp(token0, "help") == 0 )
-    {
-        if(token1 == NULL)
-        {
-            debug_console_put_char('\n');
-            debug_console_print("<F1>    run next instruction\n");
-            debug_console_print("<F2>    switch system status bar on and off\n");
-            debug_console_print("<F3>    switch between readable and hexadecimal disassembly\n");
-            debug_console_print("<F9>    switch to monitor and back to running\n");
-            debug_console_print("<F10>   toggle runtime stats (running only)\n");
-            debug_console_print("<ALT+q> quit application\n");
-            debug_console_print("<ALT+r> reset machine\n");
-            debug_console_print("<ALT+f> switch between full screen and windowed mode\n");
-            debug_console_put_char('\n');
-            debug_console_print("other commands:\n");
-            debug_console_print("  attach       b      cd     bar      bc       c   clear\n");
-            debug_console_print("    exit    full    help      ls       m      mb      mc\n");
-            debug_console_print("     pwd       r   reset      sb     sbc     ver     win\n");
-        }
-    }
-    else if( strcmp(token0, "ls") == 0 )
-    {
-        debug_console_put_char('\n');
-        debug_console_put_char('\n');
-        
-        DIR *directory = opendir(prefs.current_path);
-        struct dirent *entry;
-        int files = 0;
-        
-        while( (entry = readdir(directory)) )
-        {
-            if( *entry->d_name != '.' )
-            {
-                files++;
-                snprintf(command_help_string, 256, "%s%c",
-                         entry->d_name,
-                         (entry->d_type) & 0b100 ? '/' : '\0'
-                         );
-                debug_console_print(command_help_string);
-                debug_console_put_char('\n');
-            }
-        }
-        closedir(directory);
-        if( files == 0 ) debug_console_print("empty directory\n");
-    }
-    else if( strcmp(token0, "m") == 0 )
-    {
-        uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
-        if(lines_remaining == 0) lines_remaining = 1;
-        
-        uint32_t temp_pc = pc.m68k->getPC();
-        
-        //debug_console_put_char('\n');
-        
-        if( token1 == NULL )
-        {
-            for(int i=0; i<lines_remaining; i++)
-            {
-                debug_console_put_char('\n');
-                debug_command_memory_dump(temp_pc, 1);
-                temp_pc = (temp_pc + 8) & 0x00ffffff;
-            }
-        }
-        else
-        {
-            if ( !debug_command_hex_string_to_int(token1, &temp_pc) )
-            {
-                debug_console_put_char('\n');
-                debug_console_print("error: invalid address\n");
-            }
-            else
-            {
-                for(int i=0; i<lines_remaining; i++)
-                {
-                    debug_console_put_char('\n');
-                    debug_command_memory_dump(temp_pc & (RAM_SIZE - 1), 1);
-                    temp_pc = (temp_pc + 8) & 0x00ffffff;
-                }
-            }
-        }
-    }
-    else if( strcmp(token0, "mc") == 0 )
-    {
-        uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
-        if(lines_remaining == 0) lines_remaining = 1;
-        
-        if( token1 == NULL )
-        {
-            debug_console_put_char('\n');
-            debug_console_print("error: need address\n");
-        }
-        else
-        {
-            uint32_t temp_32bit;
-            if ( !debug_command_hex_string_to_int(token1, &temp_32bit) )
-            {
-                debug_console_put_char('\n');
-                debug_console_print("error: invalid address\n");
-            }
-            else
-            {
-                for(int i=0; i<lines_remaining; i++)
-                {
-                    debug_console_put_char('\n');
-                    debug_command_memory_character_dump(temp_32bit & (RAM_SIZE - 1), 1);
-                    temp_32bit = (temp_32bit + 16) & 0x00ffffff;
-                }
-            }
-        }
-    }
-    else if( strcmp(token0, "mb") == 0 )
-    {
-	uint8_t lines_remaining = VICV_CHAR_ROWS - (debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
-	if(lines_remaining == 0) lines_remaining = 1;
-	
-	uint32_t temp_pc = pc.m68k->getPC();
-	
-	if (token1 == NULL) {
-	    for (int i=0; i<lines_remaining; i++) {
-		debug_console_put_char('\n');
-		debug_command_memory_binary_dump(temp_pc, 1);
-		temp_pc = (temp_pc + 1) & 0x00ffffff;
-	    }
-	} else {
-	    if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
-		debug_console_put_char('\n');
-		debug_console_print("error: invalid address\n");
-	    } else {
-		for (int i=0; i<lines_remaining; i++) {
-		    debug_console_put_char('\n');
-		    debug_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
-		    temp_pc = (temp_pc + 1) & 0x00ffffff;
+	} else if (strcmp(token0, "help") == 0) {
+		token1 = strtok(NULL, " ");
+		if (token1 == NULL) {
+			debug_console_put_char('\n');
+			debug_console_print(
+				"<F1>    run next instruction\n"
+				"<F2>    switch system status bar on and off\n"
+				"<F3>    switch between readable and hexadecimal disassembly\n"
+				"<F9>    switch to monitor and back to running\n"
+				"<F10>   toggle runtime stats (running only)\n"
+				"<ALT+q> quit application\n"
+				"<ALT+r> reset machine\n"
+				"<ALT+f> switch between full screen and windowed mode\n");
+			debug_console_put_char('\n');
+			debug_console_print(
+				"other commands:\n"
+				"  attach       b      cd     bar      bc       c   clear\n"
+				"    exit    full    help      ls       m      mb      mc\n"
+				"      md     pwd       r   reset      sb     sbc     ver\n"
+				"     win\n");
 		}
-	    }
+	} else if (strcmp(token0, "ls") == 0) {
+		debug_console_put_char('\n');
+
+		debug_console.current_background_color = COBALT_06;
+		debug_console.current_foreground_color = COBALT_01;
+		getcwd(command_help_string, 256);
+		debug_console_print(command_help_string);
+		debug_console_put_char('\n');
+		debug_console.current_background_color = COBALT_01;
+		debug_console.current_foreground_color = COBALT_06;
+	    
+		DIR *directory = opendir(prefs.current_path);
+		struct dirent *entry;
+		int files = 0;
+
+		while ((entry = readdir(directory))) {
+			if (*entry->d_name != '.') {
+				files++;
+				snprintf(command_help_string, 256, "%s%c",
+					 entry->d_name,
+					 (entry->d_type) & 0b100 ? '/' : '\0');
+				debug_console_print(command_help_string);
+				debug_console_put_char('\n');
+			}
+		}
+		closedir(directory);
+		if (files == 0)
+			debug_console_print("empty directory\n");
+	} else if (strcmp(token0, "m") == 0) {
+		token1 = strtok(NULL, " ");
+		uint8_t lines_remaining = VICV_CHAR_ROWS -
+			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+		if(lines_remaining == 0) lines_remaining = 1;
+
+		uint32_t temp_pc = pc.m68k->getPC();
+        
+		if (token1 == NULL) {
+			for (int i=0; i<lines_remaining; i++) {
+				debug_console_put_char('\n');
+				debug_command_memory_dump(temp_pc, 1);
+				temp_pc = (temp_pc + 8) & 0x00ffffff;
+			}
+		} else {
+			if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
+				debug_console_put_char('\n');
+				debug_console_print("error: invalid address\n");
+			} else {
+				for (int i=0; i<lines_remaining; i++) {
+					debug_console_put_char('\n');
+					debug_command_memory_dump(temp_pc &
+						(RAM_SIZE - 1), 1);
+					temp_pc = (temp_pc + 8) & 0x00ffffff;
+				}
+			}
+		}
+	} else if (strcmp(token0, "mc") == 0) {
+		token1 = strtok(NULL, " ");
+		uint8_t lines_remaining = VICV_CHAR_ROWS -
+			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+		if(lines_remaining == 0) lines_remaining = 1;
+		if (token1 == NULL) {
+			debug_console_put_char('\n');
+			debug_console_print("error: need address\n");
+		} else {
+			uint32_t temp_32bit;
+			if (!debug_command_hex_string_to_int(token1, &temp_32bit)) {
+				debug_console_put_char('\n');
+				debug_console_print("error: invalid address\n");
+			} else {
+				for (int i=0; i<lines_remaining; i++) {
+					debug_console_put_char('\n');
+					debug_command_memory_character_dump(temp_32bit &
+						(RAM_SIZE - 1), 1);
+					temp_32bit = (temp_32bit + 16) & 0x00ffffff;
+				}
+			}
+		}
+	} else if (strcmp(token0, "mb") == 0) {
+		token1 = strtok(NULL, " ");
+		uint8_t lines_remaining = VICV_CHAR_ROWS -
+			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+		if(lines_remaining == 0) lines_remaining = 1;
+	
+		uint32_t temp_pc = pc.m68k->getPC();
+	
+		if (token1 == NULL) {
+			for (int i=0; i<lines_remaining; i++) {
+				debug_console_put_char('\n');
+				debug_command_memory_binary_dump(temp_pc, 1);
+				temp_pc = (temp_pc + 1) & 0x00ffffff;
+			}
+		} else {
+			if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
+				debug_console_put_char('\n');
+				debug_console_print("error: invalid address\n");
+			} else {
+				for (int i=0; i<lines_remaining; i++) {
+					debug_console_put_char('\n');
+					debug_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
+					temp_pc = (temp_pc + 1) & 0x00ffffff;
+				}
+			}
+		}
+	} else if (strcmp(token0, "md") == 0) {
+		uint8_t lines_remaining = VICV_CHAR_ROWS -
+			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+		if (lines_remaining == 0)
+			lines_remaining = 1;
+		uint32_t temp_pos = 0;
+		for (int i=0; i<lines_remaining; i++) {
+			debug_console_put_char('\n');
+			debug_command_fd_dump(temp_pos, 1);
+			temp_pos += 0x10;
+			if (temp_pos >= pc.fd0->disk_size())
+				temp_pos = 0;
+		}
+	} else if (strcmp(token0, "pwd") == 0) {
+		debug_console_put_char('\n');
+		getcwd(command_help_string, 256);
+		debug_console_print(command_help_string);
+		debug_console_put_char('\n');
+	} else if (strcmp(token0, "r") == 0) {
+		debug_command_dump_cpu_status();
+	} else if (strcmp(token0, "reset") == 0) {
+		debug_console_put_char('\n');
+		pc.reset();
+		statistics.reset();
+	} else if (strcmp(token0, "sb") == 0) {
+		token1 = strtok(NULL, " ");
+		debug_console_put_char('\n');
+		if (token1 == NULL) {
+			unsigned int no_of_scanline_breakpoints = 0;
+			for (int i=0; i<1024; i++) {
+				if (pc.vicv->is_scanline_breakpoint(i))
+					no_of_scanline_breakpoints++;
+			}
+			if (no_of_scanline_breakpoints) {
+				snprintf(command_help_string, 256,
+					 "currently %i scanline breakpoint(s) defined at:\n",
+					 no_of_scanline_breakpoints);
+				debug_console_print(command_help_string);
+				for (int i=0; i<1024; i++) {
+					if (pc.vicv->is_scanline_breakpoint(i)) {
+						snprintf(command_help_string,
+							 256, " %3i\n", i);
+						debug_console_print(command_help_string);
+					}
+				}
+			} else {
+				debug_console_print("no scanline breakpoints defined\n");
+			}
+		} else {
+			uint32_t temp_32bit = atoi(token1);
+			temp_32bit &= 1023;
+			if (pc.vicv->is_scanline_breakpoint(temp_32bit)) {
+				snprintf(command_help_string, 256,
+					 "removing scanline breakpoint %i\n",
+					 temp_32bit);
+				debug_console_print(command_help_string);
+				pc.vicv->remove_scanline_breakpoint(temp_32bit);
+			} else {
+				snprintf(command_help_string, 256,
+					 "adding scanline breakpoint %i\n",
+					 temp_32bit);
+				debug_console_print(command_help_string);
+				pc.vicv->add_scanline_breakpoint(temp_32bit);
+			}
+		}
+	} else if (strcmp(token0, "sbc") == 0) {
+		pc.vicv->clear_scanline_breakpoints();
+		debug_console_put_char('\n');
+		debug_console_print("all scanline breakpoints removed\n");
+	} else if (strcmp(token0, "ver") == 0) {
+		debug_console_put_char('\n');
+		debug_console_version();
+	} else if (strcmp(token0, "win") == 0) {
+		token1 = strtok(NULL, " ");
+		debug_console_put_char('\n');
+		if (token1 == NULL) {
+			host_video.reset_window_size();
+			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
+				 host_video.current_window_width(), host_video.current_window_height());
+			debug_console_print(command_help_string);
+		} else if (strcmp(token1, "+") == 0) {
+			host_video.increase_window_size();
+			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
+				 host_video.current_window_width(), host_video.current_window_height());
+			debug_console_print(command_help_string);
+		} else if (strcmp(token1, "-") == 0) {
+			host_video.decrease_window_size();
+			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
+				 host_video.current_window_width(), host_video.current_window_height());
+			debug_console_print(command_help_string);
+		} else {
+			snprintf(command_help_string, 256,
+				 "error: unknown argument '%s'\n", token1);
+			debug_console_print(command_help_string);
+		}
+	} else {
+		debug_console_put_char('\n');
+		snprintf(command_help_string, 256,
+			 "error: unknown command '%s'\n", token0);
+		debug_console_print(command_help_string);
 	}
-    }
-    else if( strcmp(token0, "pwd") == 0 )
-    {
-        debug_console_put_char('\n');
-        getcwd(command_help_string, 256);
-        debug_console_print(command_help_string);
-        debug_console_put_char('\n');
-    }
-    else if( strcmp(token0, "r") == 0 )
-    {
-        debug_command_dump_cpu_status();
-    }
-    else if( strcmp(token0, "reset") == 0)
-    {
-        debug_console_put_char('\n');
-        pc.reset();
-        statistics.reset();
-    }
-    else if( strcmp(token0, "sb") == 0)
-    {
-        debug_console_put_char('\n');
-        if(token1 == NULL)
-        {
-            unsigned int no_of_scanline_breakpoints = 0;
-            for(int i=0; i<1024; i++)
-            {
-                if(pc.vicv->is_scanline_breakpoint(i)) no_of_scanline_breakpoints++;
-            }
-            if(no_of_scanline_breakpoints)
-            {
-                snprintf(command_help_string, 256, "currently %i scanline breakpoint(s) defined at:\n", no_of_scanline_breakpoints);
-                debug_console_print(command_help_string);
-                for(int i=0; i<1024; i++)
-                {
-                    if(pc.vicv->is_scanline_breakpoint(i))
-                    {
-                        snprintf(command_help_string, 256, " %3i\n", i);
-                        debug_console_print(command_help_string);
-                    }
-                }
-            }
-            else
-            {
-                debug_console_print("no scanline breakpoints defined\n");
-            }
-        }
-        else
-        {
-            uint32_t temp_32bit = atoi(token1);
-            temp_32bit &= 1023;
-            if(pc.vicv->is_scanline_breakpoint(temp_32bit))
-            {
-                snprintf(command_help_string, 256, "removing scanline breakpoint %i\n", temp_32bit);
-                debug_console_print(command_help_string);
-                pc.vicv->remove_scanline_breakpoint(temp_32bit);
-            }
-            else
-            {
-                snprintf(command_help_string, 256, "adding scanline breakpoint %i\n", temp_32bit);
-                debug_console_print(command_help_string);
-                pc.vicv->add_scanline_breakpoint(temp_32bit);
-            }
-        }
-    }
-    else if( strcmp(token0, "sbc") == 0 )
-    {
-        pc.vicv->clear_scanline_breakpoints();
-        debug_console_put_char('\n');
-        debug_console_print("all scanline breakpoints removed\n");
-    }
-    else if( strcmp(token0, "ver") == 0 )
-    {
-        debug_console_put_char('\n');
-        debug_console_version();
-    }
-    else if( strcmp(token0, "win") == 0 )
-    {
-        debug_console_put_char('\n');
-        if(token1 == NULL)
-        {
-            host_video.reset_window_size();
-            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
-            debug_console_print(command_help_string);
-        }
-        else if( strcmp(token1, "+") == 0 )
-        {
-            host_video.increase_window_size();
-            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
-            debug_console_print(command_help_string);
-        }
-        else if( strcmp(token1, "-") == 0 )
-        {
-            host_video.decrease_window_size();
-            snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n", host_video.current_window_width(), host_video.current_window_height());
-            debug_console_print(command_help_string);
-        }
-        else
-        {
-            snprintf(command_help_string, 256, "error: unknown argument '%s'\n", token1);
-            debug_console_print(command_help_string);
-        }
-    }
-    else
-    {
-        debug_console_put_char('\n');
-        snprintf(command_help_string, 256, "error: unknown command '%s'\n", token0);
-        debug_console_print(command_help_string);
-    }
 }
 
 void E64::debug_command_dump_cpu_status()
@@ -538,7 +507,9 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
 
 void E64::debug_command_single_step_cpu()
 {
+	debug_console_cursor_deactivate();
 	pc.run(0);
+	debug_console_cursor_activate();
 }
 
 void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
@@ -732,19 +703,15 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 	string_to_parse_and_exec[7]  = '\0';
 	string_to_parse_and_exec[10] = '\0';
 	
-	if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
-	{
+	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
 		debug_console_put_char('\r');
 		debug_console.cursor_pos += 1;
 		debug_console_print("??????\n");
-	}
-	else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
-	{
-	    debug_console_put_char('\r');
-	    debug_console.cursor_pos += 8;
-	    debug_console_print("??\n");
-	}
-	else {
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 8;
+		debug_console_print("??\n");
+	} else {
 		arg0 &= 0xff;
 		pc.mmu->write_memory_8(address, (uint8_t)arg0);
 		debug_console_put_char('\r');
@@ -753,5 +720,57 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 		address &= 0xffffff;
 		snprintf(command_help_string, 256, "\n\'%06x ", address);
 		debug_console_print(command_help_string);
+	}
+}
+
+void E64::debug_command_fd_dump(uint32_t address, int rows)
+{
+	address &= 0xfffffff0;
+	
+	for (int i=0; i<rows; i++ ) {
+		uint16_t sector = address / pc.fd0->bytes_per_sector();
+		uint16_t offset = address - (sector * pc.fd0->bytes_per_sector());
+		snprintf(command_help_string, 256, "\r\"%04x:%04x ", sector, offset);
+		debug_console_print(command_help_string);
+		for (int i=0; i<16; i++) {
+			if (i & 0b1) {
+				debug_console.current_foreground_color =
+					COBALT_05;
+			} else {
+				debug_console.current_foreground_color =
+					COBALT_07;
+			}
+			snprintf(command_help_string, 256, "%02x",
+				 pc.fd0->disk_contents[address+i]);
+			debug_console_print(command_help_string);
+		}
+		debug_console_put_char(' ');
+		debug_console.current_foreground_color = COBALT_06;
+		debug_console.current_background_color = COBALT_02;
+		for (int i=0; i<16; i++) {
+			debug_console_put_screencode(pc.fd0->disk_contents[address+i]);
+		}
+		debug_console.current_background_color = COBALT_01;
+		address += 0x10;
+	}
+	debug_console.cursor_pos -= 49;
+}
+
+void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
+{
+	uint32_t sector;
+	uint32_t offset;
+
+	string_to_parse_and_exec[5]  = '\0';
+	string_to_parse_and_exec[10] = '\0';
+	
+	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &sector)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 1;
+		debug_console_print("????\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[6], &offset)) {
+	       debug_console_put_char('\r');
+	       debug_console.cursor_pos += 6;
+	       debug_console_print("????\n");
 	}
 }
