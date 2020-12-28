@@ -37,7 +37,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			debug_console_print("\nerror: missing filename\n");
 		} else {
-			pc.fd0->attach_disk_image(token1, true);
+			pc.fd0->attach_disk_image(token1, false);
 		}
 	} else if (strcmp(token0, "b") == 0) {
 		token1 = strtok(NULL, " ");
@@ -163,6 +163,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			debug_console_print("empty directory\n");
 	} else if (strcmp(token0, "m") == 0) {
 		token1 = strtok(NULL, " ");
+		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
 			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if(lines_remaining == 0) lines_remaining = 1;
@@ -237,17 +238,38 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			}
 		}
 	} else if (strcmp(token0, "md") == 0) {
+		token1 = strtok(NULL, " ");
+		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
 			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if (lines_remaining == 0)
 			lines_remaining = 1;
+		
 		uint32_t temp_pos = 0;
-		for (int i=0; i<lines_remaining; i++) {
-			debug_console_put_char('\n');
-			debug_command_fd_dump(temp_pos, 1);
-			temp_pos += 0x10;
-			if (temp_pos >= pc.fd0->disk_size())
-				temp_pos = 0;
+		
+		if (token1 == NULL) {
+			for (int i=0; i<lines_remaining; i++) {
+				debug_console_put_char('\n');
+				debug_command_fd_dump(temp_pos, 1);
+				temp_pos += 0x08;
+				if (temp_pos >= pc.fd0->disk_size())
+					temp_pos = 0;
+			}
+		} else {
+			if (!debug_command_hex_string_to_int(token1, &temp_pos)) {
+				debug_console_put_char('\n');
+				debug_console_print("error: invalid sector\n");
+			} else {
+				temp_pos *= pc.fd0->bytes_per_sector();
+				if (temp_pos >= pc.fd0->disk_size())
+					temp_pos = pc.fd0->disk_size() -
+					pc.fd0->bytes_per_sector();
+				for (int i=0; i<lines_remaining; i++) {
+					debug_console_put_char('\n');
+					debug_command_fd_dump(temp_pos, 1);
+					temp_pos += 0x08;
+				}
+			}
 		}
 	} else if (strcmp(token0, "pwd") == 0) {
 		debug_console_put_char('\n');
@@ -725,52 +747,124 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 
 void E64::debug_command_fd_dump(uint32_t address, int rows)
 {
-	address &= 0xfffffff0;
+	address &= 0xfffffff8;
+
+	if (address == 0xfffffff8)
+		address = pc.fd0->disk_size() - 0x08;
+	if (address >= pc.fd0->disk_size())
+		address = 0;
 	
 	for (int i=0; i<rows; i++ ) {
 		uint16_t sector = address / pc.fd0->bytes_per_sector();
 		uint16_t offset = address - (sector * pc.fd0->bytes_per_sector());
-		snprintf(command_help_string, 256, "\r\"%04x:%04x ", sector, offset);
+		snprintf(command_help_string, 256, "\r\"%1x:%08x:%04x ", 0, sector, offset);
 		debug_console_print(command_help_string);
-		for (int i=0; i<16; i++) {
-			if (i & 0b1) {
-				debug_console.current_foreground_color =
-					COBALT_05;
-			} else {
-				debug_console.current_foreground_color =
-					COBALT_07;
-			}
-			snprintf(command_help_string, 256, "%02x",
+		for (int i=0; i<8; i++) {
+			snprintf(command_help_string, 256, "%02x ",
 				 pc.fd0->disk_contents[address+i]);
 			debug_console_print(command_help_string);
 		}
-		debug_console_put_char(' ');
-		debug_console.current_foreground_color = COBALT_06;
 		debug_console.current_background_color = COBALT_02;
-		for (int i=0; i<16; i++) {
+		for (int i=0; i<8; i++)
 			debug_console_put_screencode(pc.fd0->disk_contents[address+i]);
-		}
 		debug_console.current_background_color = COBALT_01;
-		address += 0x10;
+		address += 0x8;
 	}
-	debug_console.cursor_pos -= 49;
+	debug_console.cursor_pos -= 32;
 }
 
 void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 {
-	uint32_t sector;
-	uint32_t offset;
+	uint32_t sector = 0;
+	uint32_t offset = 0;
 
-	string_to_parse_and_exec[5]  = '\0';
-	string_to_parse_and_exec[10] = '\0';
+	string_to_parse_and_exec[11] = '\0';
+	string_to_parse_and_exec[16] = '\0';
+
+	uint32_t arg0 = 0;
+	uint32_t arg1 = 0;
+	uint32_t arg2 = 0;
+	uint32_t arg3 = 0;
+	uint32_t arg4 = 0;
+	uint32_t arg5 = 0;
+	uint32_t arg6 = 0;
+	uint32_t arg7 = 0;
+
+	string_to_parse_and_exec[19] = '\0';
+	string_to_parse_and_exec[22] = '\0';
+	string_to_parse_and_exec[25] = '\0';
+	string_to_parse_and_exec[28] = '\0';
+	string_to_parse_and_exec[31] = '\0';
+	string_to_parse_and_exec[34] = '\0';
+	string_to_parse_and_exec[37] = '\0';
+	string_to_parse_and_exec[40] = '\0';
+
 	
-	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &sector)) {
+	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 1;
-		debug_console_print("????\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[6], &offset)) {
+		debug_console.cursor_pos += 3;
+		debug_console_print("????????\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
 	       debug_console_put_char('\r');
-	       debug_console.cursor_pos += 6;
+	       debug_console.cursor_pos += 12;
 	       debug_console_print("????\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 17;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 20;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 23;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 26;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 29;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 32;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 35;
+		debug_console_print("??\n");
+	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
+		debug_console_put_char('\r');
+		debug_console.cursor_pos += 38;
+		debug_console_print("??\n");
+	} else {
+		uint32_t temp_pos = ((sector * pc.fd0->bytes_per_sector()) + offset);
+		if ((temp_pos & 0b111) || (temp_pos >= pc.fd0->disk_size())) {
+			debug_console_print("\nerror: illegal sector:offset\n");
+		} else {
+			pc.fd0->disk_contents[temp_pos + 0x0] = (arg0 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x1] = (arg1 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x2] = (arg2 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x3] = (arg3 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x4] = (arg4 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x5] = (arg5 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x6] = (arg6 & 0xff);
+			pc.fd0->disk_contents[temp_pos + 0x7] = (arg7 & 0xff);
+			
+			debug_console_put_char('\r');
+			debug_command_fd_dump(temp_pos, 1);
+			temp_pos += 0x8;
+			if (temp_pos >= pc.fd0->disk_size())
+				temp_pos = 0;
+			
+			sector = temp_pos / pc.fd0->bytes_per_sector();
+			offset = temp_pos - (sector * pc.fd0->bytes_per_sector());
+			
+			snprintf(command_help_string, 256, "\n\"%1x:%08x:%04x ", 0, sector, offset);
+			debug_console_print(command_help_string);
+		}
 	}
 }

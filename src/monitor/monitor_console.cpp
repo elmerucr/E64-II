@@ -264,7 +264,7 @@ void debug_console_arrow_down()
 			break;
 		case DISK:
 			debug_console_add_bottom_row();
-			E64::debug_command_fd_dump(address + 0x10, 1);
+			E64::debug_command_fd_dump(address + 0x08, 1);
 			break;
         }
     }
@@ -299,7 +299,7 @@ void debug_console_arrow_up()
 			break;
 		case DISK:
 			debug_console_add_top_row();
-			E64::debug_command_fd_dump(address - 0x10, 1);
+			E64::debug_command_fd_dump(address - 0x08, 1);
 			break;
         }
     }
@@ -453,32 +453,30 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 			}
 			potential_address[6] = 0;
 			E64::debug_command_hex_string_to_int(potential_address, address);
-			if(top_down)
-				break;
+			if (top_down) break;
 		} else if (debug_console.console_character_buffer[i] == '"') {
 			output_type = DISK;
 			
-			char potential_sector[5];
+			char potential_sector[9];
 			uint32_t sector;
-			for (int j=0; j<4; j++) {
+			for (int j=0; j<8; j++) {
 				potential_sector[j] =
-					debug_console.console_character_buffer[i+1+j];
+					debug_console.console_character_buffer[i+3+j];
 			}
-			potential_sector[4] = 0;
+			potential_sector[8] = 0;
 			E64::debug_command_hex_string_to_int(potential_sector, &sector);
 			
 			char potential_offset[5];
 			uint32_t offset;
 			for (int j=0; j<4; j++) {
 				potential_offset[j] =
-					debug_console.console_character_buffer[i+6+j];
+					debug_console.console_character_buffer[i+12+j];
 			}
 			potential_offset[4] = 0;
 			E64::debug_command_hex_string_to_int(potential_offset, &offset);
 			
 			*address = (sector * pc.fd0->bytes_per_sector()) + offset;
-			if (top_down)
-				break;
+			if (top_down) break;
 		}
 	}
 	return output_type;
