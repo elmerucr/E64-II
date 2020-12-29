@@ -59,17 +59,18 @@ enum motor_state {
 
 class fd {
 private:
-	bool		disk_attached;
-	bool		write_protect;
+	bool disk_inside;
+	bool write_protect;
+	uint8_t registers[16];
 	
-	FILE		*current_disk;
+	FILE *current_disk;
 	
-	enum fd_state	current_fd_state;
-	enum motor_state	current_motor_state;
+	enum fd_state current_fd_state;
+	enum motor_state current_motor_state;
 	
-	uint32_t	spin_up_cycles;
-	uint32_t	spin_delay_cycles;
-	uint32_t	cycle_counter;
+	uint32_t spin_up_cycles;
+	uint32_t spin_delay_cycles;
+	uint32_t cycle_counter;
 	
 public:
 	fd();

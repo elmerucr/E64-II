@@ -25,7 +25,7 @@
 E64::fd::fd()
 {
 	disk_contents = new uint8_t[DISK_SIZE * sizeof(uint8_t)];
-	disk_attached = false;
+	disk_inside = false;
 	
 	current_fd_state = FD_IDLE;
 	current_motor_state = MOTOR_IDLE;
@@ -39,7 +39,7 @@ E64::fd::~fd()
 {
 	// check for unfinished writing actions?
 	// this avoids disk corruption
-	if (disk_attached) {
+	if (disk_inside) {
 		eject_disk();
 	}
 	delete disk_contents;
@@ -48,21 +48,38 @@ E64::fd::~fd()
 void E64::fd::reset()
 {
 	// a reset doesn't eject a disk
+	for (int i=0; i<16; i++)
+		registers[i] = 0x00;
 }
 
 uint8_t E64::fd::read_byte(uint8_t address)
 {
+	switch(address & 0xf) {
+		case 0x00:
+			return disk_inside ? 0b00000001 : 0b00000000;
+		case 0x01:
+			break;
+		default:
+			return registers[address & 0xf];
+	}
 	return 0x00;
 }
 
 void E64::fd::write_byte(uint8_t address, uint8_t byte)
 {
-	//
+	switch (address & 0xf) {
+		case 0x00:
+			break;
+		case 0x01:
+			break;
+		default:
+			registers[address & 0xf] = byte;
+	}
 }
 
 int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 {
-	if (disk_attached) {
+	if (disk_inside) {
 		debug_console_print("\nerror: already a disk inside\n");
 		return FD_ERROR_DISK_INSIDE;
 	}
@@ -83,7 +100,7 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 		debug_console_put_char('\n');
 		current_disk = fopen(path, "r+b");
 		fread(disk_contents, DISK_SIZE, 1, current_disk);
-		disk_attached = true;
+		disk_inside = true;
 		write_protect = write_protect_disk ? true : false;
 		return 0;
 	} else {
@@ -95,14 +112,14 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 int E64::fd::eject_disk()
 {
 	int return_value = 0;
-	if (disk_attached) {
+	if (disk_inside) {
 		if (!write_protect) {
 			fseek(current_disk, 0, SEEK_SET);
 			fwrite(disk_contents, DISK_SIZE, 1, current_disk);
 			printf("[fd] writing disk contents\n");
 		}
 		fclose(current_disk);
-		disk_attached = false;
+		disk_inside = false;
 		for (int i=0; i<DISK_SIZE; i++)
 			disk_contents[i] = 0;
 	} else {

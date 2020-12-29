@@ -292,7 +292,9 @@ int E64::sdl2_process_events()
                             debug_command_single_step_cpu();
                             if( debug_console.status_bar_active == false ) {
                                 debug_console_cursor_deactivate();
-                                debug_console_toggle_status_bar();
+                                //debug_console_toggle_status_bar();
+				debug_command_dump_cpu_status();
+				    debug_console_prompt();
                                 debug_console_cursor_activate();
                             }
                             break;

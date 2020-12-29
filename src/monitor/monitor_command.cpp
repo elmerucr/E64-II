@@ -107,6 +107,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (pc.fd0->eject_disk())
 			debug_console_print("error: no disk inserted\n");
 	} else if (strcmp(token0, "exit") == 0) {
+		have_prompt = false;
 		E64::sdl2_wait_until_enter_released();
 		pc.running = false;
 	} else if (strcmp(token0, "full") == 0) {
@@ -142,14 +143,9 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		}
 	} else if (strcmp(token0, "ls") == 0) {
 		debug_console_put_char('\n');
-
-		debug_console.current_background_color = COBALT_06;
-		debug_console.current_foreground_color = COBALT_01;
 		getcwd(command_help_string, 256);
 		debug_console_print(command_help_string);
 		debug_console_put_char('\n');
-		debug_console.current_background_color = COBALT_01;
-		debug_console.current_foreground_color = COBALT_06;
 	    
 		DIR *directory = opendir(prefs.current_path);
 		struct dirent *entry;
@@ -197,29 +193,6 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 				}
 			}
 		}
-	} else if (strcmp(token0, "mc") == 0) {
-		have_prompt = false;
-		token1 = strtok(NULL, " ");
-		uint8_t lines_remaining = VICV_CHAR_ROWS -
-			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
-		if(lines_remaining == 0) lines_remaining = 1;
-		if (token1 == NULL) {
-			debug_console_put_char('\n');
-			debug_console_print("error: need address\n");
-		} else {
-			uint32_t temp_32bit;
-			if (!debug_command_hex_string_to_int(token1, &temp_32bit)) {
-				debug_console_put_char('\n');
-				debug_console_print("error: invalid address\n");
-			} else {
-				for (int i=0; i<lines_remaining; i++) {
-					debug_console_put_char('\n');
-					debug_command_memory_character_dump(temp_32bit &
-						(RAM_SIZE - 1), 1);
-					temp_32bit = (temp_32bit + 16) & 0x00ffffff;
-				}
-			}
-		}
 	} else if (strcmp(token0, "mb") == 0) {
 		have_prompt = false;
 		token1 = strtok(NULL, " ");
@@ -244,6 +217,29 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 					debug_console_put_char('\n');
 					debug_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
 					temp_pc = (temp_pc + 1) & 0x00ffffff;
+				}
+			}
+		}
+	} else if (strcmp(token0, "mc") == 0) {
+		have_prompt = false;
+		token1 = strtok(NULL, " ");
+		uint8_t lines_remaining = VICV_CHAR_ROWS -
+			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+		if(lines_remaining == 0) lines_remaining = 1;
+		if (token1 == NULL) {
+			debug_console_put_char('\n');
+			debug_console_print("error: need address\n");
+		} else {
+			uint32_t temp_32bit;
+			if (!debug_command_hex_string_to_int(token1, &temp_32bit)) {
+				debug_console_put_char('\n');
+				debug_console_print("error: invalid address\n");
+			} else {
+				for (int i=0; i<lines_remaining; i++) {
+					debug_console_put_char('\n');
+					debug_command_memory_character_dump(temp_32bit &
+						(RAM_SIZE - 1), 1);
+					temp_32bit = (temp_32bit + 16) & 0x00ffffff;
 				}
 			}
 		}
