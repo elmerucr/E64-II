@@ -30,7 +30,7 @@ void debug_console_init()
     }
     debug_console_cursor_activate();
 
-    // status bar stuff (initial state)
+    // status bar stuff
     debug_console.status_bar_active = false;
     //debug_console.status_bar_active = true;
     debug_console.status_bar_rows = 14;
@@ -41,8 +41,9 @@ void debug_console_init()
     debug_status_bar_refresh();
 
 	debug_console_put_char('\n');
-    //for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
-    debug_console_version();
+	//for(int i=0; i<(debug_console.status_bar_rows + 1); i++) debug_console_print("\n");
+	debug_console_version();
+	debug_console_prompt();
 }
 
 void debug_console_version()
@@ -480,4 +481,9 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 		}
 	}
 	return output_type;
+}
+
+void debug_console_prompt()
+{
+	debug_console_print("\nready.\n");
 }

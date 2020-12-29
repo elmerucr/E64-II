@@ -50,6 +50,7 @@ void debug_console_blit_to_debug_screen();
 void debug_console_put_char(char character);
 void debug_console_put_screencode(char screencode);
 void debug_console_print(const char *string_to_print);
+void debug_console_prompt();
 
 void debug_console_cursor_activate();
 void debug_console_cursor_deactivate();

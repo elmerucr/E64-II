@@ -19,26 +19,26 @@ char command_help_string[2048];
 
 void E64::debug_command_execute(char *string_to_parse_and_exec)
 {
+	bool have_prompt = true;
+	
 	char *token0, *token1;
 	token0 = strtok(string_to_parse_and_exec, " ");
 	
 	if (token0 == NULL) {
+		have_prompt = false;
 		debug_console_put_char('\n');
 	} else if (token0[0] == ':') {
+		have_prompt = false;
 		debug_command_enter_monitor_line(string_to_parse_and_exec);
 	} else if (token0[0] == ';') {
+		have_prompt = false;
 		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
 	} else if (token0[0] == '\'') {
+		have_prompt = false;
 		debug_command_enter_monitor_binary_line(string_to_parse_and_exec);
 	} else if (token0[0] == '"') {
+		have_prompt = false;
 		debug_command_enter_monitor_disk_line(string_to_parse_and_exec);
-	} else if (strcmp(token0, "attach") == 0) {
-		token1 = strtok(NULL, " ");
-		if (token1 == NULL) {
-			debug_console_print("\nerror: missing filename\n");
-		} else {
-			pc.fd0->attach_disk_image(token1, false);
-		}
 	} else if (strcmp(token0, "b") == 0) {
 		token1 = strtok(NULL, " ");
 		debug_console_put_char('\n');
@@ -102,10 +102,10 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		pc.switch_to_running();
 	} else if( strcmp(token0, "clear") == 0 ) {
 		debug_console_clear();
-	} else if (strcmp(token0, "detach") == 0) {
+	} else if (strcmp(token0, "eject") == 0) {
 		debug_console_put_char('\n');
-		if (pc.fd0->detach_disk_image())
-			debug_console_print("error: no disk attached\n");
+		if (pc.fd0->eject_disk())
+			debug_console_print("error: no disk inserted\n");
 	} else if (strcmp(token0, "exit") == 0) {
 		E64::sdl2_wait_until_enter_released();
 		pc.running = false;
@@ -128,10 +128,17 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			debug_console_put_char('\n');
 			debug_console_print(
 				"other commands:\n"
-				"  attach       b      cd     bar      bc       c   clear\n"
-				"    exit    full    help      ls       m      mb      mc\n"
-				"      md     pwd       r   reset      sb     sbc     ver\n"
-				"     win\n");
+				"       b      cd     bar      bc       c   clear   eject\n"
+				"    exit    full  insert    help      ls       m      mb\n"
+				"      mc      md     pwd       r   reset      sb     sbc\n"
+				"     ver     win\n");
+		}
+	} else if (strcmp(token0, "insert") == 0) {
+		token1 = strtok(NULL, " ");
+		if (token1 == NULL) {
+			debug_console_print("\nerror: missing filename\n");
+		} else {
+			pc.fd0->insert_disk(token1, true);
 		}
 	} else if (strcmp(token0, "ls") == 0) {
 		debug_console_put_char('\n');
@@ -162,6 +169,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (files == 0)
 			debug_console_print("empty directory\n");
 	} else if (strcmp(token0, "m") == 0) {
+		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
@@ -190,6 +198,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			}
 		}
 	} else if (strcmp(token0, "mc") == 0) {
+		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
 			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
@@ -212,6 +221,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			}
 		}
 	} else if (strcmp(token0, "mb") == 0) {
+		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
 			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
@@ -238,6 +248,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			}
 		}
 	} else if (strcmp(token0, "md") == 0) {
+		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
@@ -359,6 +370,8 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			 "error: unknown command '%s'\n", token0);
 		debug_console_print(command_help_string);
 	}
+	if (have_prompt)
+		debug_console_prompt();
 }
 
 void E64::debug_command_dump_cpu_status()
