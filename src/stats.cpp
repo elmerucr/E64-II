@@ -70,7 +70,7 @@ void E64::stats::process_parameters()
     status_bar_framecounter++;
     if( status_bar_framecounter == status_bar_framecounter_interval )
     {
-        snprintf(statistics_string, 256, "%5.2fMHz  %5.2ffps  %5.2fms %5.0fbytes %5.1f%% blitter", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size, smoothed_percentage_blitter);
+        snprintf(statistics_string, 256, "%5.2fMHz  %5.2ffps  %5.2fms %4.1fkb %5.1f%% blit", smoothed_mhz, smoothed_framerate, smoothed_idle_per_frame/1000, smoothed_audio_queue_size/1024, smoothed_percentage_blitter);
         status_bar_framecounter = 0;
     }
 }

@@ -2,7 +2,7 @@
  * fd.hpp
  * E64-II
  *
- * Copyright © 2020 elmerucr. All rights reserved.
+ * Copyright © 2020-2021 elmerucr. All rights reserved.
  */
 
 #include "common.hpp"
@@ -31,7 +31,11 @@ E64::fd::fd()
 	current_motor_state = MOTOR_IDLE;
 	
 	spin_up_cycles = (CPU_CLOCK_SPEED / 1000) * SPIN_UP_TIME_MS;
+	spin_up_counter = 0;
+	
 	spin_delay_cycles = (CPU_CLOCK_SPEED / 1000) * SPIN_DELAY_MS;
+	spin_delay_counter = 0;
+	
 	cycle_counter = 0;
 }
 
@@ -48,6 +52,7 @@ E64::fd::~fd()
 void E64::fd::reset()
 {
 	// a reset doesn't eject a disk
+	
 	for (int i=0; i<16; i++)
 		registers[i] = 0x00;
 }
@@ -71,6 +76,27 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 		case 0x00:
 			break;
 		case 0x01:
+			sector_number =
+				registers[0x2] << 24 |
+				registers[0x3] << 16 |
+				registers[0x4] <<  8 |
+				registers[0x5] <<  0 ;
+			memory_address =
+				registers[0x6] << 24 |
+				registers[0x7] << 16 |
+				registers[0x8] <<  8 |
+				registers[0x9] <<  0 ;
+			memory_address &= 0xfffffffe;
+			
+			if ((byte & 0b11) == 0b10) {
+				if (current_fd_state == FD_IDLE) {
+					current_fd_state = FD_READING;
+				}
+			} else if ((byte & 0b11) == 0b11) {
+				if (current_fd_state == FD_IDLE) {
+					current_fd_state = FD_READING;
+				}
+			}
 			break;
 		default:
 			registers[address & 0xf] = byte;
@@ -136,4 +162,23 @@ uint16_t E64::fd::bytes_per_sector()
 uint32_t E64::fd::disk_size()
 {
 	return DISK_SIZE;
+}
+
+
+void E64::fd::run(uint32_t number_of_cycles)
+{
+	switch (current_fd_state) {
+		case FD_IDLE:
+			check_spin_delay();
+			break;
+		case FD_READING:
+			break;
+		case FD_WRITING:
+			break;
+	}
+}
+
+void E64::fd::check_spin_delay()
+{
+	//if (current_motor_state == MOTOR)
 }

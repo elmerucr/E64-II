@@ -2,12 +2,34 @@
  * vicv.cpp
  * E64-II
  *
- * Copyright © 2017-2020 elmerucr. All rights reserved.
+ * Copyright © 2017-2021 elmerucr. All rights reserved.
  */
  
 #include <cstdio>
 #include "vicv.hpp"
 #include "common.hpp"
+
+uint16_t disk_icon[128] = {
+	// empty
+	COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
+	COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,
+
+	// disk inside
+	COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
+	COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04
+};
 
 E64::vicv_ic::vicv_ic()
 {
@@ -79,8 +101,10 @@ void E64::vicv_ic::run(uint32_t number_of_cycles)
 			break;
 		case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
 			// finished vblank, do other necessary stuff
-			if (stats_overlay_present)
-				render_stats(44, 276);
+				if (stats_overlay_present) {
+					render_stats(72, 276);
+					render_disk_activity(4, 276);
+				}
 			host_video.swap_buffers();
 			cycle_clock = dot_clock = 0;
 			frame_done = true;
@@ -122,7 +146,7 @@ inline void E64::vicv_ic::render_stats(uint16_t xpos, uint16_t ypos)
 
 			host_video.backbuffer[base + x] = (eight_pixels & 0x80) ?
 				host_video.palette[COBALT_06] :
-				host_video.palette[COBALT_01];
+				host_video.palette[COBALT_02];
 
 			eight_pixels = eight_pixels << 1;
 			x++;
@@ -133,6 +157,24 @@ inline void E64::vicv_ic::render_stats(uint16_t xpos, uint16_t ypos)
 		// go to the next line
 		base = (base + VICV_PIXELS_PER_SCANLINE) %
 			(VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
+	}
+}
+
+
+inline void E64::vicv_ic::render_disk_activity(uint16_t xpos, uint16_t ypos)
+{
+	uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) %
+		(VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
+	
+	uint16_t icon_offset = 0;
+	if (pc.fd0->read_byte(0x00) & 0x01)
+		icon_offset = 64;
+	
+	for (int x=0; x<8; x++) {
+		for (int y=0; y<8; y++) {
+			host_video.backbuffer[base + (VICV_PIXELS_PER_SCANLINE*y) + x] =
+				host_video.palette[disk_icon[(y*8)+x+icon_offset]];
+		}
 	}
 }
 

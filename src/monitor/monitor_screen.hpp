@@ -1,15 +1,15 @@
 //  monitor_screen.hpp
 //  E64-II
 //
-//  Copyright © 2017-2020 elmerucr. All rights reserved.
+//  Copyright © 2017-2021 elmerucr. All rights reserved.
 //
 //  c256_debug_screen covers 32 rows (256 lines)
 //  the bottom 64 lines are used to display part of the current framebuffer
 
 #include "common.hpp"
 
-#ifndef monitor_screen_hpp
-#define monitor_screen_hpp
+#ifndef MONITOR_SCREEN_HPP
+#define MONITOR_SCREEN_HPP
 
 namespace E64
 {

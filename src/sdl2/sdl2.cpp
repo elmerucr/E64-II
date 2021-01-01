@@ -290,7 +290,7 @@ int E64::sdl2_process_events()
                             break;
                         case SDLK_F1:
                             debug_command_single_step_cpu();
-                            if( debug_console.status_bar_active == false ) {
+                            if( monitor_console_0.status_bar_active == false ) {
                                 debug_console_cursor_deactivate();
                                 //debug_console_toggle_status_bar();
 				debug_command_dump_cpu_status();
@@ -302,7 +302,7 @@ int E64::sdl2_process_events()
                             debug_console_toggle_status_bar();
                             break;
                         case SDLK_F3:
-                            debug_console.status_bar_hex_view = !debug_console.status_bar_hex_view;
+				    monitor_console_0.status_bar_hex_view = !monitor_console_0.status_bar_hex_view;
                             break;
                     }
                 }

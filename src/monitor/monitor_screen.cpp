@@ -1,7 +1,7 @@
 //  monitor_screen.cpp
 //  E64-II
 //
-//  Copyright © 2017-2020 elmerucr. All rights reserved.
+//  Copyright © 2017-2021 elmerucr. All rights reserved.
 
 #include "monitor_screen.hpp"
 #include "common.hpp"

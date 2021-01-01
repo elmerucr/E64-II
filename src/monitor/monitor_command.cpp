@@ -1,7 +1,7 @@
 //  monitor_command.cpp
 //  E64-II
 //
-//  Copyright © 2019-2020 elmerucr. All rights reserved.
+//  Copyright © 2019-2021 elmerucr. All rights reserved.
 
 #include <cstdio>
 #include <cstring>
@@ -169,7 +169,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		token1 = strtok(NULL, " ");
 		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
-			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+			(monitor_console_0.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if(lines_remaining == 0) lines_remaining = 1;
 
 		uint32_t temp_pc = pc.m68k->getPC();
@@ -197,7 +197,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
-			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+			(monitor_console_0.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if(lines_remaining == 0) lines_remaining = 1;
 	
 		uint32_t temp_pc = pc.m68k->getPC();
@@ -224,7 +224,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		have_prompt = false;
 		token1 = strtok(NULL, " ");
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
-			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+			(monitor_console_0.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if(lines_remaining == 0) lines_remaining = 1;
 		if (token1 == NULL) {
 			debug_console_put_char('\n');
@@ -248,7 +248,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		token1 = strtok(NULL, " ");
 		
 		uint8_t lines_remaining = VICV_CHAR_ROWS -
-			(debug_console.cursor_pos / VICV_CHAR_COLUMNS) - 9;
+			(monitor_console_0.cursor_pos / VICV_CHAR_COLUMNS) - 9;
 		if (lines_remaining == 0)
 			lines_remaining = 1;
 		
@@ -396,7 +396,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
             temp_address &= RAM_SIZE - 1;
         }
         
-        debug_console.current_background_color = COBALT_02;
+	    monitor_console_0.current_background_color = COBALT_02;
         
         temp_address = address;
         for(int i=0; i<8; i++)
@@ -408,9 +408,9 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
         address += 8;
         address &= RAM_SIZE - 1;
         
-        debug_console.current_background_color = COBALT_01;
+	    monitor_console_0.current_background_color = COBALT_01;
         
-        debug_console.cursor_pos -= 28;
+	    monitor_console_0.cursor_pos -= 28;
     }
 }
 
@@ -436,16 +436,16 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
         temp_address = address;
         for(int i=0; i<8; i++)
         {
-            debug_console.current_background_color = *(uint16_t *)(&(pc.mmu->ram[temp_address & 0x00ffffff]));
+		monitor_console_0.current_background_color = *(uint16_t *)(&(pc.mmu->ram[temp_address & 0x00ffffff]));
             debug_console_put_char(' ');
             temp_address += 2;
         }
 
-        debug_console.current_background_color = COBALT_01;
+	    monitor_console_0.current_background_color = COBALT_01;
         
         address += 16;
         address &= RAM_SIZE - 1;
-        debug_console.cursor_pos -= 48;
+	    monitor_console_0.cursor_pos -= 48;
     }
 }
 
@@ -470,9 +470,9 @@ void E64::debug_command_memory_binary_dump(uint32_t address, int rows)
 
 		debug_console_put_char(' ');
 
-		debug_console.current_background_color = COBALT_02;
+		monitor_console_0.current_background_color = COBALT_02;
 		debug_console_put_screencode( pc.mmu->read_memory_8(address));
-		debug_console.current_background_color = COBALT_01;
+		monitor_console_0.current_background_color = COBALT_01;
 		
 		if (address & 0b1)
 			snprintf(command_help_string, 256, "      ");
@@ -481,18 +481,18 @@ void E64::debug_command_memory_binary_dump(uint32_t address, int rows)
 				 pc.mmu->read_memory_16(address));
 		debug_console_print(command_help_string);
 		
-		debug_console.current_background_color =
+		monitor_console_0.current_background_color =
 			pc.mmu->read_memory_8(address & 0xfffffe) |
 			pc.mmu->read_memory_8((address & 0xfffffe)+1) << 8;
 		
 		debug_console_print("  ");
 		
-		debug_console.current_background_color = COBALT_01;
+		monitor_console_0.current_background_color = COBALT_01;
 		
 		address++;
 		address &= RAM_SIZE - 1;
 	}
-	debug_console.cursor_pos -= 21;
+	monitor_console_0.cursor_pos -= 21;
 }
 
 
@@ -557,37 +557,37 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
     if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 1;
+	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
     else if( address & 0b1 )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 1;
+	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 8;
+	    monitor_console_0.cursor_pos += 8;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 13;
+	    monitor_console_0.cursor_pos += 13;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 18;
+	    monitor_console_0.cursor_pos += 18;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 23;
+	    monitor_console_0.cursor_pos += 23;
         debug_console_print("????\n");
     }
     else
@@ -635,61 +635,61 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
     if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 1;
+	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
     else if( address & 0b1 )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 1;
+	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 8;
+	    monitor_console_0.cursor_pos += 8;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 13;
+	    monitor_console_0.cursor_pos += 13;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 18;
+	    monitor_console_0.cursor_pos += 18;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 23;
+	    monitor_console_0.cursor_pos += 23;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[28], &arg4) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 28;
+	    monitor_console_0.cursor_pos += 28;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[33], &arg5) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 33;
+	    monitor_console_0.cursor_pos += 33;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg6) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 38;
+	    monitor_console_0.cursor_pos += 38;
         debug_console_print("????\n");
     }
     else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[43], &arg7) )
     {
         debug_console_put_char('\r');
-        debug_console.cursor_pos += 43;
+	    monitor_console_0.cursor_pos += 43;
         debug_console_print("????\n");
     }
     else
@@ -736,11 +736,11 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 	
 	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 1;
+		monitor_console_0.cursor_pos += 1;
 		debug_console_print("??????\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 8;
+		monitor_console_0.cursor_pos += 8;
 		debug_console_print("??\n");
 	} else {
 		arg0 &= 0xff;
@@ -773,13 +773,13 @@ void E64::debug_command_fd_dump(uint32_t address, int rows)
 				 pc.fd0->disk_contents[address+i]);
 			debug_console_print(command_help_string);
 		}
-		debug_console.current_background_color = COBALT_02;
+		monitor_console_0.current_background_color = COBALT_02;
 		for (int i=0; i<8; i++)
 			debug_console_put_screencode(pc.fd0->disk_contents[address+i]);
-		debug_console.current_background_color = COBALT_01;
+		monitor_console_0.current_background_color = COBALT_01;
 		address += 0x8;
 	}
-	debug_console.cursor_pos -= 32;
+	monitor_console_0.cursor_pos -= 32;
 }
 
 void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
@@ -811,43 +811,43 @@ void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 	
 	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 3;
+		monitor_console_0.cursor_pos += 3;
 		debug_console_print("????????\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
 	       debug_console_put_char('\r');
-	       debug_console.cursor_pos += 12;
+		monitor_console_0.cursor_pos += 12;
 	       debug_console_print("????\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 17;
+		monitor_console_0.cursor_pos += 17;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 20;
+		monitor_console_0.cursor_pos += 20;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 23;
+		monitor_console_0.cursor_pos += 23;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 26;
+		monitor_console_0.cursor_pos += 26;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 29;
+		monitor_console_0.cursor_pos += 29;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 32;
+		monitor_console_0.cursor_pos += 32;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 35;
+		monitor_console_0.cursor_pos += 35;
 		debug_console_print("??\n");
 	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
 		debug_console_put_char('\r');
-		debug_console.cursor_pos += 38;
+		monitor_console_0.cursor_pos += 38;
 		debug_console_print("??\n");
 	} else {
 		uint32_t temp_pos = ((sector * pc.fd0->bytes_per_sector()) + offset);

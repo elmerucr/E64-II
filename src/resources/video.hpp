@@ -36,6 +36,8 @@ private:
     bool fullscreen;
     int window_width;
     int window_height;
+	
+	void init_palette();
     
     /* These are host framebuffers for double buffering. We need two
      * buffers as the calls for refreshing the screen might happen when

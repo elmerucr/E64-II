@@ -1,7 +1,7 @@
 //  common.h
 //  E64-II
 //
-//  Copyright © 2017-2020 elmerucr. All rights reserved.
+//  Copyright © 2017-2021 elmerucr. All rights reserved.
 //
 //  General definitions for the project
 
@@ -16,8 +16,8 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20201229
-#define E64_II_YEAR             2020
+#define E64_II_BUILD            20210101
+#define E64_II_YEAR             2021
 
 /* Global objects */
 extern E64::settings	prefs;
@@ -86,6 +86,7 @@ extern uint8_t		rom[];
 #define VICV_CHAR_COLUMNS		(VICV_PIXELS_PER_SCANLINE/8)
 #define VICV_CHAR_ROWS			(VICV_SCANLINES/8)
 
+/* Font address is relative to start of ROM */
 #define	CBM_CP437_FONT_ADDRESS		0x3f000
 
 #define FPS                         60

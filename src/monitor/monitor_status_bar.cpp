@@ -1,7 +1,7 @@
 //  monitor_status_bar.cpp
 //  E64-II
 //
-//  Copyright © 2019-2020 elmerucr. All rights reserved.
+//  Copyright © 2019-2021 elmerucr. All rights reserved.
 
 #include <cstdio>
 
@@ -18,16 +18,16 @@ char help_string_2[2048];
 
 void debug_status_bar_clear()
 {
-    for(int i=0; i<(debug_console.status_bar_rows * VICV_CHAR_COLUMNS); i++)
+    for(int i=0; i<(monitor_console_0.status_bar_rows * VICV_CHAR_COLUMNS); i++)
     {
         status_bar_chars[i] = ASCII_SPACE;
         //status_bar_chars[i] = ascii_to_screencode[ASCII_SPACE];
         status_bar_foreground_color_buffer[i] = COBALT_06;
         status_bar_background_color_buffer[i] = COBALT_02;
     }
-    debug_console.status_bar_cursor_pos = 0;
-    debug_console.status_bar_foreground_color = COBALT_06;  // default value
-    debug_console.status_bar_background_color = COBALT_02;  // default value
+	monitor_console_0.status_bar_cursor_pos = 0;
+	monitor_console_0.status_bar_foreground_color = COBALT_06;  // default value
+	monitor_console_0.status_bar_background_color = COBALT_02;  // default value
 }
 
 void debug_status_bar_refresh()
@@ -42,17 +42,17 @@ void debug_status_bar_refresh()
     // disassembly
     debug_status_bar_set_cursor_pos(10*VICV_CHAR_COLUMNS + 0);
     uint32_t temp_pc = pc.m68k->getPC();
-    for(int i=0; i<(debug_console.status_bar_rows - 10); i++ )
+    for(int i=0; i<(monitor_console_0.status_bar_rows - 10); i++ )
     {
         if(pc.m68k->debugger.breakpoints.isSetAt(temp_pc))
         {
-            debug_console.status_bar_foreground_color = AMBER_06; // bright amber
+		monitor_console_0.status_bar_foreground_color = AMBER_06; // bright amber
         }
         snprintf(help_string, 256, "%06x ", temp_pc );
         debug_status_bar_print(help_string);
         int no_of_bytes = pc.m68k->disassemble(temp_pc, help_string);
         
-        if( debug_console.status_bar_hex_view == true )
+        if( monitor_console_0.status_bar_hex_view == true )
         {
             for(int i = 0; i< (no_of_bytes/2); i++)
             {
@@ -67,7 +67,7 @@ void debug_status_bar_refresh()
         
         debug_status_bar_putchar('\n');
         
-        debug_console.status_bar_foreground_color = COBALT_06;  // revert to normal color
+	    monitor_console_0.status_bar_foreground_color = COBALT_06;  // revert to normal color
         
         temp_pc += no_of_bytes;
     }
@@ -78,8 +78,8 @@ void debug_status_bar_refresh()
     debug_status_bar_print(help_string);
 
     // set accent colors for titles etc...
-    debug_console.status_bar_foreground_color = COBALT_07;
-    debug_console.status_bar_background_color = COBALT_04;
+	monitor_console_0.status_bar_foreground_color = COBALT_07;
+	monitor_console_0.status_bar_background_color = COBALT_04;
 
     snprintf(help_string, 256, " CPU Status                              ");
     debug_status_bar_set_cursor_pos(0);
@@ -95,8 +95,8 @@ void debug_status_bar_refresh()
 void debug_status_bar_set_cursor_pos(uint16_t pos)
 {
     // confine cursor
-    debug_console.status_bar_cursor_pos = pos % debug_console.status_bar_total_chars;
-    debug_console.status_bar_base_pos = debug_console.status_bar_cursor_pos % VICV_CHAR_COLUMNS;
+	monitor_console_0.status_bar_cursor_pos = pos % monitor_console_0.status_bar_total_chars;
+	monitor_console_0.status_bar_base_pos = monitor_console_0.status_bar_cursor_pos % VICV_CHAR_COLUMNS;
 }
 
 void debug_status_bar_putchar(char character)
@@ -105,17 +105,16 @@ void debug_status_bar_putchar(char character)
     switch(character)
     {
         case ASCII_LF:
-            debug_console.status_bar_cursor_pos += VICV_CHAR_COLUMNS;
-            debug_console.status_bar_cursor_pos -= (debug_console.status_bar_cursor_pos % VICV_CHAR_COLUMNS);
-            debug_console.status_bar_cursor_pos += debug_console.status_bar_base_pos;
+		    monitor_console_0.status_bar_cursor_pos += VICV_CHAR_COLUMNS;
+		    monitor_console_0.status_bar_cursor_pos -= (monitor_console_0.status_bar_cursor_pos % VICV_CHAR_COLUMNS);
+		    monitor_console_0.status_bar_cursor_pos += monitor_console_0.status_bar_base_pos;
             break;
         default:
-            status_bar_chars[debug_console.status_bar_cursor_pos] = character;
-            //status_bar_chars[debug_console.status_bar_cursor_pos] = ascii_to_screencode[character];
-            status_bar_foreground_color_buffer[debug_console.status_bar_cursor_pos] = debug_console.status_bar_foreground_color;
-            status_bar_background_color_buffer[debug_console.status_bar_cursor_pos] = debug_console.status_bar_background_color;
-            debug_console.status_bar_cursor_pos++;
-            debug_console.status_bar_cursor_pos %= debug_console.status_bar_total_chars;
+            status_bar_chars[monitor_console_0.status_bar_cursor_pos] = character;
+            status_bar_foreground_color_buffer[monitor_console_0.status_bar_cursor_pos] = monitor_console_0.status_bar_foreground_color;
+            status_bar_background_color_buffer[monitor_console_0.status_bar_cursor_pos] = monitor_console_0.status_bar_background_color;
+		    monitor_console_0.status_bar_cursor_pos++;
+		    monitor_console_0.status_bar_cursor_pos %= monitor_console_0.status_bar_total_chars;
             break;
     }
 }

@@ -1,7 +1,7 @@
 //  machine.cpp
 //  E64-II
 //
-//  Copyright © 2019-2020 elmerucr. All rights reserved.
+//  Copyright © 2019-2021 elmerucr. All rights reserved.
 
 #include "monitor_console.hpp"
 #include "monitor_screen.hpp"
@@ -123,27 +123,22 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
 		output_state |= SCANLINE_BREAKPOINT;
 	}
     
-	// run cycles on blitter
 	blitter->run(m68k_to_blitter->clock(processed_cycles));
-	
-	// run cycles on timer
 	timer->run(processed_cycles);
-	
-	// run cycles on cia
 	cia->run(processed_cycles);
+	fd0->run(processed_cycles);
 	
 	// run cycles on sound device & start audio if buffer is large enough
 	// some cheating by adjustment of cycles to run depending on current
 	// audio queue size
 	unsigned int audio_queue_size = statistics.get_current_audio_queue_size();
 	
-	if (audio_queue_size < 0.9 * AUDIO_BUFFER_SIZE) {
+	if (audio_queue_size < 0.9 * AUDIO_BUFFER_SIZE)
 		sids->run(m68k_to_sid->clock(1.2 * processed_cycles));
-	} else if (audio_queue_size > 1.1 * AUDIO_BUFFER_SIZE) {
+	else if (audio_queue_size > 1.1 * AUDIO_BUFFER_SIZE)
 		sids->run(m68k_to_sid->clock(0.8 * processed_cycles));
-	} else {
+	else
 		sids->run(m68k_to_sid->clock(processed_cycles));
-	}
 	
 	if (audio_queue_size > (AUDIO_BUFFER_SIZE/2))
 		E64::sdl2_start_audio();
@@ -158,7 +153,7 @@ void E64::machine::reset()
 	m68k->reset();
 	sids->reset();
 	vicv->reset();
-	blitter->reset();    // sometimes, when resetting there's the warning message blitter not finished
+	blitter->reset();    // sometimes warning message blitter not finished
 	timer->reset();
 	cia->reset();
 	fd0->reset();

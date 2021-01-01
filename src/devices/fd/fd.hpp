@@ -2,7 +2,7 @@
  * fd.hpp
  * E64-II
  *
- * Copyright © 2020 elmerucr. All rights reserved.
+ * Copyright © 2020-2021 elmerucr. All rights reserved.
  */
 
 /*
@@ -12,8 +12,8 @@
  * |       | | | |
  * |       | | | +-- Empty (0) / Disk inside (1)
  * |       | | +---- Motor idle (0) / Motor spinning (1)
- * |       | +------ Reading: Idle (0) / Busy (1)
- * |       +-------- Writing: Idle (0) / Busy (1)
+ * |       | +------ Data direction: Reading (0) / Writing (1)
+ * |       +-------- Data transfer: Idle (0) / Busy (1)
  * +---------------- Error (1)
  *
  * bits 4-6: Reserved
@@ -54,7 +54,8 @@ enum fd_state {
 enum motor_state {
 	MOTOR_IDLE,
 	MOTOR_SPINNING_UP,
-	MOTOR_SPINNING
+	MOTOR_SPINNING,
+	MOTOR_SPINNING_DELAY
 };
 
 class fd {
@@ -69,9 +70,18 @@ private:
 	enum motor_state current_motor_state;
 	
 	uint32_t spin_up_cycles;
+	uint32_t spin_up_counter;
+	
 	uint32_t spin_delay_cycles;
+	uint32_t spin_delay_counter;
+	
 	uint32_t cycle_counter;
 	
+	// finite state machine parameters
+	uint32_t sector_number;
+	uint32_t memory_address;
+	
+	void check_spin_delay();
 public:
 	fd();
 	~fd();

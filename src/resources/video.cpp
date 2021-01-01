@@ -106,23 +106,7 @@ E64::video::video()
 	// prepare debug_screen_buffer
 	debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
 
-	/*
-	 * Prepare the 12 bit color palette and fill it with the right colors.
-	 * Index in the array is the actual 12 bit color, the 32 bit value is
-	 * the color in host space.
-	 */
-	palette = new uint32_t[0x10000];
-	for (int i = 0x0; i<0x10000; i++) {
-		/* rgb444 format and swapped because big-endian internally */
-		uint8_t red   = (i & 0x000f);
-		uint8_t green = (i & 0xf000) >> 12;
-		uint8_t blue  = (i & 0x0f00) >> 8;
-
-		palette[i] =	0xff000000 |
-				((red * 0x11) << 16) |
-				((green * 0x11) << 8) |
-				(blue * 0x11);
-	}
+	init_palette();
 }
 
 E64::video::~video()
@@ -150,6 +134,27 @@ void E64::video::reset()
 
 	for (int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++)
 		buffer_0[i] = buffer_1[i] = 0xff202020;
+}
+
+void E64::video::init_palette()
+{
+	/*
+	 * Prepare the 12 bit color palette and fill it with the right colors.
+	 * Index in the array is the actual 12 bit color, the 32 bit value is
+	 * the color in host space.
+	 */
+	palette = new uint32_t[0x10000];
+	for (int i = 0x0; i<0x10000; i++) {
+		/* rgb444 format and swapped because big-endian internally */
+		uint8_t red   = (i & 0x000f);
+		uint8_t green = (i & 0xf000) >> 12;
+		uint8_t blue  = (i & 0x0f00) >> 8;
+
+		palette[i] =	0xff000000 |
+				((red * 0x11) << 16) |
+				((green * 0x11) << 8) |
+				(blue * 0x11);
+	}
 }
 
 void E64::video::update_screen()

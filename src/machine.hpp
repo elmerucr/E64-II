@@ -1,7 +1,7 @@
 //  machine.hpp
 //  E64-II
 //
-//  Copyright © 2019-2020 elmerucr. All rights reserved.
+//  Copyright © 2019-2021 elmerucr. All rights reserved.
 
 #ifndef MACHINE_HPP
 #define MACHINE_HPP
@@ -17,7 +17,7 @@
 #include "blitter.hpp"
 #include "fd.hpp"
 
-// output states for run member function
+// output states for run function
 #define NO_BREAKPOINT       0b00000000
 #define CPU_BREAKPOINT      0b00000001
 #define SCANLINE_BREAKPOINT 0b00000010

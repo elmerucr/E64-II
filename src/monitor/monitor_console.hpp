@@ -1,13 +1,13 @@
 //  monitor_console.hpp
 //  E64-II
 //
-//  Copyright © 2018-2020 elmerucr. All rights reserved.
+//  Copyright © 2018-2021 elmerucr. All rights reserved.
 
 #include <cstdint>
 #include "common.hpp"
 
-#ifndef monitor_console_hpp
-#define monitor_console_hpp
+#ifndef MONITOR_CONSOLE_HPP
+#define MONITOR_CONSOLE_HPP
 
 enum monitor_type {
 	NOTHING,
@@ -17,10 +17,10 @@ enum monitor_type {
 	DISK
 };
 
-typedef struct {
-	uint8_t console_character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
-	uint16_t console_foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
-	uint16_t console_background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+struct monitor_console {
+	uint8_t character_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+	uint16_t foreground_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
+	uint16_t background_color_buffer[(VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS];
 
 	// cursor related vars
 	int16_t		cursor_pos;
@@ -40,9 +40,9 @@ typedef struct {
 	uint16_t	status_bar_foreground_color;
 	uint16_t	status_bar_background_color;
 	bool		status_bar_hex_view;
-} debug_console_struct;
+};
 
-extern debug_console_struct debug_console;
+extern monitor_console monitor_console_0;
 
 void debug_console_init();
 void debug_console_version();
@@ -72,8 +72,7 @@ void debug_console_add_bottom_row();
  * This function checks the screen output for presence of specific
  * monitor output such as ':' at the beginning of a line.
  *
- * The function will return the type if something was
- * found.
+ * The function will return the type if something was found.
  *
  * If the 1st argument is TRUE, it will look top down, if FALSE, bottom
  * up. The 2nd argument is a pointer to an uint16_t in which the result

@@ -2,7 +2,7 @@
  * vicv.hpp
  * E64-II
  *
- * Copyright © 2017-2020 elmerucr. All rights reserved.
+ * Copyright © 2017-2021 elmerucr. All rights reserved.
  */
 
 #include <cstdint>
@@ -66,6 +66,7 @@ public:
 private:
 	bool stats_overlay_present;
 	void render_stats(uint16_t xpos, uint16_t ypos);
+	void render_disk_activity(uint16_t xpos, uint16_t ypos);
 	char *stats_text;
 public:
 	inline void toggle_stats()
