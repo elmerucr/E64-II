@@ -104,17 +104,11 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_clear();
 	} else if (strcmp(token0, "eject") == 0) {
 		debug_console_put_char('\n');
-		switch (pc.fd0->eject_disk()) {
-			case 0:
-				break;
-			case 1:
-				debug_console_print("error: no disk "
-						    "inserted\n");
-				break;
-			case 2:
-				debug_console_print("error: drive motor "
-						    "still spinning\n");
-				break;
+		if (pc.fd0->eject_disk()) {
+			snprintf(command_help_string, 256,
+				 "error %i: can't eject disk\n",
+				 pc.fd0->read_error_state());
+			debug_console_print(command_help_string);
 		}
 	} else if (strcmp(token0, "exit") == 0) {
 		have_prompt = false;

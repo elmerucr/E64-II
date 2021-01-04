@@ -27,7 +27,7 @@ E64::fd::fd()
 {
 	disk_contents = new uint8_t[DISK_SIZE * sizeof(uint8_t)];
 	
-	fd_state = FD_EMPTY;
+	fd_state = FD_STATE_EMPTY;
 	
 	error_led_cycles = (CPU_CLOCK_SPEED / 1000) * ERROR_LED_TIME_MS;
 	reset_error_state();
@@ -40,7 +40,7 @@ E64::fd::fd()
 
 E64::fd::~fd()
 {
-	if (fd_state != FD_EMPTY) {
+	if (fd_state != FD_STATE_EMPTY) {
 		// finish actions if any such as writing a sector
 		eject_disk();
 	}
@@ -100,9 +100,9 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 
 int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 {
-	if (fd_state != FD_EMPTY) {
+	if (fd_state != FD_STATE_EMPTY) {
 		debug_console_print("\nerror: already a disk inside\n");
-		return FD_ERROR_DISK_INSIDE;
+		return FD_HOST_ERROR_DISK_INSIDE;
 	}
 	
 	struct stat stats;
@@ -110,11 +110,11 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 	if (stat(path, &stats) == 0) {
 		if (S_ISDIR(stats.st_mode)) {
 			debug_console_print("\nerror: path is directory\n");
-			return FD_ERROR_IS_DIRECTORY;
+			return FD_HOST_ERROR_IS_DIRECTORY;
 		}
 		if (stats.st_size != DISK_SIZE) {
 			debug_console_print("\nerror: disk image wrong size\n");
-			return FD_ERROR_WRONG_SIZE;
+			return FD_HOST_ERROR_WRONG_SIZE;
 		}
 		debug_console_print("\ninserting disk: ");
 		debug_console_print(path);
@@ -122,54 +122,39 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 		current_disk = fopen(path, "r+b");
 		fread(disk_contents, DISK_SIZE, 1, current_disk);
 		
-		fd_state = FD_SPINNING_UP;
-		next_state = FD_SPINNING;
+		fd_state = FD_STATE_SPINNING_UP;
+		next_state = FD_STATE_SPINNING;
 		
 		write_protect = write_protect_disk ? true : false;
 		return 0;
 	} else {
 		debug_console_print("\nerror: file doesn't exist\n");
-		return FD_ERROR_WRONG_PATH;
+		return FD_HOST_ERROR_WRONG_PATH;
 	}
 }
 
 int E64::fd::eject_disk()
 {
 	switch (fd_state) {
-		case FD_EMPTY:
-			start_error_state();
+		case FD_STATE_EMPTY:
+			start_error_state(FD_ERROR_NO_DISK_INSIDE);
 			return 1;
-		case FD_DISK_LOADED:
+		case FD_STATE_DISK_LOADED:
 			if (!write_protect) {
 				fseek(current_disk, 0, SEEK_SET);
 				fwrite(disk_contents, DISK_SIZE, 1, current_disk);
 				printf("[fd] writing disk contents\n");
 			}
 			fclose(current_disk);
-			fd_state = FD_EMPTY;
+			fd_state = FD_STATE_EMPTY;
 			for (int i=0; i<DISK_SIZE; i++)
 				disk_contents[i] = 0;
 			return 0;
 		default:
 			// drive motor is spinning
-			start_error_state();
-			return 2;
+			start_error_state(FD_ERROR_MOTOR_IS_SPINNING);
+			return 1;
 	}
-//	int return_value = 0;
-//	if (fd_state != FD_EMPTY) {
-//		if (!write_protect) {
-//			fseek(current_disk, 0, SEEK_SET);
-//			fwrite(disk_contents, DISK_SIZE, 1, current_disk);
-//			printf("[fd] writing disk contents\n");
-//		}
-//		fclose(current_disk);
-//		fd_state = FD_EMPTY;
-//		for (int i=0; i<DISK_SIZE; i++)
-//			disk_contents[i] = 0;
-//	} else {
-//		return_value = 1;
-//	}
-//	return return_value;
 }
 
 uint16_t E64::fd::bytes_per_sector()
@@ -186,21 +171,21 @@ uint32_t E64::fd::disk_size()
 void E64::fd::run(uint32_t number_of_cycles)
 {
 	switch (fd_state) {
-		case FD_EMPTY:
+		case FD_STATE_EMPTY:
 			break;
-		case FD_DISK_LOADED:
+		case FD_STATE_DISK_LOADED:
 			break;
-		case FD_SPINNING_UP:
+		case FD_STATE_SPINNING_UP:
 			cycle_counter += number_of_cycles;
 			if (cycle_counter > spin_up_cycles) {
 				fd_state = next_state;
 				cycle_counter -= spin_up_cycles;
 			}
 			break;
-		case FD_SPINNING:
+		case FD_STATE_SPINNING:
 			cycle_counter += number_of_cycles;
 			if (cycle_counter > spin_delay_cycles) {
-				fd_state = FD_DISK_LOADED;
+				fd_state = FD_STATE_DISK_LOADED;
 				cycle_counter -= spin_delay_cycles;
 			}
 			break;
@@ -215,7 +200,7 @@ void E64::fd::run(uint32_t number_of_cycles)
 //		case FD_WRITING:
 //			break;
 	}
-	if (in_error) {
+	if (current_error_state != FD_ERROR_NONE) {
 		if (error_led_counter > error_led_cycles) {
 			error_led_on = !error_led_on;
 			error_led_counter -= error_led_cycles;
@@ -301,30 +286,30 @@ uint16_t *E64::fd::icon_data()
 	if (error_led_on)
 		return &disk_icon_data[384];
 	switch (fd_state) {
-		case FD_EMPTY:
+		case FD_STATE_EMPTY:
 			return &disk_icon_data[0];
-		case FD_DISK_LOADED:
+		case FD_STATE_DISK_LOADED:
 			return &disk_icon_data[64];
-		case FD_SPINNING_UP:
+		case FD_STATE_SPINNING_UP:
 			return &disk_icon_data[128];
-		case FD_READING:
+		case FD_STATE_READING:
 			return &disk_icon_data[192];
-		case FD_WRITING:
+		case FD_STATE_WRITING:
 			return &disk_icon_data[256];
-		case FD_SPINNING:
+		case FD_STATE_SPINNING:
 			return &disk_icon_data[320];
 	}
 }
 
-void E64::fd::start_error_state()
+void E64::fd::start_error_state(enum fd_error_state_list new_error)
 {
-	in_error = true;
+	current_error_state = new_error;
 	error_led_on = true;
 	error_led_counter = 0;
 }
 
 void E64::fd::reset_error_state()
 {
-	in_error = false;
+	current_error_state = FD_ERROR_NONE;
 	error_led_on = false;
 }

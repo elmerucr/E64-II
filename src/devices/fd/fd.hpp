@@ -36,22 +36,28 @@
 #ifndef FD_HPP
 #define FD_HPP
 
-#define	FD_ERROR_DISK_INSIDE	0b00000001
-#define FD_ERROR_WRONG_PATH	0b00000010
-#define FD_ERROR_IS_DIRECTORY	0b00000100
-#define FD_ERROR_WRONG_SIZE	0b00001000
-#define FD_ERROR_EXTENSION	0b00010000
+#define	FD_HOST_ERROR_DISK_INSIDE	0b00000001
+#define FD_HOST_ERROR_WRONG_PATH	0b00000010
+#define FD_HOST_ERROR_IS_DIRECTORY	0b00000100
+#define FD_HOST_ERROR_WRONG_SIZE	0b00001000
+#define FD_HOST_ERROR_EXTENSION		0b00010000
 
 namespace E64
 {
 
 enum fd_state_list {
-	FD_EMPTY,
-	FD_DISK_LOADED,
-	FD_SPINNING_UP,
-	FD_READING,
-	FD_WRITING,
-	FD_SPINNING
+	FD_STATE_EMPTY,
+	FD_STATE_DISK_LOADED,
+	FD_STATE_SPINNING_UP,
+	FD_STATE_READING,
+	FD_STATE_WRITING,
+	FD_STATE_SPINNING
+};
+
+enum fd_error_state_list {
+	FD_ERROR_NONE = 0,
+	FD_ERROR_NO_DISK_INSIDE,
+	FD_ERROR_MOTOR_IS_SPINNING
 };
 
 class fd {
@@ -61,7 +67,7 @@ private:
 	
 	uint8_t registers[16];
 	
-	bool in_error;
+	enum fd_error_state_list current_error_state;
 	bool error_led_on;
 	uint32_t error_led_cycles;
 	uint32_t error_led_counter;
@@ -78,7 +84,7 @@ private:
 	
 	enum fd_state_list next_state;
 	
-	void start_error_state();
+	void start_error_state(enum fd_error_state_list new_error);
 	void reset_error_state();
 	
 public:
@@ -95,19 +101,21 @@ public:
 	void	write_byte(uint8_t address, uint8_t byte);
 	void	run(uint32_t number_of_cycles);
 	
+	int	read_error_state() { return current_error_state; }
+	
 	uint16_t bytes_per_sector();
 	uint32_t disk_size();
 	uint16_t *icon_data();
 	
 	inline bool disk_inside()
 	{
-		return fd_state != FD_EMPTY;
+		return fd_state != FD_STATE_EMPTY;
 		
 	}
 	
 	inline bool motor_spinning()
 	{
-		return (fd_state != FD_EMPTY) && (fd_state != FD_DISK_LOADED);
+		return (fd_state != FD_STATE_EMPTY) && (fd_state != FD_STATE_DISK_LOADED);
 	}
 };
 
