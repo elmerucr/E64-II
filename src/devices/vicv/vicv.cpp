@@ -9,31 +9,10 @@
 #include "vicv.hpp"
 #include "common.hpp"
 
-uint16_t disk_icon[128] = {
-	// empty
-	COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_01,COBALT_02,
-	COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,
-
-	// disk inside
-	COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_04,
-	COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04,COBALT_04
-};
-
 E64::vicv_ic::vicv_ic()
 {
-	stats_overlay_present = false;
+	disk_stat_visible = true;
+	stats_visible = false;
 
 	framebuffer0 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER0];
 	framebuffer1 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER1];
@@ -89,7 +68,7 @@ void E64::vicv_ic::run(uint32_t number_of_cycles)
 			else
 				host_video.backbuffer[dot_clock] =
 					host_video.palette[frontbuffer[dot_clock]];
-			dot_clock++;	// progr dot clock if pixel was sent (!blank)
+			dot_clock++;	// progress dot clock if pixel was sent (!blank)
 		}
 
 		cycle_clock++;
@@ -101,10 +80,10 @@ void E64::vicv_ic::run(uint32_t number_of_cycles)
 			break;
 		case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
 			// finished vblank, do other necessary stuff
-				if (stats_overlay_present) {
+				if (stats_visible)
 					render_stats(72, 276);
+				if (disk_stat_visible)
 					render_disk_activity(4, 276);
-				}
 			host_video.swap_buffers();
 			cycle_clock = dot_clock = 0;
 			frame_done = true;
@@ -118,10 +97,10 @@ void E64::vicv_ic::run(uint32_t number_of_cycles)
 	old_y_pos = y_pos;
 }
 
-#define Y_POS           (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
-#define X_POS           (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
-#define HBLANK          (X_POS >= VICV_PIXELS_PER_SCANLINE)
-#define VBLANK          (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
+#define Y_POS  (cycle_clock / (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK))
+#define X_POS  (cycle_clock - (Y_POS * (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)))
+#define HBLANK (X_POS >= VICV_PIXELS_PER_SCANLINE)
+#define VBLANK (cycle_clock>=((VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES))
 
 bool E64::vicv_ic::is_hblank() { return HBLANK; }
 
@@ -166,14 +145,12 @@ inline void E64::vicv_ic::render_disk_activity(uint16_t xpos, uint16_t ypos)
 	uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) %
 		(VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
 	
-	uint16_t icon_offset = 0;
-	if (pc.fd0->read_byte(0x00) & 0x01)
-		icon_offset = 64;
+	uint16_t *icon = pc.fd0->icon_data();
 	
 	for (int x=0; x<8; x++) {
 		for (int y=0; y<8; y++) {
 			host_video.backbuffer[base + (VICV_PIXELS_PER_SCANLINE*y) + x] =
-				host_video.palette[disk_icon[(y*8)+x+icon_offset]];
+				host_video.palette[icon[(y*8)+x]];
 		}
 	}
 }
@@ -230,4 +207,12 @@ void E64::vicv_ic::write_byte(uint8_t address, uint8_t byte)
 		registers[address & 0x07] = byte;
 		break;
 	}
+}
+
+void E64::vicv_ic::toggle_stats()
+{
+	int i = (disk_stat_visible ? 0b01 : 0b00) | (stats_visible ? 0b10 : 0b00);
+	i++;
+	disk_stat_visible = i & 0b01;
+	stats_visible = i & 0b10;
 }

@@ -104,8 +104,18 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_clear();
 	} else if (strcmp(token0, "eject") == 0) {
 		debug_console_put_char('\n');
-		if (pc.fd0->eject_disk())
-			debug_console_print("error: no disk inserted\n");
+		switch (pc.fd0->eject_disk()) {
+			case 0:
+				break;
+			case 1:
+				debug_console_print("error: no disk "
+						    "inserted\n");
+				break;
+			case 2:
+				debug_console_print("error: drive motor "
+						    "still spinning\n");
+				break;
+		}
 	} else if (strcmp(token0, "exit") == 0) {
 		have_prompt = false;
 		E64::sdl2_wait_until_enter_released();
@@ -122,7 +132,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 				"<F2>    switch system status bar on and off\n"
 				"<F3>    switch between readable and hexadecimal disassembly\n"
 				"<F9>    switch to monitor and back to running\n"
-				"<F10>   toggle runtime stats (running only)\n"
+				"<F10>   toggles several stats (running mode only)\n"
 				"<ALT+q> quit application\n"
 				"<ALT+r> reset machine\n"
 				"<ALT+f> switch between full screen and windowed mode\n");

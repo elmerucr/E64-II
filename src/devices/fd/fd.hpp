@@ -12,8 +12,8 @@
  * |       | | | |
  * |       | | | +-- Empty (0) / Disk inside (1)
  * |       | | +---- Motor idle (0) / Motor spinning (1)
- * |       | +------ Data direction: Reading (0) / Writing (1)
- * |       +-------- Data transfer: Idle (0) / Busy (1)
+ * |       | +------ Reading: idle (0) / busy (1)
+ * |       +-------- Writing: idle (0) / Busy (1)
  * +---------------- Error (1)
  *
  * bits 4-6: Reserved
@@ -45,43 +45,42 @@
 namespace E64
 {
 
-enum fd_state {
-	FD_IDLE,
+enum fd_state_list {
+	FD_EMPTY,
+	FD_DISK_LOADED,
+	FD_SPINNING_UP,
 	FD_READING,
-	FD_WRITING
-};
-
-enum motor_state {
-	MOTOR_IDLE,
-	MOTOR_SPINNING_UP,
-	MOTOR_SPINNING,
-	MOTOR_SPINNING_DELAY
+	FD_WRITING,
+	FD_SPINNING
 };
 
 class fd {
 private:
-	bool disk_inside;
 	bool write_protect;
-	uint8_t registers[16];
-	
 	FILE *current_disk;
 	
-	enum fd_state current_fd_state;
-	enum motor_state current_motor_state;
+	uint8_t registers[16];
+	
+	bool in_error;
+	bool error_led_on;
+	uint32_t error_led_cycles;
+	uint32_t error_led_counter;
+	
+	enum fd_state_list fd_state;
 	
 	uint32_t spin_up_cycles;
-	uint32_t spin_up_counter;
-	
 	uint32_t spin_delay_cycles;
-	uint32_t spin_delay_counter;
-	
 	uint32_t cycle_counter;
 	
 	// finite state machine parameters
 	uint32_t sector_number;
 	uint32_t memory_address;
 	
-	void check_spin_delay();
+	enum fd_state_list next_state;
+	
+	void start_error_state();
+	void reset_error_state();
+	
 public:
 	fd();
 	~fd();
@@ -98,6 +97,18 @@ public:
 	
 	uint16_t bytes_per_sector();
 	uint32_t disk_size();
+	uint16_t *icon_data();
+	
+	inline bool disk_inside()
+	{
+		return fd_state != FD_EMPTY;
+		
+	}
+	
+	inline bool motor_spinning()
+	{
+		return (fd_state != FD_EMPTY) && (fd_state != FD_DISK_LOADED);
+	}
 };
 
 }

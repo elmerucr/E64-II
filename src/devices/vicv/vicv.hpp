@@ -64,13 +64,14 @@ public:
 
 	// stats overlay
 private:
-	bool stats_overlay_present;
+	bool stats_visible;
+	bool disk_stat_visible;
+	
 	void render_stats(uint16_t xpos, uint16_t ypos);
 	void render_disk_activity(uint16_t xpos, uint16_t ypos);
 	char *stats_text;
 public:
-	inline void toggle_stats()
-		{ stats_overlay_present = !stats_overlay_present; }
+	void toggle_stats();
 	void set_stats(char *text)
 		{ stats_text = text; }
     

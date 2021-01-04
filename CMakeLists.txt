@@ -29,10 +29,9 @@ include_directories(
 add_subdirectory(src/)
 
 add_executable(
-    E64-II
-    src/main.cpp
-    src/machine.cpp
-    src/frequency_divider.cpp
+	E64-II
+	src/main.cpp
+	src/machine.cpp
 	src/stats.cpp)
 
 target_link_libraries(E64-II cia cpu E64_sdl2 fd mmu monitor resid resources rom sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
