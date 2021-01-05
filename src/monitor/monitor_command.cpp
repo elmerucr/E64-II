@@ -105,10 +105,16 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "eject") == 0) {
 		debug_console_put_char('\n');
 		if (pc.fd0->eject_disk()) {
-			snprintf(command_help_string, 256,
-				 "error %i: can't eject disk\n",
-				 pc.fd0->read_error_state());
-			debug_console_print(command_help_string);
+			switch (pc.fd0->read_error_state()) {
+				case FD_ERROR_NO_DISK_INSIDE:
+					debug_console_print("error: no disk"
+							    " inside\n");
+					break;
+				case FD_ERROR_MOTOR_IS_SPINNING:
+					debug_console_print("error: motor is"
+							    " still spinning\n");
+				break;
+			}
 		}
 	} else if (strcmp(token0, "exit") == 0) {
 		have_prompt = false;
@@ -858,15 +864,16 @@ void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 		if ((temp_pos & 0b111) || (temp_pos >= pc.fd0->disk_size())) {
 			debug_console_print("\nerror: illegal sector:offset\n");
 		} else {
-			pc.fd0->disk_contents[temp_pos + 0x0] = (arg0 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x1] = (arg1 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x2] = (arg2 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x3] = (arg3 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x4] = (arg4 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x5] = (arg5 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x6] = (arg6 & 0xff);
-			pc.fd0->disk_contents[temp_pos + 0x7] = (arg7 & 0xff);
-			
+			if (pc.fd0->disk_inside()) {
+				pc.fd0->disk_contents[temp_pos + 0x0] = (arg0 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x1] = (arg1 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x2] = (arg2 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x3] = (arg3 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x4] = (arg4 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x5] = (arg5 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x6] = (arg6 & 0xff);
+				pc.fd0->disk_contents[temp_pos + 0x7] = (arg7 & 0xff);
+			}
 			debug_console_put_char('\r');
 			debug_command_fd_dump(temp_pos, 1);
 			temp_pos += 0x8;

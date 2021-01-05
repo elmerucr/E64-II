@@ -22,9 +22,10 @@
  * Register 1 - FD Control Register
  *
  * 7 6 5 4 3 2 1 0
- *             | |
- *             | +-- Data direction: Reading (0) / Writing (1)
- *             +---- Start operation
+ * |           | |
+ * |           | +-- Data direction: Reading (0) / Writing (1)
+ * |           +---- Start operation
+ * +---------------- Reset (and do not eject disk)
  *
  * Registers 2 - 5: Form a sector number (big endian) for read/write operation.
  *
@@ -57,7 +58,12 @@ enum fd_state_list {
 enum fd_error_state_list {
 	FD_ERROR_NONE = 0,
 	FD_ERROR_NO_DISK_INSIDE,
-	FD_ERROR_MOTOR_IS_SPINNING
+	FD_ERROR_MOTOR_IS_SPINNING,
+	FD_ERROR_READING_PLANNED,
+	FD_ERROR_READING,
+	FD_ERROR_WRITING_PLANNED,
+	FD_ERROR_WRITING,
+	FD_ERROR_WRONG_SECTOR
 };
 
 class fd {
@@ -81,11 +87,15 @@ private:
 	// finite state machine parameters
 	uint32_t sector_number;
 	uint32_t memory_address;
+	uint32_t byte_count;		// used for read/write counting
 	
 	enum fd_state_list next_state;
 	
 	void start_error_state(enum fd_error_state_list new_error);
 	void reset_error_state();
+	
+	void attempt_start_reading();
+	void attempt_start_writing();
 	
 public:
 	fd();
@@ -107,16 +117,12 @@ public:
 	uint32_t disk_size();
 	uint16_t *icon_data();
 	
-	inline bool disk_inside()
-	{
-		return fd_state != FD_STATE_EMPTY;
-		
-	}
-	
-	inline bool motor_spinning()
-	{
-		return (fd_state != FD_STATE_EMPTY) && (fd_state != FD_STATE_DISK_LOADED);
-	}
+	inline bool disk_inside() { return fd_state != FD_STATE_EMPTY; }
+	inline bool motor_spinning() { return (fd_state != FD_STATE_EMPTY) &&
+		(fd_state != FD_STATE_DISK_LOADED); }
+	inline bool reading() { return fd_state == FD_STATE_READING; }
+	inline bool writing() { return fd_state == FD_STATE_WRITING; }
+	inline bool in_error() { return current_error_state != FD_ERROR_NONE; }
 };
 
 }
