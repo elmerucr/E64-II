@@ -18,7 +18,7 @@
 #define BYTES_PER_SECTOR	512
 #define	DISK_SIZE		SECTORS*BYTES_PER_SECTOR
 
-#define CYCLES_PER_BYTE		512
+#define CYCLES_PER_BYTE		8192
 #define SPIN_UP_TIME_MS		300
 #define SPIN_DELAY_MS		2000
 #define ERROR_LED_TIME_MS	250
@@ -69,8 +69,8 @@ uint8_t E64::fd::read_byte(uint8_t address)
 				(reading()        ? 0b00000100 : 0b00000000) |
 				(writing()        ? 0b00001000 : 0b00000000) |
 				(in_error()       ? 0b10000000 : 0b00000000) ;
-		case 0x01:
-			break;
+		case 0x02:
+			return read_error_state();
 		default:
 			return registers[address & 0xf];
 	}
@@ -84,25 +84,25 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 			break;
 		case 0x01:
 			sector_number =
-				registers[0x2] << 24 |
-				registers[0x3] << 16 |
-				registers[0x4] <<  8 |
-				registers[0x5] <<  0 ;
+				registers[0x4] << 24 |
+				registers[0x5] << 16 |
+				registers[0x6] <<  8 |
+				registers[0x7] <<  0 ;
 			memory_address =
-				registers[0x6] << 24 |
-				registers[0x7] << 16 |
-				registers[0x8] <<  8 |
-				registers[0x9] <<  0 ;
+				registers[0x8] << 24 |
+				registers[0x9] << 16 |
+				registers[0xa] <<  8 |
+				registers[0xb] <<  0 ;
 			memory_address &= 0xfffffffe;
 			switch (byte) {
-				case 0b00000010:
+				case 0b00000100:
 					attempt_start_reading();
 					break;
-				case 0b00000011:
+				case 0b00001000:
 					attempt_start_writing();
 					break;
 				case 0b10000000:
-					// reset drive
+					reset_error_state();
 					break;
 				default:
 					break;
@@ -221,7 +221,7 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 {
 	if (fd_state != FD_STATE_EMPTY) {
 		debug_console_print("\nerror: already a disk inside\n");
-		return FD_HOST_ERROR_DISK_INSIDE;
+		return 1;
 	}
 	
 	struct stat stats;
@@ -229,11 +229,11 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 	if (stat(path, &stats) == 0) {
 		if (S_ISDIR(stats.st_mode)) {
 			debug_console_print("\nerror: path is directory\n");
-			return FD_HOST_ERROR_IS_DIRECTORY;
+			return 1;
 		}
 		if (stats.st_size != DISK_SIZE) {
 			debug_console_print("\nerror: disk image wrong size\n");
-			return FD_HOST_ERROR_WRONG_SIZE;
+			return 1;
 		}
 		debug_console_print("\ninserting disk: ");
 		debug_console_print(path);
@@ -248,7 +248,7 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk)
 		return 0;
 	} else {
 		debug_console_print("\nerror: file doesn't exist\n");
-		return FD_HOST_ERROR_WRONG_PATH;
+		return 1;
 	}
 }
 
@@ -363,12 +363,12 @@ uint16_t disk_icon_data[448] = {
 	
 	// FD_SPINNING_UP
 	COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
-	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
+	COBALT_06,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,   0x44f3,COBALT_06,
 	COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,
 	
 	// FD_READING
@@ -393,12 +393,12 @@ uint16_t disk_icon_data[448] = {
 	
 	// FD_SPINNING
 	COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
-	COBALT_06, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04, GREEN_04,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
+	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
 	COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,
 	
 	// error led

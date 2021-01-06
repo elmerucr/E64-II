@@ -19,29 +19,29 @@
  * bits 4-6: Reserved
  *
  *
- * Register 1 - FD Control Register
+ * Register 1 - FD Control Register (WRITE ONLY)
  *
  * 7 6 5 4 3 2 1 0
- * |           | |
- * |           | +-- Data direction: Reading (0) / Writing (1)
- * |           +---- Start operation
- * +---------------- Reset (and do not eject disk)
+ * |       | |
+ * |       | +------ Start reading (1)
+ * |       +-------- Start writing (1)
+ * +---------------- Reset error state
  *
- * Registers 2 - 5: Form a sector number (big endian) for read/write operation.
+ * Register 2 - Error status of drive (READ ONLY)
+ * --> Enumerated list
  *
- * Registers 6 - 9: Form an address (big endian) for read/write operation.
+ * Register 3 - Reserved for IRQ status etc...
+ * --> Probably an enumerated list
+ *
+ * Registers 4 - 7: Form a sector number (big endian) for read/write operation.
+ *
+ * Registers 8 - 11: Form an address (big endian) for read/write operation.
  *                  Uneven address will be truncated to even address.
  *
  */
 
 #ifndef FD_HPP
 #define FD_HPP
-
-#define	FD_HOST_ERROR_DISK_INSIDE	0b00000001
-#define FD_HOST_ERROR_WRONG_PATH	0b00000010
-#define FD_HOST_ERROR_IS_DIRECTORY	0b00000100
-#define FD_HOST_ERROR_WRONG_SIZE	0b00001000
-#define FD_HOST_ERROR_EXTENSION		0b00010000
 
 namespace E64
 {
@@ -63,7 +63,8 @@ enum fd_error_state_list {
 	FD_ERROR_READING,
 	FD_ERROR_WRITING_PLANNED,
 	FD_ERROR_WRITING,
-	FD_ERROR_WRONG_SECTOR
+	FD_ERROR_WRONG_SECTOR,
+	FD_ERROR_WRITE_PROTECT
 };
 
 class fd {
