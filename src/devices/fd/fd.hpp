@@ -70,6 +70,7 @@ enum fd_error_state_list {
 class fd {
 private:
 	bool write_protect;
+	bool save_on_eject;
 	FILE *current_disk;
 	
 	uint8_t registers[16];
@@ -86,7 +87,9 @@ private:
 	uint32_t cycle_counter;
 	
 	// finite state machine parameters
+	uint32_t potential_sector_number;
 	uint32_t sector_number;
+	uint32_t potential_memory_address;
 	uint32_t memory_address;
 	uint32_t byte_count;		// used for read/write counting
 	
@@ -104,7 +107,7 @@ public:
 	
 	uint8_t	*disk_contents;
 	
-	int	insert_disk(const char *path, bool write_protect_disk);
+	int	insert_disk(const char *path, bool write_protect_disk, bool save_on_eject_disk);
 	int	eject_disk();
 	
 	void	reset();
@@ -112,18 +115,42 @@ public:
 	void	write_byte(uint8_t address, uint8_t byte);
 	void	run(uint32_t number_of_cycles);
 	
-	int	read_error_state() { return current_error_state; }
+	int read_error_state()
+	{
+		return current_error_state;
+	}
 	
 	uint16_t bytes_per_sector();
 	uint32_t disk_size();
 	uint16_t *icon_data();
 	
-	inline bool disk_inside() { return fd_state != FD_STATE_EMPTY; }
-	inline bool motor_spinning() { return (fd_state != FD_STATE_EMPTY) &&
-		(fd_state != FD_STATE_DISK_LOADED); }
-	inline bool reading() { return fd_state == FD_STATE_READING; }
-	inline bool writing() { return fd_state == FD_STATE_WRITING; }
-	inline bool in_error() { return current_error_state != FD_ERROR_NONE; }
+	inline bool disk_inside()
+	{
+		return fd_state != FD_STATE_EMPTY;
+	}
+	
+	inline bool motor_spinning()
+	{
+		return	(fd_state != FD_STATE_EMPTY) &&
+			(fd_state != FD_STATE_DISK_LOADED);
+	}
+	
+	inline bool reading()
+	{
+		return	(fd_state == FD_STATE_READING) ||
+			(next_state == FD_STATE_READING);
+	}
+	
+	inline bool writing()
+	{
+		return	(fd_state == FD_STATE_WRITING) ||
+			(next_state == FD_STATE_WRITING);
+	}
+	
+	inline bool in_error()
+	{
+		return current_error_state != FD_ERROR_NONE;
+	}
 };
 
 }

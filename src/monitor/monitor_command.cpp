@@ -149,7 +149,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			debug_console_print("\nerror: missing filename\n");
 		} else {
-			pc.fd0->insert_disk(token1, true);
+			pc.fd0->insert_disk(token1, false, false);
 		}
 	} else if (strcmp(token0, "ls") == 0) {
 		debug_console_put_char('\n');
