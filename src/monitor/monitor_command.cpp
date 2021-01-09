@@ -105,7 +105,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "eject") == 0) {
 		debug_console_put_char('\n');
 		if (pc.fd0->eject_disk()) {
-			switch (pc.fd0->read_error_state()) {
+			switch (pc.fd0->get_error_state()) {
 				case FD_ERROR_NO_DISK_INSIDE:
 					debug_console_print("error: no disk"
 							    " inside\n");

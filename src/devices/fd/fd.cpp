@@ -1,5 +1,5 @@
 /*
- * fd.hpp
+ * fd.cpp
  * E64-II
  *
  * Copyright © 2020-2021 elmerucr. All rights reserved.
@@ -11,37 +11,24 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#define SIDES			2
-#define TRACKS			80
-#define SECTORS_PER_TRACK	18
-#define SECTORS			SIDES*TRACKS*SECTORS_PER_TRACK
-#define BYTES_PER_SECTOR	512
-#define	DISK_SIZE		SECTORS*BYTES_PER_SECTOR
-
-#define CYCLES_PER_BYTE		8192
-#define SPIN_UP_TIME_MS		300
-#define SPIN_DELAY_MS		2000
-#define ERROR_LED_TIME_MS	250
-
 E64::fd::fd()
 {
-	disk_contents = new uint8_t[DISK_SIZE * sizeof(uint8_t)];
+	disk_contents = new uint8_t[FD_DISK_SIZE * sizeof(uint8_t)];
 	
 	fd_state = FD_STATE_EMPTY;
 	
-	error_led_cycles = (CPU_CLOCK_SPEED / 1000) * ERROR_LED_TIME_MS;
+	error_led_cycles = (CPU_CLOCK_SPEED / 1000) * FD_ERROR_LED_TIME_MS;
 	reset_error_state();
 	
-	spin_up_cycles = (CPU_CLOCK_SPEED / 1000) * SPIN_UP_TIME_MS;
-	spin_delay_cycles = (CPU_CLOCK_SPEED / 1000) * SPIN_DELAY_MS;
-	
-	cycle_counter = 0;
+	spin_up_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_UP_TIME_MS;
+	spin_delay_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_DELAY_MS;
 }
 
 E64::fd::~fd()
 {
 	if (fd_state != FD_STATE_EMPTY) {
 		// finish actions if any such as writing a sector
+		// NEEDS WORK
 		eject_disk();
 	}
 	delete disk_contents;
@@ -50,13 +37,10 @@ E64::fd::~fd()
 void E64::fd::reset()
 {
 	// a reset doesn't eject a disk
-	
 	for (int i=0; i<16; i++)
 		registers[i] = 0x00;
-	
 	reset_error_state();
-	
-	cycle_counter = 0;
+	cycles_done = 0;
 }
 
 uint8_t E64::fd::read_byte(uint8_t address)
@@ -69,8 +53,10 @@ uint8_t E64::fd::read_byte(uint8_t address)
 				(reading()        ? 0b00000100 : 0b00000000) |
 				(writing()        ? 0b00001000 : 0b00000000) |
 				(in_error()       ? 0b10000000 : 0b00000000) ;
+		case 0x01:
+			return 0x00;
 		case 0x02:
-			return read_error_state();
+			return get_error_state();
 		default:
 			return registers[address & 0xf];
 	}
@@ -83,17 +69,6 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 		case 0x00:
 			break;
 		case 0x01:
-			potential_sector_number =
-				registers[0x4] << 24 |
-				registers[0x5] << 16 |
-				registers[0x6] <<  8 |
-				registers[0x7] <<  0 ;
-			potential_memory_address =
-				registers[0x8] << 24 |
-				registers[0x9] << 16 |
-				registers[0xa] <<  8 |
-				registers[0xb] <<  0 ;
-			memory_address &= 0xfffffffe;
 			switch (byte) {
 				case 0b00000100:
 					attempt_start_reading();
@@ -108,6 +83,10 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 					break;
 			}
 			break;
+		case 0x0b:
+			// smallest byte of buffer address, must be even
+			registers[0x0b] = byte & 0b11111110;
+			break;
 		default:
 			registers[address & 0xf] = byte;
 	}
@@ -117,57 +96,56 @@ void E64::fd::attempt_start_reading()
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
-			start_error_state(FD_ERROR_NO_DISK_INSIDE);
+			set_error_state(FD_ERROR_NO_DISK_INSIDE);
 			break;
 		case FD_STATE_DISK_LOADED:
-			if (sector_number >= SECTORS) {
-				start_error_state(FD_ERROR_WRONG_SECTOR);
+			if (sector >= FD_SECTORS) {
+				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
-			sector_number = potential_sector_number;
-			memory_address = potential_memory_address;
+			get_sector_and_buffer();
 			fd_state = FD_STATE_SPINNING_UP;
 			next_state = FD_STATE_READING;
-			byte_count = 0;
+			cycles_done = 0;
+			bytes_done = 0;
 			break;
 		case FD_STATE_SPINNING_UP:
 			switch (next_state) {
 				case FD_STATE_SPINNING:
-					if (sector_number >= SECTORS) {
-						start_error_state(FD_ERROR_WRONG_SECTOR);
+					if (sector >= FD_SECTORS) {
+						set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 						break;
 					}
-					sector_number = potential_sector_number;
-					memory_address = potential_memory_address;
+					get_sector_and_buffer();
 					next_state = FD_STATE_READING;
-					byte_count = 0;
+					cycles_done = 0;
+					bytes_done = 0;
 					break;
 				case FD_STATE_READING:
-					start_error_state(FD_ERROR_READING_PLANNED);
+					set_error_state(FD_ERROR_READING_PLANNED);
 					break;
 				case FD_STATE_WRITING:
-					start_error_state(FD_ERROR_WRITING_PLANNED);
+					set_error_state(FD_ERROR_WRITING_PLANNED);
 					break;
 				default:
 					break;
 			}
 			break;
 		case FD_STATE_READING:
-			start_error_state(FD_ERROR_READING);
+			set_error_state(FD_ERROR_READING);
 			break;
 		case FD_STATE_WRITING:
-			start_error_state(FD_ERROR_WRITING);
+			set_error_state(FD_ERROR_WRITING);
 			break;
 		case FD_STATE_SPINNING:
-			if (sector_number >= SECTORS) {
-				start_error_state(FD_ERROR_WRONG_SECTOR);
+			if (sector >= FD_SECTORS) {
+				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
-			sector_number = potential_sector_number;
-			memory_address = potential_memory_address;
+			get_sector_and_buffer();
 			fd_state = FD_STATE_READING;
-			//next_state = FD_STATE_SPINNING
-			byte_count = 0;
+			cycles_done = 0;
+			bytes_done = 0;
 			break;
 	}
 }
@@ -175,60 +153,60 @@ void E64::fd::attempt_start_reading()
 void E64::fd::attempt_start_writing()
 {
 	if (write_protect) {
-		start_error_state(FD_ERROR_WRITE_PROTECT);
+		set_error_state(FD_ERROR_WRITE_PROTECT);
 	} else {
 		switch (fd_state) {
 			case FD_STATE_EMPTY:
-				start_error_state(FD_ERROR_NO_DISK_INSIDE);
+				set_error_state(FD_ERROR_NO_DISK_INSIDE);
 				break;
 			case FD_STATE_DISK_LOADED:
-				if (sector_number >= SECTORS) {
-					start_error_state(FD_ERROR_WRONG_SECTOR);
+				if (sector >= FD_SECTORS) {
+					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
-				sector_number = potential_sector_number;
-				memory_address = potential_memory_address;
+				get_sector_and_buffer();
 				fd_state = FD_STATE_SPINNING_UP;
 				next_state = FD_STATE_WRITING;
-				byte_count = 0;
+				cycles_done = 0;
+				bytes_done = 0;
 				break;
 			case FD_STATE_SPINNING_UP:
 				switch (next_state) {
 					case FD_STATE_SPINNING:
-						if (sector_number >= SECTORS) {
-							start_error_state(FD_ERROR_WRONG_SECTOR);
+						if (sector >= FD_SECTORS) {
+							set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 							break;
 						}
-						sector_number = potential_sector_number;
-						memory_address = potential_memory_address;
+						get_sector_and_buffer();
 						next_state = FD_STATE_WRITING;
-						byte_count = 0;
+						cycles_done = 0;
+						bytes_done = 0;
 						break;
 					case FD_STATE_READING:
-						start_error_state(FD_ERROR_READING_PLANNED);
+						set_error_state(FD_ERROR_READING_PLANNED);
 						break;
 					case FD_STATE_WRITING:
-						start_error_state(FD_ERROR_WRITING_PLANNED);
+						set_error_state(FD_ERROR_WRITING_PLANNED);
 						break;
 					default:
 						break;
 				}
 				break;
 			case FD_STATE_READING:
-				start_error_state(FD_ERROR_READING);
+				set_error_state(FD_ERROR_READING);
 				break;
 			case FD_STATE_WRITING:
-				start_error_state(FD_ERROR_WRITING);
+				set_error_state(FD_ERROR_WRITING);
 				break;
 			case FD_STATE_SPINNING:
-				if (sector_number >= SECTORS) {
-					start_error_state(FD_ERROR_WRONG_SECTOR);
+				if (sector >= FD_SECTORS) {
+					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
-				sector_number = potential_sector_number;
-				memory_address = potential_memory_address;
+				get_sector_and_buffer();
 				fd_state = FD_STATE_WRITING;
-				byte_count = 0;
+				cycles_done = 0;
+				bytes_done = 0;
 				break;
 		}
 	}
@@ -248,7 +226,7 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 			debug_console_print("\nerror: path is directory\n");
 			return 1;
 		}
-		if (stats.st_size != DISK_SIZE) {
+		if (stats.st_size != FD_DISK_SIZE) {
 			debug_console_print("\nerror: disk image wrong size\n");
 			return 1;
 		}
@@ -256,7 +234,7 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 		debug_console_print(path);
 		debug_console_put_char('\n');
 		current_disk = fopen(path, "r+b");
-		fread(disk_contents, DISK_SIZE, 1, current_disk);
+		fread(disk_contents, FD_DISK_SIZE, 1, current_disk);
 		
 		fd_state = FD_STATE_SPINNING_UP;
 		next_state = FD_STATE_SPINNING;
@@ -286,38 +264,41 @@ int E64::fd::eject_disk()
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
-			start_error_state(FD_ERROR_NO_DISK_INSIDE);
+			set_error_state(FD_ERROR_NO_DISK_INSIDE);
 			return 1;
 		case FD_STATE_DISK_LOADED:
 			if (save_on_eject) {
 				fseek(current_disk, 0, SEEK_SET);
-				fwrite(disk_contents, DISK_SIZE, 1, current_disk);
+				fwrite(disk_contents, FD_DISK_SIZE, 1, current_disk);
 				printf("[fd] writing disk contents\n");
 			}
 			fclose(current_disk);
 			fd_state = FD_STATE_EMPTY;
-			for (int i=0; i<DISK_SIZE; i++)
+			for (int i=0; i < FD_DISK_SIZE; i++)
 				disk_contents[i] = 0;
 			return 0;
 		default:
 			// drive motor is spinning
-			start_error_state(FD_ERROR_MOTOR_IS_SPINNING);
+			// that's true, but make difference between read/write
+			// etc???
+			// NEEDS WORK
+			set_error_state(FD_ERROR_MOTOR_IS_SPINNING);
 			return 1;
 	}
 }
 
 uint16_t E64::fd::bytes_per_sector()
 {
-	return BYTES_PER_SECTOR;
+	return FD_BYTES_PER_SECTOR;
 }
 
 uint32_t E64::fd::disk_size()
 {
-	return DISK_SIZE;
+	return FD_DISK_SIZE;
 }
 
 
-void E64::fd::run(uint32_t number_of_cycles)
+void E64::fd::run(uint32_t cycles)
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
@@ -325,44 +306,44 @@ void E64::fd::run(uint32_t number_of_cycles)
 		case FD_STATE_DISK_LOADED:
 			break;
 		case FD_STATE_SPINNING_UP:
-			cycle_counter += number_of_cycles;
-			if (cycle_counter > spin_up_cycles) {
+			cycles_done += cycles;
+			if (cycles_done > spin_up_cycles) {
 				fd_state = next_state;
 				next_state = FD_STATE_SPINNING;
-				cycle_counter -= spin_up_cycles;
+				cycles_done -= spin_up_cycles;
 			}
 			break;
 		case FD_STATE_READING:
-			cycle_counter += number_of_cycles;
-			if (cycle_counter > CYCLES_PER_BYTE) {
-				pc.mmu->ram[(memory_address+byte_count) & 0xffffff] =
-					pc.fd0->disk_contents[(sector_number * BYTES_PER_SECTOR) + byte_count];
-				cycle_counter -= CYCLES_PER_BYTE;
-				byte_count++;
-				if (byte_count == BYTES_PER_SECTOR) {
+			cycles_done += cycles;
+			if (cycles_done > FD_CYCLES_PER_BYTE) {
+				pc.mmu->ram[(buffer+bytes_done) & 0xffffff] =
+					pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
+				cycles_done -= FD_CYCLES_PER_BYTE;
+				bytes_done++;
+				if (bytes_done == FD_BYTES_PER_SECTOR) {
 					fd_state = FD_STATE_SPINNING;
-					cycle_counter = 0;
+					cycles_done = 0;
 				}
 			}
 			break;
 		case FD_STATE_WRITING:
-			cycle_counter += number_of_cycles;
-			if (cycle_counter > CYCLES_PER_BYTE) {
-				pc.fd0->disk_contents[(sector_number * BYTES_PER_SECTOR) + byte_count] =
-					pc.mmu->ram[(memory_address+byte_count) & 0xffffff];
-				cycle_counter -= CYCLES_PER_BYTE;
-				byte_count++;
-				if (byte_count == BYTES_PER_SECTOR) {
+			cycles_done += cycles;
+			if (cycles_done > FD_CYCLES_PER_BYTE) {
+				pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
+					pc.mmu->ram[(buffer+bytes_done) & 0xffffff];
+				cycles_done -= FD_CYCLES_PER_BYTE;
+				bytes_done++;
+				if (bytes_done == FD_BYTES_PER_SECTOR) {
 					fd_state = FD_STATE_SPINNING;
-					cycle_counter = 0;
+					cycles_done = 0;
 				}
 			}
 			break;
 		case FD_STATE_SPINNING:
-			cycle_counter += number_of_cycles;
-			if (cycle_counter > spin_delay_cycles) {
+			cycles_done += cycles;
+			if (cycles_done > spin_delay_cycles) {
 				fd_state = FD_STATE_DISK_LOADED;
-				cycle_counter -= spin_delay_cycles;
+				cycles_done -= spin_delay_cycles;
 			}
 			break;
 	}
@@ -371,11 +352,12 @@ void E64::fd::run(uint32_t number_of_cycles)
 			error_led_on = !error_led_on;
 			error_led_counter -= error_led_cycles;
 		}
-		error_led_counter += number_of_cycles;
+		error_led_counter += cycles;
 	}
 }
 
 uint16_t disk_icon_data[448] = {
+	
 	// FD_EMPTY
 	COBALT_03,COBALT_03,COBALT_03,COBALT_03,COBALT_03,COBALT_03,COBALT_03,COBALT_03,
 	COBALT_03,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_02,COBALT_03,
@@ -436,7 +418,7 @@ uint16_t disk_icon_data[448] = {
 	COBALT_06, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03, GREEN_03,COBALT_06,
 	COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,COBALT_06,
 	
-	// error led
+	// error led flashes
 	C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,
 	C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,
 	C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,
@@ -450,24 +432,24 @@ uint16_t disk_icon_data[448] = {
 uint16_t *E64::fd::icon_data()
 {
 	if (error_led_on)
-		return &disk_icon_data[384];
+		return &disk_icon_data[0x180];
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
-			return &disk_icon_data[0];
+			return &disk_icon_data[0x000];
 		case FD_STATE_DISK_LOADED:
-			return &disk_icon_data[64];
+			return &disk_icon_data[0x040];
 		case FD_STATE_SPINNING_UP:
-			return &disk_icon_data[128];
+			return &disk_icon_data[0x080];
 		case FD_STATE_READING:
-			return &disk_icon_data[192];
+			return &disk_icon_data[0x0c0];
 		case FD_STATE_WRITING:
-			return &disk_icon_data[256];
+			return &disk_icon_data[0x100];
 		case FD_STATE_SPINNING:
-			return &disk_icon_data[320];
+			return &disk_icon_data[0x140];
 	}
 }
 
-void E64::fd::start_error_state(enum fd_error_state_list new_error)
+void E64::fd::set_error_state(enum fd_error_list new_error)
 {
 	current_error_state = new_error;
 	error_led_on = true;
