@@ -128,26 +128,37 @@ void E64::sids_ic::write_byte(uint8_t address, uint8_t byte)
 
 void E64::sids_ic::run(uint32_t number_of_cycles)
 {
-    delta_t_sid0 += number_of_cycles;
-    delta_t_sid1 = delta_t_sid0;
-    // clock(delta_t, buf, maxNoOfSamples) function:
-    //   This function returns the number of samples written by the SID chip.
-    //   delta_t is a REFERENCE to the number of cycles to be processed
-    //   buf is the memory area in which data should be written
-    //   maxNoOfSamples (internal size of the presented buffer)
-    int n = sid[0].clock(delta_t_sid0, sample_buffer_mono_sid0, 65536);
-    sid[1].clock(delta_t_sid1, sample_buffer_mono_sid1, 65536);
-    
-    for(int i=0; i<n; i++)
-    {
-        // left channel
-        sample_buffer_stereo[2*i] = (sample_buffer_mono_sid0[i] * balance_registers[0]) / 255;
-        sample_buffer_stereo[2*i] += (sample_buffer_mono_sid1[i] * balance_registers[2]) / 255;
-        // right channel
-        sample_buffer_stereo[(2*i)+1] = (sample_buffer_mono_sid0[i] * balance_registers[1]) / 255;
-        sample_buffer_stereo[(2*i)+1] += (sample_buffer_mono_sid1[i] * balance_registers[3]) / 255;
-    }
-    E64::sdl2_queue_audio((void *)sample_buffer_stereo, 2 * n * sizeof(int16_t));
+	delta_t_sid0 += number_of_cycles;
+	delta_t_sid1 = delta_t_sid0;
+	/*
+	 * clock(delta_t, buf, maxNoOfSamples) function:
+	 *
+	 *   This function returns the number of samples written by the SID chip.
+	 *   delta_t is a REFERENCE to the number of cycles to be processed
+	 *   buf is the memory area in which data should be written
+	 *   maxNoOfSamples (internal size of the presented buffer)
+	 */
+	int n = sid[0].clock(delta_t_sid0, sample_buffer_mono_sid0, 65536);
+	sid[1].clock(delta_t_sid1, sample_buffer_mono_sid1, 65536);
+
+	for (int i=0; i<n; i++) {
+		int16_t fd_sample = pc.fd0->motor_sound_sample();
+		
+		// left channel
+		sample_buffer_stereo[2*i] = (sample_buffer_mono_sid0[i] *
+					     balance_registers[0]) / 255;
+		sample_buffer_stereo[2*i] += (sample_buffer_mono_sid1[i] *
+					      balance_registers[2]) / 255;
+		sample_buffer_stereo[2*i] += fd_sample;
+		
+		// right channel
+		sample_buffer_stereo[(2*i)+1] = (sample_buffer_mono_sid0[i] *
+						 balance_registers[1]) / 255;
+		sample_buffer_stereo[(2*i)+1] += (sample_buffer_mono_sid1[i] *
+						  balance_registers[3]) / 255;
+		sample_buffer_stereo[(2*i)+1] += fd_sample;
+	}
+	E64::sdl2_queue_audio((void *)sample_buffer_stereo, 2 * n * sizeof(int16_t));
 }
 
 void E64::sids_ic::reset()

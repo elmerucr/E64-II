@@ -161,6 +161,7 @@ private:
 			 registers[0xb] <<  0 ;
 	}
 	
+	uint16_t sample_no;
 public:
 	fd();
 	~fd();
@@ -202,6 +203,8 @@ public:
 	}
 	
 	inline bool in_error() { return current_error_state != FD_ERROR_NONE; }
+	
+	int16_t motor_sound_sample();
 };
 
 }
