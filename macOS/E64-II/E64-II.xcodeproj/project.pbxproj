@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4633A79823FD565800AFD176 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4633A79723FD565800AFD176 /* video.cpp */; };
+		463CC6FD25ABAC3E00F160FA /* fd_sounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463CC6FC25ABAC3E00F160FA /* fd_sounds.cpp */; };
 		467817062517567F008F8A1A /* settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 467817042517567F008F8A1A /* settings.cpp */; };
 		468B288E258E4C51002B1FE9 /* fd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 468B288D258E4C51002B1FE9 /* fd.cpp */; };
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 /* Begin PBXFileReference section */
 		4633A79623FD565800AFD176 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/resources/video.hpp; sourceTree = "<group>"; };
 		4633A79723FD565800AFD176 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/resources/video.cpp; sourceTree = "<group>"; };
+		463CC6FC25ABAC3E00F160FA /* fd_sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd_sounds.cpp; path = ../../../src/devices/fd/fd_sounds.cpp; sourceTree = "<group>"; };
 		467817042517567F008F8A1A /* settings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = settings.cpp; path = ../../../src/resources/settings.cpp; sourceTree = "<group>"; };
 		467817052517567F008F8A1A /* settings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = settings.hpp; path = ../../../src/resources/settings.hpp; sourceTree = "<group>"; };
 		468B288C258E4C51002B1FE9 /* fd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fd.hpp; path = ../../../src/devices/fd/fd.hpp; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			children = (
 				468B288C258E4C51002B1FE9 /* fd.hpp */,
 				468B288D258E4C51002B1FE9 /* fd.cpp */,
+				463CC6FC25ABAC3E00F160FA /* fd_sounds.cpp */,
 			);
 			name = fd;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				46C4CC1D24388CBC002BD371 /* sid.cc in Sources */,
 				4691C7D523D7B5BF00E9E78D /* mmu.cpp in Sources */,
 				46D318522528BC3900E08C23 /* monitor_screen.cpp in Sources */,
+				463CC6FD25ABAC3E00F160FA /* fd_sounds.cpp in Sources */,
 				46C4CC1B24388CBC002BD371 /* wave8580_PST.cc in Sources */,
 				46C4CC1E24388CBC002BD371 /* wave6581_P_T.cc in Sources */,
 				4691C80723D7B62400E9E78D /* timer.cpp in Sources */,
