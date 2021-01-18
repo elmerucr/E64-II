@@ -1,5 +1,5 @@
 /*
- * common.h
+ * common.hpp
  * E64-II
  *
  * Copyright © 2017-2021 elmerucr. All rights reserved.
@@ -18,7 +18,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20210110
+#define E64_II_BUILD            20210118
 #define E64_II_YEAR             2021
 
 /* Global objects */

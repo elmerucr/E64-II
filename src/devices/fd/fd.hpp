@@ -116,6 +116,8 @@ private:
 	uint32_t sector;
 	uint32_t buffer;
 	
+	uint32_t track;
+	
 	/*
 	 * On a read or write action, this variable keeps track of the number of
 	 * bytes that have been transferred. The total number is always equal to
@@ -159,9 +161,18 @@ private:
 			 registers[0x9] << 16 |
 			 registers[0xa] <<  8 |
 			 registers[0xb] <<  0 ;
+		
+		track  = sector / (FD_SIDES * FD_SECTORS_PER_TRACK);
+		
+		printf("[fd] track: %02i\n", track);
 	}
 	
 	uint16_t sample_no;
+	bool previous_sample_motor_on;
+	bool playing_spinning_down;
+	bool playing_track_change;
+	uint16_t spinning_down_sample_no;
+	uint16_t track_change_sample_no;
 public:
 	fd();
 	~fd();
@@ -204,7 +215,7 @@ public:
 	
 	inline bool in_error() { return current_error_state != FD_ERROR_NONE; }
 	
-	int16_t motor_sound_sample();
+	int16_t sound_sample();
 };
 
 }
