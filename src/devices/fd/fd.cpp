@@ -111,11 +111,11 @@ void E64::fd::attempt_start_reading()
 			set_error_state(FD_ERROR_NO_DISK_INSIDE);
 			break;
 		case FD_STATE_DISK_LOADED:
+			get_sector_and_buffer();
 			if (sector >= FD_SECTORS) {
 				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
-			get_sector_and_buffer();
 			fd_state = FD_STATE_SPINNING_UP;
 			next_state = FD_STATE_READING;
 			cycles_done = 0;
@@ -124,11 +124,11 @@ void E64::fd::attempt_start_reading()
 		case FD_STATE_SPINNING_UP:
 			switch (next_state) {
 				case FD_STATE_SPINNING:
+					get_sector_and_buffer();
 					if (sector >= FD_SECTORS) {
 						set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 						break;
 					}
-					get_sector_and_buffer();
 					next_state = FD_STATE_READING;
 					cycles_done = 0;
 					bytes_done = 0;
@@ -150,11 +150,11 @@ void E64::fd::attempt_start_reading()
 			set_error_state(FD_ERROR_WRITING);
 			break;
 		case FD_STATE_SPINNING:
+			get_sector_and_buffer();
 			if (sector >= FD_SECTORS) {
 				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
-			get_sector_and_buffer();
 			fd_state = FD_STATE_READING;
 			cycles_done = 0;
 			bytes_done = 0;
@@ -172,11 +172,11 @@ void E64::fd::attempt_start_writing()
 				set_error_state(FD_ERROR_NO_DISK_INSIDE);
 				break;
 			case FD_STATE_DISK_LOADED:
+				get_sector_and_buffer();
 				if (sector >= FD_SECTORS) {
 					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
-				get_sector_and_buffer();
 				fd_state = FD_STATE_SPINNING_UP;
 				next_state = FD_STATE_WRITING;
 				cycles_done = 0;
@@ -185,11 +185,11 @@ void E64::fd::attempt_start_writing()
 			case FD_STATE_SPINNING_UP:
 				switch (next_state) {
 					case FD_STATE_SPINNING:
+						get_sector_and_buffer();
 						if (sector >= FD_SECTORS) {
 							set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 							break;
 						}
-						get_sector_and_buffer();
 						next_state = FD_STATE_WRITING;
 						cycles_done = 0;
 						bytes_done = 0;
@@ -211,11 +211,11 @@ void E64::fd::attempt_start_writing()
 				set_error_state(FD_ERROR_WRITING);
 				break;
 			case FD_STATE_SPINNING:
+				get_sector_and_buffer();
 				if (sector >= FD_SECTORS) {
 					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
-				get_sector_and_buffer();
 				fd_state = FD_STATE_WRITING;
 				cycles_done = 0;
 				bytes_done = 0;
