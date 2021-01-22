@@ -27,10 +27,13 @@ E64::fd::fd()
 	spin_up_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_UP_TIME_MS;
 	spin_delay_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_DELAY_MS;
 	
+	track = 0;
+	
 	sample_no = 0;
 	previous_sample_motor_on = false;
 	playing_spinning_down = false;
 	playing_track_change = false;
+	previous_track = 0;
 }
 
 E64::fd::~fd()
@@ -50,7 +53,6 @@ void E64::fd::reset()
 		registers[i] = 0x00;
 	reset_error_state();
 	cycles_done = 0;
-	track = 0;
 }
 
 uint8_t E64::fd::read_byte(uint8_t address)
@@ -481,17 +483,21 @@ int16_t E64::fd::sound_sample()
 	
 	if (previous_sample_motor_on && (!motor_on)) {
 		playing_spinning_down = true;
-		playing_track_change = true;
 		spinning_down_sample_no = 0;
-		track_change_sample_no = 0;
 	}
 	previous_sample_motor_on = motor_on;
+	
+	if (previous_track != track) {
+		playing_track_change = true;
+		track_change_sample_no = 0;
+	}
+	previous_track = track;
 	
 	int16_t sample_1 = playing_spinning_down ?
 		(int16_t)fd_motor_spinning_down[spinning_down_sample_no++] : 0;
 	
 	int16_t sample_2 = playing_track_change ?
-		(int16_t)fd_track_change[track_change_sample_no++] : 0;
+		2 * (int16_t)fd_track_change[track_change_sample_no++] : 0;
 	
 	if (spinning_down_sample_no == 21920)
 		playing_spinning_down = false;
@@ -499,5 +505,5 @@ int16_t E64::fd::sound_sample()
 	if (track_change_sample_no == 1984)
 		playing_track_change = false;
 	
-	return motor_on ? (int16_t)fd_motor_spinning[sample_no++] : (sample_1 + sample_2);
+	return sample_2 + (motor_on ? (int16_t)fd_motor_spinning[sample_no++] : sample_1);
 }

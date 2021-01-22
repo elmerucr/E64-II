@@ -3,4 +3,114 @@
    uuid = "5AC5E3E4-0B02-4138-B4C0-282492026745"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../src/devices/fd/fd.hpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "get_sector_and_buffer()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 73f7c2eee26556f2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_reading()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "92">
+               </Location>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 73f7c2eee26556f2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_reading()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "152">
+               </Location>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 73f7c2eee26556f2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_reading()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "236">
+               </Location>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 74fbbf6aa189285e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_writing()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "118">
+               </Location>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 74fbbf6aa189285e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_writing()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "181">
+               </Location>
+               <Location
+                  uuid = "2856F5DB-038A-4FDA-8EA9-17D4FA1851E9 - 74fbbf6aa189285e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "E64::fd::attempt_start_writing()"
+                  moduleName = "E64-II"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/elmer/Desktop/E64-II/src/devices/fd/fd.hpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "156"
+                  endingLineNumber = "156"
+                  offsetFromSymbolStart = "260">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

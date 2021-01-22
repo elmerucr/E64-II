@@ -163,14 +163,13 @@ private:
 			 registers[0xb] <<  0 ;
 		
 		track  = sector / (FD_SIDES * FD_SECTORS_PER_TRACK);
-		
-		printf("[fd] track: %02i\n", track);
 	}
 	
 	uint16_t sample_no;
 	bool previous_sample_motor_on;
 	bool playing_spinning_down;
 	bool playing_track_change;
+	uint32_t previous_track;
 	uint16_t spinning_down_sample_no;
 	uint16_t track_change_sample_no;
 public:
