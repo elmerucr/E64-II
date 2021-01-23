@@ -494,10 +494,10 @@ int16_t E64::fd::sound_sample()
 	previous_track = track;
 	
 	int16_t sample_1 = playing_spinning_down ?
-		(int16_t)fd_motor_spinning_down[spinning_down_sample_no++] : 0;
+		fd_motor_spinning_down[spinning_down_sample_no++] : 0;
 	
 	int16_t sample_2 = playing_track_change ?
-		2 * (int16_t)fd_track_change[track_change_sample_no++] : 0;
+		fd_track_change[track_change_sample_no++] : 0;
 	
 	if (spinning_down_sample_no == 21920)
 		playing_spinning_down = false;
@@ -505,5 +505,5 @@ int16_t E64::fd::sound_sample()
 	if (track_change_sample_no == 1984)
 		playing_track_change = false;
 	
-	return sample_2 + (motor_on ? (int16_t)fd_motor_spinning[sample_no++] : sample_1);
+	return sample_2 + (motor_on ? fd_motor_spinning[sample_no++] : sample_1);
 }
