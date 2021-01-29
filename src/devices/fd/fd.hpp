@@ -54,6 +54,7 @@
 #define FD_SPIN_UP_TIME_MS	300
 #define FD_SPIN_DELAY_MS	2000
 #define FD_ERROR_LED_TIME_MS	250
+#define FD_TRACK_CHANGE_TIME_MS	100
 
 namespace E64
 {
@@ -117,6 +118,7 @@ private:
 	uint32_t buffer;
 	
 	uint32_t track;
+	uint32_t previous_track;
 	
 	/*
 	 * On a read or write action, this variable keeps track of the number of
@@ -137,6 +139,13 @@ private:
 	 * Constructor calculates this based on ms and clock speed.
 	 */
 	uint32_t spin_delay_cycles;
+	
+	/*
+	 * Number of cycles for track change. Calculated by constructor.
+	 */
+	uint32_t track_change_cycles;
+	
+	int32_t track_change_cycle_counter;
 	
 	/*
 	 * Internal counter that keeps track of the amount of cycles since
@@ -162,6 +171,7 @@ private:
 			 registers[0xa] <<  8 |
 			 registers[0xb] <<  0 ;
 		
+		previous_track = track;
 		track  = sector / (FD_SIDES * FD_SECTORS_PER_TRACK);
 	}
 	
@@ -169,7 +179,7 @@ private:
 	bool previous_sample_motor_on;
 	bool playing_spinning_down;
 	bool playing_track_change;
-	uint32_t previous_track;
+	uint32_t track_last_sample;
 	uint16_t spinning_down_sample_no;
 	uint16_t track_change_sample_no;
 public:

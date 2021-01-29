@@ -26,14 +26,16 @@ E64::fd::fd()
 	
 	spin_up_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_UP_TIME_MS;
 	spin_delay_cycles = (CPU_CLOCK_SPEED / 1000) * FD_SPIN_DELAY_MS;
+	track_change_cycles = (CPU_CLOCK_SPEED / 1000) * FD_TRACK_CHANGE_TIME_MS;
 	
 	track = 0;
+	previous_track = 0;
 	
 	sample_no = 0;
 	previous_sample_motor_on = false;
 	playing_spinning_down = false;
 	playing_track_change = false;
-	previous_track = 0;
+	track_last_sample = 0;
 }
 
 E64::fd::~fd()
@@ -53,6 +55,7 @@ void E64::fd::reset()
 		registers[i] = 0x00;
 	reset_error_state();
 	cycles_done = 0;
+	track_change_cycle_counter = 0;
 }
 
 uint8_t E64::fd::read_byte(uint8_t address)
@@ -116,6 +119,8 @@ void E64::fd::attempt_start_reading()
 				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
+			if (track != previous_track)
+				track_change_cycle_counter += track_change_cycles;
 			fd_state = FD_STATE_SPINNING_UP;
 			next_state = FD_STATE_READING;
 			cycles_done = 0;
@@ -129,6 +134,8 @@ void E64::fd::attempt_start_reading()
 						set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 						break;
 					}
+					if (track != previous_track)
+						track_change_cycle_counter += track_change_cycles;
 					next_state = FD_STATE_READING;
 					cycles_done = 0;
 					bytes_done = 0;
@@ -155,6 +162,8 @@ void E64::fd::attempt_start_reading()
 				set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 				break;
 			}
+			if (track != previous_track)
+				track_change_cycle_counter += track_change_cycles;
 			fd_state = FD_STATE_READING;
 			cycles_done = 0;
 			bytes_done = 0;
@@ -177,6 +186,8 @@ void E64::fd::attempt_start_writing()
 					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
+				if (track != previous_track)
+					track_change_cycle_counter += track_change_cycles;
 				fd_state = FD_STATE_SPINNING_UP;
 				next_state = FD_STATE_WRITING;
 				cycles_done = 0;
@@ -190,6 +201,8 @@ void E64::fd::attempt_start_writing()
 							set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 							break;
 						}
+						if (track != previous_track)
+							track_change_cycle_counter += track_change_cycles;
 						next_state = FD_STATE_WRITING;
 						cycles_done = 0;
 						bytes_done = 0;
@@ -216,6 +229,8 @@ void E64::fd::attempt_start_writing()
 					set_error_state(FD_ERROR_ILLEGAL_SECTOR);
 					break;
 				}
+				if (track != previous_track)
+					track_change_cycle_counter += track_change_cycles;
 				fd_state = FD_STATE_WRITING;
 				cycles_done = 0;
 				bytes_done = 0;
@@ -326,28 +341,40 @@ void E64::fd::run(uint32_t cycles)
 			}
 			break;
 		case FD_STATE_READING:
-			cycles_done += cycles;
-			if (cycles_done > FD_CYCLES_PER_BYTE) {
-				pc.mmu->ram[(buffer+bytes_done) & 0xffffff] =
-					pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
-				cycles_done -= FD_CYCLES_PER_BYTE;
-				bytes_done++;
-				if (bytes_done == FD_BYTES_PER_SECTOR) {
-					fd_state = FD_STATE_SPINNING;
-					cycles_done = 0;
+			if (track_change_cycle_counter) {
+				track_change_cycle_counter -= cycles;
+				if (track_change_cycle_counter < 0)
+					track_change_cycle_counter = 0;
+			} else {
+				cycles_done += cycles;
+				if (cycles_done > FD_CYCLES_PER_BYTE) {
+					pc.mmu->ram[(buffer+bytes_done) & 0xffffff] =
+						pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
+					cycles_done -= FD_CYCLES_PER_BYTE;
+					bytes_done++;
+					if (bytes_done == FD_BYTES_PER_SECTOR) {
+						fd_state = FD_STATE_SPINNING;
+						cycles_done = 0;
+					}
 				}
 			}
 			break;
 		case FD_STATE_WRITING:
-			cycles_done += cycles;
-			if (cycles_done > FD_CYCLES_PER_BYTE) {
-				pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
-					pc.mmu->ram[(buffer+bytes_done) & 0xffffff];
-				cycles_done -= FD_CYCLES_PER_BYTE;
-				bytes_done++;
-				if (bytes_done == FD_BYTES_PER_SECTOR) {
-					fd_state = FD_STATE_SPINNING;
-					cycles_done = 0;
+			if (track_change_cycle_counter) {
+				track_change_cycle_counter -= cycles;
+				if (track_change_cycle_counter < 0)
+					track_change_cycle_counter = 0;
+			} else {
+				cycles_done += cycles;
+				if (cycles_done > FD_CYCLES_PER_BYTE) {
+					pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
+						pc.mmu->ram[(buffer+bytes_done) & 0xffffff];
+					cycles_done -= FD_CYCLES_PER_BYTE;
+					bytes_done++;
+					if (bytes_done == FD_BYTES_PER_SECTOR) {
+						fd_state = FD_STATE_SPINNING;
+						cycles_done = 0;
+					}
 				}
 			}
 			break;
@@ -487,11 +514,11 @@ int16_t E64::fd::sound_sample()
 	}
 	previous_sample_motor_on = motor_on;
 	
-	if (previous_track != track) {
+	if (track_last_sample != track) {
 		playing_track_change = true;
 		track_change_sample_no = 0;
 	}
-	previous_track = track;
+	track_last_sample = track;
 	
 	int16_t sample_1 = playing_spinning_down ?
 		fd_motor_spinning_down[spinning_down_sample_no++] : 0;
