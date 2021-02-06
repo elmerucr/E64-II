@@ -224,6 +224,8 @@ public:
 	
 	inline bool in_error() { return current_error_state != FD_ERROR_NONE; }
 	
+	inline uint8_t current_track() { return track; }
+	
 	int16_t sound_sample();
 };
 
