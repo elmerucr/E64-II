@@ -34,7 +34,7 @@ Finally, to run the application from the build directory:
 $ ./E64-II
 ````
 ### Building ROM
-The sourcecode comes with a working version of the rom ````rom.cpp````. If you want to build and/or modify it yourself however, have a look the [E64-II-rom project](https://github.com/elmerucr/E64-II-rom).
+The sourcecode comes with a working version of the rom ````rom.cpp````. If you want to build and/or modify it yourself however, have a look the [E64-II-ROM-C project](https://github.com/elmerucr/E64-II-ROM-C).
 ## Websites and projects of interest
 ### Assemblers and Compilers
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
