@@ -2,7 +2,6 @@ add_subdirectory(devices/)
 add_subdirectory(host/)
 add_subdirectory(monitor/)
 add_subdirectory(rom/)
-add_subdirectory(sdl2/)
 
 add_library(lua STATIC
 	lua-5.4.2/src/lapi.c
