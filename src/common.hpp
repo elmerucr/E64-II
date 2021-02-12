@@ -13,7 +13,6 @@
 #include <cstdint>
 
 #include "host.hpp"
-#include "video.hpp"
 #include "machine.hpp"
 #include "stats.hpp"
 
@@ -25,7 +24,6 @@
 /* Global objects */
 extern E64::host_t	host;
 extern E64::machine	pc;
-extern E64::video	host_video;
 extern E64::stats	statistics;
 extern uint8_t		rom[];
 

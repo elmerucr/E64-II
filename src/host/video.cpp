@@ -6,7 +6,7 @@
 #include "video.hpp"
 #include "common.hpp"
 
-E64::video::video()
+E64::video_t::video_t()
 {
 	SDL_version compiled;
 	SDL_version linked;
@@ -109,7 +109,7 @@ E64::video::video()
 	init_palette();
 }
 
-E64::video::~video()
+E64::video_t::~video_t()
 {
 	delete [] palette;
 	delete [] debug_screen_buffer;
@@ -127,7 +127,7 @@ E64::video::~video()
 	SDL_Quit();
 }
 
-void E64::video::reset()
+void E64::video_t::reset()
 {
 	frontbuffer = buffer_1;
 	backbuffer  = buffer_0;
@@ -136,7 +136,7 @@ void E64::video::reset()
 		buffer_0[i] = buffer_1[i] = 0xff202020;
 }
 
-void E64::video::init_palette()
+void E64::video_t::init_palette()
 {
 	/*
 	 * Prepare the 12 bit color palette and fill it with the right colors.
@@ -157,7 +157,7 @@ void E64::video::init_palette()
 	}
 }
 
-void E64::video::update_screen()
+void E64::video_t::update_screen()
 {
 	SDL_RenderClear(renderer);
 
@@ -177,7 +177,7 @@ void E64::video::update_screen()
 	SDL_RenderPresent(renderer);
 }
 
-void E64::video::reset_window_size()
+void E64::video_t::reset_window_size()
 {
 	SDL_SetWindowSize(window, window_sizes[current_window_size].x,
 			  window_sizes[current_window_size].y);
@@ -185,7 +185,7 @@ void E64::video::reset_window_size()
 			      SDL_WINDOWPOS_CENTERED);
 }
 
-void E64::video::increase_window_size()
+void E64::video_t::increase_window_size()
 {
 	if (current_window_size < 4) {
 		current_window_size++;
@@ -197,7 +197,7 @@ void E64::video::increase_window_size()
 	}
 }
 
-void E64::video::decrease_window_size()
+void E64::video_t::decrease_window_size()
 {
 	if (current_window_size > 0) {
 		current_window_size--;
@@ -209,7 +209,7 @@ void E64::video::decrease_window_size()
 	}
 }
 
-void E64::video::toggle_fullscreen()
+void E64::video_t::toggle_fullscreen()
 {
 	fullscreen = !fullscreen;
 	if (fullscreen) {
@@ -220,7 +220,7 @@ void E64::video::toggle_fullscreen()
 	SDL_GetWindowSize(window, &window_width, &window_height);
 }
 
-void E64::video::update_title()
+void E64::video_t::update_title()
 {
 	switch (pc.mode) {
         case RUNNING:

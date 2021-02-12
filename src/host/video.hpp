@@ -16,7 +16,7 @@ struct window_size
     uint16_t y;
 };
 
-class video {
+class video_t {
 private:
     const struct window_size window_sizes[5] =
     {
@@ -46,8 +46,8 @@ private:
     uint32_t *buffer_0;
     uint32_t *buffer_1;
 public:
-    video();
-    ~video();
+    video_t();
+    ~video_t();
 
     /* Palette, 4096 colors (3 x 4 bit)
      */

@@ -2,6 +2,7 @@
 #define HOST_HPP
 
 #include "settings.hpp"
+#include "video.hpp"
 
 namespace E64
 {
@@ -13,6 +14,7 @@ public:
 	~host_t();
 	
 	settings_t settings;
+	video_t video;
 };
 
 }

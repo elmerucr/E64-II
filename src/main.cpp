@@ -24,7 +24,6 @@
 // global components
 E64::host_t	host;
 E64::machine    pc;
-E64::video      host_video;
 E64::stats      statistics;
 
 std::chrono::time_point<std::chrono::steady_clock> refresh_time;
@@ -46,7 +45,7 @@ static void run_loop()
 		 * measurement for estimation of idle time.
 		 */
 		statistics.start_idle_time();
-		if (host_video.vsync_disabled()) {
+		if (host.video.vsync_disabled()) {
 			refresh_time +=
 				std::chrono::microseconds(statistics.frametime);
 			/*
@@ -56,10 +55,11 @@ static void run_loop()
 			 * avoid "playing catch-up" by the virtual machine.
 			 */
 			if (refresh_time < std::chrono::steady_clock::now())
-				refresh_time = std::chrono::steady_clock::now() + std::chrono::microseconds(statistics.frametime);
+				refresh_time = std::chrono::steady_clock::now() +
+					std::chrono::microseconds(statistics.frametime);
 			std::this_thread::sleep_until(refresh_time);
 		}
-		host_video.update_screen();
+		host.video.update_screen();
 		statistics.end_idle_time();
 	}
 }
@@ -70,7 +70,7 @@ static void monitor_loop()
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
 		E64::monitor_screen_update();
-		host_video.update_screen();
+		host.video.update_screen();
 	}
 	std::this_thread::sleep_for(std::chrono::microseconds(10000));
 
@@ -84,7 +84,7 @@ static void monitor_loop()
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
 		E64::monitor_screen_update();
-		host_video.update_screen();
+		host.video.update_screen();
 		break;
 	}
 }
@@ -93,10 +93,6 @@ int main(int argc, char **argv)
 {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs(L);
-	
-	printf("E64-II (C)%i by elmerucr - version %i.%i.%i\n",
-	       E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION,
-	       E64_II_BUILD);
 
 	debug_console_init();
 	// call inits to global components? messages can be in console
@@ -131,7 +127,6 @@ int main(int argc, char **argv)
 
 	printf("detected quit event\n");
 	E64::sdl2_cleanup();
-	printf("closing E64-II\n");
 	
 	lua_close(L);
 	return 0;

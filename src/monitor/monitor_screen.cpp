@@ -46,8 +46,8 @@ void E64::monitor_screen_update()
 		 * Backbuffer is the one currently being drawn into, so that
 		 * one should be shown.
 		 */
-		host_video.debug_screen_buffer[((VICV_SCANLINES-64)*VICV_PIXELS_PER_SCANLINE) + i] =
-			host_video.backbuffer[base + i];
+		host.video.debug_screen_buffer[((VICV_SCANLINES-64)*VICV_PIXELS_PER_SCANLINE) + i] =
+			host.video.backbuffer[base + i];
 	}
 
 	uint16_t current_pixel = pc.vicv->get_current_pixel();
@@ -62,7 +62,7 @@ void E64::monitor_screen_update()
 		pixel_cursor_color = 0xffff0000;
 	}
 
-	host_video.debug_screen_buffer[((VICV_SCANLINES - 64)*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
+	host.video.debug_screen_buffer[((VICV_SCANLINES - 64)*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
 }
 
 inline void E64::monitor_screen_render_scanline(int line_number)
@@ -90,7 +90,7 @@ inline void E64::monitor_screen_render_scanline(int line_number)
 			current_background_color = monitor_screen_background_color_buffer[char_position];
 			eight_pixels = rom[CBM_CP437_FONT_ADDRESS + ((current_char<<3) | current_character_line)];
 		}
-		host_video.debug_screen_buffer[base+x] = (eight_pixels & 0x80) ? host_video.palette[current_foreground_color] : host_video.palette[current_background_color];
+		host.video.debug_screen_buffer[base+x] = (eight_pixels & 0x80) ? host.video.palette[current_foreground_color] : host.video.palette[current_background_color];
 
 		// shift all bits in internal byte 1 place to the left
 		eight_pixels = eight_pixels << 1;
