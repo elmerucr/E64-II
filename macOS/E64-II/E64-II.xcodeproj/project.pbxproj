@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		463CC6FD25ABAC3E00F160FA /* fd_sounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463CC6FC25ABAC3E00F160FA /* fd_sounds.cpp */; };
+		466D919C25D6E96D00BD95AE /* sdl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 466D919A25D6E96D00BD95AE /* sdl2.cpp */; };
 		468B288E258E4C51002B1FE9 /* fd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 468B288D258E4C51002B1FE9 /* fd.cpp */; };
 		468C2BF925D3420800C39E08 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 468C2BBD25D3420500C39E08 /* lauxlib.c */; };
 		468C2BFA25D3420800C39E08 /* loadlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 468C2BBE25D3420500C39E08 /* loadlib.c */; };
@@ -44,7 +45,6 @@
 		4691C77923D7B23C00E9E78D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77823D7B23C00E9E78D /* Assets.xcassets */; };
 		4691C77C23D7B23C00E9E78D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */; };
 		4691C78823D7B28600E9E78D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C78723D7B28600E9E78D /* main.cpp */; };
-		4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79023D7B31500E9E78D /* sdl2.cpp */; };
 		4691C79623D7B34700E9E78D /* vicv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4691C79523D7B34700E9E78D /* vicv.cpp */; };
 		4691C7A623D7B3B600E9E78D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; };
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -102,6 +102,8 @@
 
 /* Begin PBXFileReference section */
 		463CC6FC25ABAC3E00F160FA /* fd_sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd_sounds.cpp; path = ../../../src/devices/fd/fd_sounds.cpp; sourceTree = "<group>"; };
+		466D919A25D6E96D00BD95AE /* sdl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdl2.cpp; path = ../../../src/host/sdl2.cpp; sourceTree = "<group>"; };
+		466D919B25D6E96D00BD95AE /* sdl2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = sdl2.hpp; path = ../../../src/host/sdl2.hpp; sourceTree = "<group>"; };
 		468B288C258E4C51002B1FE9 /* fd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fd.hpp; path = ../../../src/devices/fd/fd.hpp; sourceTree = "<group>"; };
 		468B288D258E4C51002B1FE9 /* fd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd.cpp; path = ../../../src/devices/fd/fd.cpp; sourceTree = "<group>"; };
 		468C2BBD25D3420500C39E08 /* lauxlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lauxlib.c; path = "../../../src/lua-5.4.2/src/lauxlib.c"; sourceTree = "<group>"; };
@@ -170,8 +172,6 @@
 		4691C78023D7B23C00E9E78D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4691C78123D7B23C00E9E78D /* E64_II.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = E64_II.entitlements; sourceTree = "<group>"; };
 		4691C78723D7B28600E9E78D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../src/main.cpp; sourceTree = "<group>"; };
-		4691C78F23D7B31500E9E78D /* sdl2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = sdl2.hpp; path = ../../../src/sdl2/sdl2.hpp; sourceTree = "<group>"; };
-		4691C79023D7B31500E9E78D /* sdl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdl2.cpp; path = ../../../src/sdl2/sdl2.cpp; sourceTree = "<group>"; };
 		4691C79423D7B34700E9E78D /* vicv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vicv.hpp; path = ../../../src/devices/vicv/vicv.hpp; sourceTree = "<group>"; };
 		4691C79523D7B34700E9E78D /* vicv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vicv.cpp; path = ../../../src/devices/vicv/vicv.cpp; sourceTree = "<group>"; };
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
@@ -378,7 +378,6 @@
 				4691C79223D7B32300E9E78D /* devices */,
 				46C9CE3425D6CFBC00AC9626 /* host */,
 				461CAD9C24AE765A001A3313 /* rom */,
-				4691C78E23D7B30400E9E78D /* sdl2 */,
 				4691C7AF23D7B40600E9E78D /* common.hpp */,
 				4691C7B023D7B40600E9E78D /* frequency_divider.hpp */,
 				4691C7AC23D7B40600E9E78D /* machine.hpp */,
@@ -401,15 +400,6 @@
 				4691C77B23D7B23C00E9E78D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		4691C78E23D7B30400E9E78D /* sdl2 */ = {
-			isa = PBXGroup;
-			children = (
-				4691C78F23D7B31500E9E78D /* sdl2.hpp */,
-				4691C79023D7B31500E9E78D /* sdl2.cpp */,
-			);
-			name = sdl2;
 			sourceTree = "<group>";
 		};
 		4691C79223D7B32300E9E78D /* devices */ = {
@@ -579,6 +569,8 @@
 			children = (
 				46C9CE3725D6CFFE00AC9626 /* host.hpp */,
 				46C9CE3525D6CFF000AC9626 /* host.cpp */,
+				466D919B25D6E96D00BD95AE /* sdl2.hpp */,
+				466D919A25D6E96D00BD95AE /* sdl2.cpp */,
 				46C9CE3C25D6E22600AC9626 /* settings.hpp */,
 				46C9CE3B25D6E22600AC9626 /* settings.cpp */,
 				46C9CE3925D6E06100AC9626 /* video.hpp */,
@@ -663,7 +655,6 @@
 				468C2C0225D3420800C39E08 /* lcode.c in Sources */,
 				46C4CC1C24388CBC002BD371 /* voice.cc in Sources */,
 				468B288E258E4C51002B1FE9 /* fd.cpp in Sources */,
-				4691C79123D7B31500E9E78D /* sdl2.cpp in Sources */,
 				468C2C1325D3420800C39E08 /* lbaselib.c in Sources */,
 				46C9CE3D25D6E22600AC9626 /* settings.cpp in Sources */,
 				468C2BF925D3420800C39E08 /* lauxlib.c in Sources */,
@@ -698,6 +689,7 @@
 				4691C7B823D7B4DC00E9E78D /* cia.cpp in Sources */,
 				46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */,
 				468C2C1725D3420800C39E08 /* linit.c in Sources */,
+				466D919C25D6E96D00BD95AE /* sdl2.cpp in Sources */,
 				4691C7B123D7B40600E9E78D /* machine.cpp in Sources */,
 				468C2C0325D3420800C39E08 /* lundump.c in Sources */,
 				468C2BFF25D3420800C39E08 /* lobject.c in Sources */,
