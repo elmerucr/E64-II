@@ -13,7 +13,7 @@
 
 extern uint8_t kernel[];
 
-E64::settings::settings()
+E64::settings_t::settings_t()
 {
 	snprintf(settings_path, 256, "%s", getenv("HOME"));     // within apple app container this returns a long path
 
@@ -48,7 +48,7 @@ E64::settings::settings()
 	update_current_path_from_settings();
 }
 
-E64::settings::~settings()
+E64::settings_t::~settings_t()
 {
 	write_current_path_to_settings();
 
@@ -58,7 +58,7 @@ E64::settings::~settings()
 	}
 }
 
-void E64::settings::update_current_path_from_settings()
+void E64::settings_t::update_current_path_from_settings()
 {
 	FILE *temp_file = fopen("PATH", "r");
 	if(temp_file) {
@@ -75,7 +75,7 @@ void E64::settings::update_current_path_from_settings()
 	}
 }
 
-void E64::settings::write_current_path_to_settings()
+void E64::settings_t::write_current_path_to_settings()
 {
 	chdir(settings_path);
 	FILE *temp_file = fopen("PATH", "w");

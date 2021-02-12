@@ -108,16 +108,16 @@ void E64::mmu_ic::write_memory_16(unsigned int address, unsigned int value)
 
 void E64::mmu_ic::find_and_update_rom_image()
 {
-	FILE *temp_file = fopen(prefs.path_to_rom, "r");
+	FILE *temp_file = fopen(host.settings.path_to_rom, "r");
 	
 	if (temp_file) {
 		printf("[mmu] found 'rom.bin' in %s, using this image\n",
-		       prefs.settings_path);
+		       host.settings.settings_path);
 		fread(current_rom_image, 262144, 1, temp_file);
 		fclose(temp_file);
 	} else {
 		printf("[mmu] no 'rom.bin' in %s, using built-in rom\n",
-		       prefs.settings_path);
+		       host.settings.settings_path);
 		for(int i=0; i<262144; i++) current_rom_image[i] = rom[i];
 	}
 }

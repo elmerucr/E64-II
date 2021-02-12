@@ -10,7 +10,7 @@
 
 namespace E64 {
 
-class settings
+class settings_t
 {
 private:
 	DIR *settings_directory;
@@ -18,8 +18,8 @@ private:
 	void update_current_path_from_settings();
 	void write_current_path_to_settings();
 public:
-	settings();
-	~settings();
+	settings_t();
+	~settings_t();
 
 	char home_dir[256];
 	char settings_path[256];

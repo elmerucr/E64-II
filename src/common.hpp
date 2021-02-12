@@ -11,24 +11,25 @@
 #define COMMON_H
 
 #include <cstdint>
-#include "settings.hpp"
+
+#include "host.hpp"
 #include "video.hpp"
 #include "machine.hpp"
 #include "stats.hpp"
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20210209
+#define E64_II_BUILD            20210212
 #define E64_II_YEAR             2021
 
 /* Global objects */
-extern E64::settings	prefs;
+extern E64::host_t	host;
 extern E64::machine	pc;
 extern E64::video	host_video;
 extern E64::stats	statistics;
 extern uint8_t		rom[];
 
-#define	RAM_SIZE	0x1000000   // 16mb system, DO NOT CHANGE
+#define	RAM_SIZE	0x01000000   // 16mb system, DO NOT CHANGE
 
 /*
  * System uses standard 720p60 HDMI output.

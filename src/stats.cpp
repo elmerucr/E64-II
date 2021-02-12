@@ -36,7 +36,7 @@ void E64::stats::reset()
     
     alpha = 0.90f;
     
-    time_per_frame = 1000000 / FPS;
+    frametime = 1000000 / FPS;
 
     now = then = std::chrono::steady_clock::now();
 }
@@ -75,13 +75,13 @@ void E64::stats::process_parameters()
     }
 }
 
-void E64::stats::start_idle()
+void E64::stats::start_idle_time()
 {
     // here we pinpoint done, because we're done with the "work"
     done = std::chrono::steady_clock::now();
 }
 
-void E64::stats::done_idle()
+void E64::stats::end_idle_time()
 {
     now = std::chrono::steady_clock::now();
     total_idle_time += std::chrono::duration_cast<std::chrono::microseconds>(now - done).count();

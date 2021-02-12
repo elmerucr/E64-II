@@ -8,8 +8,7 @@
 #ifndef VIDEO_HPP
 #define VIDEO_HPP
 
-namespace E64
-{
+namespace E64 {
 
 struct window_size
 {
@@ -17,8 +16,7 @@ struct window_size
     uint16_t y;
 };
 
-class video
-{
+class video {
 private:
     const struct window_size window_sizes[5] =
     {

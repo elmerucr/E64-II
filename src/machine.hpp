@@ -27,8 +27,8 @@ namespace E64
 
 enum machine_mode
 {
-    MONITOR_MODE,
-    NORMAL_MODE
+    MONITOR,
+    RUNNING
 };
     
 class machine
@@ -39,8 +39,8 @@ private:
     frequency_divider *m68k_to_sid;
     char machine_help_string[2048];
 public:
-    enum machine_mode   current_mode;
-    bool running;
+    enum machine_mode   mode;
+    bool on;
     
 	mmu_ic		*mmu;
 	cpu_moira	*m68k;
@@ -59,9 +59,8 @@ public:
 
 	void reset();
 
-	void switch_to_running();
-	void switch_to_debug();
-	void switch_mode();
+	void switch_mode(enum machine_mode new_mode);
+	void toggle_mode();
 };
 
 }

@@ -47,18 +47,14 @@ private:
 public:
     void reset();
     
-    uint32_t time_per_frame;      // in microseconds
+    uint32_t frametime;      // in microseconds
     
     // process calculations on parameters (fps/mhz/buffersize)
     void process_parameters();
 
     // for time measurement within a frame
-    void start_idle();
-    void done_idle();
-    
-    // debug related
-    void start_debug_time();
-    void end_debug_time();
+    void start_idle_time();
+    void end_idle_time();
 
     // getters
     inline double get_current_framerate() { return framerate; }

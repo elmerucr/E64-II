@@ -1,5 +1,5 @@
 add_subdirectory(devices/)
+add_subdirectory(host/)
 add_subdirectory(monitor/)
-add_subdirectory(resources/)
 add_subdirectory(rom/)
 add_subdirectory(sdl2/)

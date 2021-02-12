@@ -161,12 +161,12 @@ void E64::video::update_screen()
 {
 	SDL_RenderClear(renderer);
 
-	switch (pc.current_mode) {
-        case NORMAL_MODE:
+	switch (pc.mode) {
+        case RUNNING:
 		SDL_UpdateTexture(texture, NULL, frontbuffer,
 				  VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
 		break;
-        case MONITOR_MODE:
+        case MONITOR:
 		SDL_UpdateTexture(texture, NULL, debug_screen_buffer,
 				  VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
 		break;
@@ -222,11 +222,11 @@ void E64::video::toggle_fullscreen()
 
 void E64::video::update_title()
 {
-	switch (pc.current_mode) {
-        case NORMAL_MODE:
+	switch (pc.mode) {
+        case RUNNING:
 		SDL_SetWindowTitle(window, "E64-II");
 		break;
-        case MONITOR_MODE:
+        case MONITOR:
 		SDL_SetWindowTitle(window, "E64-II monitor");
 		break;
 	}

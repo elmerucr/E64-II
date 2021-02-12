@@ -11,36 +11,24 @@
 
 E64::machine::machine()
 {
-	// defaults to normal mode, but can be changed later by application
-	current_mode = NORMAL_MODE;
+	switch_mode(RUNNING);
 	
 	mmu = new mmu_ic();
-	
 	m68k = new cpu_moira();
-	
 	TTL74LS148 = new TTL74LS148_ic();
-	
 	timer = new timer_ic();
 	timer->interrupt_device_number = TTL74LS148->connect_device(4);
-	
 	vicv = new vicv_ic();
 	vicv->vblank_interrupt_device_number = TTL74LS148->connect_device(2);
-	
 	blitter = new blitter_ic();
-	
 	sids = new sids_ic();
-	
 	cia = new cia_ic();
-	
 	fd0 = new fd();
 	
-	// init frequency dividers (make sure the right amount of cycles will run on different ic's)
+	// init frequency dividers (right no of cycles will run on different ic's)
 	m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
 	m68k_to_blitter = new frequency_divider(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
 	m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
-//	m68k_to_timer = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
-//	m68k_to_cia = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
-//	m68k_to_fd0 = new frequency_divider(CPU_CLOCK_SPEED, CPU_CLOCK_SPEED );
 	
 	m68k->configDasm(true, false);   // output numbers in hex, use small case for mnemonics
 }
@@ -62,31 +50,33 @@ E64::machine::~machine()
 	delete mmu;
 }
 
-void E64::machine::switch_to_running()
+void E64::machine::switch_mode(enum machine_mode new_mode)
 {
-	current_mode = NORMAL_MODE;
-	debug_console_cursor_deactivate();
-	host_video.update_title();
-	// audio starts automatically when buffer reaches a minimum size
+	switch (new_mode) {
+		case E64::RUNNING:
+			mode = RUNNING;
+			debug_console_cursor_deactivate();
+			host_video.update_title();
+			// audio starts automatically when buffer reaches a minimum size
+			break;
+		case E64::MONITOR:
+			mode = MONITOR;
+			debug_console_cursor_activate();
+			host_video.update_title();
+			E64::sdl2_stop_audio();
+			break;
+	}
 }
 
-void E64::machine::switch_to_debug()
+void E64::machine::toggle_mode()
 {
-	current_mode = MONITOR_MODE;
-	debug_console_cursor_activate();
-	host_video.update_title();
-	E64::sdl2_stop_audio();
-}
-
-void E64::machine::switch_mode()
-{
-	switch (current_mode) {
-	case NORMAL_MODE:
-		switch_to_debug();
-		break;
-        case MONITOR_MODE:
-		switch_to_running();
-		break;
+	switch (mode) {
+		case RUNNING:
+			switch_mode(E64::MONITOR);
+			break;
+		case MONITOR:
+			switch_mode(E64::RUNNING);
+			break;
 	}
 }
 
@@ -117,7 +107,9 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
 	// run cycles on vicv and check for breakpoints
 	vicv->run(m68k_to_vicv->clock(processed_cycles));
 	if (vicv->breakpoint_reached) {
-		snprintf(machine_help_string, 256, "scanline breakpoint occurred at line %i\n", vicv->get_current_scanline());
+		snprintf(machine_help_string, 256,
+			 "scanline breakpoint occurred at line %i\n",
+			 vicv->get_current_scanline());
 		debug_console_print(machine_help_string);
 		vicv->breakpoint_reached = false;
 		output_state |= SCANLINE_BREAKPOINT;

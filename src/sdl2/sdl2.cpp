@@ -90,7 +90,7 @@ int E64::sdl2_process_events()
                 if(event.key.keysym.sym == SDLK_F9)
                 {
                     E64::sdl2_wait_until_f9_released();
-                    pc.switch_mode();
+                    pc.toggle_mode();
                 }
                 else if( (event.key.keysym.sym == SDLK_f) && alt_pressed )
                 {
@@ -108,14 +108,14 @@ int E64::sdl2_process_events()
                     E64::sdl2_wait_until_q_released();
                     return_value = QUIT_EVENT;
                 }
-                else if(pc.current_mode == NORMAL_MODE)
+                else if(pc.mode == RUNNING)
                 {
                     if(event.key.keysym.sym == SDLK_F10)
                     {
                         pc.vicv->toggle_stats();
                     }
                 }
-                else if(pc.current_mode == MONITOR_MODE)
+                else if(pc.mode == MONITOR)
                 {
                     switch(event.key.keysym.sym)
                     {

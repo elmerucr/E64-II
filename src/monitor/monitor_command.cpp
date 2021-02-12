@@ -73,13 +73,13 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		token1 = strtok(NULL, " ");
 		debug_console_put_char('\n');
 		if (token1 == NULL) {
-			if (chdir(prefs.home_dir)) {
+			if (chdir(host.settings.home_dir)) {
 				snprintf(command_help_string, 256,
 					 "error: no such file or directory: %s\n",
-					 prefs.home_dir);
+					 host.settings.home_dir);
 				debug_console_print(command_help_string);
 			}
-			getcwd(prefs.current_path, 256);    // update current_path
+			getcwd(host.settings.current_path, 256);    // update current_path
 		} else {
 			if (chdir(token1)) {
 				snprintf(command_help_string, 256,
@@ -87,7 +87,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 					 token1);
 				debug_console_print(command_help_string);
 			}
-			getcwd(prefs.current_path, 256);    // update current_path
+			getcwd(host.settings.current_path, 256);    // update current_path
 		}
 	} else if (strcmp(token0, "bar") == 0) {
 		debug_console_put_char('\n');
@@ -99,7 +99,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "c") == 0) {
 		debug_console_put_char('\n');
 		E64::sdl2_wait_until_enter_released();
-		pc.switch_to_running();
+		pc.switch_mode(E64::RUNNING);
 	} else if( strcmp(token0, "clear") == 0 ) {
 		debug_console_clear();
 	} else if (strcmp(token0, "eject") == 0) {
@@ -119,7 +119,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "exit") == 0) {
 		have_prompt = false;
 		E64::sdl2_wait_until_enter_released();
-		pc.running = false;
+		pc.on = false;
 	} else if (strcmp(token0, "full") == 0) {
 		debug_console_put_char('\n');
 		host_video.toggle_fullscreen();
@@ -157,7 +157,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_print(command_help_string);
 		debug_console_put_char('\n');
 	    
-		DIR *directory = opendir(prefs.current_path);
+		DIR *directory = opendir(host.settings.current_path);
 		struct dirent *entry;
 		int files = 0;
 
