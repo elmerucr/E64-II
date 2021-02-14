@@ -9,7 +9,6 @@
 #include <SDL2/SDL.h>
 #include "common.hpp"
 #include "sdl2.hpp"
-#include "monitor_screen.hpp"
 #include "monitor_console.hpp"
 #include "monitor_command.hpp"
 
@@ -394,20 +393,22 @@ int E64::sdl2_process_events()
         pc.cia->keys_last_known_state[SCANCODE_UP] = E64_sdl2_keyboard_state[SDL_SCANCODE_UP] ? 0x01 : 0x00;
         pc.cia->keys_last_known_state[SCANCODE_DOWN] = E64_sdl2_keyboard_state[SDL_SCANCODE_DOWN] ? 0x01 : 0x00;
         pc.cia->keys_last_known_state[SCANCODE_RIGHT] = E64_sdl2_keyboard_state[SDL_SCANCODE_RIGHT] ? 0x01 : 0x00;
-    }
-    return return_value;
+	}
+	if (return_value == QUIT_EVENT)
+		printf("[SDL] detected quit event\n");
+	return return_value;
 }
 
 void E64::sdl2_wait_until_enter_released()
 {
-    SDL_Event event;
-    bool wait = true;
-    while(wait)
-    {
-        SDL_PollEvent(&event);
-        if( (event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_RETURN) ) wait = false;
-        std::this_thread::sleep_for(std::chrono::microseconds(40000));
-    }
+	SDL_Event event;
+	bool wait = true;
+	while (wait) {
+		SDL_PollEvent(&event);
+		if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_RETURN))
+			wait = false;
+		std::this_thread::sleep_for(std::chrono::microseconds(40000));
+	}
 }
 
 void E64::sdl2_wait_until_f9_released()

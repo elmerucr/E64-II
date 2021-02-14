@@ -8,16 +8,10 @@
 #include <thread>
 
 #include "common.hpp"
-#include "host.hpp"
 #include "sdl2.hpp"
-#include "stats.hpp"
-#include "vicv.hpp"
 #include "monitor_console.hpp"
 #include "monitor_screen.hpp"
 #include "monitor_status_bar.hpp"
-#include "cia.hpp"
-#include "sids.hpp"
-#include "timer.hpp"
 
 #include "lua.hpp"
 
@@ -26,7 +20,7 @@ E64::host_t	host;
 E64::machine    pc;
 E64::stats      statistics;
 
-std::chrono::time_point<std::chrono::steady_clock> refresh_time;
+std::chrono::time_point<std::chrono::steady_clock> refresh_moment;
 
 static void run_loop()
 {
@@ -46,7 +40,7 @@ static void run_loop()
 		 */
 		statistics.start_idle_time();
 		if (host.video.vsync_disabled()) {
-			refresh_time +=
+			refresh_moment +=
 				std::chrono::microseconds(statistics.frametime);
 			/*
 			 * Check if the next update is in the past,
@@ -54,10 +48,10 @@ static void run_loop()
 			 * If so, calculate a new update moment. This will
 			 * avoid "playing catch-up" by the virtual machine.
 			 */
-			if (refresh_time < std::chrono::steady_clock::now())
-				refresh_time = std::chrono::steady_clock::now() +
+			if (refresh_moment < std::chrono::steady_clock::now())
+				refresh_moment = std::chrono::steady_clock::now() +
 					std::chrono::microseconds(statistics.frametime);
-			std::this_thread::sleep_until(refresh_time);
+			std::this_thread::sleep_until(refresh_moment);
 		}
 		host.video.update_screen();
 		statistics.end_idle_time();
@@ -110,9 +104,9 @@ int main(int argc, char **argv)
 	pc.reset();
 	pc.on = true;
 
-	refresh_time = std::chrono::steady_clock::now();
-
 	statistics.reset();
+	
+	refresh_moment = std::chrono::steady_clock::now();
 
 	while (pc.on) {
 		switch (pc.mode) {
@@ -125,9 +119,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	printf("detected quit event\n");
 	E64::sdl2_cleanup();
-	
 	lua_close(L);
 	return 0;
 }

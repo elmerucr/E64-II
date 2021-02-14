@@ -18,7 +18,7 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20210212
+#define E64_II_BUILD            20210214
 #define E64_II_YEAR             2021
 
 /* Global objects */
@@ -94,7 +94,7 @@ extern uint8_t		rom[];
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
 #define BLITTER_DOT_CLOCK_SPEED     (4*VICV_DOT_CLOCK_SPEED)
-#define CPU_CLOCK_SPEED             (VICV_DOT_CLOCK_SPEED)
+#define CPU_CLOCK_SPEED             (1*VICV_DOT_CLOCK_SPEED)
 
 #define SID_CLOCK_SPEED             985248
 #define SAMPLE_RATE                 44100
