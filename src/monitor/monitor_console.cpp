@@ -251,19 +251,19 @@ void debug_console_arrow_down()
                 break;
             case ASCII:
                 debug_console_add_bottom_row();
-                E64::debug_command_memory_dump((address+8) & (RAM_SIZE - 1), 1);
+                E64::monitor_command_memory_dump((address+8) & (RAM_SIZE - 1), 1);
                 break;
             case CHARACTER:
                 debug_console_add_bottom_row();
-                E64::debug_command_memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
+                E64::monitor_command_memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
                 break;
 		case BINARY:
 			debug_console_add_bottom_row();
-			E64::debug_command_memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
+			E64::monitor_command_memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
 			break;
 		case DISK:
 			debug_console_add_bottom_row();
-			E64::debug_command_fd_dump(address + 0x08, 1);
+			E64::monitor_command_fd_dump(address + 0x08, 1);
 			break;
         }
     }
@@ -286,19 +286,19 @@ void debug_console_arrow_up()
                 break;
             case ASCII:
                 debug_console_add_top_row();
-                E64::debug_command_memory_dump((address-8) & (RAM_SIZE - 1), 1);
+                E64::monitor_command_memory_dump((address-8) & (RAM_SIZE - 1), 1);
                 break;
             case CHARACTER:
                 debug_console_add_top_row();
-                E64::debug_command_memory_character_dump((address-16) & (RAM_SIZE - 1), 1);
+                E64::monitor_command_memory_character_dump((address-16) & (RAM_SIZE - 1), 1);
                 break;
 		case BINARY:
 			debug_console_add_top_row();
-			E64::debug_command_memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
+			E64::monitor_command_memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
 			break;
 		case DISK:
 			debug_console_add_top_row();
-			E64::debug_command_fd_dump(address - 0x08, 1);
+			E64::monitor_command_fd_dump(address - 0x08, 1);
 			break;
         }
     }
@@ -319,7 +319,7 @@ void debug_console_enter()
     
     console_help_string[64] = ASCII_NULL;
     
-    E64::debug_command_execute(console_help_string);
+    E64::monitor_command_execute(console_help_string);
 }
 
 void debug_console_backspace()
@@ -427,7 +427,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 				monitor_console_0.character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::debug_command_hex_string_to_int(potential_address, address);
+			E64::monitor_command_hex_string_to_int(potential_address, address);
 			if (top_down)
 				break;
 		} else if (monitor_console_0.character_buffer[i] == ';') {
@@ -439,7 +439,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 				monitor_console_0.character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::debug_command_hex_string_to_int(potential_address, address);
+			E64::monitor_command_hex_string_to_int(potential_address, address);
 			if (top_down)
 				break;
 		} else if (monitor_console_0.character_buffer[i] == '\'') {
@@ -451,7 +451,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 				monitor_console_0.character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::debug_command_hex_string_to_int(potential_address, address);
+			E64::monitor_command_hex_string_to_int(potential_address, address);
 			if (top_down) break;
 		} else if (monitor_console_0.character_buffer[i] == '"') {
 			output_type = DISK;
@@ -463,7 +463,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 					monitor_console_0.character_buffer[i+3+j];
 			}
 			potential_sector[8] = 0;
-			E64::debug_command_hex_string_to_int(potential_sector, &sector);
+			E64::monitor_command_hex_string_to_int(potential_sector, &sector);
 			
 			char potential_offset[5];
 			uint32_t offset;
@@ -472,7 +472,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 					monitor_console_0.character_buffer[i+12+j];
 			}
 			potential_offset[4] = 0;
-			E64::debug_command_hex_string_to_int(potential_offset, &offset);
+			E64::monitor_command_hex_string_to_int(potential_offset, &offset);
 			
 			*address = (sector * pc.fd0->bytes_per_sector()) + offset;
 			if (top_down) break;

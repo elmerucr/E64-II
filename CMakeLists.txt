@@ -21,7 +21,6 @@ include_directories(
     src/devices/TTL74LS148/
     src/devices/vicv/
     src/host/
-    src/lua-5.4.2/src
     src/monitor/
     src/rom/
 )
@@ -34,4 +33,4 @@ add_executable(
 	src/machine.cpp
 	src/stats.cpp)
 
-target_link_libraries(E64-II cia cpu fd host lua mmu monitor resid rom sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
+target_link_libraries(E64-II cia cpu fd host mmu monitor resid rom sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})

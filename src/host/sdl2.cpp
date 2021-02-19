@@ -288,11 +288,11 @@ int E64::sdl2_process_events()
                             debug_console_arrow_down();
                             break;
                         case SDLK_F1:
-                            debug_command_single_step_cpu();
+                            monitor_command_single_step_cpu();
                             if( monitor_console_0.status_bar_active == false ) {
                                 debug_console_cursor_deactivate();
                                 //debug_console_toggle_status_bar();
-				debug_command_dump_cpu_status();
+				monitor_command_dump_cpu_status();
 				    debug_console_prompt();
                                 debug_console_cursor_activate();
                             }

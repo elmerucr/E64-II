@@ -13,8 +13,6 @@
 #include "monitor_screen.hpp"
 #include "monitor_status_bar.hpp"
 
-#include "lua.hpp"
-
 // global components
 E64::host_t	host;
 E64::machine    pc;
@@ -85,9 +83,6 @@ static void monitor_loop()
 
 int main(int argc, char **argv)
 {
-	lua_State *L = luaL_newstate();
-	luaL_openlibs(L);
-
 	debug_console_init();
 	// call inits to global components? messages can be in console
 
@@ -120,6 +115,5 @@ int main(int argc, char **argv)
 	}
 
 	E64::sdl2_cleanup();
-	lua_close(L);
 	return 0;
 }

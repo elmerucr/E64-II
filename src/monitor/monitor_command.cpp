@@ -17,7 +17,7 @@
 
 char command_help_string[2048];
 
-void E64::debug_command_execute(char *string_to_parse_and_exec)
+void E64::monitor_command_execute(char *string_to_parse_and_exec)
 {
 	bool have_prompt = true;
 	
@@ -29,16 +29,16 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_put_char('\n');
 	} else if (token0[0] == ':') {
 		have_prompt = false;
-		debug_command_enter_monitor_line(string_to_parse_and_exec);
+		monitor_command_enter_monitor_line(string_to_parse_and_exec);
 	} else if (token0[0] == ';') {
 		have_prompt = false;
-		debug_command_enter_monitor_character_line(string_to_parse_and_exec);
+		monitor_command_enter_monitor_character_line(string_to_parse_and_exec);
 	} else if (token0[0] == '\'') {
 		have_prompt = false;
-		debug_command_enter_monitor_binary_line(string_to_parse_and_exec);
+		monitor_command_enter_monitor_binary_line(string_to_parse_and_exec);
 	} else if (token0[0] == '"') {
 		have_prompt = false;
-		debug_command_enter_monitor_disk_line(string_to_parse_and_exec);
+		monitor_command_enter_monitor_disk_line(string_to_parse_and_exec);
 	} else if (strcmp(token0, "b") == 0) {
 		token1 = strtok(NULL, " ");
 		debug_console_put_char('\n');
@@ -58,7 +58,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			}
 		} else {
 			uint32_t temp_32bit;
-			if (debug_command_hex_string_to_int(token1, &temp_32bit)) {
+			if (monitor_command_hex_string_to_int(token1, &temp_32bit)) {
 				temp_32bit &= (RAM_SIZE - 1);
 				pc.m68k->debugger.breakpoints.addAt(temp_32bit);
 				snprintf(command_help_string, 256,
@@ -187,17 +187,17 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				debug_console_put_char('\n');
-				debug_command_memory_dump(temp_pc, 1);
+				monitor_command_memory_dump(temp_pc, 1);
 				temp_pc = (temp_pc + 8) & 0x00ffffff;
 			}
 		} else {
-			if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
+			if (!monitor_command_hex_string_to_int(token1, &temp_pc)) {
 				debug_console_put_char('\n');
 				debug_console_print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					debug_console_put_char('\n');
-					debug_command_memory_dump(temp_pc &
+					monitor_command_memory_dump(temp_pc &
 						(RAM_SIZE - 1), 1);
 					temp_pc = (temp_pc + 8) & 0x00ffffff;
 				}
@@ -215,17 +215,17 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				debug_console_put_char('\n');
-				debug_command_memory_binary_dump(temp_pc, 1);
+				monitor_command_memory_binary_dump(temp_pc, 1);
 				temp_pc = (temp_pc + 1) & 0x00ffffff;
 			}
 		} else {
-			if (!debug_command_hex_string_to_int(token1, &temp_pc)) {
+			if (!monitor_command_hex_string_to_int(token1, &temp_pc)) {
 				debug_console_put_char('\n');
 				debug_console_print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					debug_console_put_char('\n');
-					debug_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
+					monitor_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
 					temp_pc = (temp_pc + 1) & 0x00ffffff;
 				}
 			}
@@ -241,13 +241,13 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 			debug_console_print("error: need address\n");
 		} else {
 			uint32_t temp_32bit;
-			if (!debug_command_hex_string_to_int(token1, &temp_32bit)) {
+			if (!monitor_command_hex_string_to_int(token1, &temp_32bit)) {
 				debug_console_put_char('\n');
 				debug_console_print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					debug_console_put_char('\n');
-					debug_command_memory_character_dump(temp_32bit &
+					monitor_command_memory_character_dump(temp_32bit &
 						(RAM_SIZE - 1), 1);
 					temp_32bit = (temp_32bit + 16) & 0x00ffffff;
 				}
@@ -267,13 +267,13 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				debug_console_put_char('\n');
-				debug_command_fd_dump(temp_pos, 1);
+				monitor_command_fd_dump(temp_pos, 1);
 				temp_pos += 0x08;
 				if (temp_pos >= pc.fd0->disk_size())
 					temp_pos = 0;
 			}
 		} else {
-			if (!debug_command_hex_string_to_int(token1, &temp_pos)) {
+			if (!monitor_command_hex_string_to_int(token1, &temp_pos)) {
 				debug_console_put_char('\n');
 				debug_console_print("error: invalid sector\n");
 			} else {
@@ -283,7 +283,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 					pc.fd0->bytes_per_sector();
 				for (int i=0; i<lines_remaining; i++) {
 					debug_console_put_char('\n');
-					debug_command_fd_dump(temp_pos, 1);
+					monitor_command_fd_dump(temp_pos, 1);
 					temp_pos += 0x08;
 				}
 			}
@@ -294,7 +294,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_print(command_help_string);
 		debug_console_put_char('\n');
 	} else if (strcmp(token0, "r") == 0) {
-		debug_command_dump_cpu_status();
+		monitor_command_dump_cpu_status();
 	} else if (strcmp(token0, "reset") == 0) {
 		debug_console_put_char('\n');
 		pc.reset();
@@ -380,7 +380,7 @@ void E64::debug_command_execute(char *string_to_parse_and_exec)
 		debug_console_prompt();
 }
 
-void E64::debug_command_dump_cpu_status()
+void E64::monitor_command_dump_cpu_status()
 {
     debug_console_put_char('\n');
     pc.m68k->dump_registers(command_help_string);
@@ -388,7 +388,7 @@ void E64::debug_command_dump_cpu_status()
     debug_console_put_char('\n');
 }
 
-void E64::debug_command_memory_dump(uint32_t address, int rows)
+void E64::monitor_command_memory_dump(uint32_t address, int rows)
 {
     address = address & 0xfffffffe;  // only even addresses allowed
     
@@ -424,7 +424,7 @@ void E64::debug_command_memory_dump(uint32_t address, int rows)
     }
 }
 
-void E64::debug_command_memory_character_dump(uint32_t address, int rows)
+void E64::monitor_command_memory_character_dump(uint32_t address, int rows)
 {
     for(int i=0; i<rows; i++ )
     {
@@ -459,7 +459,7 @@ void E64::debug_command_memory_character_dump(uint32_t address, int rows)
     }
 }
 
-void E64::debug_command_memory_binary_dump(uint32_t address, int rows)
+void E64::monitor_command_memory_binary_dump(uint32_t address, int rows)
 {
 	for (int i=0; i<rows; i++) {
 		uint8_t temp_byte = pc.mmu->read_memory_8(address);
@@ -514,7 +514,7 @@ void E64::debug_command_memory_binary_dump(uint32_t address, int rows)
  * This function is slightly adopted to check for true values. It returns false
  * when there's wrong input.
  */
-bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *return_value)
+bool E64::monitor_command_hex_string_to_int(const char *temp_string, uint32_t *return_value)
 {
     uint32_t val = 0;
     while (*temp_string)
@@ -546,14 +546,14 @@ bool E64::debug_command_hex_string_to_int(const char *temp_string, uint32_t *ret
     return true;
 }
 
-void E64::debug_command_single_step_cpu()
+void E64::monitor_command_single_step_cpu()
 {
 	debug_console_cursor_deactivate();
 	pc.run(0);
 	debug_console_cursor_activate();
 }
 
-void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
+void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
 {
     uint32_t address;
     uint32_t arg0, arg1, arg2, arg3;
@@ -564,7 +564,7 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
     string_to_parse_and_exec[22] = '\0';
     string_to_parse_and_exec[27] = '\0';
     
-    if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+    if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 1;
@@ -576,25 +576,25 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
 	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 8;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 13;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 18;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 23;
@@ -616,7 +616,7 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
 
         debug_console_put_char('\r');
         
-        debug_command_memory_dump(original_address, 1);
+        monitor_command_memory_dump(original_address, 1);
         
         original_address += 8;
         original_address &= 0xffffff;
@@ -627,7 +627,7 @@ void E64::debug_command_enter_monitor_line(char *string_to_parse_and_exec)
 }
 
 //  rewrite this / merge this with the other enter line function?
-void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_exec)
+void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and_exec)
 {
     uint32_t address;
     uint32_t arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7;
@@ -642,7 +642,7 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
     string_to_parse_and_exec[42] = '\0';
     string_to_parse_and_exec[47] = '\0';
     
-    if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+    if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 1;
@@ -654,49 +654,49 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
 	    monitor_console_0.cursor_pos += 1;
         debug_console_print("??????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 8;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 13;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 18;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 23;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[28], &arg4) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[28], &arg4) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 28;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[33], &arg5) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[33], &arg5) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 33;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg6) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg6) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 38;
         debug_console_print("????\n");
     }
-    else if( !debug_command_hex_string_to_int(&string_to_parse_and_exec[43], &arg7) )
+    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[43], &arg7) )
     {
         debug_console_put_char('\r');
 	    monitor_console_0.cursor_pos += 43;
@@ -726,7 +726,7 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
 
         debug_console_put_char('\r');
         
-        debug_command_memory_character_dump(original_address, 1);
+        monitor_command_memory_character_dump(original_address, 1);
         
         original_address += 16;
         original_address &= 0xffffff;
@@ -736,7 +736,7 @@ void E64::debug_command_enter_monitor_character_line(char *string_to_parse_and_e
     }
 }
 
-void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec)
+void E64::monitor_command_enter_monitor_binary_line(char *string_to_parse_and_exec)
 {
 	uint32_t address;
 	uint32_t arg0;
@@ -744,11 +744,11 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 	string_to_parse_and_exec[7]  = '\0';
 	string_to_parse_and_exec[10] = '\0';
 	
-	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
+	if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 1;
 		debug_console_print("??????\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 8;
 		debug_console_print("??\n");
@@ -756,7 +756,7 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 		arg0 &= 0xff;
 		pc.mmu->write_memory_8(address, (uint8_t)arg0);
 		debug_console_put_char('\r');
-		debug_command_memory_binary_dump(address, 1);
+		monitor_command_memory_binary_dump(address, 1);
 		address++;
 		address &= 0xffffff;
 		snprintf(command_help_string, 256, "\n\'%06x ", address);
@@ -764,7 +764,7 @@ void E64::debug_command_enter_monitor_binary_line(char *string_to_parse_and_exec
 	}
 }
 
-void E64::debug_command_fd_dump(uint32_t address, int rows)
+void E64::monitor_command_fd_dump(uint32_t address, int rows)
 {
 	address &= 0xfffffff8;
 
@@ -792,7 +792,7 @@ void E64::debug_command_fd_dump(uint32_t address, int rows)
 	monitor_console_0.cursor_pos -= 32;
 }
 
-void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
+void E64::monitor_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 {
 	uint32_t sector = 0;
 	uint32_t offset = 0;
@@ -819,43 +819,43 @@ void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 	string_to_parse_and_exec[40] = '\0';
 
 	
-	if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
+	if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 3;
 		debug_console_print("????????\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
 	       debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 12;
 	       debug_console_print("????\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 17;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 20;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 23;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 26;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 29;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 32;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 35;
 		debug_console_print("??\n");
-	} else if (!debug_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
+	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
 		debug_console_put_char('\r');
 		monitor_console_0.cursor_pos += 38;
 		debug_console_print("??\n");
@@ -875,7 +875,7 @@ void E64::debug_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
 				pc.fd0->disk_contents[temp_pos + 0x7] = (arg7 & 0xff);
 			}
 			debug_console_put_char('\r');
-			debug_command_fd_dump(temp_pos, 1);
+			monitor_command_fd_dump(temp_pos, 1);
 			temp_pos += 0x8;
 			if (temp_pos >= pc.fd0->disk_size())
 				temp_pos = 0;

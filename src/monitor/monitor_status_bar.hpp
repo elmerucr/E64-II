@@ -12,8 +12,8 @@ extern uint8_t status_bar_chars[];
 extern uint16_t status_bar_foreground_color_buffer[];
 extern uint16_t status_bar_background_color_buffer[];
 
-void debug_status_bar_clear(void);
-void debug_status_bar_refresh(void);
+void debug_status_bar_clear();
+void debug_status_bar_refresh();
 
 void debug_status_bar_set_cursor_pos(uint16_t pos);
 void debug_status_bar_putchar(char character);
