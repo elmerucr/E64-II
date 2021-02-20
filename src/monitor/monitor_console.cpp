@@ -7,7 +7,7 @@
 
 #include "common.hpp"
 #include "monitor_console.hpp"
-#include "monitor_screen.hpp"
+#include "screen.hpp"
 #include "monitor_command.hpp"
 #include "monitor_status_bar.hpp"
 
@@ -141,17 +141,17 @@ void debug_console_blit_to_debug_screen()
 {
     for(int i = 0; i < ((VICV_CHAR_ROWS-8)*VICV_CHAR_COLUMNS); i++)
     {
-        monitor_screen_character_buffer[i] = monitor_console_0.character_buffer[i];
-        monitor_screen_foreground_color_buffer[i] = monitor_console_0.foreground_color_buffer[i];
-        monitor_screen_background_color_buffer[i] = monitor_console_0.background_color_buffer[i];
+        screen_character_buffer[i] = monitor_console_0.character_buffer[i];
+        screen_foreground_color_buffer[i] = monitor_console_0.foreground_color_buffer[i];
+        screen_background_color_buffer[i] = monitor_console_0.background_color_buffer[i];
     }
     if( monitor_console_0.status_bar_active == true )
     {
         for(int i = 0; i < (monitor_console_0.status_bar_rows * VICV_CHAR_COLUMNS); i++)
         {
-            monitor_screen_character_buffer[i] = status_bar_chars[i];
-            monitor_screen_foreground_color_buffer[i] = status_bar_foreground_color_buffer[i];
-            monitor_screen_background_color_buffer[i] = status_bar_background_color_buffer[i];
+            screen_character_buffer[i] = status_bar_chars[i];
+            screen_foreground_color_buffer[i] = status_bar_foreground_color_buffer[i];
+            screen_background_color_buffer[i] = status_bar_background_color_buffer[i];
         }
     }
 }

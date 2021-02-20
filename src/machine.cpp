@@ -4,7 +4,7 @@
 //  Copyright © 2019-2021 elmerucr. All rights reserved.
 
 #include "monitor_console.hpp"
-#include "monitor_screen.hpp"
+#include "screen.hpp"
 #include "machine.hpp"
 #include "sdl2.hpp"
 #include "common.hpp"
@@ -56,13 +56,13 @@ void E64::machine::switch_mode(enum machine_mode new_mode)
 		case E64::RUNNING:
 			mode = RUNNING;
 			debug_console_cursor_deactivate();
-			host.video.update_title();
+			host.video->update_title();
 			// audio starts automatically when buffer reaches a minimum size
 			break;
 		case E64::MONITOR:
 			mode = MONITOR;
 			debug_console_cursor_activate();
-			host.video.update_title();
+			host.video->update_title();
 			E64::sdl2_stop_audio();
 			break;
 	}
@@ -140,7 +140,7 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
 
 void E64::machine::reset()
 {
-	host.video.reset();
+	host.video->reset();
 	mmu->reset();
 	m68k->reset();
 	sids->reset();

@@ -1,7 +1,7 @@
 //  sdl2.cpp
 //  E64
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2021 elmerucr. All rights reserved.
 
 #include <cstdio>
 #include <thread>
@@ -94,7 +94,7 @@ int E64::sdl2_process_events()
                 else if( (event.key.keysym.sym == SDLK_f) && alt_pressed )
                 {
                     E64::sdl2_wait_until_f_released();
-                    host.video.toggle_fullscreen();
+                    host.video->toggle_fullscreen();
                 }
                 else if( (event.key.keysym.sym == SDLK_r) && alt_pressed )
                 {

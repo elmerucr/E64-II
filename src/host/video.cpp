@@ -100,11 +100,11 @@ E64::video_t::video_t()
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// prepare both screen buffers
-	buffer_0 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
-	buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+	framebuffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+	//buffer_1 = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
 
 	// prepare debug_screen_buffer
-	debug_screen_buffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
+	monitor_framebuffer = new uint32_t[VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES];
 
 	init_palette();
 }
@@ -112,12 +112,10 @@ E64::video_t::video_t()
 E64::video_t::~video_t()
 {
 	delete [] palette;
-	delete [] debug_screen_buffer;
-	delete [] buffer_1;
-	delete [] buffer_0;
-	buffer_0 = nullptr;
-	buffer_1 = nullptr;
-	debug_screen_buffer = nullptr;
+	delete [] monitor_framebuffer;
+	delete [] framebuffer;
+	framebuffer = nullptr;
+	monitor_framebuffer = nullptr;
 	palette = nullptr;
 
 	printf("[SDL] cleaning up video\n");
@@ -129,11 +127,8 @@ E64::video_t::~video_t()
 
 void E64::video_t::reset()
 {
-	frontbuffer = buffer_1;
-	backbuffer  = buffer_0;
-
 	for (int i=0; i<VICV_PIXELS_PER_SCANLINE*VICV_SCANLINES; i++)
-		buffer_0[i] = buffer_1[i] = 0xff202020;
+		framebuffer[i] = 0xff202020;
 }
 
 void E64::video_t::init_palette()
@@ -163,11 +158,11 @@ void E64::video_t::update_screen()
 
 	switch (pc.mode) {
         case RUNNING:
-		SDL_UpdateTexture(texture, NULL, frontbuffer,
+		SDL_UpdateTexture(texture, NULL, framebuffer,
 				  VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
 		break;
         case MONITOR:
-		SDL_UpdateTexture(texture, NULL, debug_screen_buffer,
+		SDL_UpdateTexture(texture, NULL, monitor_framebuffer,
 				  VICV_PIXELS_PER_SCANLINE * sizeof(uint32_t));
 		break;
 	}

@@ -1,7 +1,7 @@
 //  sdl2.hpp
 //  E64
 //
-//  Copyright © 2017 elmerucr. All rights reserved.
+//  Copyright © 2017-2021 elmerucr. All rights reserved.
 
 #ifndef sdl2_hpp
 #define sdl2_hpp

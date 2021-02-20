@@ -1,30 +1,30 @@
-//  monitor_screen.cpp
+//  screen.cpp
 //  E64-II
 //
 //  Copyright © 2017-2021 elmerucr. All rights reserved.
 
-#include "monitor_screen.hpp"
+#include "screen.hpp"
 #include "common.hpp"
 
-uint8_t monitor_screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
-uint16_t monitor_screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
-uint16_t monitor_screen_background_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint8_t screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint16_t screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
+uint16_t screen_background_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 
-uint16_t debug_screen_pixel_cursor_blink_time;
-uint16_t monitor_screen_pixel_cursor_blink_time_countdown;
+uint16_t screen_pixel_cursor_blink_time;
+uint16_t screen_pixel_cursor_blink_time_countdown;
 
-void E64::monitor_screen_init()
+void E64::screen_init()
 {
-	debug_screen_pixel_cursor_blink_time = 40;
-	monitor_screen_pixel_cursor_blink_time_countdown =
-		debug_screen_pixel_cursor_blink_time;
+	screen_pixel_cursor_blink_time = 40;
+	screen_pixel_cursor_blink_time_countdown =
+		screen_pixel_cursor_blink_time;
 }
 
-void E64::monitor_screen_update()
+void E64::screen_update()
 {
 	// update all scanlines
 	for (int i=0; i < VICV_SCANLINES - 64; i++)
-		monitor_screen_render_scanline(i);
+		screen_render_scanline(i);
 
 	// copy relevant area of vicv screen buffer to bottom of debug screen buffer
 	uint16_t scanline_normalized;
@@ -46,8 +46,8 @@ void E64::monitor_screen_update()
 		 * Backbuffer is the one currently being drawn into, so that
 		 * one should be shown.
 		 */
-		host.video.debug_screen_buffer[((VICV_SCANLINES-64)*VICV_PIXELS_PER_SCANLINE) + i] =
-			host.video.backbuffer[base + i];
+		host.video->monitor_framebuffer[((VICV_SCANLINES-64)*VICV_PIXELS_PER_SCANLINE) + i] =
+			host.video->framebuffer[base + i];
 	}
 
 	uint16_t current_pixel = pc.vicv->get_current_pixel();
@@ -62,10 +62,10 @@ void E64::monitor_screen_update()
 		pixel_cursor_color = 0xffff0000;
 	}
 
-	host.video.debug_screen_buffer[((VICV_SCANLINES - 64)*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
+	host.video->monitor_framebuffer[((VICV_SCANLINES - 64)*VICV_PIXELS_PER_SCANLINE) + ((current_scanline - scanline_normalized)*VICV_PIXELS_PER_SCANLINE) + current_pixel ] = pixel_cursor_color;
 }
 
-inline void E64::monitor_screen_render_scanline(int line_number)
+inline void E64::screen_render_scanline(int line_number)
 {
 	int base;
 
@@ -85,12 +85,12 @@ inline void E64::monitor_screen_render_scanline(int line_number)
 		if (!(x & 7)) {
 			int current_text_column = (x >> 3);
 			uint16_t char_position = (((current_text_row * VICV_CHAR_COLUMNS) + current_text_column));
-			current_char = monitor_screen_character_buffer[char_position];
-			current_foreground_color = monitor_screen_foreground_color_buffer[char_position];
-			current_background_color = monitor_screen_background_color_buffer[char_position];
+			current_char = screen_character_buffer[char_position];
+			current_foreground_color = screen_foreground_color_buffer[char_position];
+			current_background_color = screen_background_color_buffer[char_position];
 			eight_pixels = rom[CBM_CP437_FONT_ADDRESS + ((current_char<<3) | current_character_line)];
 		}
-		host.video.debug_screen_buffer[base+x] = (eight_pixels & 0x80) ? host.video.palette[current_foreground_color] : host.video.palette[current_background_color];
+		host.video->monitor_framebuffer[base+x] = (eight_pixels & 0x80) ? host.video->palette[current_foreground_color] : host.video->palette[current_background_color];
 
 		// shift all bits in internal byte 1 place to the left
 		eight_pixels = eight_pixels << 1;

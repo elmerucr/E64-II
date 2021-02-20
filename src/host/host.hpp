@@ -14,7 +14,7 @@ public:
 	~host_t();
 	
 	settings_t settings;
-	video_t video;
+	video_t *video;
 };
 
 }

@@ -10,7 +10,7 @@
 #include "common.hpp"
 #include "sdl2.hpp"
 #include "monitor_console.hpp"
-#include "monitor_screen.hpp"
+#include "screen.hpp"
 #include "monitor_status_bar.hpp"
 
 // global components
@@ -20,7 +20,7 @@ E64::stats      statistics;
 
 std::chrono::time_point<std::chrono::steady_clock> refresh_moment;
 
-static void run_loop()
+static void run_cycle()
 {
 	if (pc.run(63)) pc.switch_mode(E64::MONITOR);
 	if (pc.vicv->frame_done) {
@@ -37,7 +37,7 @@ static void run_loop()
 		 * measurement for estimation of idle time.
 		 */
 		statistics.start_idle_time();
-		if (host.video.vsync_disabled()) {
+		if (host.video->vsync_disabled()) {
 			refresh_moment +=
 				std::chrono::microseconds(statistics.frametime);
 			/*
@@ -51,18 +51,18 @@ static void run_loop()
 					std::chrono::microseconds(statistics.frametime);
 			std::this_thread::sleep_until(refresh_moment);
 		}
-		host.video.update_screen();
+		host.video->update_screen();
 		statistics.end_idle_time();
 	}
 }
 
-static void monitor_loop()
+static void monitor_cycle()
 {
 	if (debug_console_cursor_flash()) {
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
-		E64::monitor_screen_update();
-		host.video.update_screen();
+		E64::screen_update();
+		host.video->update_screen();
 	}
 	std::this_thread::sleep_for(std::chrono::microseconds(10000));
 
@@ -75,8 +75,8 @@ static void monitor_loop()
 	case E64::KEYPRESS_EVENT:
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
-		E64::monitor_screen_update();
-		host.video.update_screen();
+		E64::screen_update();
+		host.video->update_screen();
 		break;
 	}
 }
@@ -92,7 +92,8 @@ int main(int argc, char **argv)
 	// set up window management, audio and some other stuff
 	E64::sdl2_init();
 
-	E64::monitor_screen_init();
+	// from monitor; needs to move into a class
+	E64::screen_init();
 
 	// Select starting mode of E64-II
 	pc.switch_mode(E64::RUNNING);
@@ -106,10 +107,10 @@ int main(int argc, char **argv)
 	while (pc.on) {
 		switch (pc.mode) {
 			case E64::RUNNING:
-				run_loop();
+				run_cycle();
 				break;
 			case E64::MONITOR:
-				monitor_loop();
+				monitor_cycle();
 				break;
 		}
 	}

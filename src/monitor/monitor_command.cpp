@@ -122,7 +122,7 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		pc.on = false;
 	} else if (strcmp(token0, "full") == 0) {
 		debug_console_put_char('\n');
-		host.video.toggle_fullscreen();
+		host.video->toggle_fullscreen();
 	} else if (strcmp(token0, "help") == 0) {
 		token1 = strtok(NULL, " ");
 		if (token1 == NULL) {
@@ -351,19 +351,19 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		token1 = strtok(NULL, " ");
 		debug_console_put_char('\n');
 		if (token1 == NULL) {
-			host.video.reset_window_size();
+			host.video->reset_window_size();
 			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
-				 host.video.current_window_width(), host.video.current_window_height());
+				 host.video->current_window_width(), host.video->current_window_height());
 			debug_console_print(command_help_string);
 		} else if (strcmp(token1, "+") == 0) {
-			host.video.increase_window_size();
+			host.video->increase_window_size();
 			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
-				 host.video.current_window_width(), host.video.current_window_height());
+				 host.video->current_window_width(), host.video->current_window_height());
 			debug_console_print(command_help_string);
 		} else if (strcmp(token1, "-") == 0) {
-			host.video.decrease_window_size();
+			host.video->decrease_window_size();
 			snprintf(command_help_string, 256, "host system window size is %u x %u pixels\n",
-				 host.video.current_window_width(), host.video.current_window_height());
+				 host.video->current_window_width(), host.video->current_window_height());
 			debug_console_print(command_help_string);
 		} else {
 			snprintf(command_help_string, 256,
