@@ -15,6 +15,7 @@
 #include "host.hpp"
 #include "machine.hpp"
 #include "stats.hpp"
+#include "rom.hpp"
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
@@ -25,7 +26,7 @@
 extern E64::host_t	host;
 extern E64::machine_t	machine;
 extern E64::stats	statistics;
-extern uint8_t		rom[];
+//extern uint8_t		rom[];
 
 #define	RAM_SIZE	0x01000000   // 16mb system, DO NOT CHANGE
 

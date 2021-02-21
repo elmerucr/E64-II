@@ -120,7 +120,7 @@ inline void E64::vicv_ic::render_stats(uint16_t xpos, uint16_t ypos)
 			// are we at the first pixel of a char
 			if (!(x & 7)) {
 				eight_pixels =
-					rom[CBM_CP437_FONT_ADDRESS + ((*temp_text * 8) + y)];
+					kernel[CBM_CP437_FONT_ADDRESS + ((*temp_text * 8) + y)];
 			}
 
 			host.video->framebuffer[base + x] = (eight_pixels & 0x80) ?

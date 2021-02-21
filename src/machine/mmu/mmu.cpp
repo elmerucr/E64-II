@@ -29,7 +29,7 @@ void E64::mmu_ic::reset()
 		ram[i] = (i & 64) ? 0x10 : 0x00;
 
 	// try to find and update rom image
-	find_and_update_rom_image();
+	find_and_update_kernel_image();
 }
 
 unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
@@ -48,10 +48,12 @@ unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
 		return machine.cia->read_byte(address & 0xff);
 	} else if (page == IO_FD0_PAGE) {
 		return machine.fd0->read_byte(address & 0xff);
-	} else if (((address & 0x00fc0000) >> 16) == IO_ROM_MASK) {
-		return current_rom_image[address & 0x3ffff];
+	} else if (((address & 0x00fc0000) >> 16) == IO_KERNEL) {
+		return current_kernel_image[address & 0x3ffff];
 	} else if ((address & IO_RESET_VECTOR_MASK) == 0) {
-		return current_rom_image[address & 0xffff];
+		return current_kernel_image[address & 0xffff];
+	} else if ((address & IO_FONT) == IO_FONT) {
+		return cbm_cp437_font[address & 0x7ff];
 	} else {
 		return ram[address & 0xffffff];
 	}
@@ -106,18 +108,18 @@ void E64::mmu_ic::write_memory_16(unsigned int address, unsigned int value)
 	write_memory_8(temp_address, value & 0xff);
 }
 
-void E64::mmu_ic::find_and_update_rom_image()
+void E64::mmu_ic::find_and_update_kernel_image()
 {
-	FILE *temp_file = fopen(host.settings.path_to_rom, "r");
+	FILE *f = fopen(host.settings.path_to_kernel, "r");
 	
-	if (temp_file) {
-		printf("[mmu] found 'rom.bin' in %s, using this image\n",
+	if (f) {
+		printf("[mmu] found 'kernel.bin' in %s, using this image\n",
 		       host.settings.settings_path);
-		fread(current_rom_image, 262144, 1, temp_file);
-		fclose(temp_file);
+		fread(current_kernel_image, 262144, 1, f);
+		fclose(f);
 	} else {
-		printf("[mmu] no 'rom.bin' in %s, using built-in rom\n",
+		printf("[mmu] no 'kernel.bin' in %s, using built-in rom\n",
 		       host.settings.settings_path);
-		for(int i=0; i<262144; i++) current_rom_image[i] = rom[i];
+		for(int i=0; i<262144; i++) current_kernel_image[i] = kernel[i];
 	}
 }

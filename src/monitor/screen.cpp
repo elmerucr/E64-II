@@ -5,6 +5,7 @@
 
 #include "screen.hpp"
 #include "common.hpp"
+#include "rom.hpp"
 
 uint8_t screen_character_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
 uint16_t screen_foreground_color_buffer[VICV_CHAR_ROWS*VICV_CHAR_COLUMNS];
@@ -88,7 +89,7 @@ inline void E64::screen_render_scanline(int line_number)
 			current_char = screen_character_buffer[char_position];
 			current_foreground_color = screen_foreground_color_buffer[char_position];
 			current_background_color = screen_background_color_buffer[char_position];
-			eight_pixels = rom[CBM_CP437_FONT_ADDRESS + ((current_char<<3) | current_character_line)];
+			eight_pixels = cbm_cp437_font[((current_char<<3) | current_character_line)];
 		}
 		host.video->monitor_framebuffer[base+x] = (eight_pixels & 0x80) ? host.video->palette[current_foreground_color] : host.video->palette[current_background_color];
 
