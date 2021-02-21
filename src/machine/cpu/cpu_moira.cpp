@@ -12,22 +12,22 @@
 
 u8 cpu_moira::read8(u32 addr)
 {
-	return pc.mmu->read_memory_8(addr);
+	return machine.mmu->read_memory_8(addr);
 }
 
 u16 cpu_moira::read16(u32 addr)
 {
-	return pc.mmu->read_memory_16(addr);
+	return machine.mmu->read_memory_16(addr);
 }
 
 void cpu_moira::write8 (u32 addr, u8  val)
 {
-	pc.mmu->write_memory_8(addr, val);
+	machine.mmu->write_memory_8(addr, val);
 }
 
 void cpu_moira::write16 (u32 addr, u16 val)
 {
-	pc.mmu->write_memory_16(addr, val);
+	machine.mmu->write_memory_16(addr, val);
 }
 
 void cpu_moira::breakpointReached(u32 addr)

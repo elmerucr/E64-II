@@ -8,7 +8,7 @@
 
 void E64::timer_ic::reset()
 {
-	pc.TTL74LS148->release_line(interrupt_device_number);
+	machine.TTL74LS148->release_line(interrupt_device_number);
 
 	registers[0] = 0x00;	// no pending irq's
 	registers[1] = 0x00;	// all timers turned off
@@ -32,7 +32,7 @@ void E64::timer_ic::run(uint32_t number_of_cycles)
 		    (registers[1] & (0b1 << i))) {
 			timers[i].counter -= timers[i].clock_interval;
 			// NEEDS WORK: what if counter flips below 0?
-			pc.TTL74LS148->pull_line(interrupt_device_number);
+			machine.TTL74LS148->pull_line(interrupt_device_number);
 			registers[0] |= (0b1 << i);
 		}
 	}
@@ -69,7 +69,7 @@ void E64::timer_ic::write_byte(uint8_t address, uint8_t byte)
 
             if ((registers[0] & 0xff) == 0) {
                 // no timers left causing interrupts
-                pc.TTL74LS148->release_line(interrupt_device_number);
+                machine.TTL74LS148->release_line(interrupt_device_number);
             }
             break;
         case 0x01:

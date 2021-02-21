@@ -348,8 +348,8 @@ void E64::fd::run(uint32_t cycles)
 			} else {
 				cycles_done += cycles;
 				if (cycles_done > FD_CYCLES_PER_BYTE) {
-					pc.mmu->ram[(buffer+bytes_done) & 0xffffff] =
-						pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
+					machine.mmu->ram[(buffer+bytes_done) & 0xffffff] =
+						machine.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
 					cycles_done -= FD_CYCLES_PER_BYTE;
 					bytes_done++;
 					if (bytes_done == FD_BYTES_PER_SECTOR) {
@@ -367,8 +367,8 @@ void E64::fd::run(uint32_t cycles)
 			} else {
 				cycles_done += cycles;
 				if (cycles_done > FD_CYCLES_PER_BYTE) {
-					pc.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
-						pc.mmu->ram[(buffer+bytes_done) & 0xffffff];
+					machine.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
+						machine.mmu->ram[(buffer+bytes_done) & 0xffffff];
 					cycles_done -= FD_CYCLES_PER_BYTE;
 					bytes_done++;
 					if (bytes_done == FD_BYTES_PER_SECTOR) {

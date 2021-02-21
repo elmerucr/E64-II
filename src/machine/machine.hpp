@@ -31,7 +31,7 @@ enum machine_mode
     RUNNING
 };
     
-class machine
+class machine_t
 {
 private:
     frequency_divider *m68k_to_vicv;
@@ -52,8 +52,8 @@ public:
 	cia_ic		*cia;
 	fd		*fd0;
 
-	machine();
-	~machine();
+	machine_t();
+	~machine_t();
 
 	uint8_t  run(uint16_t no_of_cycles);
 

@@ -198,7 +198,7 @@ void E64::blitter_ic::run(int no_of_cycles)
                 cycles_busy++;
                 
                 if (!(pixel_no == total_no_of_pix)) {
-                    pc.vicv->backbuffer[pixel_no] = clear_color;
+                    machine.vicv->backbuffer[pixel_no] = clear_color;
                     pixel_no++;
                 }
                 else {
@@ -236,23 +236,23 @@ void E64::blitter_ic::run(int no_of_cycles)
                             
                             tile_number = tile_x + (tile_y << width_in_tiles_log2);
                             
-                            tile_index = pc.mmu->ram[(tile_data + tile_number) & 0x00ffffff];
+                            tile_index = machine.mmu->ram[(tile_data + tile_number) & 0x00ffffff];
                             
                             /* Replace foreground and background colors if necessary */
                             if( color_per_tile )
                             {
-                                foreground_color = pc.mmu->ram_as_words[((tile_color_data >> 1) + tile_number) & 0x007fffff];
+                                foreground_color = machine.mmu->ram_as_words[((tile_color_data >> 1) + tile_number) & 0x007fffff];
                                 
-                                background_color = pc.mmu->ram_as_words[ ((tile_background_color_data >> 1) + tile_number) & 0x007fffff ];
+                                background_color = machine.mmu->ram_as_words[ ((tile_background_color_data >> 1) + tile_number) & 0x007fffff ];
                             }
                             
                             pixel_in_tile = (x_in_blit & 0b111) | ((y_in_blit & 0b111) << 3);
                             
                             /*  Pick the right pixel depending on bitmap mode or tile mode */
                             source_color = bitmap_mode ?
-                                pc.mmu->ram_as_words[((pixel_data >> 1) + normalized_pixel_no) & 0x007fffff]
+                                machine.mmu->ram_as_words[((pixel_data >> 1) + normalized_pixel_no) & 0x007fffff]
                                 :
-                                pc.mmu->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
+                                machine.mmu->ram_as_words[((pixel_data >> 1) + ((tile_index << 6) | pixel_in_tile) ) & 0x007fffff];
                             
                             /*  If the source color has an alpha value of higher than 0x0 (there is a pixel),
                              *  and we're not in multicolor mode, replace with foreground color.
@@ -274,7 +274,7 @@ void E64::blitter_ic::run(int no_of_cycles)
                             }
                             
                             /*  Finally, call the alpha blend function */
-                            alpha_blend( &pc.vicv->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
+                            alpha_blend( &machine.vicv->backbuffer[scrn_x + (scrn_y * VICV_PIXELS_PER_SCANLINE)], &source_color );
                         }
                     }
                     pixel_no++;
@@ -324,7 +324,7 @@ void E64::blitter_ic::write_byte(uint8_t address, uint8_t byte)
 					ptr_to_blit_struct = 0xffffe0;
 
 				// copy the structure into the operations list
-				operations[head].this_blit = *(struct surface_blit *)&pc.mmu->ram[ptr_to_blit_struct];
+				operations[head].this_blit = *(struct surface_blit *)&machine.mmu->ram[ptr_to_blit_struct];
 			}
 			head++;
 		}

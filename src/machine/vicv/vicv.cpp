@@ -14,8 +14,8 @@ E64::vicv_ic::vicv_ic()
 	disk_stat_visible = true;
 	stats_visible = false;
 
-	framebuffer0 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER0];
-	framebuffer1 = (uint16_t *)&pc.mmu->ram[VICV_FRAMEBUFFER1];
+	framebuffer0 = (uint16_t *)&machine.mmu->ram[VICV_FRAMEBUFFER0];
+	framebuffer1 = (uint16_t *)&machine.mmu->ram[VICV_FRAMEBUFFER1];
 
 	breakpoint_reached = false;
 	clear_scanline_breakpoints();
@@ -26,7 +26,7 @@ E64::vicv_ic::vicv_ic()
 
 void E64::vicv_ic::reset()
 {
-	pc.TTL74LS148->release_line(vblank_interrupt_device_number);
+	machine.TTL74LS148->release_line(vblank_interrupt_device_number);
 
 	frame_done = false;
 
@@ -76,7 +76,7 @@ void E64::vicv_ic::run(uint32_t number_of_cycles)
 		switch (cycle_clock) {
 		case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*VICV_SCANLINES:
 			// start of vblank
-			pc.TTL74LS148->pull_line(vblank_interrupt_device_number);
+			machine.TTL74LS148->pull_line(vblank_interrupt_device_number);
 			break;
 		case (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK):
 			// finished vblank, do other necessary stuff
@@ -145,7 +145,7 @@ inline void E64::vicv_ic::render_disk_activity(uint16_t xpos, uint16_t ypos)
 	uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) %
 		(VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
 	
-	uint16_t *icon = pc.fd0->icon_data();
+	uint16_t *icon = machine.fd0->icon_data();
 	
 	for (int x=0; x<8; x++) {
 		for (int y=0; y<8; y++) {
@@ -190,12 +190,12 @@ void E64::vicv_ic::write_byte(uint8_t address, uint8_t byte)
 	switch (address) {
 	case VICV_REG_ISR:
 		if (byte & 0b00000001)
-			pc.TTL74LS148->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
+			machine.TTL74LS148->release_line(vblank_interrupt_device_number);  // acknowledge pending irq
 		break;
 	case VICV_REG_BUFFERSWAP:
 		if (byte & 0b00000001) {
-			if (pc.blitter->current_state != IDLE) {
-				pc.blitter->current_state = IDLE;
+			if (machine.blitter->current_state != IDLE) {
+				machine.blitter->current_state = IDLE;
 				printf("[VICV] warning: blitter was not finished when swapping buffers\n");
 			}
 			uint16_t *tempbuffer = frontbuffer;

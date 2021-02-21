@@ -9,7 +9,7 @@
 #include "sdl2.hpp"
 #include "common.hpp"
 
-E64::machine::machine()
+E64::machine_t::machine_t()
 {
 	switch_mode(RUNNING);
 	
@@ -33,7 +33,7 @@ E64::machine::machine()
 	m68k->configDasm(true, false);   // output numbers in hex, use small case for mnemonics
 }
 
-E64::machine::~machine()
+E64::machine_t::~machine_t()
 {
 	delete m68k_to_sid;
 	delete m68k_to_blitter;
@@ -50,7 +50,7 @@ E64::machine::~machine()
 	delete mmu;
 }
 
-void E64::machine::switch_mode(enum machine_mode new_mode)
+void E64::machine_t::switch_mode(enum machine_mode new_mode)
 {
 	switch (new_mode) {
 		case E64::RUNNING:
@@ -68,7 +68,7 @@ void E64::machine::switch_mode(enum machine_mode new_mode)
 	}
 }
 
-void E64::machine::toggle_mode()
+void E64::machine_t::toggle_mode()
 {
 	switch (mode) {
 		case RUNNING:
@@ -89,13 +89,13 @@ void E64::machine::toggle_mode()
  * However, run(63) significantly reduces host cpu load, once we have some music
  * running in the virtual machine, test this.
  */
-uint8_t E64::machine::run(uint16_t no_of_cycles)
+uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 {
 	// default exit_code of the function is 0, no breakpoints have occurred
 	uint8_t output_state = NO_BREAKPOINT;
 	
 	// run cycles on the cpu and check for breakpoints
-	unsigned int processed_cycles = (unsigned int)pc.m68k->run(no_of_cycles);
+	unsigned int processed_cycles = (unsigned int)machine.m68k->run(no_of_cycles);
 	if (m68k->breakpoint_reached) {
 		snprintf(machine_help_string, 256,
 			 "cpu breakpoint occurred at $%06x\n", m68k->getPC());
@@ -138,7 +138,7 @@ uint8_t E64::machine::run(uint16_t no_of_cycles)
 	return output_state;
 }
 
-void E64::machine::reset()
+void E64::machine_t::reset()
 {
 	host.video->reset();
 	mmu->reset();

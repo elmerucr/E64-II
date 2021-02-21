@@ -15,18 +15,18 @@
 
 // global components
 E64::host_t	host;
-E64::machine    pc;
+E64::machine_t	machine;
 E64::stats      statistics;
 
 std::chrono::time_point<std::chrono::steady_clock> refresh_moment;
 
-static void run_cycle()
+static void running_frame()
 {
-	if (pc.run(63)) pc.switch_mode(E64::MONITOR);
-	if (pc.vicv->frame_done) {
-		pc.vicv->frame_done = false;
+	if (machine.run(63)) machine.switch_mode(E64::MONITOR);
+	if (machine.vicv->frame_done) {
+		machine.vicv->frame_done = false;
 		if (E64::sdl2_process_events() == E64::QUIT_EVENT)
-			pc.on = false;
+			machine.on = false;
 		statistics.process_parameters();
 		/*
 		 * If vsync is enabled, the update screen function takes more
@@ -56,7 +56,7 @@ static void run_cycle()
 	}
 }
 
-static void monitor_cycle()
+static void monitor_frame()
 {
 	if (debug_console_cursor_flash()) {
 		debug_status_bar_refresh();
@@ -68,7 +68,7 @@ static void monitor_cycle()
 
 	switch (E64::sdl2_process_events()) {
 	case E64::QUIT_EVENT:
-		pc.on = false;
+		machine.on = false;
 		break;
 	case E64::NO_EVENT:
 		break;
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 	// call inits to global components? messages can be in console
 
 	// place this call into machine class?
-	pc.vicv->set_stats(statistics.stats_info());
+	machine.vicv->set_stats(statistics.stats_info());
 
 	// set up window management, audio and some other stuff
 	E64::sdl2_init();
@@ -96,21 +96,21 @@ int main(int argc, char **argv)
 	E64::screen_init();
 
 	// Select starting mode of E64-II
-	pc.switch_mode(E64::RUNNING);
-	pc.reset();
-	pc.on = true;
+	machine.switch_mode(E64::RUNNING);
+	machine.reset();
+	machine.on = true;
 
 	statistics.reset();
 	
 	refresh_moment = std::chrono::steady_clock::now();
 
-	while (pc.on) {
-		switch (pc.mode) {
+	while (machine.on) {
+		switch (machine.mode) {
 			case E64::RUNNING:
-				run_cycle();
+				running_frame();
 				break;
 			case E64::MONITOR:
-				monitor_cycle();
+				monitor_frame();
 				break;
 		}
 	}

@@ -39,5 +39,5 @@ void E64::TTL74LS148_ic::update_interrupt_level()
 		if ((devices[i].state == false) && (devices[i].level > level))
 			level = devices[i].level;
 	}
-	pc.m68k->setIPL(level);
+	machine.m68k->setIPL(level);
 }

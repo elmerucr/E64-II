@@ -474,7 +474,7 @@ enum monitor_type debug_console_check_output(bool top_down, uint32_t *address)
 			potential_offset[4] = 0;
 			E64::monitor_command_hex_string_to_int(potential_offset, &offset);
 			
-			*address = (sector * pc.fd0->bytes_per_sector()) + offset;
+			*address = (sector * machine.fd0->bytes_per_sector()) + offset;
 			if (top_down) break;
 		}
 	}

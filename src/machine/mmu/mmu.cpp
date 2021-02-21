@@ -37,17 +37,17 @@ unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
 	uint32_t page = address >> 8;
 	
 	if (page == IO_VICV_PAGE) {
-		return pc.vicv->read_byte(address & 0xff);
+		return machine.vicv->read_byte(address & 0xff);
 	} else if (page == IO_SND_PAGE) {
-		return pc.sids->read_byte(address & 0xff);
+		return machine.sids->read_byte(address & 0xff);
 	} else if (page == IO_BLITTER_PAGE) {
-		return pc.blitter->read_byte(address & 0xff);
+		return machine.blitter->read_byte(address & 0xff);
 	} else if (page == IO_TIMER_PAGE) {
-		return pc.timer->read_byte(address & 0xff);
+		return machine.timer->read_byte(address & 0xff);
 	} else if (page == IO_CIA_PAGE) {
-		return pc.cia->read_byte(address & 0xff);
+		return machine.cia->read_byte(address & 0xff);
 	} else if (page == IO_FD0_PAGE) {
-		return pc.fd0->read_byte(address & 0xff);
+		return machine.fd0->read_byte(address & 0xff);
 	} else if (((address & 0x00fc0000) >> 16) == IO_ROM_MASK) {
 		return current_rom_image[address & 0x3ffff];
 	} else if ((address & IO_RESET_VECTOR_MASK) == 0) {
@@ -82,17 +82,17 @@ void E64::mmu_ic::write_memory_8(unsigned int address, unsigned int value)
 	uint32_t page = address >> 8;
 	
 	if (page == IO_VICV_PAGE) {
-		pc.vicv->write_byte(address & 0xff, value & 0xff);
+		machine.vicv->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_SND_PAGE) {
-		pc.sids->write_byte(address & 0xff, value & 0xff);
+		machine.sids->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_BLITTER_PAGE) {
-		pc.blitter->write_byte(address & 0xff, value & 0xff);
+		machine.blitter->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_TIMER_PAGE) {
-		pc.timer->write_byte(address & 0xff, value & 0xff);
+		machine.timer->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_CIA_PAGE) {
-		pc.cia->write_byte(address & 0xff, value & 0xff);
+		machine.cia->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_FD0_PAGE) {
-		pc.fd0->write_byte(address & 0xff, value & 0xff);
+		machine.fd0->write_byte(address & 0xff, value & 0xff);
 	} else {
 		ram[address & 0xffffff] = value & 0xff;
 	}

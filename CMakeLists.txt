@@ -9,28 +9,24 @@ find_package(sdl2 REQUIRED)
 include_directories(
     ${SDL2_INCLUDE_DIRS}
     src/
-    src/devices/
-    src/devices/cpu/
-    src/devices/cpu/Moira
-    src/devices/fd
-    src/devices/mmu/
-    src/devices/cia/
-    src/devices/sids/
-    src/devices/sids/resid-0.16/
-    src/devices/timer/
-    src/devices/TTL74LS148/
-    src/devices/vicv/
     src/host/
+    src/machine/
+    src/machine/cpu/
+    src/machine/cpu/Moira
+    src/machine/fd
+    src/machine/mmu/
+    src/machine/cia/
+    src/machine/sids/
+    src/machine/sids/resid-0.16/
+    src/machine/timer/
+    src/machine/TTL74LS148/
+    src/machine/vicv/
     src/monitor/
     src/rom/
 )
 
 add_subdirectory(src/)
 
-add_executable(
-	E64-II
-	src/main.cpp
-	src/machine.cpp
-	src/stats.cpp)
+add_executable(E64-II src/main.cpp)
 
-target_link_libraries(E64-II cia cpu fd host mmu monitor resid rom sids timer TTL74LS148 vicv ${SDL2_LIBRARIES})
+target_link_libraries(E64-II host machine monitor rom ${SDL2_LIBRARIES})
