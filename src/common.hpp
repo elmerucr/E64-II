@@ -14,19 +14,20 @@
 
 #include "host.hpp"
 #include "machine.hpp"
+#include "monitor.hpp"
 #include "stats.hpp"
 #include "rom.hpp"
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20210221
+#define E64_II_BUILD            20210222
 #define E64_II_YEAR             2021
 
 /* Global objects */
 extern E64::host_t	host;
 extern E64::machine_t	machine;
+extern E64::monitor_t	monitor;
 extern E64::stats	statistics;
-//extern uint8_t		rom[];
 
 #define	RAM_SIZE	0x01000000   // 16mb system, DO NOT CHANGE
 
@@ -81,17 +82,14 @@ extern E64::stats	statistics;
 #define VICV_PIXELS_HBLANK		148
 #define VICV_SCANLINES			288
 #define VICV_SCANLINES_VBLANK		12
-#define VICV_FRAMEBUFFER0		0x00f00000
-#define VICV_FRAMEBUFFER1		0x00f48000
+#define VICV_FB0			0x00f00000
+#define VICV_FB1			0x00f48000
 
 /* These two macros are defined for use within the monitor */
 #define VICV_CHAR_COLUMNS		(VICV_PIXELS_PER_SCANLINE/8)
 #define VICV_CHAR_ROWS			(VICV_SCANLINES/8)
 
-/* Font address is relative to start of ROM */
-#define	CBM_CP437_FONT_ADDRESS		0x3f000
-
-#define FPS                         60
+#define FPS				60
 
 #define VICV_DOT_CLOCK_SPEED        (VICV_PIXELS_PER_SCANLINE+VICV_PIXELS_HBLANK)*(VICV_SCANLINES+VICV_SCANLINES_VBLANK)*FPS
 #define BLITTER_DOT_CLOCK_SPEED     (4*VICV_DOT_CLOCK_SPEED)

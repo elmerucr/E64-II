@@ -97,3 +97,18 @@ inline void E64::screen_render_scanline(int line_number)
 		eight_pixels = eight_pixels << 1;
 	}
 }
+
+E64::screen_t::screen_t()
+{
+	//
+}
+
+E64::screen_t::~screen_t()
+{
+	//
+}
+
+void E64::screen_t::init()
+{
+	//
+}

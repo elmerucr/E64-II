@@ -16,6 +16,7 @@
 		4691C7A623D7B3B600E9E78D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; };
 		4691C7A723D7B3B600E9E78D /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4691C7A523D7B3B600E9E78D /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4691C81423D7B80B00E9E78D /* log.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4691C81323D7B80B00E9E78D /* log.txt */; };
+		46B3D15325E406320048C6A3 /* monitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46B3D15225E406310048C6A3 /* monitor.cpp */; };
 		46C9CE3625D6CFF000AC9626 /* host.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3525D6CFF000AC9626 /* host.cpp */; };
 		46C9CE3A25D6E06100AC9626 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3825D6E06100AC9626 /* video.cpp */; };
 		46C9CE3D25D6E22600AC9626 /* settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3B25D6E22600AC9626 /* settings.cpp */; };
@@ -84,6 +85,8 @@
 		4691C7A523D7B3B600E9E78D /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		4691C7AF23D7B40600E9E78D /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common.hpp; path = ../../../src/common.hpp; sourceTree = "<group>"; };
 		4691C81323D7B80B00E9E78D /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = log.txt; path = ../../../log.txt; sourceTree = "<group>"; };
+		46B3D15125E406310048C6A3 /* monitor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor.hpp; path = ../../../src/monitor/monitor.hpp; sourceTree = "<group>"; };
+		46B3D15225E406310048C6A3 /* monitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor.cpp; path = ../../../src/monitor/monitor.cpp; sourceTree = "<group>"; };
 		46C9CE3525D6CFF000AC9626 /* host.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = host.cpp; path = ../../../src/host/host.cpp; sourceTree = "<group>"; };
 		46C9CE3725D6CFFE00AC9626 /* host.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = host.hpp; path = ../../../src/host/host.hpp; sourceTree = "<group>"; };
 		46C9CE3825D6E06100AC9626 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = ../../../src/host/video.cpp; sourceTree = "<group>"; };
@@ -237,6 +240,8 @@
 		4691C79723D7B35500E9E78D /* monitor */ = {
 			isa = PBXGroup;
 			children = (
+				46B3D15125E406310048C6A3 /* monitor.hpp */,
+				46B3D15225E406310048C6A3 /* monitor.cpp */,
 				46D318482528BC3900E08C23 /* screen.hpp */,
 				46D3184D2528BC3900E08C23 /* screen.cpp */,
 				46D3184E2528BC3900E08C23 /* monitor_console.hpp */,
@@ -518,6 +523,7 @@
 				46EE69DF25E2F22D005C69F2 /* wave8580__ST.cc in Sources */,
 				46EE69F325E2F40E005C69F2 /* stats.cpp in Sources */,
 				46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */,
+				46B3D15325E406320048C6A3 /* monitor.cpp in Sources */,
 				46EE69D425E2F22D005C69F2 /* wave.cc in Sources */,
 				466D919C25D6E96D00BD95AE /* sdl2.cpp in Sources */,
 				46EE698F25E29DE6005C69F2 /* fd.cpp in Sources */,

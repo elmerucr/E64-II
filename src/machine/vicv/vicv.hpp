@@ -48,8 +48,8 @@ private:
 	uint8_t registers[256];
 	
 	// framebuffer pointers inside the virtual machine
-	uint16_t *framebuffer0;
-	uint16_t *framebuffer1;
+	uint16_t *fb0;
+	uint16_t *fb1;
 
 	uint32_t cycle_clock;	// measures all cycles
 	uint32_t dot_clock;	// measures only cycles that wrote a pixel

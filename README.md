@@ -19,7 +19,7 @@ E64-II is a virtual computer system that runs on macOS and linux. It's mainly in
 #### macOS
 * Install [Xcode](https://developer.apple.com/xcode)
 * Install the [SDL2 framework](https://www.libsdl.org/download-2.0.php) development library to /Library/Frameworks
-* Open the Xcode project in the ./macOS/E64 folder and build
+* Open the Xcode project in the ./macOS/E64-II folder and build the application
 #### Ubuntu Linux / Debian
 Run the following commands in a terminal:
 ````console
@@ -33,8 +33,8 @@ Finally, to run the application from the build directory:
 ````console
 $ ./E64-II
 ````
-### Building ROM
-The sourcecode comes with a working version of the rom ````rom.cpp````. If you want to build and/or modify it yourself however, have a look the [E64-II-ROM-C project](https://github.com/elmerucr/E64-II-ROM-C).
+### Building KERNEL
+The sourcecode comes with a working version of the kernel ````kernel.cpp````. If you want to build and/or modify it yourself however, have a look the [E64-II-KERNEL project](https://github.com/elmerucr/E64-II-KERNEL).
 ## Websites and projects of interest
 ### Assemblers and Compilers
 * [64tass](https://sourceforge.net/projects/tass64/) - An assembler for the legendary 6502 processor and its derivatives.
@@ -63,7 +63,7 @@ The sourcecode comes with a working version of the rom ````rom.cpp````. If you w
 * [ultimate64](https://ultimate64.com/Ultimate-64) - A hardware implementation (FPGA) of the C64.
 * [visual6502](http://www.visual6502.org) - Visual Transistor-level Simulation of the 6502 CPU and other chips.
 ## MIT License
-Copyright (c) 2020 elmerucr
+Copyright (c) 2021 elmerucr
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

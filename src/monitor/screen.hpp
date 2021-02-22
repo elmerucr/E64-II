@@ -3,7 +3,7 @@
 //
 //  Copyright © 2017-2021 elmerucr. All rights reserved.
 //
-//  c256_debug_screen covers 32 rows (256 lines)
+//  covers 32 rows (256 lines)
 //  the bottom 64 lines are used to display part of the current framebuffer
 
 #include "common.hpp"
@@ -11,8 +11,14 @@
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
 
-namespace E64
-{
+namespace E64 {
+
+class screen_t {
+public:
+	screen_t();
+	~screen_t();
+	void init();
+};
 
 void screen_init();
 void screen_update();

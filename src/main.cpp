@@ -16,6 +16,7 @@
 // global components
 E64::host_t	host;
 E64::machine_t	machine;
+E64::monitor_t	monitor;
 E64::stats      statistics;
 
 std::chrono::time_point<std::chrono::steady_clock> refresh_moment;

@@ -14,8 +14,8 @@ E64::vicv_ic::vicv_ic()
 	disk_stat_visible = true;
 	stats_visible = false;
 
-	framebuffer0 = (uint16_t *)&machine.mmu->ram[VICV_FRAMEBUFFER0];
-	framebuffer1 = (uint16_t *)&machine.mmu->ram[VICV_FRAMEBUFFER1];
+	fb0 = (uint16_t *)&machine.mmu->ram[VICV_FB0];
+	fb1 = (uint16_t *)&machine.mmu->ram[VICV_FB1];
 
 	breakpoint_reached = false;
 	clear_scanline_breakpoints();
@@ -35,8 +35,8 @@ void E64::vicv_ic::reset()
 	for (int i=0; i<256; i++)
 		registers[i] = 0;
 
-	frontbuffer = framebuffer0;
-	backbuffer  = framebuffer1;
+	frontbuffer = fb0;
+	backbuffer  = fb1;
 }
 
 void E64::vicv_ic::run(uint32_t number_of_cycles)
@@ -120,7 +120,7 @@ inline void E64::vicv_ic::render_stats(uint16_t xpos, uint16_t ypos)
 			// are we at the first pixel of a char
 			if (!(x & 7)) {
 				eight_pixels =
-					kernel[CBM_CP437_FONT_ADDRESS + ((*temp_text * 8) + y)];
+					cbm_cp437_font[((*temp_text * 8) + y)];
 			}
 
 			host.video->framebuffer[base + x] = (eight_pixels & 0x80) ?
