@@ -1,4 +1,6 @@
 #include "screen.hpp"
+#include "tty.hpp"
+#include "status_bar.hpp"
 
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
@@ -11,6 +13,8 @@ public:
 	~monitor_t();
 	
 	screen_t *screen;
+	tty_t *tty;
+	status_bar_t *status_bar;
 };
 
 }

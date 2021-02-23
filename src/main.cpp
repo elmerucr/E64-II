@@ -9,13 +9,11 @@
 
 #include "common.hpp"
 #include "sdl2.hpp"
-#include "monitor_console.hpp"
-#include "monitor_status_bar.hpp"
 
 // global components
 E64::host_t	host;
-E64::machine_t	machine;
 E64::monitor_t	monitor;
+E64::machine_t	machine;
 E64::stats      statistics;
 
 std::chrono::time_point<std::chrono::steady_clock> refresh_moment;
@@ -58,9 +56,9 @@ static void running_frame()
 
 static void monitor_frame()
 {
-	if (debug_console_cursor_flash()) {
-		debug_status_bar_refresh();
-		debug_console_blit_to_debug_screen();
+	if (monitor.tty->cursor_flash()) {
+		monitor.status_bar->refresh();
+		monitor.tty->blit_to_screen();
 		monitor.screen->update();
 		host.video->update_screen();
 	}
@@ -73,8 +71,8 @@ static void monitor_frame()
 	case E64::NO_EVENT:
 		break;
 	case E64::KEYPRESS_EVENT:
-		debug_status_bar_refresh();
-		debug_console_blit_to_debug_screen();
+		monitor.status_bar->refresh();
+			monitor.tty->blit_to_screen();
 		monitor.screen->update();
 		host.video->update_screen();
 		break;
@@ -83,9 +81,6 @@ static void monitor_frame()
 
 int main(int argc, char **argv)
 {
-	debug_console_init();
-	// call inits to global components? messages can be in console
-
 	// place this call into machine class?
 	machine.vicv->set_stats(statistics.stats_info());
 

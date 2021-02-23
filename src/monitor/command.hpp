@@ -1,15 +1,14 @@
-//  monitor_command.hpp
+//  command.hpp
 //  E64-II
 //
 //  Copyright © 2019-2021 elmerucr. All rights reserved.
 
-#ifndef MONITOR_COMMAND_HPP
-#define MONITOR_COMMAND_HPP
+#ifndef COMMAND_HPP
+#define COMMAND_HPP
 
 #include <cstdint>
 
-namespace E64
-{
+namespace E64 {
 
 void monitor_command_execute(char *string_to_parse_and_exec);
 void monitor_command_enter_monitor_line(char *string_to_parse_and_exec);

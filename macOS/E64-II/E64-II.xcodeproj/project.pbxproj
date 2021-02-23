@@ -20,9 +20,9 @@
 		46C9CE3625D6CFF000AC9626 /* host.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3525D6CFF000AC9626 /* host.cpp */; };
 		46C9CE3A25D6E06100AC9626 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3825D6E06100AC9626 /* video.cpp */; };
 		46C9CE3D25D6E22600AC9626 /* settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46C9CE3B25D6E22600AC9626 /* settings.cpp */; };
-		46D3184F2528BC3900E08C23 /* monitor_status_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318472528BC3900E08C23 /* monitor_status_bar.cpp */; };
-		46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318492528BC3900E08C23 /* monitor_command.cpp */; };
-		46D318512528BC3900E08C23 /* monitor_console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184B2528BC3900E08C23 /* monitor_console.cpp */; };
+		46D3184F2528BC3900E08C23 /* status_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318472528BC3900E08C23 /* status_bar.cpp */; };
+		46D318502528BC3900E08C23 /* command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D318492528BC3900E08C23 /* command.cpp */; };
+		46D318512528BC3900E08C23 /* tty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184B2528BC3900E08C23 /* tty.cpp */; };
 		46D318522528BC3900E08C23 /* screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46D3184D2528BC3900E08C23 /* screen.cpp */; };
 		46EE698425E29D3C005C69F2 /* machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE698225E29D3C005C69F2 /* machine.cpp */; };
 		46EE698E25E29DE6005C69F2 /* fd_sounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE698B25E29DE5005C69F2 /* fd_sounds.cpp */; };
@@ -93,14 +93,14 @@
 		46C9CE3925D6E06100AC9626 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = ../../../src/host/video.hpp; sourceTree = "<group>"; };
 		46C9CE3B25D6E22600AC9626 /* settings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = settings.cpp; path = ../../../src/host/settings.cpp; sourceTree = "<group>"; };
 		46C9CE3C25D6E22600AC9626 /* settings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = settings.hpp; path = ../../../src/host/settings.hpp; sourceTree = "<group>"; };
-		46D318472528BC3900E08C23 /* monitor_status_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor_status_bar.cpp; path = ../../../src/monitor/monitor_status_bar.cpp; sourceTree = "<group>"; };
+		46D318472528BC3900E08C23 /* status_bar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = status_bar.cpp; path = ../../../src/monitor/status_bar.cpp; sourceTree = "<group>"; };
 		46D318482528BC3900E08C23 /* screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = screen.hpp; path = ../../../src/monitor/screen.hpp; sourceTree = "<group>"; };
-		46D318492528BC3900E08C23 /* monitor_command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor_command.cpp; path = ../../../src/monitor/monitor_command.cpp; sourceTree = "<group>"; };
-		46D3184A2528BC3900E08C23 /* monitor_status_bar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_status_bar.hpp; path = ../../../src/monitor/monitor_status_bar.hpp; sourceTree = "<group>"; };
-		46D3184B2528BC3900E08C23 /* monitor_console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monitor_console.cpp; path = ../../../src/monitor/monitor_console.cpp; sourceTree = "<group>"; };
-		46D3184C2528BC3900E08C23 /* monitor_command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_command.hpp; path = ../../../src/monitor/monitor_command.hpp; sourceTree = "<group>"; };
+		46D318492528BC3900E08C23 /* command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = command.cpp; path = ../../../src/monitor/command.cpp; sourceTree = "<group>"; };
+		46D3184A2528BC3900E08C23 /* status_bar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = status_bar.hpp; path = ../../../src/monitor/status_bar.hpp; sourceTree = "<group>"; };
+		46D3184B2528BC3900E08C23 /* tty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tty.cpp; path = ../../../src/monitor/tty.cpp; sourceTree = "<group>"; };
+		46D3184C2528BC3900E08C23 /* command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = command.hpp; path = ../../../src/monitor/command.hpp; sourceTree = "<group>"; };
 		46D3184D2528BC3900E08C23 /* screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = screen.cpp; path = ../../../src/monitor/screen.cpp; sourceTree = "<group>"; };
-		46D3184E2528BC3900E08C23 /* monitor_console.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = monitor_console.hpp; path = ../../../src/monitor/monitor_console.hpp; sourceTree = "<group>"; };
+		46D3184E2528BC3900E08C23 /* tty.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = tty.hpp; path = ../../../src/monitor/tty.hpp; sourceTree = "<group>"; };
 		46EE698225E29D3C005C69F2 /* machine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = machine.cpp; path = ../../../src/machine/machine.cpp; sourceTree = "<group>"; };
 		46EE698325E29D3C005C69F2 /* machine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = machine.hpp; path = ../../../src/machine/machine.hpp; sourceTree = "<group>"; };
 		46EE698B25E29DE5005C69F2 /* fd_sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd_sounds.cpp; path = ../../../src/machine/fd/fd_sounds.cpp; sourceTree = "<group>"; };
@@ -244,12 +244,12 @@
 				46B3D15225E406310048C6A3 /* monitor.cpp */,
 				46D318482528BC3900E08C23 /* screen.hpp */,
 				46D3184D2528BC3900E08C23 /* screen.cpp */,
-				46D3184E2528BC3900E08C23 /* monitor_console.hpp */,
-				46D3184B2528BC3900E08C23 /* monitor_console.cpp */,
-				46D3184C2528BC3900E08C23 /* monitor_command.hpp */,
-				46D318492528BC3900E08C23 /* monitor_command.cpp */,
-				46D3184A2528BC3900E08C23 /* monitor_status_bar.hpp */,
-				46D318472528BC3900E08C23 /* monitor_status_bar.cpp */,
+				46D3184E2528BC3900E08C23 /* tty.hpp */,
+				46D3184B2528BC3900E08C23 /* tty.cpp */,
+				46D3184C2528BC3900E08C23 /* command.hpp */,
+				46D318492528BC3900E08C23 /* command.cpp */,
+				46D3184A2528BC3900E08C23 /* status_bar.hpp */,
+				46D318472528BC3900E08C23 /* status_bar.cpp */,
 			);
 			name = monitor;
 			sourceTree = "<group>";
@@ -508,10 +508,10 @@
 				46C9CE3D25D6E22600AC9626 /* settings.cpp in Sources */,
 				4691C78823D7B28600E9E78D /* main.cpp in Sources */,
 				46EE69DE25E2F22D005C69F2 /* wave6581_PS_.cc in Sources */,
-				46D3184F2528BC3900E08C23 /* monitor_status_bar.cpp in Sources */,
+				46D3184F2528BC3900E08C23 /* status_bar.cpp in Sources */,
 				46EE69DA25E2F22D005C69F2 /* voice.cc in Sources */,
 				46EE69D525E2F22D005C69F2 /* wave8580_P_T.cc in Sources */,
-				46D318512528BC3900E08C23 /* monitor_console.cpp in Sources */,
+				46D318512528BC3900E08C23 /* tty.cpp in Sources */,
 				46EE69D825E2F22D005C69F2 /* envelope.cc in Sources */,
 				46EE69E125E2F22D005C69F2 /* filter.cc in Sources */,
 				46EE69EC25E2F300005C69F2 /* timer.cpp in Sources */,
@@ -522,7 +522,7 @@
 				46EE69D225E2F22D005C69F2 /* wave6581_PST.cc in Sources */,
 				46EE69DF25E2F22D005C69F2 /* wave8580__ST.cc in Sources */,
 				46EE69F325E2F40E005C69F2 /* stats.cpp in Sources */,
-				46D318502528BC3900E08C23 /* monitor_command.cpp in Sources */,
+				46D318502528BC3900E08C23 /* command.cpp in Sources */,
 				46B3D15325E406320048C6A3 /* monitor.cpp in Sources */,
 				46EE69D425E2F22D005C69F2 /* wave.cc in Sources */,
 				466D919C25D6E96D00BD95AE /* sdl2.cpp in Sources */,

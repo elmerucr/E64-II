@@ -6,7 +6,7 @@
  */
 
 #include "common.hpp"
-#include "monitor_console.hpp"
+#include "tty.hpp"
 #include "fd.hpp"
 #include <unistd.h>
 #include <sys/stat.h>
@@ -242,7 +242,7 @@ void E64::fd::attempt_start_writing()
 int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on_eject_disk)
 {
 	if (fd_state != FD_STATE_EMPTY) {
-		debug_console_print("\nerror: already a disk inside\n");
+		monitor.tty->print("\nerror: already a disk inside\n");
 		return 1;
 	}
 	
@@ -250,16 +250,16 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 	
 	if (stat(path, &stats) == 0) {
 		if (S_ISDIR(stats.st_mode)) {
-			debug_console_print("\nerror: path is directory\n");
+			monitor.tty->print("\nerror: path is directory\n");
 			return 1;
 		}
 		if (stats.st_size != FD_DISK_SIZE) {
-			debug_console_print("\nerror: disk image wrong size\n");
+			monitor.tty->print("\nerror: disk image wrong size\n");
 			return 1;
 		}
-		debug_console_print("\ninserting disk: ");
-		debug_console_print(path);
-		debug_console_put_char('\n');
+		monitor.tty->print("\ninserting disk: ");
+		monitor.tty->print(path);
+		monitor.tty->putchar('\n');
 		current_disk = fopen(path, "r+b");
 		fread(disk_contents, FD_DISK_SIZE, 1, current_disk);
 		
@@ -270,19 +270,19 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 		save_on_eject = save_on_eject_disk;
 		
 		if (write_protect) {
-			debug_console_print("\ndisk is write protected\n");
+			monitor.tty->print("\ndisk is write protected\n");
 		} else {
-			debug_console_print("\ndisk is writable\n");
+			monitor.tty->print("\ndisk is writable\n");
 		}
 		if (save_on_eject) {
-			debug_console_print("disk contents will be saved on eject\n");
+			monitor.tty->print("disk contents will be saved on eject\n");
 		} else {
-			debug_console_print("disk contents will not be saved on eject\n");
+			monitor.tty->print("disk contents will not be saved on eject\n");
 		}
 		
 		return 0;
 	} else {
-		debug_console_print("\nerror: no such file\n");
+		monitor.tty->print("\nerror: no such file\n");
 		return 1;
 	}
 }

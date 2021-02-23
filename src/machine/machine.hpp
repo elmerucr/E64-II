@@ -8,6 +8,7 @@
 
 #include "cia.hpp"
 #include "cpu_moira.hpp"
+#include "fd.hpp"
 #include "frequency_divider.hpp"
 #include "mmu.hpp"
 #include "sids.hpp"
@@ -15,7 +16,6 @@
 #include "TTL74LS148.hpp"
 #include "vicv.hpp"
 #include "blitter.hpp"
-#include "fd.hpp"
 
 // output states for run function
 #define NO_BREAKPOINT       0b00000000

@@ -9,8 +9,8 @@
 #include <SDL2/SDL.h>
 #include "common.hpp"
 #include "sdl2.hpp"
-#include "monitor_console.hpp"
-#include "monitor_command.hpp"
+#include "tty.hpp"
+#include "command.hpp"
 
 SDL_AudioDeviceID E64_sdl2_audio_dev;
 SDL_AudioSpec want, have;
@@ -119,189 +119,188 @@ int E64::sdl2_process_events()
                     switch(event.key.keysym.sym)
                     {
                         case SDLK_0:
-                            debug_console_put_char(shift_pressed ? ')' : '0');
+                            monitor.tty->putchar(shift_pressed ? ')' : '0');
                             break;
                         case SDLK_1:
-                            debug_console_put_char(shift_pressed ? '!' : '1');
+                            monitor.tty->putchar(shift_pressed ? '!' : '1');
                             break;
                         case SDLK_2:
-                            debug_console_put_char(shift_pressed ? '@' : '2');
+                            monitor.tty->putchar(shift_pressed ? '@' : '2');
                             break;
                         case SDLK_3:
-                            debug_console_put_char(shift_pressed ? '#' : '3');
+                            monitor.tty->putchar(shift_pressed ? '#' : '3');
                             break;
                         case SDLK_4:
-                            debug_console_put_char(shift_pressed ? '$' : '4');
+                            monitor.tty->putchar(shift_pressed ? '$' : '4');
                             break;
                         case SDLK_5:
-                            debug_console_put_char(shift_pressed ? '%' : '5');
+                            monitor.tty->putchar(shift_pressed ? '%' : '5');
                             break;
                         case SDLK_6:
-                            debug_console_put_char(shift_pressed ? '^' : '6');
+                            monitor.tty->putchar(shift_pressed ? '^' : '6');
                             break;
                         case SDLK_7:
-                            debug_console_put_char(shift_pressed ? '&' : '7');
+                            monitor.tty->putchar(shift_pressed ? '&' : '7');
                             break;
                         case SDLK_8:
-                            debug_console_put_char(shift_pressed ? '*' : '8');
+                            monitor.tty->putchar(shift_pressed ? '*' : '8');
                             break;
                         case SDLK_9:
-                            debug_console_put_char(shift_pressed ? '(' : '9');
+                            monitor.tty->putchar(shift_pressed ? '(' : '9');
                             break;
                         case SDLK_a:
-                            debug_console_put_char(shift_pressed ? 'A' : 'a');
+                            monitor.tty->putchar(shift_pressed ? 'A' : 'a');
                             break;
                         case SDLK_b:
-                            debug_console_put_char(shift_pressed ? 'B' : 'b');
+                            monitor.tty->putchar(shift_pressed ? 'B' : 'b');
                             break;
                         case SDLK_c:
-                            debug_console_put_char(shift_pressed ? 'C' : 'c');
+                            monitor.tty->putchar(shift_pressed ? 'C' : 'c');
                             break;
                         case SDLK_d:
-                            debug_console_put_char(shift_pressed ? 'D' : 'd');
+                            monitor.tty->putchar(shift_pressed ? 'D' : 'd');
                             break;
                         case SDLK_e:
-                            debug_console_put_char(shift_pressed ? 'E' : 'e');
+                            monitor.tty->putchar(shift_pressed ? 'E' : 'e');
                             break;
                         case SDLK_f:
-                            debug_console_put_char(shift_pressed ? 'F' : 'f');
+                            monitor.tty->putchar(shift_pressed ? 'F' : 'f');
                             break;
                         case SDLK_g:
-                            debug_console_put_char(shift_pressed ? 'G' : 'g');
+                            monitor.tty->putchar(shift_pressed ? 'G' : 'g');
                             break;
                         case SDLK_h:
-                            debug_console_put_char(shift_pressed ? 'H' : 'h');
+                            monitor.tty->putchar(shift_pressed ? 'H' : 'h');
                             break;
                         case SDLK_i:
-                            debug_console_put_char(shift_pressed ? 'I' : 'i');
+                            monitor.tty->putchar(shift_pressed ? 'I' : 'i');
                             break;
                         case SDLK_j:
-                            debug_console_put_char(shift_pressed ? 'J' : 'j');
+                            monitor.tty->putchar(shift_pressed ? 'J' : 'j');
                             break;
                         case SDLK_k:
-                            debug_console_put_char(shift_pressed ? 'K' : 'k');
+                            monitor.tty->putchar(shift_pressed ? 'K' : 'k');
                             break;
                         case SDLK_l:
-                            debug_console_put_char(shift_pressed ? 'L' : 'l');
+                            monitor.tty->putchar(shift_pressed ? 'L' : 'l');
                             break;
                         case SDLK_m:
-                            debug_console_put_char(shift_pressed ? 'M' : 'm');
+                            monitor.tty->putchar(shift_pressed ? 'M' : 'm');
                             break;
                         case SDLK_n:
-                            debug_console_put_char(shift_pressed ? 'N' : 'n');
+                            monitor.tty->putchar(shift_pressed ? 'N' : 'n');
                             break;
                         case SDLK_o:
-                            debug_console_put_char(shift_pressed ? 'O' : 'o');
+                            monitor.tty->putchar(shift_pressed ? 'O' : 'o');
                             break;
                         case SDLK_p:
-                            debug_console_put_char(shift_pressed ? 'P' : 'p');
+                            monitor.tty->putchar(shift_pressed ? 'P' : 'p');
                             break;
                         case SDLK_q:
-                            debug_console_put_char(shift_pressed ? 'Q' : 'q');
+                            monitor.tty->putchar(shift_pressed ? 'Q' : 'q');
                             break;
                         case SDLK_r:
-                            debug_console_put_char(shift_pressed ? 'R' : 'r');
+                            monitor.tty->putchar(shift_pressed ? 'R' : 'r');
                             break;
                         case SDLK_s:
-                            debug_console_put_char(shift_pressed ? 'S' : 's');
+                            monitor.tty->putchar(shift_pressed ? 'S' : 's');
                             break;
                         case SDLK_t:
-                            debug_console_put_char(shift_pressed ? 'T' : 't');
+                            monitor.tty->putchar(shift_pressed ? 'T' : 't');
                             break;
                         case SDLK_u:
-                            debug_console_put_char(shift_pressed ? 'U' : 'u');
+                            monitor.tty->putchar(shift_pressed ? 'U' : 'u');
                             break;
                         case SDLK_v:
-                            debug_console_put_char(shift_pressed ? 'V' : 'v');
+                            monitor.tty->putchar(shift_pressed ? 'V' : 'v');
                             break;
                         case SDLK_w:
-                            debug_console_put_char(shift_pressed ? 'W' : 'w');
+                            monitor.tty->putchar(shift_pressed ? 'W' : 'w');
                             break;
                         case SDLK_x:
-                            debug_console_put_char(shift_pressed ? 'X' : 'x');
+                            monitor.tty->putchar(shift_pressed ? 'X' : 'x');
                             break;
                         case SDLK_y:
-                            debug_console_put_char(shift_pressed ? 'Y' : 'y');
+                            monitor.tty->putchar(shift_pressed ? 'Y' : 'y');
                             break;
                         case SDLK_z:
-                            debug_console_put_char(shift_pressed ? 'Z' : 'z');
+                            monitor.tty->putchar(shift_pressed ? 'Z' : 'z');
                             break;
                         case SDLK_SPACE:
-                            debug_console_put_char(' ');
+                            monitor.tty->putchar(' ');
                             break;
                         case SDLK_BACKQUOTE:
-                            debug_console_put_char(shift_pressed ? '~' : '`');
+                            monitor.tty->putchar(shift_pressed ? '~' : '`');
                             break;
                         case SDLK_COMMA:
-                            debug_console_put_char(shift_pressed ? '<' : ',');
+                            monitor.tty->putchar(shift_pressed ? '<' : ',');
                             break;
                         case SDLK_PERIOD:
-                            debug_console_put_char(shift_pressed ? '>' : '.');
+                            monitor.tty->putchar(shift_pressed ? '>' : '.');
                             break;
                         case SDLK_SLASH:
-                            debug_console_put_char(shift_pressed ? '?' : '/');
+                            monitor.tty->putchar(shift_pressed ? '?' : '/');
                             break;
                         case SDLK_SEMICOLON:
-                            debug_console_put_char(shift_pressed ? ':' : ';');
+                            monitor.tty->putchar(shift_pressed ? ':' : ';');
                             break;
                         case SDLK_QUOTE:
-                            debug_console_put_char(shift_pressed ? '"' : '\'');
+                            monitor.tty->putchar(shift_pressed ? '"' : '\'');
                             break;
                         case SDLK_BACKSLASH:
-                            debug_console_put_char(shift_pressed ? '|' : '\\');
+                            monitor.tty->putchar(shift_pressed ? '|' : '\\');
                             break;
                         case SDLK_LEFTBRACKET:
-                            debug_console_put_char(shift_pressed ? '{' : '[');
+                            monitor.tty->putchar(shift_pressed ? '{' : '[');
                             break;
                         case SDLK_RIGHTBRACKET:
-                            debug_console_put_char(shift_pressed ? '}' : ']');
+                            monitor.tty->putchar(shift_pressed ? '}' : ']');
                             break;
                         case SDLK_MINUS:
-                            debug_console_put_char(shift_pressed ? '_' : '-');
+                            monitor.tty->putchar(shift_pressed ? '_' : '-');
                             break;
                         case SDLK_EQUALS:
-                            debug_console_put_char(shift_pressed ? '+' : '=');
+                            monitor.tty->putchar(shift_pressed ? '+' : '=');
                             break;
                         case SDLK_RETURN:
-                            debug_console_enter();
+				    monitor.tty->enter();
                             break;
                         case SDLK_BACKSPACE:
                             if(shift_pressed)
                             {
-                                debug_console_insert();
+				    monitor.tty->insert();
                             }
                             else
                             {
-                                debug_console_backspace();
+				    monitor.tty->backspace();
                             }
                             break;
                         case SDLK_LEFT:
-                            debug_console_arrow_left();
+				    monitor.tty->arrow_left();
                             break;
                         case SDLK_RIGHT:
-                            debug_console_arrow_right();
+				    monitor.tty->arrow_right();
                             break;
                         case SDLK_UP:
-                            debug_console_arrow_up();
+				    monitor.tty->arrow_up();
                             break;
                         case SDLK_DOWN:
-                            debug_console_arrow_down();
+				    monitor.tty->arrow_down();
                             break;
                         case SDLK_F1:
                             monitor_command_single_step_cpu();
-                            if( monitor_console_0.status_bar_active == false ) {
-                                debug_console_cursor_deactivate();
-                                //debug_console_toggle_status_bar();
+                            if (monitor.tty->status_bar_active == false) {
+				    monitor.tty->cursor_deactivate();
 				monitor_command_dump_cpu_status();
-				    debug_console_prompt();
-                                debug_console_cursor_activate();
+				    monitor.tty->prompt();
+				    monitor.tty->cursor_activate();
                             }
                             break;
                         case SDLK_F2:
-                            debug_console_toggle_status_bar();
+				    monitor.tty->toggle_status_bar();
                             break;
                         case SDLK_F3:
-				    monitor_console_0.status_bar_hex_view = !monitor_console_0.status_bar_hex_view;
+				    monitor.tty->status_bar_hex_view = !monitor.tty->status_bar_hex_view;
                             break;
                     }
                 }

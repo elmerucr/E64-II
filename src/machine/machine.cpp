@@ -3,8 +3,6 @@
 //
 //  Copyright © 2019-2021 elmerucr. All rights reserved.
 
-#include "monitor_console.hpp"
-#include "screen.hpp"
 #include "machine.hpp"
 #include "sdl2.hpp"
 #include "common.hpp"
@@ -55,13 +53,13 @@ void E64::machine_t::switch_mode(enum machine_mode new_mode)
 	switch (new_mode) {
 		case E64::RUNNING:
 			mode = RUNNING;
-			debug_console_cursor_deactivate();
+			monitor.tty->cursor_deactivate();
 			host.video->update_title();
 			// audio starts automatically when buffer reaches a minimum size
 			break;
 		case E64::MONITOR:
 			mode = MONITOR;
-			debug_console_cursor_activate();
+			monitor.tty->cursor_activate();
 			host.video->update_title();
 			E64::sdl2_stop_audio();
 			break;
@@ -99,7 +97,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 	if (m68k->breakpoint_reached) {
 		snprintf(machine_help_string, 256,
 			 "cpu breakpoint occurred at $%06x\n", m68k->getPC());
-		debug_console_print(machine_help_string);
+		monitor.tty->print(machine_help_string);
 		m68k->breakpoint_reached = false;
 		output_state |= CPU_BREAKPOINT;
 	}
@@ -110,7 +108,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 		snprintf(machine_help_string, 256,
 			 "scanline breakpoint occurred at line %i\n",
 			 vicv->get_current_scanline());
-		debug_console_print(machine_help_string);
+		monitor.tty->print(machine_help_string);
 		vicv->breakpoint_reached = false;
 		output_state |= SCANLINE_BREAKPOINT;
 	}
