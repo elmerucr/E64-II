@@ -10,7 +10,6 @@
 #include "common.hpp"
 #include "sdl2.hpp"
 #include "monitor_console.hpp"
-#include "screen.hpp"
 #include "monitor_status_bar.hpp"
 
 // global components
@@ -62,7 +61,7 @@ static void monitor_frame()
 	if (debug_console_cursor_flash()) {
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
-		E64::screen_update();
+		monitor.screen->update();
 		host.video->update_screen();
 	}
 	std::this_thread::sleep_for(std::chrono::microseconds(10000));
@@ -76,7 +75,7 @@ static void monitor_frame()
 	case E64::KEYPRESS_EVENT:
 		debug_status_bar_refresh();
 		debug_console_blit_to_debug_screen();
-		E64::screen_update();
+		monitor.screen->update();
 		host.video->update_screen();
 		break;
 	}
@@ -92,9 +91,6 @@ int main(int argc, char **argv)
 
 	// set up window management, audio and some other stuff
 	E64::sdl2_init();
-
-	// from monitor; needs to move into a class
-	E64::screen_init();
 
 	// Select starting mode of E64-II
 	machine.switch_mode(E64::RUNNING);

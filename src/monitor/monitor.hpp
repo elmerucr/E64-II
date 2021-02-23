@@ -1,7 +1,7 @@
+#include "screen.hpp"
+
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
-
-#include "screen.hpp"
 
 namespace E64 {
 
