@@ -30,7 +30,7 @@
 		46EE699425E2EED2005C69F2 /* cia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE699225E2EED2005C69F2 /* cia.cpp */; };
 		46EE69AB25E2F018005C69F2 /* Moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE699E25E2F018005C69F2 /* Moira.cpp */; };
 		46EE69AC25E2F018005C69F2 /* MoiraDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69A325E2F018005C69F2 /* MoiraDebugger.cpp */; };
-		46EE69AF25E2F02B005C69F2 /* cpu_moira.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69AE25E2F02B005C69F2 /* cpu_moira.cpp */; };
+		46EE69AF25E2F02B005C69F2 /* cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69AE25E2F02B005C69F2 /* cpu.cpp */; };
 		46EE69B325E2F16E005C69F2 /* mmu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69B125E2F16E005C69F2 /* mmu.cpp */; };
 		46EE69B825E2F1F2005C69F2 /* sids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69B725E2F1F2005C69F2 /* sids.cpp */; };
 		46EE69D225E2F22D005C69F2 /* wave6581_PST.cc in Sources */ = {isa = PBXBuildFile; fileRef = 46EE69B925E2F22C005C69F2 /* wave6581_PST.cc */; };
@@ -106,7 +106,7 @@
 		46EE698B25E29DE5005C69F2 /* fd_sounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd_sounds.cpp; path = ../../../src/machine/fd/fd_sounds.cpp; sourceTree = "<group>"; };
 		46EE698C25E29DE5005C69F2 /* fd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fd.cpp; path = ../../../src/machine/fd/fd.cpp; sourceTree = "<group>"; };
 		46EE698D25E29DE5005C69F2 /* fd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fd.hpp; path = ../../../src/machine/fd/fd.hpp; sourceTree = "<group>"; };
-		46EE699025E2EE6B005C69F2 /* frequency_divider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = frequency_divider.hpp; path = ../../../src/machine/frequency_divider.hpp; sourceTree = "<group>"; };
+		46EE699025E2EE6B005C69F2 /* clocks.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = clocks.hpp; path = ../../../src/machine/clocks.hpp; sourceTree = "<group>"; };
 		46EE699225E2EED2005C69F2 /* cia.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cia.cpp; path = ../../../src/machine/cia/cia.cpp; sourceTree = "<group>"; };
 		46EE699325E2EED2005C69F2 /* cia.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cia.hpp; path = ../../../src/machine/cia/cia.hpp; sourceTree = "<group>"; };
 		46EE699725E2F017005C69F2 /* MoiraTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraTypes.h; path = ../../../src/machine/cpu/Moira/MoiraTypes.h; sourceTree = "<group>"; };
@@ -129,8 +129,8 @@
 		46EE69A825E2F018005C69F2 /* MoiraDataflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraDataflow.h; path = ../../../src/machine/cpu/Moira/MoiraDataflow.h; sourceTree = "<group>"; };
 		46EE69A925E2F018005C69F2 /* MoiraConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraConfig.h; path = ../../../src/machine/cpu/Moira/MoiraConfig.h; sourceTree = "<group>"; };
 		46EE69AA25E2F018005C69F2 /* MoiraInit_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoiraInit_cpp.h; path = ../../../src/machine/cpu/Moira/MoiraInit_cpp.h; sourceTree = "<group>"; };
-		46EE69AD25E2F02B005C69F2 /* cpu_moira.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cpu_moira.hpp; path = ../../../src/machine/cpu/cpu_moira.hpp; sourceTree = "<group>"; };
-		46EE69AE25E2F02B005C69F2 /* cpu_moira.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpu_moira.cpp; path = ../../../src/machine/cpu/cpu_moira.cpp; sourceTree = "<group>"; };
+		46EE69AD25E2F02B005C69F2 /* cpu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cpu.hpp; path = ../../../src/machine/cpu/cpu.hpp; sourceTree = "<group>"; };
+		46EE69AE25E2F02B005C69F2 /* cpu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpu.cpp; path = ../../../src/machine/cpu/cpu.cpp; sourceTree = "<group>"; };
 		46EE69B125E2F16E005C69F2 /* mmu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mmu.cpp; path = ../../../src/machine/mmu/mmu.cpp; sourceTree = "<group>"; };
 		46EE69B225E2F16E005C69F2 /* mmu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = mmu.hpp; path = ../../../src/machine/mmu/mmu.hpp; sourceTree = "<group>"; };
 		46EE69B625E2F1F2005C69F2 /* sids.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = sids.hpp; path = ../../../src/machine/sids/sids.hpp; sourceTree = "<group>"; };
@@ -292,7 +292,7 @@
 				46EE69E225E2F266005C69F2 /* vicv */,
 				46EE698325E29D3C005C69F2 /* machine.hpp */,
 				46EE698225E29D3C005C69F2 /* machine.cpp */,
-				46EE699025E2EE6B005C69F2 /* frequency_divider.hpp */,
+				46EE699025E2EE6B005C69F2 /* clocks.hpp */,
 			);
 			name = machine;
 			sourceTree = "<group>";
@@ -320,8 +320,8 @@
 			isa = PBXGroup;
 			children = (
 				46EE699625E2EFA1005C69F2 /* Moira */,
-				46EE69AD25E2F02B005C69F2 /* cpu_moira.hpp */,
-				46EE69AE25E2F02B005C69F2 /* cpu_moira.cpp */,
+				46EE69AD25E2F02B005C69F2 /* cpu.hpp */,
+				46EE69AE25E2F02B005C69F2 /* cpu.cpp */,
 			);
 			name = cpu;
 			sourceTree = "<group>";
@@ -529,7 +529,7 @@
 				46EE698F25E29DE6005C69F2 /* fd.cpp in Sources */,
 				46C9CE3625D6CFF000AC9626 /* host.cpp in Sources */,
 				46C9CE3A25D6E06100AC9626 /* video.cpp in Sources */,
-				46EE69AF25E2F02B005C69F2 /* cpu_moira.cpp in Sources */,
+				46EE69AF25E2F02B005C69F2 /* cpu.cpp in Sources */,
 				46D318522528BC3900E08C23 /* screen.cpp in Sources */,
 				46EE69F025E2F36E005C69F2 /* TTL74LS148.cpp in Sources */,
 				46EE69E025E2F22D005C69F2 /* wave8580_PS_.cc in Sources */,

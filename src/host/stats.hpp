@@ -12,7 +12,7 @@
 namespace E64
 {
 
-class stats
+class stats_t
 {
 private:
     std::chrono::time_point<std::chrono::steady_clock> now, then, done;
@@ -56,12 +56,11 @@ public:
     void start_idle_time();
     void end_idle_time();
 
-    // getters
-    inline double get_current_framerate() { return framerate; }
-    inline double get_current_smoothed_framerate() { return smoothed_framerate; }
-    inline double get_current_audio_queue_size() { return audio_queue_size; }
-    inline double get_current_smoothed_audio_queue_size() { return smoothed_audio_queue_size; }
-    inline char *stats_info() { return statistics_string; }
+    inline double current_framerate() { return framerate; }
+    inline double current_smoothed_framerate() { return smoothed_framerate; }
+    inline double current_audio_queue_size() { return audio_queue_size; }
+    inline double current_smoothed_audio_queue_size() { return smoothed_audio_queue_size; }
+    inline char *summary() { return statistics_string; }
 };
 
 }

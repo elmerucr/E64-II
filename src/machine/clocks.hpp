@@ -1,4 +1,4 @@
-//  frequency_divider.hpp
+//  clocks.hpp
 //  E64-II
 //
 //  Copyright © 2019-2020 elmerucr. All rights reserved.
@@ -6,15 +6,15 @@
 //  Algorithm based on bresenham line algorithm. Besides very simple multipliers / dividers,
 //  it is also possible to build very "complex" ones.
 
-#ifndef frequency_divider_hpp
-#define frequency_divider_hpp
+#ifndef CLOCKS_HPP
+#define CLOCKS_HPP
 
 #include <cstdint>
 
 namespace E64
 {
 
-class frequency_divider
+class clocks
 {
 private:
 	uint64_t clock0_frequency;
@@ -26,7 +26,7 @@ private:
 	uint64_t mod;
 	uint64_t result;
 public:
-	frequency_divider(uint32_t clock0_freq, uint32_t clock1_freq)
+	clocks(uint32_t clock0_freq, uint32_t clock1_freq)
 	{
 		clock0_frequency = clock0_freq;
 		clock1_frequency = clock1_freq;

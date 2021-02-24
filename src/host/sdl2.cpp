@@ -100,7 +100,7 @@ int E64::sdl2_process_events()
                 {
                     E64::sdl2_wait_until_r_released();
 			machine.reset();
-                    statistics.reset();
+                    stats.reset();
                 }
                 else if( (event.key.keysym.sym == SDLK_q) && alt_pressed )
                 {
@@ -288,10 +288,10 @@ int E64::sdl2_process_events()
 				    monitor.tty->arrow_down();
                             break;
                         case SDLK_F1:
-                            monitor_command_single_step_cpu();
+				    monitor.command->single_step_cpu();
                             if (monitor.tty->status_bar_active == false) {
 				    monitor.tty->cursor_deactivate();
-				monitor_command_dump_cpu_status();
+				    monitor.command->dump_cpu_status();
 				    monitor.tty->prompt();
 				    monitor.tty->cursor_activate();
                             }

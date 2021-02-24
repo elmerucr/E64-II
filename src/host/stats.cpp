@@ -13,7 +13,7 @@
 #include "common.hpp"
 
 
-void E64::stats::reset()
+void E64::stats_t::reset()
 {
     total_time = 0;
     total_idle_time = 0;
@@ -41,7 +41,7 @@ void E64::stats::reset()
     now = then = std::chrono::steady_clock::now();
 }
 
-void E64::stats::process_parameters()
+void E64::stats_t::process_parameters()
 {
     framecounter++;
     if(framecounter == framecounter_interval)
@@ -75,13 +75,13 @@ void E64::stats::process_parameters()
     }
 }
 
-void E64::stats::start_idle_time()
+void E64::stats_t::start_idle_time()
 {
     // here we pinpoint done, because we're done with the "work"
     done = std::chrono::steady_clock::now();
 }
 
-void E64::stats::end_idle_time()
+void E64::stats_t::end_idle_time()
 {
     now = std::chrono::steady_clock::now();
     total_idle_time += std::chrono::duration_cast<std::chrono::microseconds>(now - done).count();

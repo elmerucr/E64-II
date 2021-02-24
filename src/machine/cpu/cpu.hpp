@@ -1,5 +1,5 @@
 /*
- * cpu_moira.hpp
+ * cpu.hpp
  * E64-II
  *
  * Copyright © 2019-2020 elmerucr. All rights reserved.
@@ -12,7 +12,7 @@
 
 using namespace moira;
 
-class cpu_moira : public Moira
+class cpu : public Moira
 {
 	// must be implemented
 	u8 read8(u32 addr) override;

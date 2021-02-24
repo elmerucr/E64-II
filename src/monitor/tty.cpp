@@ -176,7 +176,7 @@ void E64::tty_t::enter()
     
 	console_help_string[64] = ASCII_NULL;
     
-	E64::monitor_command_execute(console_help_string);
+	monitor.command->execute(console_help_string);
 }
 
 void E64::tty_t::insert()
@@ -264,19 +264,19 @@ void E64::tty_t::arrow_up()
 				break;
 			case E64::ASCII:
 				add_top_row();
-				E64::monitor_command_memory_dump((address-8) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_dump((address-8) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::CHARACTER:
 				add_top_row();
-				E64::monitor_command_memory_character_dump((address-16) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_character_dump((address-16) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::BINARY:
 				add_top_row();
-				E64::monitor_command_memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_binary_dump((address - 1) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::DISK:
 				add_top_row();
-				E64::monitor_command_fd_dump(address - 0x08, 1);
+				monitor.command->fd_dump(address - 0x08, 1);
 				break;
 		}
 	}
@@ -298,19 +298,19 @@ void E64::tty_t::arrow_down()
 				break;
 			case E64::ASCII:
 				add_bottom_row();
-				E64::monitor_command_memory_dump((address+8) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_dump((address+8) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::CHARACTER:
 				add_bottom_row();
-				E64::monitor_command_memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_character_dump((address+16) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::BINARY:
 				add_bottom_row();
-				E64::monitor_command_memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
+				monitor.command->memory_binary_dump((address + 1) & (RAM_SIZE - 1), 1);
 				break;
 			case E64::DISK:
 				add_bottom_row();
-				E64::monitor_command_fd_dump(address + 0x08, 1);
+				monitor.command->fd_dump(address + 0x08, 1);
 				break;
 		}
 	}
@@ -351,7 +351,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 				character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::monitor_command_hex_string_to_int(potential_address, address);
+			monitor.command->hex_string_to_int(potential_address, address);
 			if (top_down) break;
 		} else if (character_buffer[i] == ';') {
 			output = CHARACTER;
@@ -361,7 +361,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 				character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::monitor_command_hex_string_to_int(potential_address, address);
+			monitor.command->hex_string_to_int(potential_address, address);
 			if (top_down) break;
 		} else if (character_buffer[i] == '\'') {
 			output = BINARY;
@@ -371,7 +371,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 				character_buffer[i+1+j];
 			}
 			potential_address[6] = 0;
-			E64::monitor_command_hex_string_to_int(potential_address, address);
+			monitor.command->hex_string_to_int(potential_address, address);
 			if (top_down) break;
 		} else if (character_buffer[i] == '"') {
 			output = DISK;
@@ -382,7 +382,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 					character_buffer[i+3+j];
 			}
 			potential_sector[8] = 0;
-			E64::monitor_command_hex_string_to_int(potential_sector, &sector);
+			monitor.command->hex_string_to_int(potential_sector, &sector);
 			char potential_offset[5];
 			uint32_t offset;
 			for (int j=0; j<4; j++) {
@@ -390,7 +390,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 					character_buffer[i+12+j];
 			}
 			potential_offset[4] = 0;
-			E64::monitor_command_hex_string_to_int(potential_offset, &offset);
+			monitor.command->hex_string_to_int(potential_offset, &offset);
 			*address = (sector * machine.fd0->bytes_per_sector()) + offset;
 			if (top_down) break;
 		}

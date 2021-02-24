@@ -20,14 +20,14 @@
 
 #define E64_II_MAJOR_VERSION    0
 #define E64_II_MINOR_VERSION    5
-#define E64_II_BUILD            20210223
+#define E64_II_BUILD            20210224
 #define E64_II_YEAR             2021
 
 /* Global objects */
 extern E64::host_t	host;
 extern E64::machine_t	machine;
 extern E64::monitor_t	monitor;
-extern E64::stats	statistics;
+extern E64::stats_t	stats;
 
 #define	RAM_SIZE	0x01000000   // 16mb system, DO NOT CHANGE
 

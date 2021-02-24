@@ -12,23 +12,28 @@ E64::machine_t::machine_t()
 	switch_mode(RUNNING);
 	
 	mmu = new mmu_ic();
-	m68k = new cpu_moira();
+	m68k = new cpu();
 	TTL74LS148 = new TTL74LS148_ic();
 	timer = new timer_ic();
 	timer->interrupt_device_number = TTL74LS148->connect_device(4);
+	
 	vicv = new vicv_ic();
 	vicv->vblank_interrupt_device_number = TTL74LS148->connect_device(2);
+	vicv->set_stats(stats.summary());
+	
 	blitter = new blitter_ic();
 	sids = new sids_ic();
 	cia = new cia_ic();
 	fd0 = new fd();
 	
-	// init frequency dividers (right no of cycles will run on different ic's)
-	m68k_to_vicv  = new frequency_divider(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
-	m68k_to_blitter = new frequency_divider(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
-	m68k_to_sid   = new frequency_divider(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
+	// init clocks (frequency dividers, right no of cycles will run on different ic's)
+	m68k_to_vicv  = new clocks(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
+	m68k_to_blitter = new clocks(CPU_CLOCK_SPEED, BLITTER_DOT_CLOCK_SPEED);
+	m68k_to_sid   = new clocks(CPU_CLOCK_SPEED, SID_CLOCK_SPEED );
 	
 	m68k->configDasm(true, false);   // output numbers in hex, use small case for mnemonics
+	
+	reset();
 }
 
 E64::machine_t::~machine_t()
@@ -48,7 +53,7 @@ E64::machine_t::~machine_t()
 	delete mmu;
 }
 
-void E64::machine_t::switch_mode(enum machine_mode new_mode)
+void E64::machine_t::switch_mode(enum mode_t new_mode)
 {
 	switch (new_mode) {
 		case E64::RUNNING:
@@ -121,7 +126,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 	// run cycles on sound device & start audio if buffer is large enough
 	// some cheating by adjustment of cycles to run depending on current
 	// audio queue size
-	unsigned int audio_queue_size = statistics.get_current_audio_queue_size();
+	unsigned int audio_queue_size = stats.current_audio_queue_size();
 	
 	if (audio_queue_size < 0.9 * AUDIO_BUFFER_SIZE)
 		sids->run(m68k_to_sid->clock(1.2 * processed_cycles));

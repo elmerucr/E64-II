@@ -1,6 +1,7 @@
 #include "screen.hpp"
 #include "tty.hpp"
 #include "status_bar.hpp"
+#include "command.hpp"
 
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
@@ -15,6 +16,7 @@ public:
 	screen_t *screen;
 	tty_t *tty;
 	status_bar_t *status_bar;
+	command_t *command;
 };
 
 }

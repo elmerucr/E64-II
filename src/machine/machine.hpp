@@ -7,9 +7,9 @@
 #define MACHINE_HPP
 
 #include "cia.hpp"
-#include "cpu_moira.hpp"
+#include "clocks.hpp"
+#include "cpu.hpp"
 #include "fd.hpp"
-#include "frequency_divider.hpp"
 #include "mmu.hpp"
 #include "sids.hpp"
 #include "timer.hpp"
@@ -25,7 +25,7 @@
 namespace E64
 {
 
-enum machine_mode
+enum mode_t
 {
     MONITOR,
     RUNNING
@@ -34,16 +34,16 @@ enum machine_mode
 class machine_t
 {
 private:
-    frequency_divider *m68k_to_vicv;
-    frequency_divider *m68k_to_blitter;
-    frequency_divider *m68k_to_sid;
+    clocks *m68k_to_vicv;
+    clocks *m68k_to_blitter;
+    clocks *m68k_to_sid;
     char machine_help_string[2048];
 public:
-    enum machine_mode   mode;
-    bool on;
-    
+	enum mode_t mode;
+	bool turned_on;
+
 	mmu_ic		*mmu;
-	cpu_moira	*m68k;
+	cpu		*m68k;
 	TTL74LS148_ic	*TTL74LS148;
 	timer_ic	*timer;
 	vicv_ic		*vicv;
@@ -59,7 +59,7 @@ public:
 
 	void reset();
 
-	void switch_mode(enum machine_mode new_mode);
+	void switch_mode(enum mode_t new_mode);
 	void toggle_mode();
 };
 

@@ -15,7 +15,7 @@
 
 char command_help_string[2048];
 
-void E64::monitor_command_execute(char *string_to_parse_and_exec)
+void E64::command_t::execute(char *string_to_parse_and_exec)
 {
 	bool have_prompt = true;
 	
@@ -27,16 +27,16 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		monitor.tty->putchar('\n');
 	} else if (token0[0] == ':') {
 		have_prompt = false;
-		monitor_command_enter_monitor_line(string_to_parse_and_exec);
+		monitor.command->enter_monitor_line(string_to_parse_and_exec);
 	} else if (token0[0] == ';') {
 		have_prompt = false;
-		monitor_command_enter_monitor_character_line(string_to_parse_and_exec);
+		monitor.command->enter_monitor_character_line(string_to_parse_and_exec);
 	} else if (token0[0] == '\'') {
 		have_prompt = false;
-		monitor_command_enter_monitor_binary_line(string_to_parse_and_exec);
+		monitor.command->enter_monitor_binary_line(string_to_parse_and_exec);
 	} else if (token0[0] == '"') {
 		have_prompt = false;
-		monitor_command_enter_monitor_disk_line(string_to_parse_and_exec);
+		monitor.command->enter_monitor_disk_line(string_to_parse_and_exec);
 	} else if (strcmp(token0, "b") == 0) {
 		token1 = strtok(NULL, " ");
 		monitor.tty->putchar('\n');
@@ -56,7 +56,7 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 			}
 		} else {
 			uint32_t temp_32bit;
-			if (monitor_command_hex_string_to_int(token1, &temp_32bit)) {
+			if (monitor.command->hex_string_to_int(token1, &temp_32bit)) {
 				temp_32bit &= (RAM_SIZE - 1);
 				machine.m68k->debugger.breakpoints.addAt(temp_32bit);
 				snprintf(command_help_string, 256,
@@ -117,7 +117,7 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 	} else if (strcmp(token0, "exit") == 0) {
 		have_prompt = false;
 		E64::sdl2_wait_until_enter_released();
-		machine.on = false;
+		machine.turned_on = false;
 	} else if (strcmp(token0, "full") == 0) {
 		monitor.tty->putchar('\n');
 		host.video->toggle_fullscreen();
@@ -185,17 +185,17 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				monitor.tty->putchar('\n');
-				monitor_command_memory_dump(temp_pc, 1);
+				monitor.command->memory_dump(temp_pc, 1);
 				temp_pc = (temp_pc + 8) & 0x00ffffff;
 			}
 		} else {
-			if (!monitor_command_hex_string_to_int(token1, &temp_pc)) {
+			if (!monitor.command->hex_string_to_int(token1, &temp_pc)) {
 				monitor.tty->putchar('\n');
 				monitor.tty->print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					monitor.tty->putchar('\n');
-					monitor_command_memory_dump(temp_pc &
+					monitor.command->memory_dump(temp_pc &
 						(RAM_SIZE - 1), 1);
 					temp_pc = (temp_pc + 8) & 0x00ffffff;
 				}
@@ -213,17 +213,17 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				monitor.tty->putchar('\n');
-				monitor_command_memory_binary_dump(temp_pc, 1);
+				monitor.command->memory_binary_dump(temp_pc, 1);
 				temp_pc = (temp_pc + 1) & 0x00ffffff;
 			}
 		} else {
-			if (!monitor_command_hex_string_to_int(token1, &temp_pc)) {
+			if (!monitor.command->hex_string_to_int(token1, &temp_pc)) {
 				monitor.tty->putchar('\n');
 				monitor.tty->print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					monitor.tty->putchar('\n');
-					monitor_command_memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
+					monitor.command->memory_binary_dump(temp_pc & (RAM_SIZE - 1), 1);
 					temp_pc = (temp_pc + 1) & 0x00ffffff;
 				}
 			}
@@ -239,13 +239,13 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 			monitor.tty->print("error: need address\n");
 		} else {
 			uint32_t temp_32bit;
-			if (!monitor_command_hex_string_to_int(token1, &temp_32bit)) {
+			if (!monitor.command->hex_string_to_int(token1, &temp_32bit)) {
 				monitor.tty->putchar('\n');
 				monitor.tty->print("error: invalid address\n");
 			} else {
 				for (int i=0; i<lines_remaining; i++) {
 					monitor.tty->putchar('\n');
-					monitor_command_memory_character_dump(temp_32bit &
+					monitor.command->memory_character_dump(temp_32bit &
 						(RAM_SIZE - 1), 1);
 					temp_32bit = (temp_32bit + 16) & 0x00ffffff;
 				}
@@ -265,13 +265,13 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		if (token1 == NULL) {
 			for (int i=0; i<lines_remaining; i++) {
 				monitor.tty->putchar('\n');
-				monitor_command_fd_dump(temp_pos, 1);
+				monitor.command->fd_dump(temp_pos, 1);
 				temp_pos += 0x08;
 				if (temp_pos >= machine.fd0->disk_size())
 					temp_pos = 0;
 			}
 		} else {
-			if (!monitor_command_hex_string_to_int(token1, &temp_pos)) {
+			if (!monitor.command->hex_string_to_int(token1, &temp_pos)) {
 				monitor.tty->putchar('\n');
 				monitor.tty->print("error: invalid sector\n");
 			} else {
@@ -281,7 +281,7 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 					machine.fd0->bytes_per_sector();
 				for (int i=0; i<lines_remaining; i++) {
 					monitor.tty->putchar('\n');
-					monitor_command_fd_dump(temp_pos, 1);
+					monitor.command->fd_dump(temp_pos, 1);
 					temp_pos += 0x08;
 				}
 			}
@@ -292,11 +292,11 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		monitor.tty->print(command_help_string);
 		monitor.tty->putchar('\n');
 	} else if (strcmp(token0, "r") == 0) {
-		monitor_command_dump_cpu_status();
+		monitor.command->dump_cpu_status();
 	} else if (strcmp(token0, "reset") == 0) {
 		monitor.tty->putchar('\n');
 		machine.reset();
-		statistics.reset();
+		stats.reset();
 	} else if (strcmp(token0, "sb") == 0) {
 		token1 = strtok(NULL, " ");
 		monitor.tty->putchar('\n');
@@ -378,7 +378,7 @@ void E64::monitor_command_execute(char *string_to_parse_and_exec)
 		monitor.tty->prompt();
 }
 
-void E64::monitor_command_dump_cpu_status()
+void E64::command_t::dump_cpu_status()
 {
 	monitor.tty->putchar('\n');
 	machine.m68k->dump_registers(command_help_string);
@@ -386,7 +386,7 @@ void E64::monitor_command_dump_cpu_status()
 	monitor.tty->putchar('\n');
 }
 
-void E64::monitor_command_memory_dump(uint32_t address, int rows)
+void E64::command_t::memory_dump(uint32_t address, int rows)
 {
     address = address & 0xfffffffe;  // only even addresses allowed
     
@@ -422,7 +422,7 @@ void E64::monitor_command_memory_dump(uint32_t address, int rows)
     }
 }
 
-void E64::monitor_command_memory_character_dump(uint32_t address, int rows)
+void E64::command_t::memory_character_dump(uint32_t address, int rows)
 {
     for(int i=0; i<rows; i++ )
     {
@@ -457,7 +457,7 @@ void E64::monitor_command_memory_character_dump(uint32_t address, int rows)
     }
 }
 
-void E64::monitor_command_memory_binary_dump(uint32_t address, int rows)
+void E64::command_t::memory_binary_dump(uint32_t address, int rows)
 {
 	for (int i=0; i<rows; i++) {
 		uint8_t temp_byte = machine.mmu->read_memory_8(address);
@@ -512,7 +512,7 @@ void E64::monitor_command_memory_binary_dump(uint32_t address, int rows)
  * This function is slightly adopted to check for true values. It returns false
  * when there's wrong input.
  */
-bool E64::monitor_command_hex_string_to_int(const char *temp_string, uint32_t *return_value)
+bool E64::command_t::hex_string_to_int(const char *temp_string, uint32_t *return_value)
 {
     uint32_t val = 0;
     while (*temp_string)
@@ -544,14 +544,14 @@ bool E64::monitor_command_hex_string_to_int(const char *temp_string, uint32_t *r
     return true;
 }
 
-void E64::monitor_command_single_step_cpu()
+void E64::command_t::single_step_cpu()
 {
 	monitor.tty->cursor_deactivate();
 	machine.run(0);
 	monitor.tty->cursor_activate();
 }
 
-void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
+void E64::command_t::enter_monitor_line(char *string_to_parse_and_exec)
 {
     uint32_t address;
     uint32_t arg0, arg1, arg2, arg3;
@@ -562,7 +562,7 @@ void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
     string_to_parse_and_exec[22] = '\0';
     string_to_parse_and_exec[27] = '\0';
     
-    if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+    if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 1;
@@ -574,25 +574,25 @@ void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
 	    monitor.tty->cursor_pos += 1;
 	    monitor.tty->print("??????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 8;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 13;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 18;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 23;
@@ -614,7 +614,7 @@ void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
 
 	    monitor.tty->putchar('\r');
         
-        monitor_command_memory_dump(original_address, 1);
+	    monitor.command->memory_dump(original_address, 1);
         
         original_address += 8;
         original_address &= 0xffffff;
@@ -625,7 +625,7 @@ void E64::monitor_command_enter_monitor_line(char *string_to_parse_and_exec)
 }
 
 //  rewrite this / merge this with the other enter line function?
-void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and_exec)
+void E64::command_t::enter_monitor_character_line(char *string_to_parse_and_exec)
 {
     uint32_t address;
     uint32_t arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7;
@@ -640,7 +640,7 @@ void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and
     string_to_parse_and_exec[42] = '\0';
     string_to_parse_and_exec[47] = '\0';
     
-    if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address) )
+    if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[1], &address) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 1;
@@ -652,49 +652,49 @@ void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and
 	    monitor.tty->cursor_pos += 1;
 	    monitor.tty->print("??????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[8], &arg0) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 8;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[13], &arg1) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 13;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[18], &arg2) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 18;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[23], &arg3) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 23;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[28], &arg4) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[28], &arg4) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 28;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[33], &arg5) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[33], &arg5) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 33;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg6) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[38], &arg6) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 38;
 	    monitor.tty->print("????\n");
     }
-    else if( !monitor_command_hex_string_to_int(&string_to_parse_and_exec[43], &arg7) )
+    else if( !monitor.command->hex_string_to_int(&string_to_parse_and_exec[43], &arg7) )
     {
 	    monitor.tty->putchar('\r');
 	    monitor.tty->cursor_pos += 43;
@@ -724,7 +724,7 @@ void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and
 
 	    monitor.tty->putchar('\r');
         
-        monitor_command_memory_character_dump(original_address, 1);
+	    monitor.command->memory_character_dump(original_address, 1);
         
         original_address += 16;
         original_address &= 0xffffff;
@@ -734,7 +734,7 @@ void E64::monitor_command_enter_monitor_character_line(char *string_to_parse_and
     }
 }
 
-void E64::monitor_command_enter_monitor_binary_line(char *string_to_parse_and_exec)
+void E64::command_t::enter_monitor_binary_line(char *string_to_parse_and_exec)
 {
 	uint32_t address;
 	uint32_t arg0;
@@ -742,11 +742,11 @@ void E64::monitor_command_enter_monitor_binary_line(char *string_to_parse_and_ex
 	string_to_parse_and_exec[7]  = '\0';
 	string_to_parse_and_exec[10] = '\0';
 	
-	if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
+	if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[1], &address)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 1;
 		monitor.tty->print("??????\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[8], &arg0)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 8;
 		monitor.tty->print("??\n");
@@ -754,7 +754,7 @@ void E64::monitor_command_enter_monitor_binary_line(char *string_to_parse_and_ex
 		arg0 &= 0xff;
 		machine.mmu->write_memory_8(address, (uint8_t)arg0);
 		monitor.tty->putchar('\r');
-		monitor_command_memory_binary_dump(address, 1);
+		monitor.command->memory_binary_dump(address, 1);
 		address++;
 		address &= 0xffffff;
 		snprintf(command_help_string, 256, "\n\'%06x ", address);
@@ -762,7 +762,7 @@ void E64::monitor_command_enter_monitor_binary_line(char *string_to_parse_and_ex
 	}
 }
 
-void E64::monitor_command_fd_dump(uint32_t address, int rows)
+void E64::command_t::fd_dump(uint32_t address, int rows)
 {
 	address &= 0xfffffff8;
 
@@ -790,7 +790,7 @@ void E64::monitor_command_fd_dump(uint32_t address, int rows)
 	monitor.tty->cursor_pos -= 32;
 }
 
-void E64::monitor_command_enter_monitor_disk_line(char *string_to_parse_and_exec)
+void E64::command_t::enter_monitor_disk_line(char *string_to_parse_and_exec)
 {
 	uint32_t sector = 0;
 	uint32_t offset = 0;
@@ -817,43 +817,43 @@ void E64::monitor_command_enter_monitor_disk_line(char *string_to_parse_and_exec
 	string_to_parse_and_exec[40] = '\0';
 
 	
-	if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
+	if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[3], &sector)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 3;
 		monitor.tty->print("????????\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[12], &offset)) {
 	       monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 12;
 	       monitor.tty->print("????\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[17], &arg0)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 17;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[20], &arg1)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 20;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[23], &arg2)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 23;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[26], &arg3)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 26;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[29], &arg4)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 29;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[32], &arg5)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 32;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[35], &arg6)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 35;
 		monitor.tty->print("??\n");
-	} else if (!monitor_command_hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
+	} else if (!monitor.command->hex_string_to_int(&string_to_parse_and_exec[38], &arg7)) {
 		monitor.tty->putchar('\r');
 		monitor.tty->cursor_pos += 38;
 		monitor.tty->print("??\n");
@@ -873,7 +873,7 @@ void E64::monitor_command_enter_monitor_disk_line(char *string_to_parse_and_exec
 				machine.fd0->disk_contents[temp_pos + 0x7] = (arg7 & 0xff);
 			}
 			monitor.tty->putchar('\r');
-			monitor_command_fd_dump(temp_pos, 1);
+			monitor.command->fd_dump(temp_pos, 1);
 			temp_pos += 0x8;
 			if (temp_pos >= machine.fd0->disk_size())
 				temp_pos = 0;

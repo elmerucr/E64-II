@@ -1,41 +1,41 @@
 /*
- * cpu_moira.cpp
+ * cpu.cpp
  * E64-II
  *
  * Copyright © 2019-2020 elmerucr. All rights reserved.
  */
  
-#include "cpu_moira.hpp"
+#include "cpu.hpp"
 #include "common.hpp"
 
 #include <cstdio>
 
-u8 cpu_moira::read8(u32 addr)
+u8 cpu::read8(u32 addr)
 {
 	return machine.mmu->read_memory_8(addr);
 }
 
-u16 cpu_moira::read16(u32 addr)
+u16 cpu::read16(u32 addr)
 {
 	return machine.mmu->read_memory_16(addr);
 }
 
-void cpu_moira::write8 (u32 addr, u8  val)
+void cpu::write8 (u32 addr, u8  val)
 {
 	machine.mmu->write_memory_8(addr, val);
 }
 
-void cpu_moira::write16 (u32 addr, u16 val)
+void cpu::write16 (u32 addr, u16 val)
 {
 	machine.mmu->write_memory_16(addr, val);
 }
 
-void cpu_moira::breakpointReached(u32 addr)
+void cpu::breakpointReached(u32 addr)
 {
 	breakpoint_reached = true;
 }
 
-void cpu_moira::dump_registers(char *temp_string)
+void cpu::dump_registers(char *temp_string)
 {
 	int n;
 	int max = 2048;
