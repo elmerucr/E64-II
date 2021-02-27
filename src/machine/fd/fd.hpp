@@ -82,7 +82,7 @@ enum fd_error_list {
 	FD_ERROR_WRITE_PROTECT
 };
 
-class fd {
+class fd_t {
 private:
 	/*
 	 * write_protect is equal to the switch that could be found on real
@@ -185,8 +185,8 @@ private:
 	uint16_t spinning_down_sample_no;
 	uint16_t track_change_sample_no;
 public:
-	fd();
-	~fd();
+	fd_t();
+	~fd_t();
 	
 	uint8_t	*disk_contents;
 	

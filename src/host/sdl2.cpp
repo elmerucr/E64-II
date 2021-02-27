@@ -312,7 +312,7 @@ int E64::sdl2_process_events()
                 }
                 break;
             case SDL_DROPFILE:
-			machine.fd0->insert_disk(event.drop.file, false, false);
+			machine.fd->insert_disk(event.drop.file, false, false);
                 SDL_free(event.drop.file);
 		break;
             case SDL_QUIT:

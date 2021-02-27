@@ -23,7 +23,7 @@ public:
 	void refresh();
 	void set_cursor_pos(uint16_t pos);
 	void putchar(char c);
-	void print(const char *string_to_print);
+	void puts(const char *string_to_print);
 };
 
 }

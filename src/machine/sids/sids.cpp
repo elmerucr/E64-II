@@ -142,7 +142,7 @@ void E64::sids_ic::run(uint32_t number_of_cycles)
 	sid[1].clock(delta_t_sid1, sample_buffer_mono_sid1, 65536);
 
 	for (int i=0; i<n; i++) {
-		int16_t fd_sample = machine.fd0->sound_sample();
+		int16_t fd_sample = machine.fd->sound_sample();
 		
 		// left channel
 		sample_buffer_stereo[2*i] = (sample_buffer_mono_sid0[i] *

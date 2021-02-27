@@ -15,7 +15,7 @@ extern uint16_t fd_motor_spinning[];
 extern uint16_t fd_motor_spinning_down[];
 extern uint16_t fd_track_change[];
 
-E64::fd::fd()
+E64::fd_t::fd_t()
 {
 	disk_contents = new uint8_t[FD_DISK_SIZE * sizeof(uint8_t)];
 	
@@ -38,7 +38,7 @@ E64::fd::fd()
 	track_last_sample = 0;
 }
 
-E64::fd::~fd()
+E64::fd_t::~fd_t()
 {
 	if (fd_state != FD_STATE_EMPTY) {
 		// finish actions if any such as writing a sector
@@ -48,7 +48,7 @@ E64::fd::~fd()
 	delete disk_contents;
 }
 
-void E64::fd::reset()
+void E64::fd_t::reset()
 {
 	// a reset doesn't eject a disk
 	for (int i=0; i<16; i++)
@@ -58,7 +58,7 @@ void E64::fd::reset()
 	track_change_cycle_counter = 0;
 }
 
-uint8_t E64::fd::read_byte(uint8_t address)
+uint8_t E64::fd_t::read_byte(uint8_t address)
 {
 	switch (address & 0xf) {
 		case 0x00:
@@ -78,7 +78,7 @@ uint8_t E64::fd::read_byte(uint8_t address)
 	return 0x00;
 }
 
-void E64::fd::write_byte(uint8_t address, uint8_t byte)
+void E64::fd_t::write_byte(uint8_t address, uint8_t byte)
 {
 	switch (address & 0xf) {
 		case 0x00:
@@ -107,7 +107,7 @@ void E64::fd::write_byte(uint8_t address, uint8_t byte)
 	}
 }
 
-void E64::fd::attempt_start_reading()
+void E64::fd_t::attempt_start_reading()
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
@@ -171,7 +171,7 @@ void E64::fd::attempt_start_reading()
 	}
 }
 
-void E64::fd::attempt_start_writing()
+void E64::fd_t::attempt_start_writing()
 {
 	if (write_protect) {
 		set_error_state(FD_ERROR_WRITE_PROTECT);
@@ -239,10 +239,10 @@ void E64::fd::attempt_start_writing()
 	}
 }
 
-int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on_eject_disk)
+int E64::fd_t::insert_disk(const char *path, bool write_protect_disk, bool save_on_eject_disk)
 {
 	if (fd_state != FD_STATE_EMPTY) {
-		monitor.tty->print("\nerror: already a disk inside\n");
+		monitor.tty->puts("\nerror: already a disk inside\n");
 		return 1;
 	}
 	
@@ -250,15 +250,15 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 	
 	if (stat(path, &stats) == 0) {
 		if (S_ISDIR(stats.st_mode)) {
-			monitor.tty->print("\nerror: path is directory\n");
+			monitor.tty->puts("\nerror: path is directory\n");
 			return 1;
 		}
 		if (stats.st_size != FD_DISK_SIZE) {
-			monitor.tty->print("\nerror: disk image wrong size\n");
+			monitor.tty->puts("\nerror: disk image wrong size\n");
 			return 1;
 		}
-		monitor.tty->print("\ninserting disk: ");
-		monitor.tty->print(path);
+		monitor.tty->puts("\ninserting disk: ");
+		monitor.tty->puts(path);
 		monitor.tty->putchar('\n');
 		current_disk = fopen(path, "r+b");
 		fread(disk_contents, FD_DISK_SIZE, 1, current_disk);
@@ -270,24 +270,24 @@ int E64::fd::insert_disk(const char *path, bool write_protect_disk, bool save_on
 		save_on_eject = save_on_eject_disk;
 		
 		if (write_protect) {
-			monitor.tty->print("\ndisk is write protected\n");
+			monitor.tty->puts("\ndisk is write protected\n");
 		} else {
-			monitor.tty->print("\ndisk is writable\n");
+			monitor.tty->puts("\ndisk is writable\n");
 		}
 		if (save_on_eject) {
-			monitor.tty->print("disk contents will be saved on eject\n");
+			monitor.tty->puts("disk contents will be saved on eject\n");
 		} else {
-			monitor.tty->print("disk contents will not be saved on eject\n");
+			monitor.tty->puts("disk contents will not be saved on eject\n");
 		}
 		
 		return 0;
 	} else {
-		monitor.tty->print("\nerror: no such file\n");
+		monitor.tty->puts("\nerror: no such file\n");
 		return 1;
 	}
 }
 
-int E64::fd::eject_disk()
+int E64::fd_t::eject_disk()
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
@@ -314,18 +314,18 @@ int E64::fd::eject_disk()
 	}
 }
 
-uint16_t E64::fd::bytes_per_sector()
+uint16_t E64::fd_t::bytes_per_sector()
 {
 	return FD_BYTES_PER_SECTOR;
 }
 
-uint32_t E64::fd::disk_size()
+uint32_t E64::fd_t::disk_size()
 {
 	return FD_DISK_SIZE;
 }
 
 
-void E64::fd::run(uint32_t cycles)
+void E64::fd_t::run(uint32_t cycles)
 {
 	switch (fd_state) {
 		case FD_STATE_EMPTY:
@@ -349,7 +349,7 @@ void E64::fd::run(uint32_t cycles)
 				cycles_done += cycles;
 				if (cycles_done > FD_CYCLES_PER_BYTE) {
 					machine.mmu->ram[(buffer+bytes_done) & 0xffffff] =
-						machine.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
+						machine.fd->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done];
 					cycles_done -= FD_CYCLES_PER_BYTE;
 					bytes_done++;
 					if (bytes_done == FD_BYTES_PER_SECTOR) {
@@ -367,7 +367,7 @@ void E64::fd::run(uint32_t cycles)
 			} else {
 				cycles_done += cycles;
 				if (cycles_done > FD_CYCLES_PER_BYTE) {
-					machine.fd0->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
+					machine.fd->disk_contents[(sector * FD_BYTES_PER_SECTOR) + bytes_done] =
 						machine.mmu->ram[(buffer+bytes_done) & 0xffffff];
 					cycles_done -= FD_CYCLES_PER_BYTE;
 					bytes_done++;
@@ -468,7 +468,7 @@ uint16_t disk_icon_data[448] = {
 	C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED,C64_RED
 };
 
-uint16_t *E64::fd::icon_data()
+uint16_t *E64::fd_t::icon_data()
 {
 	if (error_led_on)
 		return &disk_icon_data[0x180];
@@ -488,20 +488,20 @@ uint16_t *E64::fd::icon_data()
 	}
 }
 
-void E64::fd::set_error_state(enum fd_error_list new_error)
+void E64::fd_t::set_error_state(enum fd_error_list new_error)
 {
 	current_error_state = new_error;
 	error_led_on = true;
 	error_led_counter = 0;
 }
 
-void E64::fd::reset_error_state()
+void E64::fd_t::reset_error_state()
 {
 	current_error_state = FD_ERROR_NONE;
 	error_led_on = false;
 }
 
-int16_t E64::fd::sound_sample()
+int16_t E64::fd_t::sound_sample()
 {
 	if (sample_no == 3816)
 		sample_no = 0;

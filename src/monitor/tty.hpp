@@ -51,7 +51,8 @@ public:
 	void blit_to_screen();
 	void putchar(char c);
 	void put_screencode(char sc);
-	void print(const char *string_to_print);
+	void puts(const char *string_to_print);
+	int print(const char *format, ...);
 	void prompt();
 	
 	void cursor_activate();
