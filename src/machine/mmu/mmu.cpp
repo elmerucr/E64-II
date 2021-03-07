@@ -47,7 +47,7 @@ unsigned int E64::mmu_ic::read_memory_8(unsigned int address)
 	} else if (page == IO_CIA_PAGE) {
 		return machine.cia->read_byte(address & 0xff);
 	} else if (page == IO_FD0_PAGE) {
-		return machine.fd0->read_byte(address & 0xff);
+		return machine.fd->read_byte(address & 0xff);
 	} else if (((address & 0x00fc0000) >> 16) == IO_KERNEL) {
 		return current_kernel_image[address & 0x3ffff];
 	} else if ((address & IO_RESET_VECTOR_MASK) == 0) {
@@ -94,7 +94,7 @@ void E64::mmu_ic::write_memory_8(unsigned int address, unsigned int value)
 	} else if (page == IO_CIA_PAGE) {
 		machine.cia->write_byte(address & 0xff, value & 0xff);
 	} else if (page == IO_FD0_PAGE) {
-		machine.fd0->write_byte(address & 0xff, value & 0xff);
+		machine.fd->write_byte(address & 0xff, value & 0xff);
 	} else {
 		ram[address & 0xffffff] = value & 0xff;
 	}

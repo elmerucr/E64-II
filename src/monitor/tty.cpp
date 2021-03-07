@@ -4,12 +4,13 @@
 //  Copyright © 2018-2021 elmerucr. All rights reserved.
 
 #include <cstdio>
+#include <cstdarg>
 
 #include "common.hpp"
 #include "tty.hpp"
 #include "command.hpp"
 
-char console_help_string[2048];
+char text_buffer[2048];
 
 E64::tty_t::tty_t()
 {
@@ -55,8 +56,7 @@ void E64::tty_t::init()
 
 void E64::tty_t::version()
 {
-	snprintf(console_help_string,256,"E64-II (C)%i - version %i.%i (%i)\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
-	print(console_help_string);
+	print("E64-II (C)%i - version %i.%i (%i)\n", E64_II_YEAR, E64_II_MAJOR_VERSION, E64_II_MINOR_VERSION, E64_II_BUILD);
 }
 
 void E64::tty_t::blit_to_screen()
@@ -113,7 +113,7 @@ void E64::tty_t::put_screencode(char sc)
     	cursor_activate();
 }
 
-void E64::tty_t::print(const char *string_to_print)
+void E64::tty_t::puts(const char *string_to_print)
 {
 	char *temp_char = (char *)string_to_print;
 	while (*temp_char != ASCII_NULL) {
@@ -122,9 +122,23 @@ void E64::tty_t::print(const char *string_to_print)
 	}
 }
 
+int E64::tty_t::print(const char *format, ...)
+{
+	char temp_string[256];
+	
+	va_list args;
+	va_start (args, format);
+	int n = vsnprintf(temp_string, 256, format, args);
+	va_end(args);
+	
+	puts(temp_string);
+		  
+	return n;
+}
+
 void E64::tty_t::prompt()
 {
-	print("\nready.\n");
+	puts("\nready.\n");
 }
 
 void E64::tty_t::cursor_activate()
@@ -171,12 +185,12 @@ void E64::tty_t::enter()
     
 	/* Copy screen contents into helper character string */
 	for (int i=0; i<64; i++) {
-		console_help_string[i] = (character_buffer[start_of_row + i]) & 0x7f;
+		text_buffer[i] = (character_buffer[start_of_row + i]) & 0x7f;
 	}
     
-	console_help_string[64] = ASCII_NULL;
+	text_buffer[64] = ASCII_NULL;
     
-	monitor.command->execute(console_help_string);
+	monitor.command->execute(text_buffer);
 }
 
 void E64::tty_t::insert()
@@ -391,7 +405,7 @@ enum E64::output_type E64::tty_t::check_output(bool top_down, uint32_t *address)
 			}
 			potential_offset[4] = 0;
 			monitor.command->hex_string_to_int(potential_offset, &offset);
-			*address = (sector * machine.fd0->bytes_per_sector()) + offset;
+			*address = (sector * machine.fd->bytes_per_sector()) + offset;
 			if (top_down) break;
 		}
 	}

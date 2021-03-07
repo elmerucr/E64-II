@@ -24,7 +24,7 @@ E64::machine_t::machine_t()
 	blitter = new blitter_ic();
 	sids = new sids_ic();
 	cia = new cia_ic();
-	fd0 = new fd();
+	fd = new fd_t();
 	
 	// init clocks (frequency dividers, right no of cycles will run on different ic's)
 	m68k_to_vicv  = new clocks(CPU_CLOCK_SPEED, VICV_DOT_CLOCK_SPEED);
@@ -42,7 +42,7 @@ E64::machine_t::~machine_t()
 	delete m68k_to_blitter;
 	delete m68k_to_vicv;
 	
-	delete fd0;
+	delete fd;
 	delete cia;
 	delete sids;
 	delete blitter;
@@ -102,7 +102,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 	if (m68k->breakpoint_reached) {
 		snprintf(machine_help_string, 256,
 			 "cpu breakpoint occurred at $%06x\n", m68k->getPC());
-		monitor.tty->print(machine_help_string);
+		monitor.tty->puts(machine_help_string);
 		m68k->breakpoint_reached = false;
 		output_state |= CPU_BREAKPOINT;
 	}
@@ -113,7 +113,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 		snprintf(machine_help_string, 256,
 			 "scanline breakpoint occurred at line %i\n",
 			 vicv->get_current_scanline());
-		monitor.tty->print(machine_help_string);
+		monitor.tty->puts(machine_help_string);
 		vicv->breakpoint_reached = false;
 		output_state |= SCANLINE_BREAKPOINT;
 	}
@@ -121,7 +121,7 @@ uint8_t E64::machine_t::run(uint16_t no_of_cycles)
 	blitter->run(m68k_to_blitter->clock(processed_cycles));
 	timer->run(processed_cycles);
 	cia->run(processed_cycles);
-	fd0->run(processed_cycles);
+	fd->run(processed_cycles);
 	
 	// run cycles on sound device & start audio if buffer is large enough
 	// some cheating by adjustment of cycles to run depending on current
@@ -151,7 +151,7 @@ void E64::machine_t::reset()
 	blitter->reset();    // sometimes warning message blitter not finished
 	timer->reset();
 	cia->reset();
-	fd0->reset();
+	fd->reset();
 	TTL74LS148->update_interrupt_level();
 	printf("[machine] system reset\n");
 }

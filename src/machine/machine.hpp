@@ -50,7 +50,7 @@ public:
 	blitter_ic	*blitter;
 	sids_ic		*sids;
 	cia_ic		*cia;
-	fd		*fd0;
+	fd_t		*fd;
 
 	machine_t();
 	~machine_t();

@@ -145,7 +145,7 @@ inline void E64::vicv_ic::render_disk_activity(uint16_t xpos, uint16_t ypos)
 	uint32_t base = ((ypos * VICV_PIXELS_PER_SCANLINE) + xpos) %
 		(VICV_PIXELS_PER_SCANLINE * VICV_SCANLINES);
 	
-	uint16_t *icon = machine.fd0->icon_data();
+	uint16_t *icon = machine.fd->icon_data();
 	
 	for (int x=0; x<8; x++) {
 		for (int y=0; y<8; y++) {
